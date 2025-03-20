@@ -1,0 +1,5 @@
+metag-contig-id
+3300046048.a:Ga0484963_00002801
+
+
+3300046048 img taxon id

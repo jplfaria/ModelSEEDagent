@@ -1,248 +1,126 @@
-# Metabolic Modeling AI Agent Framework
+# Extensive Documentation for Metabolic Modeling Agent Framework
 
-## Overview
+Version: 2.0  
+Last Updated: 2025-02-28
 
-A sophisticated Python framework that integrates metabolic modeling tools with Large Language Models (LLMs) to automate and enhance metabolic modeling workflows. The framework provides a modular, extensible architecture supporting multiple LLM backends and various metabolic analysis tools.
+---
 
-## Features
+## Table of Contents
 
-- **Multiple LLM Backend Support**:
-  - Argonne's Internal Argo Gateway API
-  - OpenAI API
-  - Local LLM Models (e.g., LLaMA)
+1. [Introduction](#introduction)
+2. [Project Overview](#project-overview)
+3. [Architecture](#architecture)
+    - [Configuration Layer](#configuration-layer)
+    - [LLM Integration](#llm-integration)
+    - [Agent Layer](#agent-layer)
+    - [Tool Layer](#tool-layer)
+    - [Utilities](#utilities)
+4. [Installation and Setup](#installation-and-setup)
+5. [Usage](#usage)
+    - [Interactive Use](#interactive-use)
+    - [Command-Line Interface](#command-line-interface)
+6. [Detailed Component Documentation](#detailed-component-documentation)
+    - [Configuration Files](#configuration-files)
+    - [Prompt Templates](#prompt-templates)
+    - [Agents](#agents)
+    - [LLM Implementations](#llm-implementations)
+    - [Tool Implementations](#tool-implementations)
+    - [Testing Framework](#testing-framework)
+7. [Extending the Framework](#extending-the-framework)
+8. [Developer Guidelines](#developer-guidelines)
+9. [Contribution Guidelines](#contribution-guidelines)
+10. [FAQs](#faqs)
+11. [License](#license)
+12. [Contact](#contact)
 
-- **Core Metabolic Modeling Tools**:
-  - Flux Balance Analysis (FBA)
-  - Model Analysis
-  - Pathway Analysis
-  - Model Validation
+---
 
-- **Advanced Modeling Capabilities**:
-  - RAST Genome Annotation Integration
-  - ModelSEED Model Building
-  - Automated Gap Filling
-  - Model Comparison
+## 1. Introduction
 
-- **Robust Architecture**:
-  - Modular Design
-  - Type-Safe with Pydantic
-  - Comprehensive Testing
-  - Async Support
-  - Extensive Error Handling
+The Metabolic Modeling Agent Framework is a modular, extensible platform that integrates advanced language models (LLMs) with specialized metabolic modeling tools. It is designed to support tasks such as Flux Balance Analysis (FBA), model structural analysis, media optimization, auxotrophy detection, and genome annotation integration. This documentation provides a comprehensive guide for developers and users detailing the system’s structure, usage, and guidelines for extending and contributing to the project.
 
-## Project Structure
+---
 
-```
-metabolic_agent/
-├── src/
-│   ├── llm/                    # LLM Infrastructure
-│   │   ├── base.py            # Base LLM interface
-│   │   ├── argo.py            # Argo implementation
-│   │   ├── openai_llm.py      # OpenAI implementation
-│   │   └── local_llm.py       # Local LLM implementation
-│   │
-│   ├── tools/                 # Modeling Tools
-│   │   ├── base.py           # Base tool interface
-│   │   ├── cobra/            # COBRA tools
-│   │   │   ├── fba.py       # FBA analysis
-│   │   │   ├── analysis.py  # Model analysis
-│   │   │   └── utils.py     # Utilities
-│   │   ├── rast/            # RAST tools
-│   │   │   └── annotation.py # Genome annotation
-│   │   └── modelseed/       # ModelSEED tools
-│   │       ├── builder.py   # Model building
-│   │       └── gapfill.py   # Gap filling
-│   │
-│   ├── agents/               # Agent Implementation
-│   │   ├── base.py          # Base agent class
-│   │   ├── metabolic.py     # Metabolic agent
-│   │   └── factory.py       # Agent factory
-│   │
-│   └── config/              # Configuration
-│       ├── settings.py      # Config management
-│       └── prompts.py       # Prompt templates
-│
-├── tests/                    # Test Suite
-│   ├── test_llm/           # LLM tests
-│   ├── test_tools/         # Tool tests
-│   └── test_agents/        # Agent tests
-│
-├── config/                  # Configuration Files
-│   ├── config.yaml         # Main configuration
-│   └── prompts/            # Prompt templates
-│       ├── metabolic.yaml
-│       └── rast.yaml
-│
-├── notebooks/              # Jupyter Notebooks
-│   ├── examples/          # Usage examples
-│   └── tutorials/         # Step-by-step guides
-│
-├── scripts/               # Utility Scripts
-│   ├── setup_env.sh      # Unix setup
-│   └── setup_env.bat     # Windows setup
-│
-└── data/                 # Data Directory
-    └── models/          # Metabolic models
-```
+## 2. Project Overview
 
-## Prerequisites
+This framework couples LLM reasoning with a suite of metabolic modeling tools using a ReAct (Reasoning + Acting) agent paradigm. The agent iteratively reasons about a given problem, calls specific tools as needed, and logs intermediate steps to eventually provide a final, well-supported answer.
 
-- Python 3.11 or higher
-- Virtual Environment (venv or conda)
-- Git
-- Access credentials for desired LLM backends
+Key functionalities include:
 
-### Optional Requirements
-- GPU for local LLM models
-- CUDA support for PyTorch
-- Access to Argo Gateway API
-- OpenAI API key
+- **Flux Balance Analysis (FBA)**
+- **Model Structural and Pathway Analysis**
+- **Minimal Media Determination**
+- **Auxotrophy Identification**
+- **Genome Annotation via RAST Integration**
 
-## Installation
+---
 
-1. **Clone the Repository**
-```bash
-git clone https://github.com/yourusername/metabolic_agent.git
-cd metabolic_agent
-```
+## 3. Architecture
 
-2. **Set Up Environment**
+### Configuration Layer
 
-For Unix-like systems:
-```bash
-chmod +x scripts/setup_env.sh
-./scripts/setup_env.sh
-```
+- **Configuration Files:**  
+  YAML files (e.g., `config/config.yaml`) define LLM settings, tool parameters, and agent behavior.
+- **Prompts:**  
+  Prompt templates (stored in `config/prompts/`) standardize the instructions for both agents and tools.
 
-For Windows:
-```batch
-scripts\setup_env.bat
-```
+### LLM Integration
 
-3. **Configure the Framework**
-- Update `config/config.yaml` with your settings
-- Configure LLM backend credentials
-- Adjust tool-specific parameters
+- **Abstract LLM Interface:**  
+  Provides a unified interface for different LLM backends (Argo, OpenAI, local models).
+- **Implementations:**  
+  - **ArgoLLM:** Communicates with a hosted API.
+  - **OpenAILLM:** Uses OpenAI’s ChatCompletion API.
+  - **LocalLLM:** Runs local models (e.g., Llama) via Hugging Face’s transformers.
+- **Safety and Token Management:**  
+  Implements safety checks, token estimation, and API call limits.
 
-## Usage
+### Agent Layer
 
-### Basic Usage
+- **Core Agent:**  
+  The metabolic agent (in `src/agents/metabolic.py`) follows a ReAct-style architecture, alternating between reasoning (“Thoughts”) and performing actions (“Actions”).
+- **Output Parsing:**  
+  Custom parsers distinguish between tool calls and final answers.
+- **Logging:**  
+  The agent logs execution steps and tool outputs for traceability.
 
-```python
-from src.llm import LLMFactory
-from src.tools import ToolRegistry
-from src.agents import AgentFactory
+### Tool Layer
 
-# Initialize components
-llm = LLMFactory.create("argo", config["llm"])
-tools = [
-    ToolRegistry.create_tool(name, config["tools"][name])
-    for name in ["run_metabolic_fba", "analyze_metabolic_model"]
-]
+- **Tool Registry:**  
+  Tools are registered in a central registry (`src/tools/base.py`) to allow dynamic loading and invocation.
+- **Implemented Tools:**  
+  - **FBATool:** Runs FBA analysis.
+  - **ModelAnalysisTool & PathwayAnalysisTool:** Analyze model structure and network properties.
+  - **MissingMediaTool & MinimalMediaTool:** Identify media deficiencies and determine minimal media formulations.
+  - **ReactionExpressionTool:** Analyzes flux distributions under specific media conditions.
+  - **AuxotrophyTool:** Detects nutrient dependencies.
+  - **RAST Tools:** For genome annotation and integration.
+- **Extensibility:**  
+  New tools can be added by following the BaseTool interface.
 
-# Create agent
-agent = AgentFactory.create_agent(
-    agent_type="metabolic",
-    llm=llm,
-    tools=tools,
-    config=config["agent"]
-)
+### Utilities
 
-# Run analysis
-result = agent.analyze_model("path/to/model.xml")
-```
+- **Model Utilities:**  
+  In `src/tools/cobra/utils.py`, functions for loading, saving, verifying, and analyzing COBRA models are provided.
+- **General Helpers:**  
+  Additional helper functions for configuration management and prompt handling.
 
-### Advanced Usage
+---
 
-#### Running FBA Analysis
-```python
-# Create specific tool instance
-fba_tool = ToolRegistry.create_tool("run_metabolic_fba", config["tools"]["fba"])
+## 4. Installation and Setup
 
-# Run analysis
-result = fba_tool.run({
-    "model_path": "path/to/model.xml",
-    "objective": "BIOMASS_reaction"
-})
-```
+### Prerequisites
 
-#### Genome Annotation Integration
-```python
-# Create RAST tool
-rast_tool = ToolRegistry.create_tool("run_rast_annotation", config["tools"]["rast"])
+- Python 3.8+
+- [COBRApy](https://github.com/opencobra/cobrapy) for metabolic modeling
+- [PyYAML](https://pyyaml.org/) for configuration management
+- LLM-specific dependencies (e.g., `transformers` for local models, `requests` for API-based models)
+- Other dependencies as listed in your `requirements.txt`
 
-# Run annotation
-result = rast_tool.run({
-    "sequence_file": "path/to/genome.fasta",
-    "file_type": "fasta"
-})
-```
+### Installation Steps
 
-#### Model Building and Gap Filling
-```python
-# Create ModelSEED tools
-builder = ToolRegistry.create_tool("build_metabolic_model", config["tools"]["modelseed"])
-gapfiller = ToolRegistry.create_tool("gapfill_model", config["tools"]["gapfill"])
+1. **Clone the Repository:**
 
-# Build and gap fill model
-model_result = builder.run({
-    "annotation_file": "path/to/annotations.json",
-    "output_path": "path/to/output.xml"
-})
-
-gapfill_result = gapfiller.run({
-    "model_path": model_result.data["model_path"],
-    "media_condition": "Complete"
-})
-```
-
-## Testing
-
-Run the test suite:
-```bash
-pytest tests/
-```
-
-Run specific test categories:
-```bash
-pytest tests/test_llm/         # Test LLM functionality
-pytest tests/test_tools/       # Test modeling tools
-pytest tests/test_agents/      # Test agents
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
-### Development Guidelines
-
-- Follow PEP 8 style guide
-- Add tests for new features
-- Update documentation as needed
-- Use type hints
-- Handle errors appropriately
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgments
-
-- ModelSEED team
-- COBRA toolbox developers
-- Argonne National Laboratory for Argo API access
-- OpenAI for API access
-
-## Contact
-
-- **Author**: Your Name
-- **Email**: your.email@example.com
-- **Organization**: Your Organization
-
-## Disclaimer
-
-This software is provided as-is. Always verify results independently for critical applications.
+   ```bash
+   git clone https://your-repo-url.git
+   cd metabolic-modeling-agent-framework

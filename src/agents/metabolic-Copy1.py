@@ -94,15 +94,18 @@ class SimpleVectorStore:
         self.documents.append(text)
         self.embeddings = self.vectorizer.fit_transform(self.documents)
         logger.info(f"VectorStore: Added document (len={len(text)}). Total documents: {len(self.documents)}.")
+        print(f"DEBUG: VectorStore added document; count = {len(self.documents)}.")
 
     def query(self, query_text: str, top_n: int = 1) -> List[str]:
         if not self.documents or self.embeddings is None:
             logger.info("VectorStore: No documents available for query.")
+            print("DEBUG: VectorStore empty on query.")
             return []
         query_vec = self.vectorizer.transform([query_text])
         sim = cosine_similarity(query_vec, self.embeddings)
         top_indices = np.argsort(sim[0])[-top_n:][::-1]
-        logger.info(f"VectorStore: Query returned {len(top_indices)} results.")
+        logger.info(f"VectorStore: Query '{query_text}' returned indices: {top_indices}.")
+        print(f"DEBUG: VectorStore query indices: {top_indices}.")
         return [self.documents[i] for i in top_indices]
 # -------------------------------
 # End SimpleVectorStore
@@ -133,39 +136,27 @@ class MetabolicAgent(BaseAgent):
     """Agent for metabolic model analysis with enhanced memory, token management, simulation result export, and logging."""
     
     def __init__(self, llm: BaseLLM, tools: List[BaseTool], config: Dict[str, Any] | AgentConfig):
-        # Initialize variables needed before super().__init__
         self._current_tool_results = "No previous results"
         self._tools_dict = {t.tool_name: t for t in tools}
         self._tool_output_counters = {}
-        
-        # Set up logging directory structure BEFORE super().__init__
+        super().__init__(llm, tools, config)
         self.run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
         self.log_base = Path(__file__).parent.parent.parent / "logs"
         self.run_dir = self.log_base / f"run_{self.run_id}"
         self.run_dir.mkdir(parents=True, exist_ok=True)
-        
-        # Create directories for the new structure
-        self.results_dir = self.run_dir / "results"
-        self.results_dir.mkdir(exist_ok=True)
-        self.observations_dir = self.run_dir / "observations"
-        self.observations_dir.mkdir(exist_ok=True)
-        self.steps_dir = self.run_dir / "steps"
-        self.steps_dir.mkdir(exist_ok=True)
-        
-        # Call super().__init__ which will trigger _setup_agent()
-        super().__init__(llm, tools, config)
-        
-        # Create the execution log
+        self.tool_dirs = {}
+        for tool in tools:
+            tool_dir = self.run_dir / tool.tool_name
+            tool_dir.mkdir(parents=True, exist_ok=True)
+            self.tool_dirs[tool.tool_name] = tool_dir
         self.exec_log = self.run_dir / "execution.json"
         with open(self.exec_log, 'w') as f:
             json.dump([], f)
-            
         self.current_iteration = 0
         self._last_query = ""
         self.vector_store = SimpleVectorStore()
-        self.simulation_store = SimulationResultsStore()
-        
-        logger.info(f"Created run directory with improved structure: {self.run_dir}")
+        self.simulation_store = SimulationResultsStore()  # New simulation results store
+        logger.info(f"Created run directory: {self.run_dir}")
         print(f"DEBUG: Run directory created at {self.run_dir}")
     
     def _normalize_tool_name(self, tool_name: str) -> str:
@@ -218,8 +209,29 @@ class MetabolicAgent(BaseAgent):
     def _summarize_tool_results(self, results: str) -> str:
         summary_prompt = f"Please summarize the following simulation output concisely:\n\n{results}\n\nSummary:"
         summary = self.llm.predict(summary_prompt, max_tokens=150)
-        logger.info("Tool results summarization completed")
+        print("DEBUG: Summarization prompt sent, summary obtained.")
         return summary.strip()
+    
+    def _log_tool_output(self, tool_name: str, content: Dict[str, Any]) -> None:
+        print(f"DEBUG: Logging output for {tool_name}: {content}")
+        try:
+            tool_dir = self.tool_dirs.get(tool_name)
+            if not tool_dir:
+                logger.error(f"Log directory for {tool_name} not found.")
+                print(f"DEBUG: Log directory for {tool_name} not found.")
+                return
+            counter = self._tool_output_counters.get(tool_name, 0) + 1
+            self._tool_output_counters[tool_name] = counter
+            timestamp = datetime.now().strftime("%H%M%S_%f")
+            filename = f"{tool_name}_output_{counter}_{timestamp}.json"
+            log_file = tool_dir / filename
+            with open(log_file, 'w') as f:
+                json.dump(content, f, indent=2)
+            logger.debug(f"Logged {tool_name} output to {log_file}")
+            print(f"DEBUG: Logged output for {tool_name} to {log_file}")
+        except Exception as e:
+            logger.error(f"Failed to log {tool_name} output: {e}")
+            print(f"DEBUG: Failed to log output for {tool_name}: {e}")
     
     def _log_execution(self, step: str, content: Any) -> None:
         try:
@@ -278,157 +290,50 @@ class MetabolicAgent(BaseAgent):
                 tool_usage[tool_name] = tool_usage.get(tool_name, 0) + 1
         return tool_usage
     
-    def _create_agent(self) -> AgentExecutor:
-        prompt = self._create_prompt()
-        tools_renderer = lambda tools_list: "\n".join([f"- {tool.name}: {tool.description}" for tool in tools_list])
-        prompt = prompt.partial(tools=tools_renderer(self.tools), tool_names=", ".join([t.name for t in self.tools]))
-        from langchain.agents.react.agent import create_react_agent
-        runnable = create_react_agent(llm=self.llm, tools=self.tools, prompt=prompt, output_parser=CustomReActOutputParser())
-        
-        # Create the standard agent executor (without modifying tools)
-        agent_executor = AgentExecutor(
-            agent=runnable, 
-            tools=self.tools, 
-            verbose=self.config.verbose, 
-            max_iterations=self.config.max_iterations, 
-            handle_parsing_errors=True, 
-            return_intermediate_steps=True
-        )
-        
-        return agent_executor
-    
     def _format_result(self, result: Dict[str, Any]) -> AgentResult:
         try:
             steps = result.get("intermediate_steps", [])
             output = result.get("output", "")
             formatted_steps = []
             tool_outputs = {}
-            all_files = {}
-            
-            # Process each step and save files
-            for step_idx, step in enumerate(steps):
+            for step in steps:
                 if isinstance(step, tuple) and len(step) == 2:
                     action, observation = step
                     tool_name = self._normalize_tool_name(
                         action.tool if hasattr(action, "tool") else str(action)
                     )
-                    
-                    # Get action input
-                    action_input = getattr(action, "tool_input", str(action))
-                    
-                    # Process valid tool steps
-                    if tool_name in ["run_metabolic_fba", "analyze_metabolic_model", "check_missing_media", 
-                                    "find_minimal_media", "analyze_reaction_expression", "identify_auxotrophies"]:
-                        
-                        # Save observation to file
-                        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                        
-                        # Save observation
-                        observation_file = self.observations_dir / f"{timestamp}_{tool_name}_observation.json"
-                        observation_data = {
-                            "tool": tool_name,
-                            "input": str(action_input),
-                            "observation": str(observation),
-                            "timestamp": timestamp,
-                            "step": step_idx
-                        }
-                        
-                        try:
-                            with open(observation_file, 'w') as f:
-                                json.dump(observation_data, f, indent=2)
-                            all_files[f"observation_{tool_name}_{step_idx}"] = str(observation_file)
-                        except Exception as e:
-                            logger.error(f"Error saving observation: {e}")
-                        
-                        # Save tool results if available
-                        if hasattr(observation, 'data') and observation.data:
-                            try:
-                                # Save results JSON
-                                result_file = self.results_dir / f"{timestamp}_{tool_name}_result.json"
-                                with open(result_file, 'w') as f:
-                                    json.dump(observation.data, f, indent=2)
-                                all_files[f"result_{tool_name}_{step_idx}"] = str(result_file)
-                                
-                                # For FBA tools with fluxes, save CSV
-                                if tool_name == "run_metabolic_fba" and "significant_fluxes" in observation.data:
-                                    import pandas as pd
-                                    flux_df = pd.DataFrame.from_dict(
-                                        observation.data.get("significant_fluxes", {}), 
-                                        orient='index', 
-                                        columns=['flux']
-                                    )
-                                    flux_file = self.results_dir / f"{timestamp}_{tool_name}_fluxes.csv"
-                                    flux_df.to_csv(flux_file)
-                                    all_files[f"fluxes_{tool_name}_{step_idx}"] = str(flux_file)
-                            except Exception as e:
-                                logger.error(f"Error saving result files: {e}")
-                        
-                        # Save step info
-                        step_file = self.steps_dir / f"{timestamp}_{tool_name}_step.json"
-                        step_data = {
-                            "step": step_idx,
-                            "tool": tool_name,
-                            "input": str(action_input),
-                            "timestamp": timestamp,
-                            "files": all_files
-                        }
-                        try:
-                            with open(step_file, 'w') as f:
-                                json.dump(step_data, f, indent=2)
-                            all_files[f"step_{tool_name}_{step_idx}"] = str(step_file)
-                        except Exception as e:
-                            logger.error(f"Error saving step data: {e}")
-                        
-                        # Add to tool outputs and formatted steps
+                    if tool_name in ["run_metabolic_fba", "analyze_metabolic_model", "check_missing_media", "find_minimal_media", "analyze_reaction_expression", "identify_auxotrophies"]:
                         tool_outputs[tool_name] = observation
-                        formatted_steps.append({
+                        step_data = {
                             "action": tool_name,
-                            "action_input": action_input,
-                            "observation": observation,
-                            "files": {k: v for k, v in all_files.items() if f"_{tool_name}_" in k}
-                        })
-            
-            # Process tool results for summary
+                            "action_input": getattr(action, "tool_input", str(action)),
+                            "observation": observation
+                        }
+                        formatted_steps.append(step_data)
+                        self._log_tool_output(tool_name, step_data)
             tool_results_str = self._format_tool_results(tool_outputs)
             summarization_threshold = self.config.get("summarization_threshold", 500) if isinstance(self.config, dict) else 500
-            
             if self.llm.estimate_tokens(tool_results_str) > summarization_threshold:
                 summarized = self._summarize_tool_results(tool_results_str)
                 self._current_tool_results = summarized
             else:
                 self._current_tool_results = tool_results_str
-                
-            # Add to vector store for context
+            # Add tool results to vector store for memory (store as string)
             document_to_store = str(tool_results_str)
             if self.vector_store:
                 self.vector_store.add_document(document_to_store)
                 retrieved_context = self.vector_store.query(str(self._last_query), top_n=1)
             else:
                 retrieved_context = []
-                
-            # Clean output
             if isinstance(output, str):
                 output = output.split("For troubleshooting")[0].strip()
                 output = re.sub(r'Thought:|Action:|Action Input:|Observation:', '', output).strip()
-                
-            # Get latest log entry
             try:
                 with open(self.exec_log, 'r') as f:
                     log_entries = json.load(f)
                 last_log = log_entries[-1] if log_entries else {}
             except Exception:
                 last_log = {}
-                
-            # Save final report
-            if output:
-                final_report_file = self.run_dir / f"final_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
-                try:
-                    with open(final_report_file, 'w') as f:
-                        f.write(output)
-                    all_files["final_report"] = str(final_report_file)
-                except Exception as e:
-                    logger.error(f"Failed to save final report: {e}")
-            
             return AgentResult(
                 success=True,
                 message="Analysis completed successfully",
@@ -437,35 +342,65 @@ class MetabolicAgent(BaseAgent):
                     "tool_results": formatted_steps,
                     "summary": self._current_tool_results,
                     "retrieved_context": retrieved_context,
-                    "log_summary": f"Enhanced logging enabled. Run directory: {str(self.run_dir)}. Last log entry: {last_log}",
-                    "files": all_files
+                    "log_summary": f"Enhanced logging enabled. Run directory: {str(self.run_dir)}. Last log entry: {last_log}"
                 },
                 intermediate_steps=formatted_steps,
                 metadata={
                     "iterations": len(formatted_steps),
                     "tools_used": self._get_tools_used(formatted_steps),
-                    "last_tool": formatted_steps[-1]["action"] if formatted_steps else None,
-                    "run_dir": str(self.run_dir)
+                    "last_tool": formatted_steps[-1]["action"] if formatted_steps else None
                 }
             )
         except Exception as e:
             logger.exception("Error formatting agent result")
             return AgentResult(success=False, message="Error formatting agent result", error=str(e))
     
-    def run(self, input_data: Dict[str, Any]) -> AgentResult:
-        try:
-            query = str(input_data.get("input", ""))
-            self._last_query = query
-            input_data.update({"input": query, "tool_results": self._current_tool_results})
-            self._log_execution("start", {"query": query})
-            result = self._agent_executor.invoke(input_data)
-            formatted_result = self._format_result(result)
-            self._log_execution("complete", formatted_result.dict())
-            return formatted_result
-        except Exception as e:
-            self._log_execution("error", {"error": str(e)})
-            logger.error(f"Agent execution failed: {e}")
-            return AgentResult(success=False, message="Execution failed", error=str(e))
+    def _create_agent(self) -> AgentExecutor:
+        prompt = self._create_prompt()
+        tools_renderer = lambda tools_list: "\n".join([f"- {tool.name}: {tool.description}" for tool in tools_list])
+        prompt = prompt.partial(tools=tools_renderer(self.tools), tool_names=", ".join([t.name for t in self.tools]))
+        from langchain.agents.react.agent import create_react_agent
+        runnable = create_react_agent(llm=self.llm, tools=self.tools, prompt=prompt, output_parser=CustomReActOutputParser())
+        
+        # Create a dictionary that maps tool names to their instances
+        tool_map = {tool.name: tool for tool in self.tools}
+        
+        # Create wrapped tools that inject output directory
+        wrapped_tools = []
+        for tool in self.tools:
+            # Create a wrapped version of the tool's run method
+            original_run = tool.run
+            
+            def wrapped_run(input_data, _tool=tool, _run_dir=self.run_dir):
+                # If input is a string, convert to dict with model_path and output_dir
+                if isinstance(input_data, str):
+                    model_path = input_data
+                    tool_dir = _run_dir / _tool.name
+                    input_data = {
+                        "model_path": model_path,
+                        "output_dir": str(tool_dir)
+                    }
+                # If input is a dict but missing output_dir, add it
+                elif isinstance(input_data, dict) and "model_path" in input_data and "output_dir" not in input_data:
+                    tool_dir = _run_dir / _tool.name
+                    input_data["output_dir"] = str(tool_dir)
+                
+                # Call the original run method with the enhanced input
+                return original_run(input_data)
+            
+            # Replace the tool's run method with our wrapped version
+            tool.run = wrapped_run.__get__(tool, type(tool))
+            wrapped_tools.append(tool)
+        
+        # Create and return the agent executor with wrapped tools
+        return AgentExecutor(
+            agent=runnable, 
+            tools=wrapped_tools, 
+            verbose=self.config.verbose, 
+            max_iterations=self.config.max_iterations, 
+            handle_parsing_errors=True, 
+            return_intermediate_steps=True
+        )
     
     def analyze_model(self, query: str) -> AgentResult:
         try:
