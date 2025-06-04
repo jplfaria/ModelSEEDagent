@@ -33,6 +33,11 @@ class LLMResponse(BaseModel):
     llm_name: str
     metadata: Dict[str, Any] = Field(default_factory=dict)
     model_config = ConfigDict(protected_namespaces=())
+    
+    @property
+    def model_name(self) -> str:
+        """Alias for llm_name for backwards compatibility"""
+        return self.llm_name
 
 class BaseLLM(LangchainBaseLLM):
     def __init__(self, config: Dict[str, Any]):
