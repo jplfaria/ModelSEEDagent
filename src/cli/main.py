@@ -38,8 +38,8 @@ from rich.tree import Tree
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from agents.enhanced_tool_integration import EnhancedToolIntegration
 from agents.langgraph_metabolic import LangGraphMetabolicAgent
+from agents.tool_integration import EnhancedToolIntegration
 from llm.argo import ArgoLLM
 from llm.local import LocalLLM
 from llm.openai_llm import OpenAILLM

@@ -340,7 +340,7 @@ A: Try more specific terminology or use help command
 - Use `help` command within the interface
 - Check the example queries in this guide
 - Review session analytics for usage patterns
-- Consult the conversation engine documentation
+- Consult the conversation module documentation
 
 ## 🎯 What's Next?
 

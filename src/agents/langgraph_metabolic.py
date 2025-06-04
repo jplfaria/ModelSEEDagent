@@ -36,7 +36,7 @@ from ..config.prompts import load_prompt_template, load_prompts
 from ..llm.base import BaseLLM
 from ..tools.base import BaseTool, ToolResult
 from .base import AgentConfig, AgentResult, BaseAgent
-from .enhanced_tool_integration import (
+from .tool_integration import (
     EnhancedToolIntegration,
     ToolCategory,
     ToolExecutionPlan,

@@ -68,14 +68,6 @@ class ToolConfig(BaseModel):
     configs: ToolConfigs
 
 
-class AgentConfig(BaseModel):
-    model_config = {"protected_namespaces": ()}
-    max_iterations: int = 5
-    verbose: bool = False
-    handle_parsing_errors: bool = True
-    additional_config: Dict[str, Any] = Field(default_factory=dict)
-
-
 class Config(BaseModel):
     model_config = {"protected_namespaces": ()}
     llm: LLMConfig
@@ -83,7 +75,7 @@ class Config(BaseModel):
     openai: Optional[OpenAIConfig] = None
     local: Optional[LocalLLMConfig] = None
     tools: ToolConfig
-    agent: AgentConfig
+    # Note: AgentConfig moved to src/agents/base.py to avoid duplication
 
 
 class ConfigManager:

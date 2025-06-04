@@ -97,7 +97,7 @@ questionary>=1.10.0  # Interactive prompts and selections
 - ✅ **Enhanced Error Recovery**: Advanced retry strategies with query simplification
 
 **Key Components Delivered:**
-- `EnhancedToolIntegration` class with intelligent planning algorithms
+- `src/agents/tool_integration.py` (713 lines) - Core integration system
 - `ToolPriority` and `ToolCategory` enum systems for workflow organization
 - Interactive HTML workflow visualizations with execution status
 - Performance analytics with moving averages and trend analysis
@@ -120,8 +120,7 @@ questionary>=1.10.0  # Interactive prompts and selections
 - ✅ Regression Testing: PASSED (maintained 8 failed, 32 passed baseline)
 
 **Files Created/Modified:**
-- `src/agents/enhanced_tool_integration.py` (713 lines) - Core integration system
-- `test_enhanced_tool_integration.py` (357 lines) - Comprehensive test suite
+- `test_tool_integration.py` (357 lines) - Comprehensive test suite
 - Enhanced `src/agents/langgraph_metabolic.py` with intelligent planning
 - Updated `requirements.txt` with visualization dependencies
 - Generated workflow visualizations and performance dashboards
@@ -156,7 +155,7 @@ questionary>=1.10.0  # Interactive prompts and selections
   - Integration with domain-specific metabolic modeling vocabulary
   - Query optimization and tool selection recommendations
 
-- [x] **Conversational AI Engine** (`src/interactive/conversation_engine.py`) - 684 lines
+- [x] **Conversational AI Engine** (`src/interactive/conversation.py`) - 684 lines
   - Natural dialogue flow management with context preservation
   - Intelligent response generation based on query analysis
   - Multi-turn conversation handling with memory

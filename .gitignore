@@ -183,3 +183,16 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# ModelSEEDagent generated files
+# Generated test data
+test_sessions/
+test_visualizations/
+test_enhanced_integration_run/
+combined_output.txt
+sessions/
+visualizations/
+
+# Examples and temporary files
+examples/temp/
+temp/

@@ -13,7 +13,10 @@ ModelSEEDagent/
 │   ├── agents/            # Agent implementations
 │   ├── llm/               # LLM integrations
 │   ├── tools/             # Metabolic modeling tools
-│   └── config/            # Configuration management
+│   ├── config/            # Configuration management
+│   ├── interactive/       # Interactive interface components
+│   ├── cli/               # Professional CLI interface
+│   └── launch_with_argo.py         # Interactive interface demo
 ├── tests/                 # Test suite (~540 LOC)
 ├── config/                # YAML configurations
 ├── data/models/           # Test metabolic models
