@@ -1,6 +1,6 @@
 # Extensive Documentation for Metabolic Modeling Agent Framework
 
-Version: 2.0  
+Version: 2.0
 Last Updated: 2025-02-28
 
 ---
@@ -59,50 +59,50 @@ Key functionalities include:
 
 ### Configuration Layer
 
-- **Configuration Files:**  
+- **Configuration Files:**
   YAML files (e.g., `config/config.yaml`) define LLM settings, tool parameters, and agent behavior.
-- **Prompts:**  
+- **Prompts:**
   Prompt templates (stored in `config/prompts/`) standardize the instructions for both agents and tools.
 
 ### LLM Integration
 
-- **Abstract LLM Interface:**  
+- **Abstract LLM Interface:**
   Provides a unified interface for different LLM backends (Argo, OpenAI, local models).
-- **Implementations:**  
+- **Implementations:**
   - **ArgoLLM:** Communicates with a hosted API.
   - **OpenAILLM:** Uses OpenAI’s ChatCompletion API.
   - **LocalLLM:** Runs local models (e.g., Llama) via Hugging Face’s transformers.
-- **Safety and Token Management:**  
+- **Safety and Token Management:**
   Implements safety checks, token estimation, and API call limits.
 
 ### Agent Layer
 
-- **Core Agent:**  
+- **Core Agent:**
   The metabolic agent (in `src/agents/metabolic.py`) follows a ReAct-style architecture, alternating between reasoning (“Thoughts”) and performing actions (“Actions”).
-- **Output Parsing:**  
+- **Output Parsing:**
   Custom parsers distinguish between tool calls and final answers.
-- **Logging:**  
+- **Logging:**
   The agent logs execution steps and tool outputs for traceability.
 
 ### Tool Layer
 
-- **Tool Registry:**  
+- **Tool Registry:**
   Tools are registered in a central registry (`src/tools/base.py`) to allow dynamic loading and invocation.
-- **Implemented Tools:**  
+- **Implemented Tools:**
   - **FBATool:** Runs FBA analysis.
   - **ModelAnalysisTool & PathwayAnalysisTool:** Analyze model structure and network properties.
   - **MissingMediaTool & MinimalMediaTool:** Identify media deficiencies and determine minimal media formulations.
   - **ReactionExpressionTool:** Analyzes flux distributions under specific media conditions.
   - **AuxotrophyTool:** Detects nutrient dependencies.
   - **RAST Tools:** For genome annotation and integration.
-- **Extensibility:**  
+- **Extensibility:**
   New tools can be added by following the BaseTool interface.
 
 ### Utilities
 
-- **Model Utilities:**  
+- **Model Utilities:**
   In `src/tools/cobra/utils.py`, functions for loading, saving, verifying, and analyzing COBRA models are provided.
-- **General Helpers:**  
+- **General Helpers:**
   Additional helper functions for configuration management and prompt handling.
 
 ---

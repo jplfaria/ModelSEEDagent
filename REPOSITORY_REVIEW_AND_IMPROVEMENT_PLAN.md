@@ -133,7 +133,7 @@ Current `src/llm/argo.py` implementation is basic compared to available advanced
 Current Jupyter notebook approach has significant problems:
 
 #### **Jupyter Notebook Issues**
-- **16+ repeated setup functions** in `argo.ipynb` 
+- **16+ repeated setup functions** in `argo.ipynb`
 - **Manual path configuration** in every cell
 - **No session persistence** - results lost on restart
 - **Poor reproducibility** - hard to share workflows
@@ -310,7 +310,7 @@ Current LangChain implementation has architectural limitations:
 ```bash
 # Final enhancements
 - [ ] **Create usage examples and tutorials**
-- [ ] **Docker containerization**  
+- [ ] **Docker containerization**
 - [ ] **Performance monitoring**
 - [ ] **Update comprehensive documentation**
 - [ ] **Add configuration validation**
@@ -329,11 +329,11 @@ Current LangChain implementation has architectural limitations:
 
 ### **LLM Issues (3 tests):** ⚠️ UPDATED COUNT
 - `tests/test_llm.py::TestBaseLLM::test_init` - Abstract class instantiation (3 tests)
-- `tests/test_llm.py::TestBaseLLM::test_check_limits_success` 
+- `tests/test_llm.py::TestBaseLLM::test_check_limits_success`
 - `tests/test_llm.py::TestBaseLLM::test_check_limits_exceeded`
 - ~~`tests/test_llm.py::TestArgoLLM::test_api_error`~~ ✅ **FIXED in Phase 1.3**
 
-**Strategy**: 
+**Strategy**:
 - **Agent issues** may be resolved naturally during LangGraph migration (Phase 2.1)
 - **LLM issues** are abstract class tests - can be addressed in Phase 2.2 or later
 - **Priority**: Medium (will address after core architecture is stable)
@@ -383,11 +383,11 @@ def test_complete_analysis_workflow():
     # 1. Run CLI command
     result = run_cli_command("modelseed analyze data/models/e_coli_core.xml")
     assert result.exit_code == 0
-    
+
     # 2. Verify output files
     assert Path("results/analysis.json").exists()
     assert Path("results/fluxes.csv").exists()
-    
+
     # 3. Validate results
     with open("results/analysis.json") as f:
         data = json.load(f)
@@ -402,13 +402,13 @@ def test_complete_analysis_workflow():
 def test_analysis_performance():
     """Benchmark analysis performance"""
     model_path = "data/models/e_coli_core.xml"
-    
+
     # Time single analysis
     start = time.time()
     result = analyze_model("Basic analysis", model_path)
     single_time = time.time() - start
     assert single_time < 5.0  # Should complete within 5 seconds
-    
+
     # Time batch analysis
     start = time.time()
     results = batch_analyze("data/models/", "results/")
@@ -422,11 +422,11 @@ def test_analysis_performance():
 # tests/regression/test_regression.py
 class TestRegression:
     """Regression test suite for critical functionality"""
-    
+
     def test_argo_llm_reliability(self):
         """Test Argo LLM reliability features"""
         llm = ArgoLLM()
-        
+
         # Test retry logic
         with mock.patch("httpx.Client.post") as mock_post:
             mock_post.side_effect = [
@@ -437,11 +437,11 @@ class TestRegression:
             result = llm.generate("test prompt")
             assert result == "success"
             assert mock_post.call_count == 3
-    
+
     def test_langgraph_workflow(self):
         """Test LangGraph workflow features"""
         workflow = create_metabolic_workflow()
-        
+
         # Test parallel execution
         result = workflow.invoke({"model_path": "e_coli_core.xml"})
         assert "structure_analysis" in result
@@ -466,17 +466,17 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.9'
-      
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install -r requirements-dev.txt
-      
+
       - name: Run tests
         run: |
           pytest tests/ --cov=src/ --cov-report=xml
-      
+
       - name: Upload coverage
         uses: codecov/codecov-action@v2
         with:
@@ -493,7 +493,7 @@ def test_data_integrity():
     model_path = Path("data/models/e_coli_core.xml")
     assert model_path.exists()
     assert model_path.stat().st_size > 0
-    
+
     # Verify model can be loaded
     model = cobra.io.read_sbml_model(str(model_path))
     assert len(model.reactions) == 95
@@ -580,12 +580,12 @@ The test suite will be run:
 - On every pull request
 - Before merging to main
 - After each implementation phase
-- During performance optimization 
+- During performance optimization
 
 ## **📊 Implementation Progress Tracking**
 
 ### **✅ Phase 1: Foundation & Core Fixes** - **COMPLETED**
-- **1.1 Critical Infrastructure Fixes** ✅ 
+- **1.1 Critical Infrastructure Fixes** ✅
   - ✅ Fixed LocalLLM import issues
   - ✅ Repository hygiene (.DS_Store, duplicates removed)
   - ✅ Updated .gitignore
@@ -601,7 +601,7 @@ The test suite will be run:
 - **2.1 LangGraph Migration** (Day 1-4) 🔄 **READY TO START**
   - [ ] **Implement LangGraph StateGraph** 🔥
       └─ Replace AgentExecutor with StateGraph
-      └─ Integrate upgraded Argo LLM client  
+      └─ Integrate upgraded Argo LLM client
       └─ Add parallel tool execution
       └─ Implement state persistence & checkpointing
       └─ Add error recovery and graceful degradation
@@ -622,17 +622,17 @@ The test suite will be run:
 
 - **3.2 Advanced Features & Polish** (Day 5-7)
   - [ ] **Create usage examples and tutorials**
-  - [ ] **Docker containerization**  
+  - [ ] **Docker containerization**
   - [ ] **Performance monitoring**
   - [ ] **Update comprehensive documentation**
   - [ ] **Add configuration validation**
 
 ### **📈 Test Progress Metrics**
 - **Starting**: 21 failed, 19 passed (47.5% pass rate)
-- **After Phase 1.1-1.2**: 9 failed, 31 passed (77.5% pass rate) 
+- **After Phase 1.1-1.2**: 9 failed, 31 passed (77.5% pass rate)
 - **After Phase 1.3**: 8 failed, 32 passed (80% pass rate) ✅ **+2.5% improvement**
 - **Target after Phase 2.1**: 5 failed, 35 passed (87.5% pass rate - agent tests may resolve)
 - **Target after Phase 3.1**: 3 failed, 37 passed (92.5% pass rate - final cleanup)
 
 ### **🎯 Next Immediate Action**
-**Phase 2.1: LangGraph Migration** - This is the correct next step as planned! 
+**Phase 2.1: LangGraph Migration** - This is the correct next step as planned!

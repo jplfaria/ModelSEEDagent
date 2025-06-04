@@ -1,8 +1,10 @@
 # src/llm/factory.py
-from typing import Dict, Any, Type
-from .base import BaseLLM
+from typing import Any, Dict, Type
+
 from .argo import ArgoLLM
+from .base import BaseLLM
 from .openai_llm import OpenAILLM
+
 
 class LLMFactory:
     @classmethod
@@ -15,6 +17,7 @@ class LLMFactory:
         elif backend == "local":
             # Import LocalLLM only when needed to avoid import errors
             from .local_llm import LocalLLM
+
             return LocalLLM
         else:
             raise ValueError(

@@ -1,0 +1,15 @@
+{
+  "id": "7c1dd25d",
+  "name": "Test Analysis Session",
+  "created_at": "2025-06-04T01:27:34.689816",
+  "last_active": "2025-06-04T01:27:34.689820",
+  "status": "active",
+  "description": "Testing interactive analysis capabilities",
+  "model_files": [],
+  "interactions": [],
+  "context": {},
+  "metadata": {},
+  "total_queries": 0,
+  "total_execution_time": 0.0,
+  "success_rate": 1.0
+}

@@ -1,6 +1,3 @@
-from .annotation import RastAnnotationTool, AnnotationAnalysisTool
+from .annotation import AnnotationAnalysisTool, RastAnnotationTool
 
-__all__ = [
-    'RastAnnotationTool',
-    'AnnotationAnalysisTool'
-]
+__all__ = ["RastAnnotationTool", "AnnotationAnalysisTool"]

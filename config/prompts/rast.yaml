@@ -54,13 +54,13 @@ tools:
       Analyze RAST genome annotations and identify metabolic functions.
       Input should be the path to the RAST annotation file.
       Returns detailed analysis of metabolic capabilities and pathway coverage.
-    
+
     usage: |
       To use this tool:
       1. Provide the path to RAST annotation file
       2. Optionally specify pathways of interest
       3. Review the functional analysis results
-    
+
     examples:
       - input: "path/to/rast_annotations.json"
         description: "Complete annotation analysis"
@@ -71,13 +71,13 @@ tools:
     description: |
       Integrate RAST annotations with metabolic models.
       Maps annotations to model reactions and identifies potential new reactions.
-    
+
     usage: |
       To use this tool:
       1. Provide paths to both RAST annotations and metabolic model
       2. Review mapping results and suggested additions
       3. Evaluate confidence scores for mappings
-    
+
     examples:
       - input: '{"annotation_path": "annotations.json", "model_path": "model.xml"}'
         description: "Basic integration analysis"
@@ -88,20 +88,20 @@ tools:
 responses:
   annotation_report: |
     Annotation Analysis Results:
-    
+
     Coverage:
     - Total Genes: {num_genes}
     - Annotated Functions: {num_functions}
     - Metabolic Genes: {num_metabolic}
-    
+
     Pathway Coverage:
     {pathway_coverage}
-    
+
     Key Findings:
     1. {finding_1}
     2. {finding_2}
     3. {finding_3}
-    
+
     Recommendations:
     1. {recommendation_1}
     2. {recommendation_2}
@@ -109,15 +109,15 @@ responses:
 
   integration_report: |
     Model Integration Results:
-    
+
     Mapping Statistics:
     - Mapped Reactions: {num_mapped}
     - New Reactions: {num_new}
     - Conflicting Mappings: {num_conflicts}
-    
+
     Changes by Subsystem:
     {subsystem_changes}
-    
+
     Suggested Actions:
     1. {action_1}
     2. {action_2}

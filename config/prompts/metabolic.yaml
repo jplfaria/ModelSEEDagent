@@ -19,10 +19,10 @@ agent:
     1. Only provide ONE response type at a time - either an Action or a Final Answer, never both.
     2. Use "Action" when you need to call a tool.
     3. Use "Final Answer" only when you have all necessary information and are done.
-    
+
     Previous Results:
     {tool_results}
-    
+
     Available Tools:
     - run_metabolic_fba: Run FBA on a model to calculate growth rates and reaction fluxes.
     - analyze_metabolic_model: Analyze model structure and network properties.
@@ -30,27 +30,27 @@ agent:
     - find_minimal_media: Determine the minimal set of media components required for growth.
     - analyze_reaction_expression: Analyze reaction expression (fluxes) under provided media.
     - identify_auxotrophies: Identify auxotrophies by testing the effect of removing candidate nutrients.
-    
+
   format_instructions: |
     Use this EXACT format - do not deviate from it:
-    
+
     When using a tool:
       Thought: [your reasoning]
       Action: tool_name  # Choose one from: run_metabolic_fba, analyze_metabolic_model, check_missing_media, find_minimal_media, analyze_reaction_expression, identify_auxotrophies
       Action Input: [input for the tool, e.g. model path or a JSON with parameters]
       Observation: [result from the tool]
       ... (repeat as needed)
-    
+
     When providing final answer:
       Thought: [summarize findings]
       Final Answer: [final summary]
-    
+
     Important:
       - Use only the above tool names.
       - Do not combine an Action and a Final Answer in one response.
       - Keep responses concise and structured.
       - Do not add extra words to tool names.
-      
+
   suffix: |
     Question: {input}
     {agent_scratchpad}
@@ -70,7 +70,7 @@ tools:
     examples:
       - input: "path/to/model.xml"
         description: "Basic FBA analysis with default objective"
-        
+
   analyze_metabolic_model:
     description: |
       Analyze structural properties of a metabolic model including reaction connectivity,
@@ -83,7 +83,7 @@ tools:
     examples:
       - input: "path/to/model.xml"
         description: "Complete model structure analysis"
-        
+
   check_missing_media:
     description: |
       Check for missing media components that may be preventing growth.
@@ -96,7 +96,7 @@ tools:
     examples:
       - input: "path/to/model.xml"
         description: "Test for missing media components"
-        
+
   find_minimal_media:
     description: |
       Determine the minimal media formulation required for model growth.
@@ -111,7 +111,7 @@ tools:
     examples:
       - input: '{"model_path": "path/to/model.xml", "media": {"EX_glc__D_e": (-10, 1000), "EX_nh4_e": (-10, 1000), ...}}'
         description: "Find minimal media for the model"
-        
+
   analyze_reaction_expression:
     description: |
       Analyze reaction expression by running FBA under specified media conditions.
@@ -126,7 +126,7 @@ tools:
     examples:
       - input: '{"model_path": "path/to/model.xml", "media": {"EX_glc__D_e": (-10, 1000), ...}}'
         description: "Analyze reaction expression under specified media"
-        
+
   identify_auxotrophies:
     description: |
       Identify potential auxotrophies by testing the effect of removing candidate external nutrients.
@@ -148,10 +148,10 @@ responses:
   tool_result: |
     Tool Results:
     {tool_output}
-    
+
     Status: {status}
     Success: {success}
-    
+
     Next steps to consider:
     1. {next_step_1}
     2. {next_step_2}
@@ -159,10 +159,10 @@ responses:
 
   error_response: |
     Error encountered: {error_message}
-    
+
     Troubleshooting steps:
     1. Check model file path and format.
     2. Verify tool input parameters.
     3. Review tool permissions and access.
-    
+
     Additional context: {error_context}
