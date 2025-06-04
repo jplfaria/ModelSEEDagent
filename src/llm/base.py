@@ -21,6 +21,11 @@ class LLMConfig:
         "max_api_calls": 100,
         "max_tokens": 50000
     })
+    
+    @property
+    def model_name(self) -> str:
+        """Alias for llm_name for backwards compatibility"""
+        return self.llm_name
 
 class LLMResponse(BaseModel):
     text: str
@@ -43,8 +48,13 @@ class BaseLLM(LangchainBaseLLM):
             "max_tokens": 50000
         })
         
+        # Support both 'model_name' (for tests) and 'llm_name' (legacy)
+        llm_name = config.get('model_name') or config.get('llm_name')
+        if not llm_name:
+            raise ValueError("Either 'model_name' or 'llm_name' must be provided in config")
+        
         return LLMConfig(
-            llm_name=config['llm_name'],
+            llm_name=llm_name,
             system_content=config['system_content'],
             max_tokens=config.get('max_tokens'),
             temperature=config.get('temperature', 0.7),
@@ -57,6 +67,18 @@ class BaseLLM(LangchainBaseLLM):
     @property
     def config(self):
         return self._config
+
+    @property 
+    def total_tokens(self):
+        return self._tokens
+    
+    @total_tokens.setter
+    def total_tokens(self, value):
+        self._tokens = value
+    
+    @property
+    def total_calls(self):
+        return self._calls
 
     def update_usage(self, tokens: int):
         self._tokens += tokens
