@@ -10,6 +10,12 @@ class ToolResult(BaseModel):
     metadata: Dict[str, Any] = Field(default_factory=dict)
     error: Optional[str] = None
 
+class ToolConfig(BaseModel):
+    """Configuration object for tools"""
+    name: str
+    description: str
+    additional_config: Dict[str, Any] = Field(default_factory=dict)
+
 class BaseTool(LangChainBaseTool):
     """Base class for all tools"""
     tool_name: ClassVar[str] = ""
@@ -23,10 +29,20 @@ class BaseTool(LangChainBaseTool):
         )
         # Store the configuration
         self._config = config
+        self._tool_config = ToolConfig(
+            name=config.get("name", self.tool_name),
+            description=config.get("description", self.tool_description),
+            additional_config={k: v for k, v in config.items() if k not in ['name', 'description']}
+        )
+    
+    @property
+    def config(self) -> ToolConfig:
+        """Get the tool configuration object for test compatibility"""
+        return self._tool_config
     
     @property
     def tool_config(self) -> Dict[str, Any]:
-        """Get the tool configuration"""
+        """Get the raw tool configuration"""
         return self._config
 
 class ToolRegistry:
