@@ -35,6 +35,9 @@ openpyxl>=3.0.0
 # Optional dependencies for enhanced features
 plotly>=5.0.0  # Interactive visualizations
 jupyter>=1.0.0  # Notebook support
+networkx>=3.0  # Graph visualization for workflow analysis
+kaleido>=0.2.1  # Static image export for plotly
+matplotlib>=3.4.0  # Additional plotting capabilities
 
 # Local LLM dependencies
 torch>=2.1.1

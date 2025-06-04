@@ -34,6 +34,11 @@ import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 
+from .enhanced_tool_integration import (
+    EnhancedToolIntegration, ToolExecutionPlan, ToolExecutionResult,
+    ToolPriority, ToolCategory, WorkflowState
+)
+
 logger = logging.getLogger(__name__)
 
 # -------------------------------
@@ -52,6 +57,13 @@ class AgentState(TypedDict):
     tool_results: Dict[str, Any]
     parallel_results: Dict[str, ToolResult]
     tools_to_call: Optional[List[str]]
+    
+    # Enhanced tool integration
+    execution_plan: Optional[List[ToolExecutionPlan]]
+    intent_analysis: Optional[Dict[str, Any]]
+    workflow_analysis: Optional[Dict[str, Any]]
+    performance_metrics: Optional[Dict[str, Dict[str, Any]]]
+    workflow_visualization: Optional[str]
     
     # Execution control
     iteration: int
@@ -199,6 +211,9 @@ class LangGraphMetabolicAgent(BaseAgent):
         self.vector_store = EnhancedVectorStore()
         self.simulation_store = SimulationResultsStore(self.run_dir)
         
+        # Enhanced tool integration
+        self.tool_integration = EnhancedToolIntegration(tools, self.run_dir)
+        
         # Tool management
         self._tools_dict = {t.tool_name: t for t in tools}
         self._available_tools = tools
@@ -281,8 +296,8 @@ class LangGraphMetabolicAgent(BaseAgent):
         return workflow
     
     def _planning_node(self, state: AgentState) -> AgentState:
-        """Planning node - decides what actions to take next"""
-        logger.debug(f"Planning node - iteration {state['iteration']}")
+        """Enhanced planning node with intelligent tool selection"""
+        logger.debug(f"Enhanced planning node - iteration {state['iteration']}")
         
         # Update workflow state
         state["workflow_state"] = "planning"
@@ -295,45 +310,99 @@ class LangGraphMetabolicAgent(BaseAgent):
                                   self._summarize_results(state)
             return state
         
-        # Create planning prompt
-        planning_prompt = self._create_planning_prompt(state)
-        
         try:
-            # Get LLM decision
-            response = self.llm._generate_response(planning_prompt)
+            # Enhanced planning with intent analysis
+            if not state.get("execution_plan"):
+                # First iteration - analyze intent and create execution plan
+                intent_analysis = self.tool_integration.analyze_query_intent(state["query"])
+                
+                # Extract model path if available
+                model_path = self._extract_model_path(state["query"])
+                
+                # Create optimized execution plan
+                execution_plan = self.tool_integration.create_execution_plan(intent_analysis, model_path)
+                
+                # Analyze workflow dependencies
+                workflow_analysis = self.tool_integration.analyze_workflow_dependencies(execution_plan)
+                
+                # Store in state
+                state["execution_plan"] = execution_plan
+                state["intent_analysis"] = intent_analysis
+                state["workflow_analysis"] = workflow_analysis
+                
+                logger.info(f"Created execution plan: {len(execution_plan)} tools, "
+                           f"estimated runtime: {workflow_analysis['estimated_runtime']:.1f}s")
+                
+                # Create workflow visualization
+                viz_path = self.tool_integration.create_workflow_visualization(execution_plan)
+                state["workflow_visualization"] = viz_path
             
-            # Parse the response to determine next action
-            next_action, tools_to_call = self._parse_planning_response(response.text)
+            # Determine next action based on execution plan
+            execution_plan = state["execution_plan"]
+            completed_tools = set(state.get("tools_called", []))
             
-            # Debug logging
-            logger.info(f"Planning decision: {next_action}, tools: {tools_to_call}")
-            logger.info(f"Raw response: {response.text[:200]}")
+            # Find next tools to execute
+            next_tools = []
+            parallel_groups = {}
             
-            state["next_action"] = next_action
-            state["messages"].append(AIMessage(content=response.text))
+            for plan in execution_plan:
+                if plan.tool_name in completed_tools:
+                    continue
+                
+                # Check dependencies
+                deps_satisfied = all(dep in completed_tools for dep in plan.depends_on)
+                if not deps_satisfied:
+                    continue
+                
+                # Group parallel tools
+                if plan.parallel_group:
+                    if plan.parallel_group not in parallel_groups:
+                        parallel_groups[plan.parallel_group] = []
+                    parallel_groups[plan.parallel_group].append(plan.tool_name)
+                else:
+                    next_tools.append(plan.tool_name)
             
-            # Store tools to call if applicable
-            if tools_to_call:
-                state["tools_to_call"] = tools_to_call
+            # Decide execution strategy
+            if parallel_groups and len(list(parallel_groups.values())[0]) > 1:
+                # Execute parallel group
+                state["next_action"] = "parallel_tools"
+                state["tools_to_call"] = list(parallel_groups.values())[0]
+                logger.info(f"Planned parallel execution: {state['tools_to_call']}")
+            elif next_tools:
+                # Execute single tool
+                state["next_action"] = "single_tool"
+                state["tools_to_call"] = [next_tools[0]]
+                logger.info(f"Planned single tool execution: {next_tools[0]}")
+            elif len(completed_tools) < len(execution_plan):
+                # Still have tools to execute but dependencies not met
+                state["next_action"] = "analyze"
+                logger.info("Waiting for dependencies, analyzing current results")
+            else:
+                # All tools completed
+                state["next_action"] = "finalize"
+                logger.info("All planned tools completed, finalizing")
             
-            # Log planning decision
-            self._log_execution("planning", {
+            # Log planning decision with enhanced context
+            self._log_execution("enhanced_planning", {
                 "iteration": state["iteration"],
-                "decision": next_action,
-                "tools": tools_to_call,
-                "reasoning": response.text[:200] + "..." if len(response.text) > 200 else response.text
+                "decision": state["next_action"],
+                "tools_to_call": state.get("tools_to_call", []),
+                "completed_tools": list(completed_tools),
+                "total_planned_tools": len(execution_plan),
+                "intent_analysis": state.get("intent_analysis", {}),
+                "workflow_complexity": state.get("intent_analysis", {}).get("workflow_complexity", "unknown")
             })
             
         except Exception as e:
-            logger.error(f"Planning error: {e}")
-            state["errors"].append(f"Planning error: {str(e)}")
+            logger.error(f"Enhanced planning error: {e}")
+            state["errors"].append(f"Enhanced planning error: {str(e)}")
             state["next_action"] = "error"
         
         return state
     
     def _single_tool_node(self, state: AgentState) -> AgentState:
-        """Execute a single tool"""
-        logger.debug("Executing single tool")
+        """Execute a single tool with enhanced monitoring"""
+        logger.debug("Executing single tool with enhanced monitoring")
         
         state["workflow_state"] = "executing"
         tool_name = state.get("tools_to_call", [None])[0]
@@ -344,23 +413,48 @@ class LangGraphMetabolicAgent(BaseAgent):
             return state
         
         try:
-            # Execute the tool
-            tool = self._tools_dict[tool_name]
-            tool_input = self._prepare_tool_input(state, tool_name)
+            # Find execution plan for this tool
+            execution_plan = state.get("execution_plan", [])
+            plan = next((p for p in execution_plan if p.tool_name == tool_name), None)
             
-            result = tool._run(tool_input)
-            
-            # Store results
-            state["tool_results"][tool_name] = result.model_dump() if hasattr(result, 'model_dump') else result.__dict__
-            state["tools_called"].append(tool_name)
-            
-            # Add to vector store for memory
-            self.vector_store.add_document(
-                f"Tool: {tool_name}, Result: {result.message}",
-                {"tool": tool_name, "success": result.success, "iteration": state["iteration"]}
-            )
-            
-            logger.info(f"Tool {tool_name} executed successfully")
+            if plan:
+                # Execute with enhanced monitoring
+                exec_result = self.tool_integration.execute_tool_with_monitoring(plan)
+                
+                # Store enhanced results
+                state["tool_results"][tool_name] = exec_result.result.model_dump() if hasattr(exec_result.result, 'model_dump') else exec_result.result.__dict__
+                state["tools_called"].append(tool_name)
+                
+                # Store performance metrics
+                if "performance_metrics" not in state:
+                    state["performance_metrics"] = {}
+                if state["performance_metrics"] is None:
+                    state["performance_metrics"] = {}
+                state["performance_metrics"][tool_name] = exec_result.performance_metrics
+                
+                # Add to vector store for memory
+                self.vector_store.add_document(
+                    f"Enhanced Tool: {tool_name}, Result: {exec_result.result.message}",
+                    {
+                        "tool": tool_name, 
+                        "success": exec_result.success, 
+                        "iteration": state["iteration"],
+                        "execution_time": exec_result.execution_time,
+                        "category": plan.category.value
+                    }
+                )
+                
+                logger.info(f"Enhanced tool {tool_name} executed - success: {exec_result.success}, time: {exec_result.execution_time:.2f}s")
+            else:
+                # Fallback to basic execution
+                tool = self._tools_dict[tool_name]
+                tool_input = self._prepare_tool_input(state, tool_name)
+                result = tool._run(tool_input)
+                
+                state["tool_results"][tool_name] = result.model_dump() if hasattr(result, 'model_dump') else result.__dict__
+                state["tools_called"].append(tool_name)
+                
+                logger.info(f"Basic tool {tool_name} executed successfully")
             
         except Exception as e:
             logger.error(f"Tool execution error: {e}")
@@ -370,13 +464,13 @@ class LangGraphMetabolicAgent(BaseAgent):
         return state
     
     def _parallel_tools_node(self, state: AgentState) -> AgentState:
-        """Execute multiple tools in parallel (simulated)"""
-        logger.debug("Executing parallel tools")
+        """Execute multiple tools in parallel with enhanced monitoring"""
+        logger.debug("Executing parallel tools with enhanced monitoring")
         
         state["workflow_state"] = "parallel_exec"
         tools_to_call = state.get("tools_to_call", [])
         
-        logger.info(f"Parallel tools node - tools to call: {tools_to_call}")
+        logger.info(f"Enhanced parallel tools node - tools to call: {tools_to_call}")
         
         if not tools_to_call:
             logger.error("No tools specified for parallel execution")
@@ -385,48 +479,74 @@ class LangGraphMetabolicAgent(BaseAgent):
             return state
         
         parallel_results = {}
+        execution_plan = state.get("execution_plan", [])
         
         for tool_name in tools_to_call:
             if tool_name not in self._tools_dict:
-                parallel_results[tool_name] = ToolResult(
+                error_result = ToolResult(
                     success=False,
                     message=f"Tool {tool_name} not found",
                     error=f"Unknown tool: {tool_name}"
                 )
+                parallel_results[tool_name] = error_result
                 continue
             
             try:
-                tool = self._tools_dict[tool_name]
-                tool_input = self._prepare_tool_input(state, tool_name)
+                # Find execution plan for this tool
+                plan = next((p for p in execution_plan if p.tool_name == tool_name), None)
                 
-                result = tool._run(tool_input)
-                parallel_results[tool_name] = result
+                if plan:
+                    # Execute with enhanced monitoring
+                    exec_result = self.tool_integration.execute_tool_with_monitoring(plan)
+                    parallel_results[tool_name] = exec_result.result
+                    
+                    # Store performance metrics
+                    if "performance_metrics" not in state:
+                        state["performance_metrics"] = {}
+                    if state["performance_metrics"] is None:
+                        state["performance_metrics"] = {}
+                    state["performance_metrics"][tool_name] = exec_result.performance_metrics
+                    
+                    logger.info(f"Enhanced parallel tool {tool_name} completed - time: {exec_result.execution_time:.2f}s")
+                else:
+                    # Fallback to basic execution
+                    tool = self._tools_dict[tool_name]
+                    tool_input = self._prepare_tool_input(state, tool_name)
+                    result = tool._run(tool_input)
+                    parallel_results[tool_name] = result
+                    
+                    logger.info(f"Basic parallel tool {tool_name} completed")
                 
                 # Store in main results
-                state["tool_results"][tool_name] = result.model_dump() if hasattr(result, 'model_dump') else result.__dict__
+                state["tool_results"][tool_name] = parallel_results[tool_name].model_dump() if hasattr(parallel_results[tool_name], 'model_dump') else parallel_results[tool_name].__dict__
                 state["tools_called"].append(tool_name)
                 
-                # Add to memory
+                # Add to memory with enhanced metadata
+                plan_metadata = {"category": plan.category.value} if plan else {"category": "unknown"}
                 self.vector_store.add_document(
-                    f"Parallel Tool: {tool_name}, Result: {result.message}",
-                    {"tool": tool_name, "success": result.success, "parallel": True, "iteration": state["iteration"]}
+                    f"Enhanced Parallel Tool: {tool_name}, Result: {parallel_results[tool_name].message}",
+                    {
+                        "tool": tool_name, 
+                        "success": parallel_results[tool_name].success, 
+                        "parallel": True, 
+                        "iteration": state["iteration"],
+                        **plan_metadata
+                    }
                 )
                 
-                logger.info(f"Parallel tool {tool_name} completed")
-                
             except Exception as e:
-                logger.error(f"Parallel tool {tool_name} error: {e}")
+                logger.error(f"Enhanced parallel tool {tool_name} error: {e}")
                 parallel_results[tool_name] = ToolResult(
                     success=False,
                     message=f"Error executing {tool_name}",
                     error=str(e)
                 )
-                state["errors"].append(f"Parallel tool {tool_name}: {str(e)}")
+                state["errors"].append(f"Enhanced parallel tool {tool_name}: {str(e)}")
         
         state["parallel_results"] = {k: v.model_dump() if hasattr(v, 'model_dump') else v.__dict__ 
                                    for k, v in parallel_results.items()}
         
-        logger.info(f"Parallel execution completed: {len(parallel_results)} tools")
+        logger.info(f"Enhanced parallel execution completed: {len(parallel_results)} tools")
         return state
     
     def _analysis_node(self, state: AgentState) -> AgentState:
@@ -495,8 +615,8 @@ class LangGraphMetabolicAgent(BaseAgent):
         return state
     
     def _finalizer_node(self, state: AgentState) -> AgentState:
-        """Finalize the workflow and prepare results"""
-        logger.debug("Finalizing workflow")
+        """Enhanced finalizer with comprehensive reporting and visualization"""
+        logger.debug("Enhanced finalizing workflow")
         
         state["workflow_state"] = "completed"
         
@@ -506,16 +626,56 @@ class LangGraphMetabolicAgent(BaseAgent):
         # Create comprehensive summary
         summary = self._create_execution_summary(state)
         
-        # Log final execution details
-        self._log_execution("finalization", {
+        # Generate enhanced reports
+        try:
+            # Create performance dashboard
+            dashboard_path = self.tool_integration.create_performance_dashboard()
+            if dashboard_path:
+                state["performance_dashboard"] = dashboard_path
+            
+            # Create final workflow visualization with results
+            execution_results = []
+            if hasattr(self.tool_integration, 'execution_history'):
+                execution_results = self.tool_integration.execution_history
+            
+            execution_plan = state.get("execution_plan", [])
+            if execution_plan:
+                final_viz_path = self.tool_integration.create_workflow_visualization(
+                    execution_plan, execution_results
+                )
+                state["final_workflow_visualization"] = final_viz_path
+            
+            # Get tool integration summary
+            tool_summary = self.tool_integration.get_execution_summary()
+            state["tool_execution_summary"] = tool_summary
+            
+            logger.info("Enhanced reporting completed successfully")
+            
+        except Exception as e:
+            logger.warning(f"Enhanced reporting failed: {e}")
+            # Continue with basic finalization
+        
+        # Log enhanced final execution details
+        self._log_execution("enhanced_finalization", {
             "total_iterations": state["iteration"],
             "tools_used": list(set(state["tools_called"])),
             "total_errors": len(state["errors"]),
             "final_answer_length": len(state["final_answer"]),
-            "execution_summary": summary
+            "execution_summary": summary,
+            "performance_metrics": state.get("performance_metrics", {}),
+            "workflow_complexity": state.get("intent_analysis", {}).get("workflow_complexity", "unknown"),
+            "total_execution_time": sum(
+                metrics.get("execution_time", 0) 
+                for metrics in (state.get("performance_metrics") or {}).values()
+            ),
+            "visualizations_created": [
+                state.get("workflow_visualization"),
+                state.get("final_workflow_visualization"),
+                state.get("performance_dashboard")
+            ]
         })
         
-        logger.info(f"Workflow completed after {state['iteration']} iterations")
+        logger.info(f"Enhanced workflow completed after {state['iteration']} iterations")
         return state
     
     # -------------------------------
@@ -750,6 +910,26 @@ Provide a concise analysis and indicate if you need to continue or can finalize.
         with open(log_file, 'w') as f:
             json.dump(self.execution_log, f, indent=2)
     
+    def _extract_model_path(self, query: str) -> Optional[str]:
+        """Extract model path from query if present"""
+        # Look for common model file patterns
+        import re
+        
+        patterns = [
+            r'(\w+\.xml)',
+            r'(\w+\.sbml)',
+            r'(data/models/\w+\.xml)',
+            r'models/(\w+)',
+        ]
+        
+        for pattern in patterns:
+            match = re.search(pattern, query.lower())
+            if match:
+                return match.group(1)
+        
+        # Default model for testing
+        return None
+    
     # -------------------------------
     # Required Abstract Methods (for BaseAgent compatibility)
     # -------------------------------
@@ -781,6 +961,11 @@ Provide a concise analysis and indicate if you need to continue or can finalize.
             "tool_results": {},
             "parallel_results": {},
             "tools_to_call": None,
+            "execution_plan": None,
+            "intent_analysis": None,
+            "workflow_analysis": None,
+            "performance_metrics": None,
+            "workflow_visualization": None,
             "iteration": 0,
             "max_iterations": input_data.get("max_iterations", 5),
             "next_action": None,
@@ -812,7 +997,30 @@ Provide a concise analysis and indicate if you need to continue or can finalize.
                     "tools_used": final_state.get("tools_called", []),
                     "iterations": final_state.get("iteration", 0),
                     "errors": final_state.get("errors", []),
-                    "execution_summary": self._create_execution_summary(final_state)
+                    "execution_summary": self._create_execution_summary(final_state),
+                    # Enhanced tool integration metadata
+                    "intent_analysis": final_state.get("intent_analysis", {}),
+                    "workflow_analysis": final_state.get("workflow_analysis", {}),
+                    "performance_metrics": final_state.get("performance_metrics", {}),
+                    "tool_execution_summary": final_state.get("tool_execution_summary", {}),
+                    # Visualization paths
+                    "workflow_visualization": final_state.get("workflow_visualization"),
+                    "final_workflow_visualization": final_state.get("final_workflow_visualization"),
+                    "performance_dashboard": final_state.get("performance_dashboard"),
+                    # Enhanced execution metrics
+                    "total_execution_time": sum(
+                        metrics.get("execution_time", 0) 
+                        for metrics in (final_state.get("performance_metrics") or {}).values()
+                    ),
+                    "workflow_complexity": final_state.get("intent_analysis", {}).get("workflow_complexity", "unknown"),
+                    "parallel_executions": len(final_state.get("parallel_results", {})),
+                    "visualization_count": len([
+                        path for path in [
+                            final_state.get("workflow_visualization"),
+                            final_state.get("final_workflow_visualization"),
+                            final_state.get("performance_dashboard")
+                        ] if path
+                    ])
                 }
             )
             
