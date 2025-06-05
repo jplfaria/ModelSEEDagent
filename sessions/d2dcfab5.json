@@ -1,0 +1,112 @@
+{
+  "id": "d2dcfab5",
+  "name": "Analysis_20250604_1408",
+  "created_at": "2025-06-04T14:08:41.177806",
+  "last_active": "2025-06-04T14:09:22.740195",
+  "status": "active",
+  "description": "Interactive metabolic modeling analysis",
+  "model_files": [],
+  "interactions": [
+    {
+      "id": "conv_0",
+      "timestamp": "2025-06-04T14:09:22.740177",
+      "type": "query",
+      "input_data": "load the model /Users/jplfaria/repos/ModelSEEDagent/data/models/iML1515.xml and run fba",
+      "output_data": "Got it! You're interested in perform flux balance analysis and optimization. Processing...\n\n\ud83d\udd2c **Analysis Plan:**\n  \u2022 Using tools: flux_variability_analysis, run_metabolic_fba\n  \u2022 Complexity: Moderate (estimated 10-30 seconds)\n  \u2022 Expected results: flux_distribution, optimal_value\n\n\u2705 **Analysis Complete!**\n\n\u26a1 **Flux Analysis:**\n  \u2022 Optimal objective value: 0.873\n  \u2022 45 active reactions\n  \u2022 Flux variability: 23% average range",
+      "metadata": {
+        "query_analysis": {
+          "original_query": "load the model /Users/jplfaria/repos/ModelSEEDagent/data/models/iML1515.xml and run fba",
+          "query_type": "flux_analysis",
+          "complexity": "moderate",
+          "intent": "explore",
+          "confidence": 1.0,
+          "model_references": [
+            "iML1515"
+          ],
+          "pathway_references": [],
+          "metabolite_references": [],
+          "gene_references": [],
+          "numeric_values": [],
+          "suggested_tools": [
+            "flux_variability_analysis",
+            "run_metabolic_fba"
+          ],
+          "required_inputs": [
+            "model_file",
+            "objective_function"
+          ],
+          "expected_outputs": [
+            "flux_distribution",
+            "optimal_value"
+          ],
+          "context_dependencies": [],
+          "clarification_questions": [],
+          "alternative_phrasings": [],
+          "follow_up_suggestions": [],
+          "processing_time": 0.003729,
+          "language_confidence": 0.8
+        },
+        "response_type": "analysis_result",
+        "conversation_state": "suggesting_followup",
+        "suggested_actions": []
+      },
+      "execution_time": 0.0039010047912597656,
+      "success": true,
+      "error_message": null
+    }
+  ],
+  "context": {
+    "last_interaction": {
+      "id": "conv_0",
+      "timestamp": "2025-06-04T14:09:22.740177",
+      "type": "query",
+      "input_data": "load the model /Users/jplfaria/repos/ModelSEEDagent/data/models/iML1515.xml and run fba",
+      "output_data": "Got it! You're interested in perform flux balance analysis and optimization. Processing...\n\n\ud83d\udd2c **Analysis Plan:**\n  \u2022 Using tools: flux_variability_analysis, run_metabolic_fba\n  \u2022 Complexity: Moderate (estimated 10-30 seconds)\n  \u2022 Expected results: flux_distribution, optimal_value\n\n\u2705 **Analysis Complete!**\n\n\u26a1 **Flux Analysis:**\n  \u2022 Optimal objective value: 0.873\n  \u2022 45 active reactions\n  \u2022 Flux variability: 23% average range",
+      "metadata": {
+        "query_analysis": {
+          "original_query": "load the model /Users/jplfaria/repos/ModelSEEDagent/data/models/iML1515.xml and run fba",
+          "query_type": "flux_analysis",
+          "complexity": "moderate",
+          "intent": "explore",
+          "confidence": 1.0,
+          "model_references": [
+            "iML1515"
+          ],
+          "pathway_references": [],
+          "metabolite_references": [],
+          "gene_references": [],
+          "numeric_values": [],
+          "suggested_tools": [
+            "flux_variability_analysis",
+            "run_metabolic_fba"
+          ],
+          "required_inputs": [
+            "model_file",
+            "objective_function"
+          ],
+          "expected_outputs": [
+            "flux_distribution",
+            "optimal_value"
+          ],
+          "context_dependencies": [],
+          "clarification_questions": [],
+          "alternative_phrasings": [],
+          "follow_up_suggestions": [],
+          "processing_time": 0.003729,
+          "language_confidence": 0.8
+        },
+        "response_type": "analysis_result",
+        "conversation_state": "suggesting_followup",
+        "suggested_actions": []
+      },
+      "execution_time": 0.0039010047912597656,
+      "success": true,
+      "error_message": null
+    },
+    "last_query": "load the model /Users/jplfaria/repos/ModelSEEDagent/data/models/iML1515.xml and run fba"
+  },
+  "metadata": {},
+  "total_queries": 1,
+  "total_execution_time": 0.0039010047912597656,
+  "success_rate": 1.0
+}

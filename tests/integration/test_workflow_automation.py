@@ -24,12 +24,21 @@ from rich.table import Table
 
 console = Console()
 
+import json
+import os
+import tempfile
+from typing import Any, Dict, List
+
+import pytest
+import yaml
+
 
 def print_section_header(title: str, emoji: str = "🔧"):
     """Print a beautiful section header"""
     console.print(f"\n{Panel(f'{emoji} {title}', border_style='blue', padding=(0, 2))}")
 
 
+@pytest.mark.asyncio
 async def test_workflow_engine():
     """Test the workflow execution engine"""
     print_section_header("Testing Workflow Engine", "⚙️")
@@ -151,6 +160,7 @@ async def test_workflow_engine():
         return False
 
 
+@pytest.mark.asyncio
 async def test_batch_processor():
     """Test the batch processing engine"""
     print_section_header("Testing Batch Processor", "📦")
@@ -311,8 +321,12 @@ def test_template_library():
             library.display_template_details("basic_analysis")
 
             # Create workflow from template
+            # Create a test file for validation
+            test_model_path = Path("test_model.xml")
+            test_model_path.write_text("<sbml><model><reaction/></model></sbml>")
+
             parameters = {
-                "model_file": "test_model.xml",
+                "model_file": str(test_model_path),
                 "media_conditions": "minimal_glucose",
                 "output_format": "html",
             }
@@ -324,6 +338,9 @@ def test_template_library():
                 f"[green]✅ Created workflow '{workflow.name}' from template[/green]"
             )
             console.print(f"[cyan]📋 Workflow has {len(workflow.steps)} steps[/cyan]")
+
+            # Clean up test file
+            test_model_path.unlink(missing_ok=True)
 
         # Test template export/import
         console.print("\n[blue]💾 Testing template export/import...[/blue]")
@@ -346,13 +363,21 @@ def test_template_library():
             # Clean up
             Path(export_path).unlink(missing_ok=True)
 
-        return True
+        # Use assertions instead of return
+        assert basic_template is not None, "Basic template not found in library"
+
+        # Additional assertions for template functionality
+        search_results = library.search_templates("analysis")
+        assert (
+            len(search_results) > 0
+        ), "No templates found when searching for 'analysis'"
 
     except Exception as e:
         console.print(f"[red]❌ Template Library test failed: {e}[/red]")
-        return False
+        assert False, f"Template Library test failed: {e}"
 
 
+@pytest.mark.asyncio
 async def test_advanced_scheduler():
     """Test the advanced workflow scheduler"""
     print_section_header("Testing Advanced Scheduler", "📅")
@@ -507,6 +532,7 @@ async def test_advanced_scheduler():
         return False
 
 
+@pytest.mark.asyncio
 async def test_integration_scenario():
     """Test a comprehensive integration scenario"""
     print_section_header("Testing Integration Scenario", "🎯")

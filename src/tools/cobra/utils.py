@@ -29,16 +29,50 @@ class ModelUtils:
             ValueError: If the model file is invalid
         """
         try:
-            if not os.path.exists(model_path):
-                raise FileNotFoundError(f"Model file not found: {model_path}")
+            # Resolve path relative to project root if not absolute
+            resolved_path = ModelUtils._resolve_model_path(model_path)
 
-            model = read_sbml_model(model_path)
+            if not os.path.exists(resolved_path):
+                raise FileNotFoundError(f'Model file not found: "{model_path}"')
+
+            model = read_sbml_model(resolved_path)
             logger.info(f"Successfully loaded model: {model.id}")
             return model
 
         except Exception as e:
-            logger.error(f"Error loading model from {model_path}: {str(e)}")
+            logger.error(f'Error loading model from "{model_path}": {str(e)}')
             raise ValueError(f"Failed to load model: {str(e)}")
+
+    @staticmethod
+    def _resolve_model_path(model_path: str) -> str:
+        """
+        Resolve model path relative to project root.
+
+        Args:
+            model_path: Original model path
+
+        Returns:
+            str: Resolved absolute path
+        """
+        # If already absolute, return as-is
+        if os.path.isabs(model_path):
+            return model_path
+
+        # Find project root (directory containing this file's parent's parent)
+        current_file = Path(__file__)
+        project_root = current_file.parent.parent.parent
+
+        # Try relative to project root first
+        project_relative = project_root / model_path
+        if project_relative.exists():
+            return str(project_relative)
+
+        # Try relative to current working directory
+        if os.path.exists(model_path):
+            return os.path.abspath(model_path)
+
+        # Return project-relative path for error reporting
+        return str(project_relative)
 
     @staticmethod
     def save_model(model: cobra.Model, output_path: str) -> str:

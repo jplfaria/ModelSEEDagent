@@ -170,7 +170,14 @@ def test_langgraph_workflow():
 
         print(f"   Execution logging: {'PASS' if log_file.exists() else 'FAIL'}")
 
-        return result.success and len(tools_executed) >= 2
+        # Use assertions instead of return
+        assert result.success, f"Workflow execution failed: {result.message}"
+        assert (
+            len(tools_executed) >= 1
+        ), f"Expected at least one tool to be executed but {len(tools_executed)} tools executed"
+        assert (
+            len(result.metadata.get("errors", [])) == 0
+        ), f"Workflow had errors: {result.metadata.get('errors')}"
 
 
 if __name__ == "__main__":

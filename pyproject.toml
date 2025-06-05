@@ -1,0 +1,176 @@
+[tool.poetry]
+name = "modelseed-agent"
+version = "0.1.0"
+description = "ModelSEED Agent: AI-powered metabolic modeling with LangGraph workflows"
+authors = ["ModelSEED Team <support@modelseed.org>"]
+readme = "README.md"
+license = "MIT"
+homepage = "https://github.com/jplfaria/ModelSEEDagent"
+repository = "https://github.com/jplfaria/ModelSEEDagent"
+documentation = "https://github.com/jplfaria/ModelSEEDagent/blob/main/README.md"
+keywords = ["metabolic-modeling", "AI", "LangGraph", "bioinformatics", "systems-biology"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+# Core AI/ML Framework
+langchain = "^0.3.0"
+langchain-community = "^0.3.0"
+langchain-core = "^0.3.22"
+openai = "^1.3.3"
+pydantic = "^2.7.4"
+
+# Metabolic Modeling Core
+cobra = "^0.27.0"
+escher = "^1.7.0"
+
+# Data Science & Analysis
+numpy = "^1.26.0"
+pandas = "^1.3.0"
+scipy = "^1.7.0"
+scikit-learn = "^1.0.0"
+
+# Visualization
+matplotlib = "^3.4.0"
+plotly = "^5.0.0"
+seaborn = "^0.11.0"
+networkx = "^2.6.0"
+kaleido = "0.2.1"
+
+# CLI & User Interface
+typer = {extras = ["rich"], version = "^0.12.3"}
+rich = "^13.3.0"
+questionary = "^2.0.1"
+click = "^8.0.0"
+
+# HTTP & API
+httpx = "^0.25.0"
+requests = "^2.25.0"
+
+# Data Formats & Configuration
+pyyaml = "^6.0"
+python-dotenv = "^1.0.0"
+openpyxl = "^3.0.0"
+jinja2 = "^3.0.3"
+
+# Utilities
+diskcache = "^5.6.1"
+tiktoken = "^0.5.1"
+protobuf = "^4.25.1"
+typing-extensions = "^4.5.0"
+
+# Optional: Local LLM Support (can be installed separately)
+torch = "^2.3.1"
+torchaudio = "^2.3.1"
+torchvision = "^0.18.1"
+sentencepiece = {version = "^0.1.99", optional = true}
+
+# Optional: Jupyter Support
+jupyterlab = "^4.2.1"
+notebook = "^7.2.1"
+ipywidgets = "^7.7.0"
+langgraph = "^0.4.8"
+langgraph-checkpoint-sqlite = "^2.0.10"
+langgraph-prebuilt = "^0.2.2"
+
+[tool.poetry.group.dev.dependencies]
+# Testing
+pytest = "^7.0.0"
+pytest-asyncio = "^0.23.2"
+pytest-cov = "^3.0.0"
+
+# Code Quality
+black = "^24.4.2"
+isort = "^5.13.2"
+flake8 = "^7.0.0"
+pre-commit = "^3.0.0"
+mypy = "^1.0.0"
+tox = "^4.0.0"
+ruff = "^0.5.0"
+ipykernel = "^6.29.5"
+
+[tool.poetry.extras]
+# Optional dependency groups
+local-llm = ["torch", "torchaudio", "torchvision", "sentencepiece"]
+jupyter = ["jupyterlab", "notebook", "ipywidgets"]
+all = ["torch", "torchaudio", "torchvision", "sentencepiece", "jupyterlab", "notebook", "ipywidgets"]
+
+[tool.poetry.scripts]
+modelseed-agent = "src.cli:app"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+# Tool configurations
+[tool.black]
+line-length = 88
+target-version = ['py39', 'py310', 'py311']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+known_first_party = ["src"]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --strict-markers --strict-config"
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.coverage.run]
+source = ["src"]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/__pycache__/*",
+    "*/venv/*",
+    "*/.venv/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]

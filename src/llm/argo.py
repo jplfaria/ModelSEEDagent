@@ -177,9 +177,26 @@ class ArgoLLM(BaseLLM):
             if system:
                 payload["system"] = system
 
-            # Add max_completion_tokens if configured
+            # Handle max_completion_tokens more carefully for o-series models
+            # Some queries work better without token limits
             if self.config.max_tokens:
-                payload["max_completion_tokens"] = self.config.max_tokens
+                # Only add if explicitly configured and non-zero
+                if isinstance(self.config.max_tokens, str):
+                    try:
+                        token_limit = int(self.config.max_tokens)
+                        if token_limit > 0:
+                            payload["max_completion_tokens"] = token_limit
+                    except ValueError:
+                        # Invalid token limit, skip it
+                        logger.debug(
+                            f"Invalid max_tokens value: {self.config.max_tokens}"
+                        )
+                        pass
+                elif (
+                    isinstance(self.config.max_tokens, int)
+                    and self.config.max_tokens > 0
+                ):
+                    payload["max_completion_tokens"] = self.config.max_tokens
 
         else:
             # Standard GPT-style models
@@ -190,8 +207,14 @@ class ArgoLLM(BaseLLM):
                     {"role": "system", "content": system},
                     {"role": "user", "content": prompt},
                 ],
-                "temperature": self.config.temperature,
             }
+
+            # Only add temperature for non-o-series models
+            if (
+                hasattr(self.config, "temperature")
+                and self.config.temperature is not None
+            ):
+                payload["temperature"] = self.config.temperature
 
             if self.config.max_tokens:
                 payload["max_tokens"] = self.config.max_tokens
@@ -264,6 +287,7 @@ class ArgoLLM(BaseLLM):
         # Track recovery attempts
         endpoint_switched = False
         sentinel_injected = False
+        max_tokens_removed = False  # Track if we removed max_completion_tokens
 
         # Retry loop with exponential backoff
         for attempt in range(self._retries + 1):
@@ -310,6 +334,24 @@ class ArgoLLM(BaseLLM):
 
                     reason = f"HTTP {response.status_code}"
 
+                elif response.status_code >= 400:
+                    # Client error - try removing max_completion_tokens for o-series models
+                    if (
+                        not max_tokens_removed
+                        and self._model_name.startswith("gpto")
+                        and "max_completion_tokens" in payload
+                        and response.status_code in [400, 422]
+                    ):
+                        logger.warning(
+                            f"4xx error ({response.status_code}), removing max_completion_tokens parameter"
+                        )
+                        payload.pop("max_completion_tokens", None)
+                        max_tokens_removed = True
+                        continue  # Retry immediately
+
+                    # Other client errors
+                    reason = f"HTTP {response.status_code}"
+
                 else:
                     # Success response
                     response.raise_for_status()
@@ -331,6 +373,7 @@ class ArgoLLM(BaseLLM):
                                 "attempt": attempt + 1,
                                 "endpoint_switched": endpoint_switched,
                                 "sentinel_injected": sentinel_injected,
+                                "max_tokens_removed": max_tokens_removed,
                             },
                         )
                     else:
@@ -348,24 +391,15 @@ class ArgoLLM(BaseLLM):
                             logger.info(f"Endpoint switched → {self._url}")
                             continue
 
-                        # Strategy 2: Inject sentinel and force /chat/
-                        if not sentinel_injected:
-                            # Rebuild payload with sentinel
-                            original_prompt = (
-                                payload.get("prompt", [""])[0]
-                                if "prompt" in payload
-                                else payload.get("messages", [{}])[-1].get(
-                                    "content", ""
-                                )
-                            )
-                            sentinel_prompt = f"Response: {original_prompt}"
-                            payload = self._build_payload(
-                                sentinel_prompt, self.config.system_content or ""
-                            )
-                            self._use_streaming = False
-                            self._url = self._base_url + "chat/"
-                            sentinel_injected = True
-                            logger.info("Sentinel injected → retry with /chat/")
+                        # Strategy 2: Remove max_completion_tokens for o-series models
+                        if (
+                            not max_tokens_removed
+                            and self._model_name.startswith("gpto")
+                            and "max_completion_tokens" in payload
+                        ):
+                            logger.info("Removing max_completion_tokens parameter")
+                            payload.pop("max_completion_tokens", None)
+                            max_tokens_removed = True
                             continue
 
             except httpx.TimeoutException:

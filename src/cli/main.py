@@ -38,13 +38,13 @@ from rich.tree import Tree
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from agents.langgraph_metabolic import LangGraphMetabolicAgent
-from agents.tool_integration import EnhancedToolIntegration
-from llm.argo import ArgoLLM
-from llm.local import LocalLLM
-from llm.openai_llm import OpenAILLM
-from tools.cobra.analysis import ModelAnalysisTool, PathwayAnalysisTool
-from tools.cobra.fba import FBATool
+from src.agents.langgraph_metabolic import LangGraphMetabolicAgent
+from src.agents.tool_integration import EnhancedToolIntegration
+from src.llm.argo import ArgoLLM
+from src.llm.local_llm import LocalLLM
+from src.llm.openai_llm import OpenAILLM
+from src.tools.cobra.analysis import ModelAnalysisTool, PathwayAnalysisTool
+from src.tools.cobra.fba import FBATool
 
 # Initialize Rich console for beautiful output
 console = Console()
@@ -58,15 +58,106 @@ app = typer.Typer(
     no_args_is_help=True,
 )
 
-# Global state for configuration
-config_state = {
-    "llm_backend": None,
-    "llm_config": None,
-    "tools": None,
-    "agent": None,
-    "last_run_id": None,
-    "workspace": Path.cwd(),
-}
+# CLI-specific configuration file for persistence
+CLI_CONFIG_FILE = Path.home() / ".modelseed-agent-cli.json"
+
+
+def load_cli_config() -> Dict[str, Any]:
+    """Load CLI configuration from persistent storage"""
+    if CLI_CONFIG_FILE.exists():
+        try:
+            with open(CLI_CONFIG_FILE, "r") as f:
+                config = json.load(f)
+
+            # Auto-recreate tools and agent if llm_config exists
+            if config.get("llm_config") and config.get("llm_backend"):
+                try:
+                    # Recreate LLM
+                    llm_config = config["llm_config"]
+                    llm_backend = config["llm_backend"]
+
+                    if llm_backend == "argo":
+                        llm = ArgoLLM(llm_config)
+                    elif llm_backend == "openai":
+                        llm = OpenAILLM(llm_config)
+                    elif llm_backend == "local":
+                        llm = LocalLLM(llm_config)
+                    else:
+                        return config  # Return config without recreating if backend unknown
+
+                    # Recreate tools
+                    tools = [
+                        FBATool(
+                            {
+                                "name": "run_metabolic_fba",
+                                "description": "Run FBA analysis",
+                            }
+                        ),
+                        ModelAnalysisTool(
+                            {
+                                "name": "analyze_metabolic_model",
+                                "description": "Analyze model structure",
+                            }
+                        ),
+                        PathwayAnalysisTool(
+                            {
+                                "name": "analyze_pathway",
+                                "description": "Analyze metabolic pathways",
+                            }
+                        ),
+                    ]
+
+                    # Recreate agent
+                    agent_config = {
+                        "name": "modelseed_langgraph_agent",
+                        "description": "Enhanced ModelSEED agent with LangGraph workflows",
+                    }
+                    agent = LangGraphMetabolicAgent(llm, tools, agent_config)
+
+                    # Update runtime objects
+                    config["tools"] = tools
+                    config["agent"] = agent
+
+                except Exception as e:
+                    # If recreation fails, just log warning and continue with basic config
+                    print(f"Warning: Could not recreate agent from saved config: {e}")
+
+            return config
+        except Exception:
+            pass
+
+    # Return default config if file doesn't exist or is corrupted
+    return {
+        "llm_backend": None,
+        "llm_config": None,
+        "tools": None,
+        "agent": None,
+        "last_run_id": None,
+        "workspace": str(Path.cwd()),
+    }
+
+
+def save_cli_config(config: Dict[str, Any]) -> None:
+    """Save CLI configuration to persistent storage"""
+    try:
+        # Don't save runtime objects like agents
+        saveable_config = {
+            "llm_backend": config.get("llm_backend"),
+            "llm_config": config.get("llm_config"),
+            "tools": None,  # Tools are recreated from config
+            "agent": None,  # Agents are runtime objects
+            "last_run_id": config.get("last_run_id"),
+            "workspace": config.get("workspace", str(Path.cwd())),
+        }
+
+        with open(CLI_CONFIG_FILE, "w") as f:
+            json.dump(saveable_config, f, indent=2)
+    except Exception as e:
+        console.print(f"[yellow]Warning: Could not save configuration: {e}[/yellow]")
+
+
+# Global state for configuration (now persistent)
+config_state = load_cli_config()
 
 # ASCII Art Banner
 BANNER = """
@@ -121,7 +212,8 @@ def create_config_panel(config: Dict[str, Any]) -> Panel:
         ),
     )
 
-    model_name = config.get("llm_config", {}).get("model_name", "Not set")
+    model_name = config.get("llm_config") or {}
+    model_name = model_name.get("model_name", "Not set")
     config_table.add_row(
         "🧠 Model",
         (
@@ -131,7 +223,7 @@ def create_config_panel(config: Dict[str, Any]) -> Panel:
         ),
     )
 
-    tools_count = len(config.get("tools", []))
+    tools_count = len(config.get("tools") or [])
     config_table.add_row(
         "🔧 Tools",
         (
@@ -147,7 +239,7 @@ def create_config_panel(config: Dict[str, Any]) -> Panel:
         (
             f"[green]{agent_status}[/green]"
             if agent_status == "Ready"
-            else "[red]{agent_status}[/red]"
+            else f"[red]{agent_status}[/red]"
         ),
     )
 
@@ -233,7 +325,9 @@ def setup(
         "--backend",
         "-b",
         help="LLM backend to use [argo, openai, local]",
-        prompt="Choose LLM backend (argo/openai/local)",
+    ),
+    model_name: str = typer.Option(
+        None, "--model", "-m", help="Model name to use (overrides defaults)"
     ),
     interactive: bool = typer.Option(
         True, "--interactive/--non-interactive", help="Use interactive setup"
@@ -244,9 +338,33 @@ def setup(
 
     Sets up the agent with your preferred LLM backend and initializes
     all necessary tools for metabolic modeling analysis.
+
+    Environment variables for defaults:
+    - DEFAULT_LLM_BACKEND: argo, openai, or local
+    - DEFAULT_MODEL_NAME: model name for the backend
+    - ARGO_USER: username for Argo Gateway
     """
     print_banner()
     console.print("[bold yellow]🔧 Setting up ModelSEEDagent...[/bold yellow]\n")
+
+    # Get defaults from environment or use fallbacks
+    default_backend = os.getenv("DEFAULT_LLM_BACKEND", "argo")
+    default_model = os.getenv("DEFAULT_MODEL_NAME", "gpt4o")  # Changed default to gpt4o
+
+    # Use provided backend or fall back to default/prompt
+    if not llm_backend:
+        if interactive:
+            llm_backend = questionary.select(
+                "Choose LLM backend:",
+                choices=[
+                    questionary.Choice("argo", "🧬 Argo Gateway (Recommended)"),
+                    questionary.Choice("openai", "🤖 OpenAI API"),
+                    questionary.Choice("local", "💻 Local LLM"),
+                ],
+                default=default_backend,
+            ).ask()
+        else:
+            llm_backend = default_backend
 
     # Validate backend choice
     valid_backends = ["argo", "openai", "local"]
@@ -269,41 +387,100 @@ def setup(
             llm_config = {}
 
             if llm_backend == "argo":
-                if interactive:
-                    api_base = questionary.text(
-                        "Argo API Base URL:", default="https://api.argilla.com/"
-                    ).ask()
-                    user = questionary.text("Argo Username:").ask()
-                    model_name = questionary.text(
-                        "Model Name:", default="llama-3.1-70b"
-                    ).ask()
-                else:
-                    api_base = "https://api.argilla.com/"
-                    user = "default_user"
-                    model_name = "llama-3.1-70b"
+                # Argo Gateway configuration with ACTUAL available models
+                argo_models = {
+                    # Dev Environment Models
+                    "gpt4o": "GPT-4o (Latest, Recommended)",
+                    "gpt4olatest": "GPT-4o Latest",
+                    "gpto1": "GPT-o1 (Reasoning)",
+                    "gpto1mini": "GPT-o1 Mini",
+                    "gpto1preview": "GPT-o1 Preview",
+                    "gpto3mini": "GPT-o3 Mini",
+                    # Prod Environment Models
+                    "gpt35": "GPT-3.5",
+                    "gpt35large": "GPT-3.5 Large",
+                    "gpt4": "GPT-4",
+                    "gpt4large": "GPT-4 Large",
+                    "gpt4turbo": "GPT-4 Turbo",
+                }
 
+                if interactive:
+                    user = questionary.text(
+                        "Argo Username:", default=os.getenv("ARGO_USER", os.getlogin())
+                    ).ask()
+
+                    # Use provided model or prompt for selection
+                    if not model_name:
+                        model_name = questionary.select(
+                            "Choose Argo model:",
+                            choices=[
+                                questionary.Choice(k, v) for k, v in argo_models.items()
+                            ],
+                            default=(
+                                default_model
+                                if default_model in argo_models
+                                else "gpt4o"
+                            ),
+                        ).ask()
+
+                    # Show helpful info about o-series models
+                    if model_name.startswith("gpto"):
+                        console.print(
+                            f"[yellow]ℹ️  Note: {model_name} is a reasoning model with special behavior:[/yellow]"
+                        )
+                        console.print(
+                            "   • No temperature parameter (reasoning models use fixed temperature)"
+                        )
+                        console.print(
+                            "   • Uses max_completion_tokens instead of max_tokens"
+                        )
+                        console.print(
+                            "   • May work better without token limits for complex queries"
+                        )
+                else:
+                    user = os.getenv("ARGO_USER", "default_user")
+                    model_name = model_name or default_model
+
+                # Build configuration with proper handling for o-series models
                 llm_config = {
                     "model_name": model_name,
-                    "api_base": api_base,
                     "user": user,
                     "system_content": "You are an expert metabolic modeling assistant.",
-                    "max_tokens": 1000,
-                    "temperature": 0.1,
                 }
+
+                # Handle token limits based on model type
+                if model_name.startswith("gpto"):
+                    # For o-series models, be more conservative with max_completion_tokens
+                    # and allow option to disable it completely
+                    if interactive:
+                        use_token_limit = questionary.confirm(
+                            f"Set token limit for {model_name}? (Some queries work better without limits)",
+                            default=False,
+                        ).ask()
+                        if use_token_limit:
+                            llm_config["max_tokens"] = questionary.text(
+                                "Max completion tokens:", default="1000"
+                            ).ask()
+                    # For non-interactive, don't set token limit for o-series by default
+                else:
+                    # Standard models get normal configuration
+                    llm_config["max_tokens"] = 1000
+                    llm_config["temperature"] = 0.1
 
             elif llm_backend == "openai":
                 if interactive:
                     api_key = questionary.password("OpenAI API Key:").ask()
-                    model_name = questionary.select(
+                    model_choice = questionary.select(
                         "OpenAI Model:",
-                        choices=["gpt-4", "gpt-4-turbo", "gpt-3.5-turbo"],
+                        choices=["gpt-4o", "gpt-4-turbo", "gpt-4", "gpt-3.5-turbo"],
+                        default="gpt-4o",
                     ).ask()
                 else:
                     api_key = os.getenv("OPENAI_API_KEY", "")
-                    model_name = "gpt-4"
+                    model_choice = model_name or "gpt-4o"
 
                 llm_config = {
-                    "model_name": model_name,
+                    "model_name": model_choice,
                     "api_key": api_key,
                     "system_content": "You are an expert metabolic modeling assistant.",
                     "max_tokens": 1000,
@@ -311,17 +488,39 @@ def setup(
                 }
 
             elif llm_backend == "local":
-                if interactive:
-                    model_path = questionary.path("Local model path:").ask()
+                # Map model names to actual paths
+                model_name = model_name or "llama-3.2-3b"  # Default to smaller model
+
+                # Define available local models with their paths
+                local_model_paths = {
+                    "llama-3.1-8b": "/Users/jplfaria/.llama/checkpoints/Llama3.1-8B",
+                    "llama-3.2-3b": "/Users/jplfaria/.llama/checkpoints/Llama3.2-3B",
+                }
+
+                # Check if the provided model is a known name or a direct path
+                if model_name in local_model_paths:
+                    model_path = local_model_paths[model_name]
+                elif model_name and Path(model_name).exists():
+                    # User provided a direct path
+                    model_path = model_name
+                    # Extract a friendly name from the path
+                    model_name = Path(model_name).name
                 else:
-                    model_path = "./models/local_model"
+                    # Default to 3B model if unknown model requested
+                    if model_name not in local_model_paths:
+                        print_warning(
+                            f"Unknown local model '{model_name}', using llama-3.2-3b"
+                        )
+                        model_name = "llama-3.2-3b"
+                    model_path = local_model_paths[model_name]
 
                 llm_config = {
-                    "model_name": "local_model",
+                    "model_name": model_name,
                     "model_path": model_path,
                     "system_content": "You are an expert metabolic modeling assistant.",
                     "max_tokens": 1000,
                     "temperature": 0.1,
+                    "device": "mps",  # Default to MPS for Mac
                 }
 
             # Create LLM instance
@@ -365,6 +564,7 @@ def setup(
             ]
 
             config_state["tools"] = tools
+
             progress.update(task, description="✅ Tools initialized successfully")
 
         except Exception as e:
@@ -398,6 +598,9 @@ def setup(
     console.print(create_config_panel(config_state))
     console.print("\n[bold green]Ready to analyze metabolic models! 🚀[/bold green]")
     console.print("\nTry: [bold cyan]modelseed-agent analyze [model_file][/bold cyan]")
+
+    # Save configuration
+    save_cli_config(config_state)
 
 
 @app.command()
@@ -887,6 +1090,157 @@ def show_run_details(run_dir: Path, open_viz: bool = False):
                     print_info(f"Opened {viz_file.name}")
                 except Exception as e:
                     print_warning(f"Could not open {viz_file.name}: {e}")
+
+
+@app.command()
+def switch(
+    backend: str = typer.Argument(
+        ..., help="Backend to switch to [argo, openai, local]"
+    ),
+    model: str = typer.Option(
+        None, "--model", "-m", help="Model to use with the backend"
+    ),
+):
+    """
+    🔄 Quick switch between LLM backends
+
+    Examples:
+      modelseed-agent switch argo              # Switch to Argo with default gpt4o
+      modelseed-agent switch argo --model gpto1  # Switch to Argo with gpt-o1
+      modelseed-agent switch openai           # Switch to OpenAI with default
+      modelseed-agent switch local            # Switch to local LLM
+    """
+    valid_backends = ["argo", "openai", "local"]
+    if backend not in valid_backends:
+        print_error(
+            f"Invalid backend '{backend}'. Choose from: {', '.join(valid_backends)}"
+        )
+        return
+
+    console.print(f"[bold cyan]🔄 Switching to {backend} backend...[/bold cyan]")
+
+    # Quick configuration based on backend
+    if backend == "argo":
+        default_model = model or os.getenv("DEFAULT_MODEL_NAME", "gpt4o")
+        user = os.getenv("ARGO_USER", os.getlogin())
+
+        llm_config = {
+            "model_name": default_model,
+            "user": user,
+            "system_content": "You are an expert metabolic modeling assistant.",
+        }
+
+        # Handle token configuration for o-series models
+        if not default_model.startswith("gpto"):
+            llm_config["max_tokens"] = 1000
+            llm_config["temperature"] = 0.1
+
+    elif backend == "openai":
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            print_error("OPENAI_API_KEY environment variable not set")
+            print_info("Set it with: export OPENAI_API_KEY='your_key_here'")
+            return
+
+        llm_config = {
+            "model_name": model or "gpt-4o",
+            "api_key": api_key,
+            "system_content": "You are an expert metabolic modeling assistant.",
+            "max_tokens": 1000,
+            "temperature": 0.1,
+        }
+
+    else:  # local
+        # Map model names to actual paths
+        model_name = model or "llama-3.2-3b"  # Default to smaller model
+
+        # Define available local models with their paths
+        local_model_paths = {
+            "llama-3.1-8b": "/Users/jplfaria/.llama/checkpoints/Llama3.1-8B",
+            "llama-3.2-3b": "/Users/jplfaria/.llama/checkpoints/Llama3.2-3B",
+        }
+
+        # Check if the provided model is a known name or a direct path
+        if model_name in local_model_paths:
+            model_path = local_model_paths[model_name]
+        elif model_name and Path(model_name).exists():
+            # User provided a direct path
+            model_path = model_name
+            # Extract a friendly name from the path
+            model_name = Path(model_name).name
+        else:
+            # Default to 3B model if unknown model requested
+            if model_name not in local_model_paths:
+                print_warning(f"Unknown local model '{model_name}', using llama-3.2-3b")
+                model_name = "llama-3.2-3b"
+            model_path = local_model_paths[model_name]
+
+        llm_config = {
+            "model_name": model_name,
+            "model_path": model_path,
+            "system_content": "You are an expert metabolic modeling assistant.",
+            "max_tokens": 1000,
+            "temperature": 0.1,
+            "device": "mps",  # Default to MPS for Mac
+        }
+
+    try:
+        # Create LLM instance
+        if backend == "argo":
+            llm = ArgoLLM(llm_config)
+        elif backend == "openai":
+            llm = OpenAILLM(llm_config)
+        else:
+            llm = LocalLLM(llm_config)
+
+        # Initialize tools (reuse existing if available)
+        tools = config_state.get("tools") or [
+            FBATool({"name": "run_metabolic_fba", "description": "Run FBA analysis"}),
+            ModelAnalysisTool(
+                {
+                    "name": "analyze_metabolic_model",
+                    "description": "Analyze model structure",
+                }
+            ),
+            PathwayAnalysisTool(
+                {"name": "analyze_pathway", "description": "Analyze metabolic pathways"}
+            ),
+        ]
+
+        # Create agent
+        agent_config = {
+            "name": "modelseed_langgraph_agent",
+            "description": "Enhanced ModelSEED agent with LangGraph workflows",
+        }
+        agent = LangGraphMetabolicAgent(llm, tools, agent_config)
+
+        # Update configuration
+        config_state["llm_backend"] = backend
+        config_state["llm_config"] = llm_config
+        config_state["tools"] = tools
+        config_state["agent"] = agent
+
+        # Save configuration
+        save_cli_config(config_state)
+
+        print_success(f"✅ Switched to {backend} backend!")
+
+        # Show model info
+        model_name = llm_config["model_name"]
+        if model_name.startswith("gpto"):
+            console.print(f"[yellow]Using reasoning model: {model_name}[/yellow]")
+            console.print("• Optimized for complex reasoning tasks")
+            console.print("• No temperature control (uses fixed reasoning temperature)")
+        else:
+            console.print(f"[green]Using model: {model_name}[/green]")
+
+        console.print(
+            f"\n[dim]Run 'modelseed-agent status' to see full configuration[/dim]"
+        )
+
+    except Exception as e:
+        print_error(f"Failed to switch to {backend}: {e}")
+        return
 
 
 if __name__ == "__main__":

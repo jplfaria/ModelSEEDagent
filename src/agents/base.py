@@ -6,8 +6,8 @@ from langchain_core.language_models.base import BaseLanguageModel
 from langchain_core.prompts import PromptTemplate
 from pydantic import BaseModel, Field
 
-from ..llm.base import BaseLLM
-from ..tools.base import BaseTool
+from src.llm.base import BaseLLM
+from src.tools.base import BaseTool
 
 
 class AgentResult(BaseModel):

@@ -89,7 +89,7 @@ def test_langgraph_agent():
         print("✅ LLM created successfully")
     except Exception as e:
         print(f"❌ LLM creation failed: {e}")
-        return False
+        assert False, f"LLM creation failed: {e}"
 
     # Create mock tools
     tools = [
@@ -113,7 +113,7 @@ def test_langgraph_agent():
 
     except Exception as e:
         print(f"❌ Agent creation failed: {e}")
-        return False
+        assert False, f"Agent creation failed: {e}"
 
     # Test simple query
     try:
@@ -135,14 +135,16 @@ def test_langgraph_agent():
         if result.data:
             print(f"   Data keys: {list(result.data.keys())}")
 
-        return True
+        # Use assertion instead of return
+        assert result.success, f"Agent execution failed: {result.message}"
+        assert len(result.metadata.get("tools_used", [])) > 0, "No tools were used"
 
     except Exception as e:
         print(f"❌ Query execution failed: {e}")
         import traceback
 
         traceback.print_exc()
-        return False
+        assert False, f"Query execution failed: {e}"
 
 
 if __name__ == "__main__":

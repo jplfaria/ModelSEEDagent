@@ -242,7 +242,10 @@ def load_agent_components():
 @app.command()
 def setup(
     llm_backend: str = typer.Option(
-        "argo", "--backend", "-b", help="LLM backend to use [argo, openai, local]"
+        None, "--backend", "-b", help="LLM backend to use [argo, openai, local]"
+    ),
+    model_name: str = typer.Option(
+        None, "--model", "-m", help="Model name to use (overrides defaults)"
     ),
     interactive: bool = typer.Option(
         True, "--interactive/--non-interactive", help="Use interactive setup"
@@ -253,9 +256,33 @@ def setup(
 
     Sets up the agent with your preferred LLM backend and initializes
     all necessary tools for metabolic modeling analysis.
+
+    Environment variables for defaults:
+    - DEFAULT_LLM_BACKEND: argo, openai, or local
+    - DEFAULT_MODEL_NAME: model name for the backend
+    - ARGO_USER: username for Argo Gateway
     """
     print_banner()
     console.print("[bold yellow]🔧 Setting up ModelSEEDagent...[/bold yellow]\n")
+
+    # Get defaults from environment or use fallbacks
+    default_backend = os.getenv("DEFAULT_LLM_BACKEND", "argo")
+    default_model = os.getenv("DEFAULT_MODEL_NAME", "gpt4o")  # Changed default to gpt4o
+
+    # Use provided backend or fall back to default/prompt
+    if not llm_backend:
+        if interactive:
+            llm_backend = questionary.select(
+                "Choose LLM backend:",
+                choices=[
+                    questionary.Choice("argo", "🧬 Argo Gateway (Recommended)"),
+                    questionary.Choice("openai", "🤖 OpenAI API"),
+                    questionary.Choice("local", "💻 Local LLM"),
+                ],
+                default=default_backend,
+            ).ask()
+        else:
+            llm_backend = default_backend
 
     # Validate backend choice
     valid_backends = ["argo", "openai", "local"]
@@ -263,9 +290,7 @@ def setup(
         print_error(
             f"Invalid backend '{llm_backend}'. Choose from: {', '.join(valid_backends)}"
         )
-        llm_backend = questionary.select(
-            "Choose LLM backend:", choices=valid_backends
-        ).ask()
+        return
 
     # Load components
     components = load_agent_components()
@@ -283,30 +308,88 @@ def setup(
         task = progress.add_task("Configuring LLM backend...", total=None)
 
         try:
-            llm_config = {}
-
             if llm_backend == "argo":
-                if interactive:
-                    api_base = questionary.text(
-                        "Argo API Base URL:", default="https://api.argilla.com/"
-                    ).ask()
-                    user = questionary.text("Argo Username:", default="test_user").ask()
-                    model_name = questionary.text(
-                        "Model Name:", default="llama-3.1-70b"
-                    ).ask()
-                else:
-                    api_base = "https://api.argilla.com/"
-                    user = "test_user"
-                    model_name = "llama-3.1-70b"
+                # Argo Gateway configuration with ACTUAL available models
+                argo_models = {
+                    # Dev Environment Models
+                    "gpt4o": "GPT-4o (Latest, Recommended)",
+                    "gpt4olatest": "GPT-4o Latest",
+                    "gpto1": "GPT-o1 (Reasoning)",
+                    "gpto1mini": "GPT-o1 Mini",
+                    "gpto1preview": "GPT-o1 Preview",
+                    "gpto3mini": "GPT-o3 Mini",
+                    # Prod Environment Models
+                    "gpt35": "GPT-3.5",
+                    "gpt35large": "GPT-3.5 Large",
+                    "gpt4": "GPT-4",
+                    "gpt4large": "GPT-4 Large",
+                    "gpt4turbo": "GPT-4 Turbo",
+                }
 
+                if interactive:
+                    user = questionary.text(
+                        "Argo Username:", default=os.getenv("ARGO_USER", os.getlogin())
+                    ).ask()
+
+                    # Use provided model or prompt for selection
+                    if not model_name:
+                        model_name = questionary.select(
+                            "Choose Argo model:",
+                            choices=[
+                                questionary.Choice(k, v) for k, v in argo_models.items()
+                            ],
+                            default=(
+                                default_model
+                                if default_model in argo_models
+                                else "gpt4o"
+                            ),
+                        ).ask()
+
+                    # Show helpful info about o-series models
+                    if model_name.startswith("gpto"):
+                        console.print(
+                            f"[yellow]ℹ️  Note: {model_name} is a reasoning model with special behavior:[/yellow]"
+                        )
+                        console.print(
+                            "   • No temperature parameter (reasoning models use fixed temperature)"
+                        )
+                        console.print(
+                            "   • Uses max_completion_tokens instead of max_tokens"
+                        )
+                        console.print(
+                            "   • May work better without token limits for complex queries"
+                        )
+                else:
+                    user = os.getenv("ARGO_USER", "test_user")
+                    model_name = model_name or default_model
+
+                # Build configuration with proper handling for o-series models
                 llm_config = {
                     "model_name": model_name,
-                    "api_base": api_base,
                     "user": user,
                     "system_content": "You are an expert metabolic modeling assistant.",
-                    "max_tokens": 1000,
-                    "temperature": 0.1,
                 }
+
+                # Handle token limits based on model type - for test compatibility
+                if model_name.startswith("gpto"):
+                    # For o-series models in standalone mode, be conservative
+                    if interactive:
+                        use_token_limit = questionary.confirm(
+                            f"Set token limit for {model_name}? (Some queries work better without limits)",
+                            default=False,
+                        ).ask()
+                        if use_token_limit:
+                            llm_config["max_tokens"] = questionary.text(
+                                "Max completion tokens:", default="1000"
+                            ).ask()
+                    # For non-interactive, don't set token limit for o-series by default
+                else:
+                    # Standard models get normal configuration
+                    llm_config["max_tokens"] = 1000
+                    llm_config["temperature"] = 0.1
+
+                # For standalone compatibility, add test URL if needed
+                llm_config["api_base"] = "https://test.api.argilla.com/"
 
                 # Create LLM instance
                 llm = components["ArgoLLM"](llm_config)

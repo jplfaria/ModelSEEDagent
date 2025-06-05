@@ -1,0 +1,441 @@
+{
+  "id": "eb9a51e8",
+  "name": "Analysis_20250604_1938",
+  "created_at": "2025-06-04T19:39:02.515886",
+  "last_active": "2025-06-04T19:43:50.997351",
+  "status": "active",
+  "description": "Interactive metabolic modeling analysis",
+  "model_files": [],
+  "interactions": [
+    {
+      "id": "conv_0",
+      "timestamp": "2025-06-04T19:41:26.748071",
+      "type": "query",
+      "input_data": "what is the growth rate of our core ecoli model>?",
+      "output_data": "Let me ask a few questions to make sure I understand correctly.\n\n\u2753 **Questions to help me assist you better:**\n  1. What growth medium or carbon source should I use?\n",
+      "metadata": {
+        "query_analysis": {
+          "original_query": "what is the growth rate of our core ecoli model>?",
+          "query_type": "growth_analysis",
+          "complexity": "moderate",
+          "intent": "explore",
+          "confidence": 0.5,
+          "model_references": [
+            "ecoli",
+            "core"
+          ],
+          "pathway_references": [],
+          "metabolite_references": [],
+          "gene_references": [],
+          "numeric_values": [],
+          "suggested_tools": [
+            "growth_analysis",
+            "model_comparison",
+            "run_metabolic_fba"
+          ],
+          "required_inputs": [
+            "model_file",
+            "media_conditions"
+          ],
+          "expected_outputs": [
+            "growth_rate",
+            "biomass_composition"
+          ],
+          "context_dependencies": [],
+          "clarification_questions": [
+            "What growth medium or carbon source should I use?"
+          ],
+          "alternative_phrasings": [],
+          "follow_up_suggestions": [
+            "Would you like to perform flux variability analysis?",
+            "Should I analyze gene essentiality?",
+            "Would you like to test different media conditions?"
+          ],
+          "processing_time": 0.003951,
+          "language_confidence": 0.8
+        },
+        "response_type": "clarification",
+        "conversation_state": "clarifying",
+        "suggested_actions": [
+          "What growth medium or carbon source should I use?"
+        ]
+      },
+      "execution_time": 0.004062175750732422,
+      "success": true,
+      "error_message": null
+    },
+    {
+      "id": "conv_1",
+      "timestamp": "2025-06-04T19:41:52.854699",
+      "type": "query",
+      "input_data": "what growth medium should i suse?",
+      "output_data": "To provide the best analysis, could you clarify a few things?\n\n\u2753 **Questions to help me assist you better:**\n  1. What growth medium or carbon source should I use?\n",
+      "metadata": {
+        "query_analysis": {
+          "original_query": "what growth medium should i suse?",
+          "query_type": "growth_analysis",
+          "complexity": "simple",
+          "intent": "explore",
+          "confidence": 1.0,
+          "model_references": [],
+          "pathway_references": [],
+          "metabolite_references": [],
+          "gene_references": [],
+          "numeric_values": [],
+          "suggested_tools": [
+            "growth_analysis",
+            "model_comparison",
+            "run_metabolic_fba"
+          ],
+          "required_inputs": [
+            "model_file",
+            "media_conditions"
+          ],
+          "expected_outputs": [
+            "growth_rate",
+            "biomass_composition"
+          ],
+          "context_dependencies": [],
+          "clarification_questions": [
+            "What growth medium or carbon source should I use?"
+          ],
+          "alternative_phrasings": [],
+          "follow_up_suggestions": [
+            "Would you like to perform flux variability analysis?",
+            "Should I analyze gene essentiality?",
+            "Would you like to test different media conditions?"
+          ],
+          "processing_time": 0.000264,
+          "language_confidence": 0.8
+        },
+        "response_type": "clarification",
+        "conversation_state": "clarifying",
+        "suggested_actions": [
+          "What growth medium or carbon source should I use?"
+        ]
+      },
+      "execution_time": 0.000370025634765625,
+      "success": true,
+      "error_message": null
+    },
+    {
+      "id": "conv_2",
+      "timestamp": "2025-06-04T19:42:06.804357",
+      "type": "query",
+      "input_data": "1. What growth medium or carbon source should I use?",
+      "output_data": "I need a bit more information to help you better.\n\n\u2753 **Questions to help me assist you better:**\n  1. What growth medium or carbon source should I use?\n",
+      "metadata": {
+        "query_analysis": {
+          "original_query": "1. What growth medium or carbon source should I use?",
+          "query_type": "growth_analysis",
+          "complexity": "simple",
+          "intent": "explore",
+          "confidence": 1.0,
+          "model_references": [],
+          "pathway_references": [],
+          "metabolite_references": [],
+          "gene_references": [],
+          "numeric_values": [
+            1.0
+          ],
+          "suggested_tools": [
+            "growth_analysis",
+            "model_comparison",
+            "run_metabolic_fba"
+          ],
+          "required_inputs": [
+            "model_file",
+            "media_conditions",
+            "parameter_values"
+          ],
+          "expected_outputs": [
+            "growth_rate",
+            "biomass_composition"
+          ],
+          "context_dependencies": [],
+          "clarification_questions": [
+            "What growth medium or carbon source should I use?"
+          ],
+          "alternative_phrasings": [],
+          "follow_up_suggestions": [
+            "Would you like to perform flux variability analysis?",
+            "Should I analyze gene essentiality?",
+            "Would you like to test different media conditions?"
+          ],
+          "processing_time": 0.000192,
+          "language_confidence": 0.8
+        },
+        "response_type": "clarification",
+        "conversation_state": "clarifying",
+        "suggested_actions": [
+          "What growth medium or carbon source should I use?"
+        ]
+      },
+      "execution_time": 0.0002579689025878906,
+      "success": true,
+      "error_message": null
+    },
+    {
+      "id": "conv_3",
+      "timestamp": "2025-06-04T19:42:35.397480",
+      "type": "query",
+      "input_data": "python -m src.cli.main interactive",
+      "output_data": "Got it! You're interested in provide information about your question. Processing...\n\n\ud83d\udd2c **Analysis Plan:**\n  \u2022 Using tools: analyze_metabolic_model\n  \u2022 Complexity: Simple (estimated a few seconds)\n  \u2022 Expected results: analysis_report\n\n\u2705 **Analysis Complete!**\n\n\ud83d\udccb **Analysis completed successfully!**\nResults are ready for your review.",
+      "metadata": {
+        "query_analysis": {
+          "original_query": "python -m src.cli.main interactive",
+          "query_type": "general_question",
+          "complexity": "simple",
+          "intent": "explore",
+          "confidence": 0.5,
+          "model_references": [],
+          "pathway_references": [],
+          "metabolite_references": [],
+          "gene_references": [],
+          "numeric_values": [],
+          "suggested_tools": [
+            "analyze_metabolic_model"
+          ],
+          "required_inputs": [
+            "model_file"
+          ],
+          "expected_outputs": [
+            "analysis_report"
+          ],
+          "context_dependencies": [],
+          "clarification_questions": [],
+          "alternative_phrasings": [],
+          "follow_up_suggestions": [],
+          "processing_time": 0.000148,
+          "language_confidence": 0.8
+        },
+        "response_type": "analysis_result",
+        "conversation_state": "suggesting_followup",
+        "suggested_actions": []
+      },
+      "execution_time": 0.00021505355834960938,
+      "success": true,
+      "error_message": null
+    },
+    {
+      "id": "conv_4",
+      "timestamp": "2025-06-04T19:43:15.637479",
+      "type": "query",
+      "input_data": "what's the growth rate of e. coli using glucose?",
+      "output_data": "Perfect! I'll help you calculate growth rates and biomass production. One moment...\n\n\ud83d\udd2c **Analysis Plan:**\n  \u2022 Using tools: growth_analysis, model_comparison, run_metabolic_fba\n  \u2022 Complexity: Moderate (estimated 10-30 seconds)\n  \u2022 Expected results: growth_rate, biomass_composition\n\n\u2705 **Analysis Complete!**\n\n\ud83d\udcc8 **Growth Analysis:**\n  \u2022 Predicted growth rate: 0.873 h\u207b\u00b9\n  \u2022 Biomass yield: 0.394 g/g glucose\n  \u2022 ATP yield: 32.1 mol/mol glucose\n\n\ud83d\udca1 **What's next?**\n  1. Would you like to perform flux variability analysis?\n  2. Should I analyze gene essentiality?\n  3. Would you like to test different media conditions?\n",
+      "metadata": {
+        "query_analysis": {
+          "original_query": "what's the growth rate of e. coli using glucose?",
+          "query_type": "growth_analysis",
+          "complexity": "moderate",
+          "intent": "explore",
+          "confidence": 0.6666666666666666,
+          "model_references": [],
+          "pathway_references": [],
+          "metabolite_references": [
+            "glucose"
+          ],
+          "gene_references": [],
+          "numeric_values": [],
+          "suggested_tools": [
+            "growth_analysis",
+            "model_comparison",
+            "run_metabolic_fba"
+          ],
+          "required_inputs": [
+            "model_file",
+            "media_conditions",
+            "metabolite_list"
+          ],
+          "expected_outputs": [
+            "growth_rate",
+            "biomass_composition"
+          ],
+          "context_dependencies": [],
+          "clarification_questions": [],
+          "alternative_phrasings": [],
+          "follow_up_suggestions": [
+            "Would you like to perform flux variability analysis?",
+            "Should I analyze gene essentiality?",
+            "Would you like to test different media conditions?"
+          ],
+          "processing_time": 0.000331,
+          "language_confidence": 0.8
+        },
+        "response_type": "analysis_result",
+        "conversation_state": "suggesting_followup",
+        "suggested_actions": [
+          "Would you like to perform flux variability analysis?",
+          "Should I analyze gene essentiality?",
+          "Would you like to test different media conditions?"
+        ]
+      },
+      "execution_time": 0.0004830360412597656,
+      "success": true,
+      "error_message": null
+    },
+    {
+      "id": "conv_5",
+      "timestamp": "2025-06-04T19:43:35.005978",
+      "type": "query",
+      "input_data": "\u2502   1. Would you like to perform flux variability analysis?                                                \u2502",
+      "output_data": "I understand you want to perform flux balance analysis and optimization. Let me analyze that...\n\n\ud83d\udd2c **Analysis Plan:**\n  \u2022 Using tools: flux_variability_analysis, run_metabolic_fba\n  \u2022 Complexity: Moderate (estimated 10-30 seconds)\n  \u2022 Expected results: flux_distribution, optimal_value\n\n\u2705 **Analysis Complete!**\n\n\u26a1 **Flux Analysis:**\n  \u2022 Optimal objective value: 0.873\n  \u2022 45 active reactions\n  \u2022 Flux variability: 23% average range",
+      "metadata": {
+        "query_analysis": {
+          "original_query": "\u2502   1. Would you like to perform flux variability analysis?                                                \u2502",
+          "query_type": "flux_analysis",
+          "complexity": "moderate",
+          "intent": "explore",
+          "confidence": 1.0,
+          "model_references": [],
+          "pathway_references": [],
+          "metabolite_references": [],
+          "gene_references": [],
+          "numeric_values": [
+            1.0
+          ],
+          "suggested_tools": [
+            "flux_variability_analysis",
+            "run_metabolic_fba"
+          ],
+          "required_inputs": [
+            "model_file",
+            "objective_function",
+            "parameter_values"
+          ],
+          "expected_outputs": [
+            "flux_distribution",
+            "optimal_value"
+          ],
+          "context_dependencies": [],
+          "clarification_questions": [],
+          "alternative_phrasings": [],
+          "follow_up_suggestions": [],
+          "processing_time": 0.000279,
+          "language_confidence": 0.8
+        },
+        "response_type": "analysis_result",
+        "conversation_state": "suggesting_followup",
+        "suggested_actions": []
+      },
+      "execution_time": 0.0003859996795654297,
+      "success": true,
+      "error_message": null
+    },
+    {
+      "id": "conv_6",
+      "timestamp": "2025-06-04T19:43:50.997342",
+      "type": "query",
+      "input_data": "\u2502   3. Would you like to test different media conditions?                                                  \u2502",
+      "output_data": "Let me ask a few questions to make sure I understand correctly.\n\n\u2753 **Questions to help me assist you better:**\n  1. Which models or conditions would you like to compare?\n",
+      "metadata": {
+        "query_analysis": {
+          "original_query": "\u2502   3. Would you like to test different media conditions?                                                  \u2502",
+          "query_type": "comparison",
+          "complexity": "complex",
+          "intent": "validate",
+          "confidence": 1.0,
+          "model_references": [],
+          "pathway_references": [],
+          "metabolite_references": [],
+          "gene_references": [],
+          "numeric_values": [
+            3.0
+          ],
+          "suggested_tools": [
+            "comparative_analysis",
+            "compare_models"
+          ],
+          "required_inputs": [
+            "model_files",
+            "comparison_criteria",
+            "parameter_values"
+          ],
+          "expected_outputs": [
+            "comparison_table",
+            "difference_analysis"
+          ],
+          "context_dependencies": [
+            "previous_model_analysis"
+          ],
+          "clarification_questions": [
+            "Which models or conditions would you like to compare?"
+          ],
+          "alternative_phrasings": [],
+          "follow_up_suggestions": [],
+          "processing_time": 0.000262,
+          "language_confidence": 0.8
+        },
+        "response_type": "clarification",
+        "conversation_state": "clarifying",
+        "suggested_actions": [
+          "Which models or conditions would you like to compare?"
+        ]
+      },
+      "execution_time": 0.00035262107849121094,
+      "success": true,
+      "error_message": null
+    }
+  ],
+  "context": {
+    "last_interaction": {
+      "id": "conv_6",
+      "timestamp": "2025-06-04T19:43:50.997342",
+      "type": "query",
+      "input_data": "\u2502   3. Would you like to test different media conditions?                                                  \u2502",
+      "output_data": "Let me ask a few questions to make sure I understand correctly.\n\n\u2753 **Questions to help me assist you better:**\n  1. Which models or conditions would you like to compare?\n",
+      "metadata": {
+        "query_analysis": {
+          "original_query": "\u2502   3. Would you like to test different media conditions?                                                  \u2502",
+          "query_type": "comparison",
+          "complexity": "complex",
+          "intent": "validate",
+          "confidence": 1.0,
+          "model_references": [],
+          "pathway_references": [],
+          "metabolite_references": [],
+          "gene_references": [],
+          "numeric_values": [
+            3.0
+          ],
+          "suggested_tools": [
+            "comparative_analysis",
+            "compare_models"
+          ],
+          "required_inputs": [
+            "model_files",
+            "comparison_criteria",
+            "parameter_values"
+          ],
+          "expected_outputs": [
+            "comparison_table",
+            "difference_analysis"
+          ],
+          "context_dependencies": [
+            "previous_model_analysis"
+          ],
+          "clarification_questions": [
+            "Which models or conditions would you like to compare?"
+          ],
+          "alternative_phrasings": [],
+          "follow_up_suggestions": [],
+          "processing_time": 0.000262,
+          "language_confidence": 0.8
+        },
+        "response_type": "clarification",
+        "conversation_state": "clarifying",
+        "suggested_actions": [
+          "Which models or conditions would you like to compare?"
+        ]
+      },
+      "execution_time": 0.00035262107849121094,
+      "success": true,
+      "error_message": null
+    },
+    "last_query": "\u2502   3. Would you like to test different media conditions?                                                  \u2502"
+  },
+  "metadata": {},
+  "total_queries": 7,
+  "total_execution_time": 0.006126880645751953,
+  "success_rate": 1.0
+}
