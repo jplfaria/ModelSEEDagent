@@ -50,7 +50,12 @@ from src.tools.cobra.flux_sampling import FluxSamplingTool
 from src.tools.cobra.flux_variability import FluxVariabilityTool
 from src.tools.cobra.gene_deletion import GeneDeletionTool
 from src.tools.cobra.production_envelope import ProductionEnvelopeTool
-from src.tools.modelseed import GapFillTool, ModelBuildTool, RastAnnotationTool
+from src.tools.modelseed import (
+    GapFillTool,
+    ModelBuildTool,
+    ModelCompatibilityTool,
+    RastAnnotationTool,
+)
 
 # Initialize Rich console for beautiful output
 console = Console()
@@ -160,6 +165,12 @@ def load_cli_config() -> Dict[str, Any]:
                             {
                                 "name": "gapfill_model",
                                 "description": "Gapfill metabolic model",
+                            }
+                        ),
+                        ModelCompatibilityTool(
+                            {
+                                "name": "test_modelseed_cobra_compatibility",
+                                "description": "Test ModelSEED-COBRApy compatibility",
                             }
                         ),
                     ]
@@ -665,6 +676,12 @@ def setup(
                 ),
                 GapFillTool(
                     {"name": "gapfill_model", "description": "Gapfill metabolic model"}
+                ),
+                ModelCompatibilityTool(
+                    {
+                        "name": "test_modelseed_cobra_compatibility",
+                        "description": "Test ModelSEED-COBRApy compatibility",
+                    }
                 ),
             ]
 
