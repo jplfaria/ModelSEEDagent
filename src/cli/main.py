@@ -56,6 +56,7 @@ from src.tools.modelseed import (
     ModelCompatibilityTool,
     RastAnnotationTool,
 )
+from src.tools.biochem.resolver import BiochemEntityResolverTool, BiochemSearchTool
 
 # Initialize Rich console for beautiful output
 console = Console()
@@ -173,6 +174,9 @@ def load_cli_config() -> Dict[str, Any]:
                                 "description": "Test ModelSEED-COBRApy compatibility",
                             }
                         ),
+                        # Biochemistry resolution tools
+                        BiochemEntityResolverTool(),
+                        BiochemSearchTool(),
                     ]
 
                     # Recreate agent
@@ -683,6 +687,9 @@ def setup(
                         "description": "Test ModelSEED-COBRApy compatibility",
                     }
                 ),
+                # Biochemistry resolution tools
+                BiochemEntityResolverTool(),
+                BiochemSearchTool(),
             ]
 
             config_state["tools"] = tools
