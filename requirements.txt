@@ -3,7 +3,8 @@ black>=22.0.0
 click>=8.0.0  # CLI utilities (typer dependency)
 
 # Metabolic modeling
-cobra>=0.26.0
+cobra>=0.29.0
+modelseedpy @ git+https://github.com/ModelSEED/ModelSEEDpy.git@dev
 diskcache>=5.6.1
 escher>=1.7.0
 flake8>=5.0.0
