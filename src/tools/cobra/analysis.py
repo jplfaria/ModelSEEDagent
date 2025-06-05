@@ -54,7 +54,7 @@ class ModelAnalysisTool(BaseTool):
     def analysis_config(self) -> ModelAnalysisConfig:
         return self._analysis_config
 
-    def _run(self, model_path: str) -> ToolResult:
+    def _run_tool(self, model_path: str) -> ToolResult:
         try:
             # Load model
             model = self._utils.load_model(model_path)
@@ -282,7 +282,7 @@ class PathwayAnalysisTool(BaseTool):
         super().__init__(config)
         self._utils = ModelUtils()
 
-    def _run(self, input_data: Dict[str, Any]) -> ToolResult:
+    def _run_tool(self, input_data: Dict[str, Any]) -> ToolResult:
         try:
             model_path = input_data.get("model_path")
             pathway = input_data.get("pathway")

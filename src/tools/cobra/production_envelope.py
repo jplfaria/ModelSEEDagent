@@ -48,7 +48,7 @@ class ProductionEnvelopeTool(BaseTool):
         """Get the production envelope configuration"""
         return self._envelope_config
 
-    def _run(self, input_data: Any) -> ToolResult:
+    def _run_tool(self, input_data: Any) -> ToolResult:
         try:
             # Parse input
             if isinstance(input_data, dict):

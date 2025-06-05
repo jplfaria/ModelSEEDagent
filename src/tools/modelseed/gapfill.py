@@ -32,7 +32,7 @@ class GapFillTool(BaseTool):
         # Use private attribute to avoid Pydantic field conflicts
         self._gapfill_config = GapFillConfig(**config.get("gapfill_config", {}))
 
-    def _run(self, input_data: Dict[str, Any]) -> ToolResult:
+    def _run_tool(self, input_data: Dict[str, Any]) -> ToolResult:
         """
         Perform gap filling on a metabolic model.
 
@@ -62,36 +62,47 @@ class GapFillTool(BaseTool):
                 raise ValueError("Either model_path or model_object must be provided")
 
             # Get media condition
-            media_condition = input_data.get("media_condition", self._gapfill_config.media_condition)
-            
+            media_condition = input_data.get(
+                "media_condition", self._gapfill_config.media_condition
+            )
+
             # Initialize MSGapfill
             gapfiller = modelseedpy.MSGapfill(
                 model,
                 media=media_condition,
-                blacklisted_reactions=input_data.get("blacklist_reactions", self._gapfill_config.blacklist_reactions)
+                blacklisted_reactions=input_data.get(
+                    "blacklist_reactions", self._gapfill_config.blacklist_reactions
+                ),
             )
-            
+
             # Configure allowed reactions if specified
-            if input_data.get("allow_reactions") or self._gapfill_config.allow_reactions:
-                allowed = input_data.get("allow_reactions", self._gapfill_config.allow_reactions)
+            if (
+                input_data.get("allow_reactions")
+                or self._gapfill_config.allow_reactions
+            ):
+                allowed = input_data.get(
+                    "allow_reactions", self._gapfill_config.allow_reactions
+                )
                 # Filter gapfilling database to only allowed reactions
                 gapfiller.prefilter(allowed_reactions=allowed)
 
             # Run gapfilling
-            max_solutions = input_data.get("max_solutions", self._gapfill_config.max_solutions)
+            max_solutions = input_data.get(
+                "max_solutions", self._gapfill_config.max_solutions
+            )
             solutions = gapfiller.run_gapfilling(max_solutions=max_solutions)
-            
+
             if not solutions:
                 return ToolResult(
                     success=False,
                     message="No gapfilling solutions found",
-                    error="Unable to find reactions that enable growth"
+                    error="Unable to find reactions that enable growth",
                 )
 
             # Apply the best solution (first one)
             best_solution = solutions[0]
             gapfiller.integrate_gapfill_solution(best_solution)
-            
+
             # Save gapfilled model if output path provided
             output_path = input_data.get("output_path")
             if output_path:
@@ -102,17 +113,25 @@ class GapFillTool(BaseTool):
             # Gather solution statistics
             solution_stats = {
                 "num_solutions": len(solutions),
-                "added_reactions": [r.id for r in best_solution.get('added_reactions', [])],
-                "removed_reactions": [r.id for r in best_solution.get('removed_reactions', [])],
-                "objective_value": best_solution.get('objective_value', 0),
-                "growth_improvement": best_solution.get('objective_value', 0) > 1e-6
+                "added_reactions": [
+                    r.id for r in best_solution.get("added_reactions", [])
+                ],
+                "removed_reactions": [
+                    r.id for r in best_solution.get("removed_reactions", [])
+                ],
+                "objective_value": best_solution.get("objective_value", 0),
+                "growth_improvement": best_solution.get("objective_value", 0) > 1e-6,
             }
-            
+
             # Test gapfilled model growth
             with model:
                 fba_solution = model.optimize()
-                final_growth = fba_solution.objective_value if fba_solution.status == 'optimal' else 0
-            
+                final_growth = (
+                    fba_solution.objective_value
+                    if fba_solution.status == "optimal"
+                    else 0
+                )
+
             return ToolResult(
                 success=True,
                 message=f"Gapfilling completed: {len(solution_stats['added_reactions'])} reactions added, growth rate: {final_growth:.6f}",
@@ -121,19 +140,19 @@ class GapFillTool(BaseTool):
                     "final_growth_rate": final_growth,
                     "model_path": str(output_file) if output_path else None,
                     "gapfilled_model": model,  # Include gapfilled model object
-                    "solutions": solutions[:3]  # Include top 3 solutions for analysis
+                    "solutions": solutions[:3],  # Include top 3 solutions for analysis
                 },
                 metadata={
                     "tool_type": "gapfilling",
                     "media_condition": media_condition,
-                    "num_added_reactions": len(solution_stats['added_reactions']),
-                    "successful_growth": final_growth > 1e-6
-                }
+                    "num_added_reactions": len(solution_stats["added_reactions"]),
+                    "successful_growth": final_growth > 1e-6,
+                },
             )
 
         except Exception as e:
             return ToolResult(
-                success=False, 
-                message=f"Error during gapfilling: {str(e)}", 
-                error=str(e)
+                success=False,
+                message=f"Error during gapfilling: {str(e)}",
+                error=str(e),
             )

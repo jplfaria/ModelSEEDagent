@@ -22,7 +22,7 @@ class ToolConfig(BaseModel):
 
 
 class BaseTool(LangChainBaseTool):
-    """Base class for all tools"""
+    """Base class for all tools with integrated execution auditing"""
 
     tool_name: ClassVar[str] = ""
     tool_description: ClassVar[str] = ""
@@ -43,6 +43,10 @@ class BaseTool(LangChainBaseTool):
             },
         )
 
+        # Audit configuration
+        self._audit_enabled = config.get("audit_enabled", True)
+        self._audit_watch_dirs = config.get("audit_watch_dirs", ["."])
+
     @property
     def config(self) -> ToolConfig:
         """Get the tool configuration object for test compatibility"""
@@ -52,6 +56,47 @@ class BaseTool(LangChainBaseTool):
     def tool_config(self) -> Dict[str, Any]:
         """Get the raw tool configuration"""
         return self._config
+
+    def _run(self, input_data: Any) -> Any:
+        """
+        Main execution method that handles auditing automatically.
+
+        This method wraps the actual tool execution (_run_tool) with
+        comprehensive auditing capabilities for hallucination detection.
+        """
+        if not self._audit_enabled:
+            # Direct execution without auditing
+            return self._run_tool(input_data)
+
+        # Import here to avoid circular imports
+        from .audit import get_auditor
+
+        auditor = get_auditor()
+
+        # Execute with full auditing
+        result, audit_file = auditor.audit_tool_execution(
+            tool_name=self.name,
+            input_data=input_data,
+            execution_func=self._run_tool,
+            watch_dirs=self._audit_watch_dirs,
+        )
+
+        # Add audit information to result metadata if it's a ToolResult
+        if hasattr(result, "metadata") and isinstance(result.metadata, dict):
+            result.metadata["audit_file"] = str(audit_file)
+            result.metadata["audit_enabled"] = True
+
+        return result
+
+    def _run_tool(self, input_data: Any) -> Any:
+        """
+        Actual tool implementation - override this in subclasses.
+
+        This method should contain the core tool logic without any
+        auditing concerns. The auditing is handled transparently
+        by the _run method above.
+        """
+        raise NotImplementedError("Subclasses must implement _run_tool method")
 
 
 class ToolRegistry:

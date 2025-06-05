@@ -31,14 +31,14 @@ class ModelBuildTool(BaseTool):
         # Use private attribute to avoid Pydantic field conflicts
         self._build_config = ModelBuildConfig(**config.get("build_config", {}))
 
-    def _run(self, input_data: Dict[str, Any]) -> ToolResult:
+    def _run_tool(self, input_data: Dict[str, Any]) -> ToolResult:
         """
         Build a metabolic model using ModelSEED.
 
         Args:
             input_data: Dictionary containing:
                 - annotation_file: Path to genome annotation file (optional)
-                - genome_object: Pre-loaded MSGenome object (optional) 
+                - genome_object: Pre-loaded MSGenome object (optional)
                 - output_path: Where to save the model
                 - model_id: Identifier for the new model
                 - template_model: Template model to use (optional)
@@ -50,10 +50,10 @@ class ModelBuildTool(BaseTool):
             # Validate inputs
             model_id = input_data.get("model_id", "model")
             output_path = input_data.get("output_path", f"{model_id}.xml")
-            
+
             # Initialize MSBuilder
             builder = modelseedpy.MSBuilder()
-            
+
             # Handle genome input - either file path or MSGenome object
             genome = None
             if "genome_object" in input_data:
@@ -61,11 +61,15 @@ class ModelBuildTool(BaseTool):
             elif "annotation_file" in input_data:
                 annotation_file = Path(input_data["annotation_file"])
                 if not annotation_file.exists():
-                    raise FileNotFoundError(f"Annotation file not found: {annotation_file}")
+                    raise FileNotFoundError(
+                        f"Annotation file not found: {annotation_file}"
+                    )
                 # Load genome from annotation file
                 genome = modelseedpy.MSGenome.from_fasta(str(annotation_file))
             else:
-                raise ValueError("Either annotation_file or genome_object must be provided")
+                raise ValueError(
+                    "Either annotation_file or genome_object must be provided"
+                )
 
             # Configure builder
             if "template_model" in input_data and input_data["template_model"]:
@@ -82,12 +86,11 @@ class ModelBuildTool(BaseTool):
 
             # Build the model
             model = builder.build(genome, model_id)
-            
+
             # Optional gapfilling during build
             if self._build_config.gapfill_on_build:
                 gapfiller = modelseedpy.MSGapfill(
-                    model,
-                    media=self._build_config.media_condition
+                    model, media=self._build_config.media_condition
                 )
                 gapfill_solutions = gapfiller.run_gapfilling()
                 if gapfill_solutions:
@@ -101,11 +104,11 @@ class ModelBuildTool(BaseTool):
             # Gather statistics
             stats = {
                 "num_reactions": len(model.reactions),
-                "num_metabolites": len(model.metabolites), 
+                "num_metabolites": len(model.metabolites),
                 "num_genes": len(model.genes),
                 "objective_id": model.objective.direction,
-                "template_used": getattr(builder.template, 'id', 'auto-selected'),
-                "gapfilled": self._build_config.gapfill_on_build
+                "template_used": getattr(builder.template, "id", "auto-selected"),
+                "gapfilled": self._build_config.gapfill_on_build,
             }
 
             return ToolResult(
@@ -115,18 +118,16 @@ class ModelBuildTool(BaseTool):
                     "model_id": model_id,
                     "model_path": str(output_file),
                     "statistics": stats,
-                    "model_object": model  # Include model object for downstream tools
+                    "model_object": model,  # Include model object for downstream tools
                 },
                 metadata={
                     "tool_type": "model_building",
                     "template_used": stats["template_used"],
-                    "gapfilled": stats["gapfilled"]
-                }
+                    "gapfilled": stats["gapfilled"],
+                },
             )
 
         except Exception as e:
             return ToolResult(
-                success=False, 
-                message=f"Error building model: {str(e)}", 
-                error=str(e)
+                success=False, message=f"Error building model: {str(e)}", error=str(e)
             )

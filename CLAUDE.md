@@ -47,6 +47,70 @@
   - Enhanced error handling with environment variable support
   - Fixed hardcoded dependencies for multi-user deployment
 
+### 🚧 Phase 4 IN PROGRESS: Tool Execution Audit System
+- **Goal**: Comprehensive tool execution auditing for hallucination detection
+- **Critical Need**: Verify AI tool outputs against actual results to detect hallucinations
+- **Scope**: Automatic capture of all tool inputs, outputs, console logs, and file artifacts
+
+#### **Implementation Phases:**
+
+**📋 Phase 4.1: Core Audit Infrastructure**
+1. **Tool Execution Interceptor** - Modify BaseTool to automatically capture:
+   - Input data and parameters with full context
+   - Console output (stdout/stderr) during execution
+   - Structured ToolResult data and metadata
+   - Execution timing and performance metrics
+   - File outputs and artifacts created by tools
+
+2. **Standardized Audit Format** - JSON audit record structure:
+   ```json
+   {
+     "audit_id": "uuid",
+     "session_id": "session_uuid",
+     "tool_name": "run_metabolic_fba",
+     "timestamp": "2024-01-15T10:30:00Z",
+     "input": {...},
+     "output": {
+       "structured": {...},  // ToolResult data
+       "console": "...",     // Captured stdout/stderr
+       "files": ["path1", "path2"]  // Created files
+     },
+     "execution": {
+       "duration_seconds": 2.5,
+       "success": true,
+       "error": null
+     }
+   }
+   ```
+
+3. **Audit Storage** - Organized storage in `logs/{session_id}/tool_audits/`
+
+**📊 Phase 4.2: Review & Analysis Tools**
+4. **CLI Review Commands** for audit inspection:
+   ```bash
+   modelseed-agent audit list                    # List recent tool executions
+   modelseed-agent audit show <audit_id>         # Show specific execution details
+   modelseed-agent audit session <session_id>   # Show all tools in a session
+   modelseed-agent audit verify <audit_id>      # Hallucination detection helpers
+   ```
+
+5. **Audit Dashboard** - Interactive review interface with filtering and search
+
+**🔍 Phase 4.3: Hallucination Detection Helpers**
+6. **Verification Tools** for output validation:
+   - Compare tool claims in `message` vs actual `data` content
+   - Validate file outputs exist and match descriptions
+   - Cross-reference console output with structured results
+   - Statistical analysis across multiple tool runs
+   - Pattern detection for common hallucination types
+
+#### **Key Benefits:**
+- **Zero Tool Modification** - Automatic capture via BaseTool interception
+- **Complete Coverage** - All 15 tools audited consistently
+- **Hallucination Detection** - Easy verification of tool claims vs reality
+- **Session Integration** - Works with existing session management
+- **Developer Friendly** - CLI commands for quick audit review
+
 ## Detailed Implementation Roadmap
 
 ### Installation (SIMPLIFIED)

@@ -118,7 +118,7 @@ class FBATool(BaseTool):
         if not model_path.endswith((".xml", ".sbml")):
             raise ValueError("Model file must be in SBML format (.xml or .sbml)")
 
-    def _run(self, input_data: Any) -> ToolResult:
+    def _run_tool(self, input_data: Any) -> ToolResult:
         try:
             # Support both dict and string inputs
             if isinstance(input_data, dict):

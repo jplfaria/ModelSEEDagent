@@ -384,7 +384,7 @@ class BiochemEntityResolverTool(BaseTool):
 
         return [row[0] for row in cursor.fetchall()]
 
-    def _run(self, input_data: Any) -> ToolResult:
+    def _run_tool(self, input_data: Any) -> ToolResult:
         """Execute biochemistry entity resolution"""
         try:
             # Validate input
@@ -607,7 +607,7 @@ class BiochemSearchTool(BaseTool):
             for row in cursor.fetchall()
         ]
 
-    def _run(self, input_data: Any) -> ToolResult:
+    def _run_tool(self, input_data: Any) -> ToolResult:
         """Execute biochemistry database search"""
         try:
             # Validate input

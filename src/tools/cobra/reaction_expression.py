@@ -30,7 +30,7 @@ class ReactionExpressionTool(BaseTool):
         self._config = ReactionExpressionConfig(**config_dict)
         self._utils = ModelUtils()
 
-    def _run(self, input_data: Any, media: dict = None) -> ToolResult:
+    def _run_tool(self, input_data: Any, media: dict = None) -> ToolResult:
         try:
             if isinstance(input_data, dict):
                 model_path = input_data.get("model_path")

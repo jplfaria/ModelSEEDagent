@@ -74,7 +74,7 @@ class ModelCompatibilityTool(BaseTool):
             **config.get("compatibility_config", {})
         )
 
-    def _run(self, input_data: Dict[str, Any]) -> ToolResult:
+    def _run_tool(self, input_data: Dict[str, Any]) -> ToolResult:
         """
         Test ModelSEED-COBRApy compatibility.
 

@@ -30,7 +30,7 @@ class MinimalMediaTool(BaseTool):
         self._config = MinimalMediaConfig(**config_dict)
         self._utils = ModelUtils()
 
-    def _run(self, input_data: Any) -> ToolResult:
+    def _run_tool(self, input_data: Any) -> ToolResult:
         try:
             # Allow input to be a dict with "model_path" and optional "output_dir"
             if isinstance(input_data, dict):

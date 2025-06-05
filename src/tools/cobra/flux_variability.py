@@ -54,7 +54,7 @@ class FluxVariabilityTool(BaseTool):
         """Get the FVA configuration"""
         return self._fva_config
 
-    def _run(self, input_data: Any) -> ToolResult:
+    def _run_tool(self, input_data: Any) -> ToolResult:
         try:
             # Support both dict and string inputs
             if isinstance(input_data, dict):
