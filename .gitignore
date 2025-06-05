@@ -262,3 +262,5 @@ temp_analysis/
 # Virtual environment variations
 venv*/
 .env*
+# Large biochemistry source files - download separately
+data/biochem_sources/*.txt

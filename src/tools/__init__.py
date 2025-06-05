@@ -1,8 +1,8 @@
 from .base import BaseTool, ToolRegistry, ToolResult
+from .biochem.resolver import BiochemEntityResolverTool, BiochemSearchTool
 from .cobra.analysis import ModelAnalysisTool, PathwayAnalysisTool
 from .cobra.fba import FBATool
 from .cobra.utils import ModelUtils
-from .biochem.resolver import BiochemEntityResolverTool, BiochemSearchTool
 
 __all__ = [
     "BaseTool",

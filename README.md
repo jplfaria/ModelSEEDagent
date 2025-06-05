@@ -7,11 +7,13 @@ ModelSEEDagent is a sophisticated AI agent system for metabolic modeling that co
 ## 🚀 Quick Start
 
 ```bash
-# Install and setup
-pip install -e .
-python run_cli.py interactive
+# Install with all dependencies
+pip install .[all]
 
-# Or use CLI
+# Or for development
+pip install -e .[all]
+
+# Setup and use CLI
 modelseed-agent setup --backend argo --model gpto1
 modelseed-agent analyze data/models/e_coli_core.xml
 ```

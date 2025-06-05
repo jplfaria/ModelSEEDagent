@@ -135,7 +135,7 @@ def launch_interactive():
     except ImportError as e:
         print(f"❌ Import error: {e}")
         print("📋 Make sure all dependencies are installed:")
-        print("   pip install -r requirements.txt")
+        print("   pip install .[all]")
         return False
 
     except Exception as e:

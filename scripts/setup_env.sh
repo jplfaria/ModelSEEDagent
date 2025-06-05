@@ -8,7 +8,7 @@ PYTHON_VERSION="3.11"
 PROJECT_ROOT="$(dirname "$(dirname "$(realpath "$0")")")"  # Get project root directory
 VENV_NAME="venv"
 VENV_PATH="$PROJECT_ROOT/$VENV_NAME"
-REQUIREMENTS_FILE="$PROJECT_ROOT/requirements.txt"
+REQUIREMENTS_FILE="$PROJECT_ROOT/pyproject.toml"
 CONFIG_DIR="$PROJECT_ROOT/config"
 DATA_DIR="$PROJECT_ROOT/data/models"
 

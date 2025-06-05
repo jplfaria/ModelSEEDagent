@@ -23,7 +23,7 @@ python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install dependencies
-pip install -r requirements.txt
+pip install .[all]
 
 # Install in development mode
 pip install -e .
@@ -176,8 +176,7 @@ ModelSEEDagent/
 │   │   └── base.py                  # Tool base classes
 │   └── config/                      # Configuration management
 ├── 🛠️ run_cli.py                    # Entry point script ✅ WORKING
-├── ⚙️ pyproject.toml                # Package configuration
-└── 🔧 requirements.txt              # Dependencies
+└── 🔧 pyproject.toml               # Dependencies and build config
 ```
 
 ## 🧬 Features

@@ -43,20 +43,24 @@ from src.agents.tool_integration import EnhancedToolIntegration
 from src.llm.argo import ArgoLLM
 from src.llm.local_llm import LocalLLM
 from src.llm.openai_llm import OpenAILLM
+from src.tools.biochem.resolver import BiochemEntityResolverTool, BiochemSearchTool
 from src.tools.cobra.analysis import ModelAnalysisTool, PathwayAnalysisTool
+from src.tools.cobra.auxotrophy import AuxotrophyTool
 from src.tools.cobra.essentiality import EssentialityAnalysisTool
 from src.tools.cobra.fba import FBATool
 from src.tools.cobra.flux_sampling import FluxSamplingTool
 from src.tools.cobra.flux_variability import FluxVariabilityTool
 from src.tools.cobra.gene_deletion import GeneDeletionTool
+from src.tools.cobra.minimal_media import MinimalMediaTool
+from src.tools.cobra.missing_media import MissingMediaTool
 from src.tools.cobra.production_envelope import ProductionEnvelopeTool
+from src.tools.cobra.reaction_expression import ReactionExpressionTool
 from src.tools.modelseed import (
     GapFillTool,
     ModelBuildTool,
     ModelCompatibilityTool,
     RastAnnotationTool,
 )
-from src.tools.biochem.resolver import BiochemEntityResolverTool, BiochemSearchTool
 
 # Initialize Rich console for beautiful output
 console = Console()
@@ -149,6 +153,30 @@ def load_cli_config() -> Dict[str, Any]:
                                 "description": "Analyze growth vs production trade-offs",
                             }
                         ),
+                        AuxotrophyTool(
+                            {
+                                "name": "identify_auxotrophies",
+                                "description": "Identify potential auxotrophies by testing nutrient removal",
+                            }
+                        ),
+                        MinimalMediaTool(
+                            {
+                                "name": "find_minimal_media",
+                                "description": "Determine minimal media components required for growth",
+                            }
+                        ),
+                        MissingMediaTool(
+                            {
+                                "name": "find_missing_media",
+                                "description": "Find missing media components preventing growth",
+                            }
+                        ),
+                        ReactionExpressionTool(
+                            {
+                                "name": "analyze_reaction_expression",
+                                "description": "Analyze reaction expression levels from omics data",
+                            }
+                        ),
                         # ModelSEED tools
                         RastAnnotationTool(
                             {
@@ -175,8 +203,18 @@ def load_cli_config() -> Dict[str, Any]:
                             }
                         ),
                         # Biochemistry resolution tools
-                        BiochemEntityResolverTool(),
-                        BiochemSearchTool(),
+                        BiochemEntityResolverTool(
+                            {
+                                "name": "resolve_biochem_entity",
+                                "description": "Resolve biochemistry entity IDs to human-readable names",
+                            }
+                        ),
+                        BiochemSearchTool(
+                            {
+                                "name": "search_biochem",
+                                "description": "Search biochemistry database for compounds and reactions",
+                            }
+                        ),
                     ]
 
                     # Recreate agent
@@ -565,8 +603,14 @@ def setup(
 
                 # Define available local models with their paths
                 local_model_paths = {
-                    "llama-3.1-8b": "/Users/jplfaria/.llama/checkpoints/Llama3.1-8B",
-                    "llama-3.2-3b": "/Users/jplfaria/.llama/checkpoints/Llama3.2-3B",
+                    "llama-3.1-8b": os.getenv(
+                        "LLAMA_8B_PATH",
+                        "/Users/jplfaria/.llama/checkpoints/Llama3.1-8B",
+                    ),
+                    "llama-3.2-3b": os.getenv(
+                        "LLAMA_3B_PATH",
+                        "/Users/jplfaria/.llama/checkpoints/Llama3.2-3B",
+                    ),
                 }
 
                 # Check if the provided model is a known name or a direct path
@@ -665,6 +709,30 @@ def setup(
                         "description": "Analyze growth vs production trade-offs",
                     }
                 ),
+                AuxotrophyTool(
+                    {
+                        "name": "identify_auxotrophies",
+                        "description": "Identify potential auxotrophies by testing nutrient removal",
+                    }
+                ),
+                MinimalMediaTool(
+                    {
+                        "name": "find_minimal_media",
+                        "description": "Determine minimal media components required for growth",
+                    }
+                ),
+                MissingMediaTool(
+                    {
+                        "name": "find_missing_media",
+                        "description": "Find missing media components preventing growth",
+                    }
+                ),
+                ReactionExpressionTool(
+                    {
+                        "name": "analyze_reaction_expression",
+                        "description": "Analyze reaction expression levels from omics data",
+                    }
+                ),
                 # ModelSEED tools
                 RastAnnotationTool(
                     {
@@ -688,8 +756,18 @@ def setup(
                     }
                 ),
                 # Biochemistry resolution tools
-                BiochemEntityResolverTool(),
-                BiochemSearchTool(),
+                BiochemEntityResolverTool(
+                    {
+                        "name": "resolve_biochem_entity",
+                        "description": "Resolve biochemistry entity IDs to human-readable names",
+                    }
+                ),
+                BiochemSearchTool(
+                    {
+                        "name": "search_biochem",
+                        "description": "Search biochemistry database for compounds and reactions",
+                    }
+                ),
             ]
 
             config_state["tools"] = tools
@@ -1011,7 +1089,7 @@ def interactive():
     except ImportError as e:
         console.print(f"[red]❌ Error importing interactive components: {e}[/red]")
         console.print(
-            "[yellow]💡 Try installing missing dependencies with: pip install -r requirements.txt[/yellow]"
+            "[yellow]💡 Try installing missing dependencies with: pip install .[all][/yellow]"
         )
     except Exception as e:
         console.print(f"[red]❌ Error starting interactive session: {e}[/red]")
@@ -1285,8 +1363,12 @@ def switch(
 
         # Define available local models with their paths
         local_model_paths = {
-            "llama-3.1-8b": "/Users/jplfaria/.llama/checkpoints/Llama3.1-8B",
-            "llama-3.2-3b": "/Users/jplfaria/.llama/checkpoints/Llama3.2-3B",
+            "llama-3.1-8b": os.getenv(
+                "LLAMA_8B_PATH", "/Users/jplfaria/.llama/checkpoints/Llama3.1-8B"
+            ),
+            "llama-3.2-3b": os.getenv(
+                "LLAMA_3B_PATH", "/Users/jplfaria/.llama/checkpoints/Llama3.2-3B"
+            ),
         }
 
         # Check if the provided model is a known name or a direct path
