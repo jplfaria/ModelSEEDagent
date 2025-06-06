@@ -1,0 +1,187 @@
+{
+  "workflow_integration": {
+    "status": "PASS",
+    "cli_commands_processed": 4,
+    "agents_created": 4,
+    "tools_available": 6,
+    "total_time_ms": 44.220924377441406,
+    "details": "All workflow integration tests passed"
+  },
+  "performance_optimization": {
+    "status": "PASS",
+    "cache_hit_rate": 0.7,
+    "cache_speedup": 6645.364306784661,
+    "parallel_speedup": 4.954517399169948,
+    "memory_efficiency": 81.9,
+    "details": "Performance optimization tests passed"
+  },
+  "reasoning_chain_execution": {
+    "status": "PASS",
+    "steps_executed": 3,
+    "total_steps": 3,
+    "total_duration_ms": 62.20102310180664,
+    "avg_step_duration_ms": 20.706971486409504,
+    "adaptive_reasoning": true,
+    "execution_results": [
+      {
+        "step": 1,
+        "tool": "run_metabolic_fba",
+        "duration_ms": 20.624876022338867,
+        "result": {
+          "growth_rate": 0.82,
+          "objective_value": 0.82
+        },
+        "success": true
+      },
+      {
+        "step": 2,
+        "tool": "find_minimal_media",
+        "duration_ms": 21.11196517944336,
+        "result": {
+          "essential_nutrients": 14,
+          "medium_complexity": "moderate"
+        },
+        "success": true
+      },
+      {
+        "step": 3,
+        "tool": "analyze_essentiality",
+        "duration_ms": 20.38407325744629,
+        "result": {
+          "essential_genes": 12,
+          "essential_reactions": 8
+        },
+        "success": true
+      }
+    ],
+    "details": "Reasoning chain execution completed successfully"
+  },
+  "hypothesis_workflow": {
+    "status": "PASS",
+    "hypotheses_generated": 3,
+    "hypotheses_tested": 3,
+    "hypotheses_supported": 3,
+    "avg_test_duration_ms": 18.184661865234375,
+    "test_results": [
+      {
+        "hypothesis_type": "general",
+        "tests_run": 1,
+        "supporting_evidence": 1,
+        "evidence_strength": 0.7,
+        "hypothesis_supported": true,
+        "test_duration_ms": 10.911941528320312
+      },
+      {
+        "hypothesis_type": "pathway_activity",
+        "tests_run": 2,
+        "supporting_evidence": 2,
+        "evidence_strength": 0.7,
+        "hypothesis_supported": true,
+        "test_duration_ms": 21.775007247924805
+      },
+      {
+        "hypothesis_type": "metabolic_efficiency",
+        "tests_run": 2,
+        "supporting_evidence": 2,
+        "evidence_strength": 0.8,
+        "hypothesis_supported": true,
+        "test_duration_ms": 21.867036819458008
+      }
+    ],
+    "details": "Hypothesis workflow completed successfully"
+  },
+  "collaborative_workflow": {
+    "status": "PASS",
+    "scenarios_tested": 3,
+    "collaborative_decisions": 3,
+    "ai_human_agreement_rate": 1.0,
+    "avg_collaboration_time_ms": 0.0027020772298177085,
+    "avg_confidence": 0.9,
+    "collaboration_results": [
+      {
+        "context": "Multiple optimization strategies available",
+        "uncertainty_level": 0.7,
+        "options_presented": 3,
+        "ai_recommendation": "balanced_approach",
+        "human_selection": "balanced_approach",
+        "human_rationale": "Agreed with AI recommendation for balanced_approach",
+        "agreement_with_ai": true,
+        "confidence_score": 0.9,
+        "collaboration_time_ms": 0.0040531158447265625
+      },
+      {
+        "context": "Conflicting analysis results",
+        "uncertainty_level": 0.7,
+        "options_presented": 3,
+        "ai_recommendation": "run_additional_validation",
+        "human_selection": "run_additional_validation",
+        "human_rationale": "Agreed with AI recommendation for run_additional_validation",
+        "agreement_with_ai": true,
+        "confidence_score": 0.9,
+        "collaboration_time_ms": 0.0019073486328125
+      },
+      {
+        "context": "Resource allocation decision",
+        "uncertainty_level": 0.7,
+        "options_presented": 3,
+        "ai_recommendation": "targeted_investigation",
+        "human_selection": "targeted_investigation",
+        "human_rationale": "Agreed with AI recommendation for targeted_investigation",
+        "agreement_with_ai": true,
+        "confidence_score": 0.9,
+        "collaboration_time_ms": 0.0021457672119140625
+      }
+    ],
+    "details": "Collaborative workflow completed successfully"
+  },
+  "pattern_learning_integration": {
+    "status": "PASS",
+    "experiences_analyzed": 4,
+    "patterns_extracted": 3,
+    "test_queries": 3,
+    "successful_matches": 1,
+    "avg_pattern_confidence": 0.6,
+    "pattern_applications": [
+      {
+        "query": "comprehensive analysis of new E. coli strain",
+        "matched_pattern": "comprehensive queries typically use: analyze_essentiality, run_metabolic_fba, find_minimal_media",
+        "relevance_score": 0.6,
+        "confidence": 0.8
+      },
+      {
+        "query": "optimize growth for S. cerevisiae",
+        "matched_pattern": "No specific pattern found",
+        "relevance_score": 0.0,
+        "confidence": 0.5
+      },
+      {
+        "query": "analyze nutritional requirements",
+        "matched_pattern": "No specific pattern found",
+        "relevance_score": 0.0,
+        "confidence": 0.5
+      }
+    ],
+    "details": "Pattern learning integration completed successfully"
+  },
+  "end_to_end_scenarios": {
+    "status": "PASS",
+    "scenarios_tested": 2,
+    "successful_scenarios": 2,
+    "avg_scenario_duration_ms": 31.734585762023926,
+    "scenario1_duration_ms": 63.46297264099121,
+    "scenario2_duration_ms": 0.006198883056640625,
+    "scenario1_results": {
+      "planning_ms": 0.0040531158447265625,
+      "execution_ms": 63.456058502197266,
+      "synthesis_ms": 0.0021457672119140625,
+      "tools_executed": 3,
+      "synthesis_confidence": 0.88
+    },
+    "scenario2_results": {
+      "hypothesis_supported": true,
+      "evidence_strength": 0.9,
+      "tests_conducted": 2
+    },
+    "details": "End-to-end scenarios completed successfully"
+  }
+}
