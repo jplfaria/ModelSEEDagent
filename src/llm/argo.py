@@ -174,43 +174,25 @@ class ArgoLLM(BaseLLM):
     def _build_payload(self, prompt: str, system: str) -> Dict[str, Any]:
         """Build request payload based on model type"""
         if self._model_name.startswith("o") or self._model_name.startswith("gpto"):
-            # O-series models use prompt array format (matching reference implementation)
-            prompt_messages = []
-
-            # Add system message first if provided
+            # O-series models use prompt array format
+            # For better results, combine system context with user prompt instead of separate array elements
             if system:
-                prompt_messages.append(system)
-
-            # Add user prompt
-            prompt_messages.append(prompt)
+                # Combine system context with user prompt for better o-series behavior
+                combined_prompt = f"{system}\n\n{prompt}"
+                prompt_array = [combined_prompt]
+            else:
+                prompt_array = [prompt]
 
             payload = {
                 "user": self._user,
                 "model": self._model_name,
-                "prompt": prompt_messages,
+                "prompt": prompt_array,
             }
 
-            # Handle max_completion_tokens for o-series models
-            # Be conservative - only add if explicitly configured
-            if hasattr(self.config, "max_tokens") and self.config.max_tokens:
-                if isinstance(self.config.max_tokens, str):
-                    try:
-                        token_limit = int(self.config.max_tokens)
-                        if token_limit > 0:
-                            payload["max_completion_tokens"] = token_limit
-                    except ValueError:
-                        # Invalid token limit, skip it
-                        logger.debug(
-                            f"Invalid max_tokens value: {self.config.max_tokens}"
-                        )
-                elif (
-                    isinstance(self.config.max_tokens, int)
-                    and self.config.max_tokens > 0
-                ):
-                    payload["max_completion_tokens"] = self.config.max_tokens
-
-            # O-series models don't support temperature parameter
-            # Don't add temperature for reasoning models
+            # O-series models don't support temperature or max_completion_tokens parameters
+            # Per Argo developer recommendation: removing max_completion_tokens completely
+            # resolves all issues with o-series models
+            # Don't add temperature or token limits for reasoning models
 
         else:
             # Standard GPT-style models use messages format
@@ -252,12 +234,14 @@ class ArgoLLM(BaseLLM):
         # Build payload
         payload = self._build_payload(prompt, system_message)
 
-        # Override parameters if provided
+        # Override parameters if provided (but not for o-series models)
         if max_tokens is not None:
-            if self._model_name.startswith("o") or self._model_name.startswith("gpto"):
-                payload["max_completion_tokens"] = max_tokens
-            else:
+            if not (
+                self._model_name.startswith("o") or self._model_name.startswith("gpto")
+            ):
+                # Only set max_tokens for standard models, not o-series
                 payload["max_tokens"] = max_tokens
+            # Per Argo developer: completely skip max_completion_tokens for o-series models
 
         # O-series models don't support temperature or stop parameters
         if not (
@@ -354,24 +338,8 @@ class ArgoLLM(BaseLLM):
                     reason = f"HTTP {response.status_code}"
 
                 elif response.status_code >= 400:
-                    # Client error - try removing max_completion_tokens for o-series models
-                    if (
-                        not max_tokens_removed
-                        and (
-                            self._model_name.startswith("gpto")
-                            or self._model_name.startswith("o")
-                        )
-                        and "max_completion_tokens" in payload
-                        and response.status_code in [400, 422]
-                    ):
-                        logger.warning(
-                            f"4xx error ({response.status_code}), removing max_completion_tokens parameter for {self._model_name}"
-                        )
-                        payload.pop("max_completion_tokens", None)
-                        max_tokens_removed = True
-                        continue  # Retry immediately
-
-                    # Other client errors
+                    # Client error - o-series models no longer need max_completion_tokens removal
+                    # since we don't add it in the first place per Argo developer recommendation
                     reason = f"HTTP {response.status_code}"
 
                 else:
@@ -413,21 +381,8 @@ class ArgoLLM(BaseLLM):
                             logger.info(f"Endpoint switched → {self._url}")
                             continue
 
-                        # Strategy 2: Remove max_completion_tokens for o-series models
-                        if (
-                            not max_tokens_removed
-                            and (
-                                self._model_name.startswith("gpto")
-                                or self._model_name.startswith("o")
-                            )
-                            and "max_completion_tokens" in payload
-                        ):
-                            logger.info(
-                                f"Removing max_completion_tokens parameter for {self._model_name}"
-                            )
-                            payload.pop("max_completion_tokens", None)
-                            max_tokens_removed = True
-                            continue
+                        # Strategy 2: No longer needed for o-series models since we don't add
+                        # max_completion_tokens parameter per Argo developer recommendation
 
             except httpx.TimeoutException:
                 reason = "timeout"
