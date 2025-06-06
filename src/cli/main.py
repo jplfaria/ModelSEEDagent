@@ -40,8 +40,10 @@ from rich.tree import Tree
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
+from src.agents import create_real_time_agent
 from src.agents.langgraph_metabolic import LangGraphMetabolicAgent
 from src.agents.tool_integration import EnhancedToolIntegration
+from src.interactive.streaming_interface import RealTimeStreamingInterface
 from src.llm.argo import ArgoLLM
 from src.llm.local_llm import LocalLLM
 from src.llm.openai_llm import OpenAILLM
@@ -815,6 +817,108 @@ def setup(
     save_cli_config(config_state)
 
 
+def run_streaming_analysis(
+    query: str, model_file: Path, analysis_input: Dict[str, Any]
+):
+    """Run analysis with real-time streaming interface"""
+    console.print("\n[bold cyan]🚀 Starting Real-Time AI Analysis[/bold cyan]")
+    console.print("[dim]Watch the AI make decisions in real-time...[/dim]\n")
+
+    try:
+        # Get LLM and tools from config
+        llm_config = config_state.get("llm_config")
+        llm_backend = config_state.get("llm_backend")
+
+        if not llm_config or not llm_backend:
+            print_error("LLM not configured. Run 'modelseed-agent setup' first.")
+            return None
+
+        # Create LLM
+        if llm_backend == "argo":
+            llm = ArgoLLM(llm_config)
+        elif llm_backend == "openai":
+            llm = OpenAILLM(llm_config)
+        else:
+            print_error(f"Unsupported LLM backend: {llm_backend}")
+            return None
+
+        # Get tools
+        tools = config_state.get("tools", [])
+        if not tools:
+            print_error("No tools configured. Run 'modelseed-agent setup' first.")
+            return None
+
+        # Create dynamic agent
+        dynamic_agent = create_real_time_agent(llm, tools, {"max_iterations": 6})
+
+        # Create streaming interface
+        streaming = RealTimeStreamingInterface()
+
+        # Start streaming analysis
+        streaming.start_streaming(query)
+
+        # Show initial AI thinking
+        streaming.show_ai_analysis(
+            "Planning comprehensive metabolic analysis approach..."
+        )
+
+        # Add model file to the query context
+        enhanced_query = f"{query}\n\nModel file: {model_file}\n\nPlease load and analyze this metabolic model comprehensively."
+
+        # Show model loading
+        streaming.show_ai_analysis(f"Loading metabolic model: {model_file.name}")
+
+        # Run the dynamic agent
+        result = dynamic_agent.run({"query": enhanced_query})
+
+        # Show completion
+        if result.success:
+            streaming.show_workflow_complete(result.message, result.metadata)
+        else:
+            streaming.show_error(result.error)
+
+        # Stop streaming after brief pause
+        import time
+
+        time.sleep(1.5)
+        streaming.stop_streaming()
+
+        return result
+
+    except Exception as e:
+        print_error(f"Streaming analysis failed: {e}")
+        return None
+
+
+def run_regular_analysis(analysis_input: Dict[str, Any], max_iterations: int):
+    """Run analysis with regular progress display"""
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        TimeElapsedColumn(),
+        console=console,
+    ) as progress:
+
+        task = progress.add_task(
+            "🔬 Running intelligent analysis...", total=max_iterations
+        )
+
+        try:
+            # Execute analysis
+            result = config_state["agent"].run(analysis_input)
+
+            # Update task completion
+            progress.update(task, completed=max_iterations)
+
+            return result
+
+        except Exception as e:
+            progress.update(task, description="❌ Analysis failed")
+            print_error(f"Analysis failed: {e}")
+            return None
+
+
 @app.command()
 def analyze(
     model_path: str = typer.Argument(
@@ -834,6 +938,11 @@ def analyze(
     ),
     format_output: str = typer.Option(
         "rich", "--format", help="Output format [rich, json, table]"
+    ),
+    stream: bool = typer.Option(
+        False,
+        "--stream",
+        help="Use real-time streaming AI agent with live reasoning display",
     ),
 ):
     """
@@ -884,33 +993,17 @@ def analyze(
 
     console.print(f"📁 Results will be saved to: [cyan]{output_path}[/cyan]\n")
 
-    # Run analysis with beautiful progress display
-    with Progress(
-        SpinnerColumn(),
-        TextColumn("[progress.description]{task.description}"),
-        BarColumn(),
-        TimeElapsedColumn(),
-        console=console,
-    ) as progress:
+    # Choose between streaming and regular analysis
+    if stream:
+        result = run_streaming_analysis(query, model_file, analysis_input)
+    else:
+        result = run_regular_analysis(analysis_input, max_iterations)
 
-        task = progress.add_task(
-            "🔬 Running intelligent analysis...", total=max_iterations
-        )
+    if not result:
+        return
 
-        try:
-            # Execute analysis
-            result = config_state["agent"].run(analysis_input)
-
-            # Update task completion
-            progress.update(task, completed=max_iterations)
-
-            # Store last run ID for status command
-            config_state["last_run_id"] = result.metadata.get("run_id")
-
-        except Exception as e:
-            progress.update(task, description="❌ Analysis failed")
-            print_error(f"Analysis failed: {e}")
-            return
+    # Store last run ID for status command
+    config_state["last_run_id"] = result.metadata.get("run_id")
 
     # Display results based on format
     if format_output == "rich":

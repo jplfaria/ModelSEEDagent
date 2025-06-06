@@ -1,0 +1,132 @@
+{
+  "id": "ebb7e70c",
+  "name": "Analysis_20250606_1412",
+  "created_at": "2025-06-06T14:12:54.750248",
+  "last_active": "2025-06-06T14:13:29.586836",
+  "status": "active",
+  "description": "Interactive metabolic modeling analysis",
+  "model_files": [],
+  "interactions": [
+    {
+      "id": "conv_0",
+      "timestamp": "2025-06-06T14:13:29.586822",
+      "type": "query",
+      "input_data": "I need a comprehensive metabolic characterization of the E. coli core model. I want to understand its growth capabilities, nutritional requirements, essential components, and metabolic flexibility. Please\n  analyze this systematically and explain your reasoning for each tool you choose.",
+      "output_data": "Let me ask a few questions to make sure I understand correctly.\n\ud83d\udd04 **Did you mean:**\n  \u2022 I need a comprehensive metabolic characterization of the E. coli core model. I want to understand its growth capabilities, nutritional requirements, essential components, and metabolic flexibility. Please\n  examine this systematically and explain your reasoning for each tool you choose.\n  \u2022 I need a comprehensive metabolic characterization of the E. coli core model. I want to understand its growth capabilities, nutritional requirements, essential components, and metabolic flexibility. Please\n  investigate this systematically and explain your reasoning for each tool you choose.\n",
+      "metadata": {
+        "query_analysis": {
+          "original_query": "I need a comprehensive metabolic characterization of the E. coli core model. I want to understand its growth capabilities, nutritional requirements, essential components, and metabolic flexibility. Please\n  analyze this systematically and explain your reasoning for each tool you choose.",
+          "query_type": "structural_analysis",
+          "complexity": "moderate",
+          "intent": "learn",
+          "confidence": 0.3333333333333333,
+          "model_references": [
+            "core"
+          ],
+          "pathway_references": [],
+          "metabolite_references": [],
+          "gene_references": [],
+          "numeric_values": [],
+          "suggested_tools": [
+            "model_statistics",
+            "analyze_metabolic_model"
+          ],
+          "required_inputs": [
+            "model_file"
+          ],
+          "expected_outputs": [
+            "model_statistics",
+            "reaction_list",
+            "metabolite_list"
+          ],
+          "context_dependencies": [],
+          "clarification_questions": [],
+          "alternative_phrasings": [
+            "I need a comprehensive metabolic characterization of the E. coli core model. I want to understand its growth capabilities, nutritional requirements, essential components, and metabolic flexibility. Please\n  examine this systematically and explain your reasoning for each tool you choose.",
+            "I need a comprehensive metabolic characterization of the E. coli core model. I want to understand its growth capabilities, nutritional requirements, essential components, and metabolic flexibility. Please\n  investigate this systematically and explain your reasoning for each tool you choose."
+          ],
+          "follow_up_suggestions": [
+            "Would you like to analyze growth capabilities next?",
+            "Should I examine specific pathways in this model?",
+            "Would you like to visualize the metabolic network?"
+          ],
+          "processing_time": 0.007146,
+          "language_confidence": 0.8
+        },
+        "response_type": "clarification",
+        "conversation_state": "clarifying",
+        "suggested_actions": [
+          "I need a comprehensive metabolic characterization of the E. coli core model. I want to understand its growth capabilities, nutritional requirements, essential components, and metabolic flexibility. Please\n  examine this systematically and explain your reasoning for each tool you choose.",
+          "I need a comprehensive metabolic characterization of the E. coli core model. I want to understand its growth capabilities, nutritional requirements, essential components, and metabolic flexibility. Please\n  investigate this systematically and explain your reasoning for each tool you choose."
+        ]
+      },
+      "execution_time": 0.0074002742767333984,
+      "success": true,
+      "error_message": null
+    }
+  ],
+  "context": {
+    "last_interaction": {
+      "id": "conv_0",
+      "timestamp": "2025-06-06T14:13:29.586822",
+      "type": "query",
+      "input_data": "I need a comprehensive metabolic characterization of the E. coli core model. I want to understand its growth capabilities, nutritional requirements, essential components, and metabolic flexibility. Please\n  analyze this systematically and explain your reasoning for each tool you choose.",
+      "output_data": "Let me ask a few questions to make sure I understand correctly.\n\ud83d\udd04 **Did you mean:**\n  \u2022 I need a comprehensive metabolic characterization of the E. coli core model. I want to understand its growth capabilities, nutritional requirements, essential components, and metabolic flexibility. Please\n  examine this systematically and explain your reasoning for each tool you choose.\n  \u2022 I need a comprehensive metabolic characterization of the E. coli core model. I want to understand its growth capabilities, nutritional requirements, essential components, and metabolic flexibility. Please\n  investigate this systematically and explain your reasoning for each tool you choose.\n",
+      "metadata": {
+        "query_analysis": {
+          "original_query": "I need a comprehensive metabolic characterization of the E. coli core model. I want to understand its growth capabilities, nutritional requirements, essential components, and metabolic flexibility. Please\n  analyze this systematically and explain your reasoning for each tool you choose.",
+          "query_type": "structural_analysis",
+          "complexity": "moderate",
+          "intent": "learn",
+          "confidence": 0.3333333333333333,
+          "model_references": [
+            "core"
+          ],
+          "pathway_references": [],
+          "metabolite_references": [],
+          "gene_references": [],
+          "numeric_values": [],
+          "suggested_tools": [
+            "model_statistics",
+            "analyze_metabolic_model"
+          ],
+          "required_inputs": [
+            "model_file"
+          ],
+          "expected_outputs": [
+            "model_statistics",
+            "reaction_list",
+            "metabolite_list"
+          ],
+          "context_dependencies": [],
+          "clarification_questions": [],
+          "alternative_phrasings": [
+            "I need a comprehensive metabolic characterization of the E. coli core model. I want to understand its growth capabilities, nutritional requirements, essential components, and metabolic flexibility. Please\n  examine this systematically and explain your reasoning for each tool you choose.",
+            "I need a comprehensive metabolic characterization of the E. coli core model. I want to understand its growth capabilities, nutritional requirements, essential components, and metabolic flexibility. Please\n  investigate this systematically and explain your reasoning for each tool you choose."
+          ],
+          "follow_up_suggestions": [
+            "Would you like to analyze growth capabilities next?",
+            "Should I examine specific pathways in this model?",
+            "Would you like to visualize the metabolic network?"
+          ],
+          "processing_time": 0.007146,
+          "language_confidence": 0.8
+        },
+        "response_type": "clarification",
+        "conversation_state": "clarifying",
+        "suggested_actions": [
+          "I need a comprehensive metabolic characterization of the E. coli core model. I want to understand its growth capabilities, nutritional requirements, essential components, and metabolic flexibility. Please\n  examine this systematically and explain your reasoning for each tool you choose.",
+          "I need a comprehensive metabolic characterization of the E. coli core model. I want to understand its growth capabilities, nutritional requirements, essential components, and metabolic flexibility. Please\n  investigate this systematically and explain your reasoning for each tool you choose."
+        ]
+      },
+      "execution_time": 0.0074002742767333984,
+      "success": true,
+      "error_message": null
+    },
+    "last_query": "I need a comprehensive metabolic characterization of the E. coli core model. I want to understand its growth capabilities, nutritional requirements, essential components, and metabolic flexibility. Please\n  analyze this systematically and explain your reasoning for each tool you choose."
+  },
+  "metadata": {},
+  "total_queries": 1,
+  "total_execution_time": 0.0074002742767333984,
+  "success_rate": 1.0
+}

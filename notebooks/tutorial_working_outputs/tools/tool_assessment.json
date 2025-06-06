@@ -1,0 +1,127 @@
+{
+  "timestamp": "2025-06-06T10:28:39.730825",
+  "total_tools": 18,
+  "available_tools": 17,
+  "unavailable_tools": 1,
+  "availability_rate": 0.9444444444444444,
+  "categories": {
+    "COBRA Analysis Tools": {
+      "description": "Comprehensive metabolic model analysis",
+      "available_count": 11,
+      "total_count": 11,
+      "tools": [
+        {
+          "name": "run_metabolic_fba",
+          "status": "available",
+          "error": null
+        },
+        {
+          "name": "find_minimal_media",
+          "status": "available",
+          "error": null
+        },
+        {
+          "name": "identify_auxotrophies",
+          "status": "available",
+          "error": null
+        },
+        {
+          "name": "run_flux_variability_analysis",
+          "status": "available",
+          "error": null
+        },
+        {
+          "name": "run_gene_deletion_analysis",
+          "status": "available",
+          "error": null
+        },
+        {
+          "name": "analyze_essentiality",
+          "status": "available",
+          "error": null
+        },
+        {
+          "name": "run_flux_sampling",
+          "status": "available",
+          "error": null
+        },
+        {
+          "name": "run_production_envelope",
+          "status": "available",
+          "error": null
+        },
+        {
+          "name": "analyze_metabolic_model",
+          "status": "available",
+          "error": null
+        },
+        {
+          "name": "analyze_reaction_expression",
+          "status": "available",
+          "error": null
+        },
+        {
+          "name": "check_missing_media",
+          "status": "available",
+          "error": null
+        }
+      ]
+    },
+    "ModelSEED Integration Tools": {
+      "description": "Genome-to-model pipeline",
+      "available_count": 4,
+      "total_count": 4,
+      "tools": [
+        {
+          "name": "annotate_genome_rast",
+          "status": "available",
+          "error": null
+        },
+        {
+          "name": "build_metabolic_model",
+          "status": "available",
+          "error": null
+        },
+        {
+          "name": "gapfill_model",
+          "status": "available",
+          "error": null
+        },
+        {
+          "name": "annotate_proteins_rast",
+          "status": "available",
+          "error": null
+        }
+      ]
+    },
+    "Biochemistry Database Tools": {
+      "description": "Universal ID resolution and search",
+      "available_count": 2,
+      "total_count": 2,
+      "tools": [
+        {
+          "name": "resolve_biochem_entity",
+          "status": "available",
+          "error": null
+        },
+        {
+          "name": "search_biochem",
+          "status": "available",
+          "error": null
+        }
+      ]
+    },
+    "Compatibility Tools": {
+      "description": "Model format compatibility verification",
+      "available_count": 0,
+      "total_count": 1,
+      "tools": [
+        {
+          "name": "check_model_compatibility",
+          "status": "unavailable",
+          "error": "Tool not found: check_model_compatibility"
+        }
+      ]
+    }
+  }
+}

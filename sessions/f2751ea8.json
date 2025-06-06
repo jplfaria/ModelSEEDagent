@@ -1,0 +1,193 @@
+{
+  "id": "f2751ea8",
+  "name": "Analysis_20250606_1010",
+  "created_at": "2025-06-06T10:10:44.184255",
+  "last_active": "2025-06-06T10:16:44.150111",
+  "status": "active",
+  "description": "Interactive metabolic modeling analysis",
+  "model_files": [],
+  "interactions": [
+    {
+      "id": "conv_0",
+      "timestamp": "2025-06-06T10:13:09.726538",
+      "type": "query",
+      "input_data": "can you do a comphreensive analysis of our ecoli core model given all teh toosl availe at your disposable?",
+      "output_data": "Got it! You're interested in provide information about your question. Processing...\n\n\ud83d\udd2c **Analysis Plan:**\n  \u2022 Using tools: analyze_metabolic_model, model_comparison\n  \u2022 Complexity: Simple (estimated a few seconds)\n  \u2022 Expected results: analysis_report\n\n\u2705 **Analysis Complete!**\n\n\ud83d\udccb **Analysis completed successfully!**\nResults are ready for your review.",
+      "metadata": {
+        "query_analysis": {
+          "original_query": "can you do a comphreensive analysis of our ecoli core model given all teh toosl availe at your disposable?",
+          "query_type": "general_question",
+          "complexity": "simple",
+          "intent": "explore",
+          "confidence": 0.5,
+          "model_references": [
+            "ecoli",
+            "core"
+          ],
+          "pathway_references": [],
+          "metabolite_references": [],
+          "gene_references": [],
+          "numeric_values": [],
+          "suggested_tools": [
+            "analyze_metabolic_model",
+            "model_comparison"
+          ],
+          "required_inputs": [
+            "model_file"
+          ],
+          "expected_outputs": [
+            "analysis_report"
+          ],
+          "context_dependencies": [],
+          "clarification_questions": [],
+          "alternative_phrasings": [],
+          "follow_up_suggestions": [],
+          "processing_time": 0.005612,
+          "language_confidence": 0.8
+        },
+        "response_type": "analysis_result",
+        "conversation_state": "suggesting_followup",
+        "suggested_actions": []
+      },
+      "execution_time": 0.005876064300537109,
+      "success": true,
+      "error_message": null
+    },
+    {
+      "id": "conv_1",
+      "timestamp": "2025-06-06T10:16:37.946655",
+      "type": "query",
+      "input_data": "i am not sur eif this is working",
+      "output_data": "Perfect! I'll help you provide information about your question. One moment...\n\n\ud83d\udd2c **Analysis Plan:**\n  \u2022 Using tools: analyze_metabolic_model, model_comparison\n  \u2022 Complexity: Simple (estimated a few seconds)\n  \u2022 Expected results: analysis_report\n\n\u2705 **Analysis Complete!**\n\n\ud83d\udccb **Analysis completed successfully!**\nResults are ready for your review.",
+      "metadata": {
+        "query_analysis": {
+          "original_query": "i am not sur eif this is working",
+          "query_type": "general_question",
+          "complexity": "simple",
+          "intent": "explore",
+          "confidence": 0.5,
+          "model_references": [],
+          "pathway_references": [],
+          "metabolite_references": [],
+          "gene_references": [],
+          "numeric_values": [],
+          "suggested_tools": [
+            "analyze_metabolic_model",
+            "model_comparison"
+          ],
+          "required_inputs": [
+            "model_file"
+          ],
+          "expected_outputs": [
+            "analysis_report"
+          ],
+          "context_dependencies": [],
+          "clarification_questions": [],
+          "alternative_phrasings": [],
+          "follow_up_suggestions": [],
+          "processing_time": 0.000453,
+          "language_confidence": 1.0
+        },
+        "response_type": "analysis_result",
+        "conversation_state": "suggesting_followup",
+        "suggested_actions": []
+      },
+      "execution_time": 0.0006837844848632812,
+      "success": true,
+      "error_message": null
+    },
+    {
+      "id": "conv_2",
+      "timestamp": "2025-06-06T10:16:44.149991",
+      "type": "query",
+      "input_data": "n",
+      "output_data": "I understand you want to provide information about your question. Let me analyze that...\n\n\ud83d\udd2c **Analysis Plan:**\n  \u2022 Using tools: analyze_metabolic_model, model_comparison\n  \u2022 Complexity: Simple (estimated a few seconds)\n  \u2022 Expected results: analysis_report\n\n\u2705 **Analysis Complete!**\n\n\ud83d\udccb **Analysis completed successfully!**\nResults are ready for your review.",
+      "metadata": {
+        "query_analysis": {
+          "original_query": "n",
+          "query_type": "general_question",
+          "complexity": "simple",
+          "intent": "explore",
+          "confidence": 0.5,
+          "model_references": [],
+          "pathway_references": [],
+          "metabolite_references": [],
+          "gene_references": [],
+          "numeric_values": [],
+          "suggested_tools": [
+            "analyze_metabolic_model",
+            "model_comparison"
+          ],
+          "required_inputs": [
+            "model_file"
+          ],
+          "expected_outputs": [
+            "analysis_report"
+          ],
+          "context_dependencies": [],
+          "clarification_questions": [],
+          "alternative_phrasings": [],
+          "follow_up_suggestions": [],
+          "processing_time": 0.000259,
+          "language_confidence": 0.7
+        },
+        "response_type": "analysis_result",
+        "conversation_state": "suggesting_followup",
+        "suggested_actions": []
+      },
+      "execution_time": 0.00041103363037109375,
+      "success": true,
+      "error_message": null
+    }
+  ],
+  "context": {
+    "last_interaction": {
+      "id": "conv_2",
+      "timestamp": "2025-06-06T10:16:44.149991",
+      "type": "query",
+      "input_data": "n",
+      "output_data": "I understand you want to provide information about your question. Let me analyze that...\n\n\ud83d\udd2c **Analysis Plan:**\n  \u2022 Using tools: analyze_metabolic_model, model_comparison\n  \u2022 Complexity: Simple (estimated a few seconds)\n  \u2022 Expected results: analysis_report\n\n\u2705 **Analysis Complete!**\n\n\ud83d\udccb **Analysis completed successfully!**\nResults are ready for your review.",
+      "metadata": {
+        "query_analysis": {
+          "original_query": "n",
+          "query_type": "general_question",
+          "complexity": "simple",
+          "intent": "explore",
+          "confidence": 0.5,
+          "model_references": [],
+          "pathway_references": [],
+          "metabolite_references": [],
+          "gene_references": [],
+          "numeric_values": [],
+          "suggested_tools": [
+            "analyze_metabolic_model",
+            "model_comparison"
+          ],
+          "required_inputs": [
+            "model_file"
+          ],
+          "expected_outputs": [
+            "analysis_report"
+          ],
+          "context_dependencies": [],
+          "clarification_questions": [],
+          "alternative_phrasings": [],
+          "follow_up_suggestions": [],
+          "processing_time": 0.000259,
+          "language_confidence": 0.7
+        },
+        "response_type": "analysis_result",
+        "conversation_state": "suggesting_followup",
+        "suggested_actions": []
+      },
+      "execution_time": 0.00041103363037109375,
+      "success": true,
+      "error_message": null
+    },
+    "last_query": "n"
+  },
+  "metadata": {},
+  "total_queries": 3,
+  "total_execution_time": 0.006970882415771484,
+  "success_rate": 1.0
+}

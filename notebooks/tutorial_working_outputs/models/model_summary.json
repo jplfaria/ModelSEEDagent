@@ -1,0 +1,18 @@
+{
+  "model_id": "e_coli_core",
+  "source_file": "/Users/jplfaria/repos/ModelSEEDagent/data/examples/e_coli_core.xml",
+  "working_copy": "tutorial_working_outputs/models/e_coli_core_working.xml",
+  "reactions": 95,
+  "metabolites": 72,
+  "genes": 137,
+  "compartments": [
+    "e",
+    "c"
+  ],
+  "objective": "Maximize\n1.0*BIOMASS_Ecoli_core_w_GAM - 1.0*BIOMASS_Ecoli_core_w_GAM_reverse_712e5",
+  "bounds": {
+    "glucose_uptake": -10.0,
+    "oxygen_uptake": -1000.0,
+    "biomass_upper": 1000.0
+  }
+}

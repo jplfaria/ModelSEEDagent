@@ -1,0 +1,55 @@
+{
+  "timestamp": "2025-06-06T10:28:36.730513",
+  "all_core_dependencies_met": true,
+  "config_loaded": true,
+  "status_by_category": {
+    "core": [
+      {
+        "name": "cobra",
+        "available": true,
+        "error": null
+      },
+      {
+        "name": "pandas",
+        "available": true,
+        "error": null
+      },
+      {
+        "name": "numpy",
+        "available": true,
+        "error": null
+      }
+    ],
+    "llm": [
+      {
+        "name": "openai",
+        "available": true,
+        "error": null
+      },
+      {
+        "name": "langchain",
+        "available": true,
+        "error": null
+      }
+    ],
+    "visualization": [
+      {
+        "name": "matplotlib",
+        "available": true,
+        "error": null
+      }
+    ],
+    "modelseed": [
+      {
+        "name": "src.config.settings",
+        "available": true,
+        "error": null
+      },
+      {
+        "name": "src.tools",
+        "available": true,
+        "error": null
+      }
+    ]
+  }
+}

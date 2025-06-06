@@ -23,7 +23,7 @@ from rich.prompt import Confirm
 from rich.table import Table
 from rich.text import Text
 
-from .conversation_engine import ConversationEngine, ConversationResponse
+from .conversation_engine import ConversationResponse, DynamicAIConversationEngine
 from .live_visualizer import LiveVisualizer
 from .query_processor import QueryAnalysis, QueryProcessor
 from .session_manager import (
@@ -61,7 +61,7 @@ class InteractiveCLI:
         self.visualizer = LiveVisualizer()
 
         self.current_session: Optional[AnalysisSession] = None
-        self.conversation_engine: Optional[ConversationEngine] = None
+        self.conversation_engine: Optional[DynamicAIConversationEngine] = None
 
         # CLI state
         self.running = False
@@ -95,7 +95,7 @@ class InteractiveCLI:
         self.current_session = session
 
         # Initialize conversation engine
-        self.conversation_engine = ConversationEngine(session, self.query_processor)
+        self.conversation_engine = DynamicAIConversationEngine(session)
 
         # Start conversation
         response = self.conversation_engine.start_conversation()

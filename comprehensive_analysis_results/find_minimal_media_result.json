@@ -1,0 +1,13 @@
+{
+  "tool_name": "find_minimal_media",
+  "description": "Minimal Media Analysis",
+  "success": true,
+  "message": "Minimal media determination completed.",
+  "data_type": "<class 'dict'>",
+  "data_keys": [
+    "minimal_media",
+    "complete_solution",
+    "result_file"
+  ],
+  "timestamp": "2025-06-06T10:28:44.132210"
+}
