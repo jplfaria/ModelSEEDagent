@@ -567,7 +567,7 @@ def setup(
                 }
 
                 # Handle token limits based on model type
-                if model_name.startswith("gpto"):
+                if model_name.startswith("gpto") or model_name.startswith("o"):
                     # For o-series models, be more conservative with max_completion_tokens
                     # and allow option to disable it completely
                     if interactive:
@@ -580,10 +580,14 @@ def setup(
                                 "Max completion tokens:", default="1000"
                             ).ask()
                     # For non-interactive, don't set token limit for o-series by default
+                    # Note: o-series models don't support temperature parameter
                 else:
                     # Standard models get normal configuration
                     llm_config["max_tokens"] = 1000
                     llm_config["temperature"] = 0.1
+
+                # Note: API key is optional for users on ANL network
+                # llm_config does not include api_key field unless explicitly set
 
             elif llm_backend == "openai":
                 if interactive:
@@ -1437,9 +1441,10 @@ def switch(
         }
 
         # Handle token configuration for o-series models
-        if not default_model.startswith("gpto"):
+        if not (default_model.startswith("gpto") or default_model.startswith("o")):
             llm_config["max_tokens"] = 1000
             llm_config["temperature"] = 0.1
+        # Note: o-series models don't get temperature parameter
 
     elif backend == "openai":
         api_key = os.getenv("OPENAI_API_KEY")
@@ -1537,10 +1542,13 @@ def switch(
 
         # Show model info
         model_name = llm_config["model_name"]
-        if model_name.startswith("gpto"):
+        if model_name.startswith("gpto") or model_name.startswith("o"):
             console.print(f"[yellow]Using reasoning model: {model_name}[/yellow]")
             console.print("• Optimized for complex reasoning tasks")
             console.print("• No temperature control (uses fixed reasoning temperature)")
+            console.print("• Uses prompt array format instead of messages")
+            if "max_tokens" not in llm_config:
+                console.print("• No token limit set (recommended for complex queries)")
         else:
             console.print(f"[green]Using model: {model_name}[/green]")
 
@@ -1650,7 +1658,8 @@ def audit_list(
         duration_str = f"{duration:.2f}s" if duration else "N/A"
         status_str = "[green]✅ Success[/green]" if success else "[red]❌ Failed[/red]"
 
-        session_id = audit_data.get("session_id", "unknown")[:8]  # Short session ID
+        session_id = audit_data.get("session_id", "unknown")
+        session_id = session_id[:8] if session_id else "default"  # Short session ID
 
         audit_table.add_row(
             audit_id, tool_name, formatted_time, duration_str, status_str, session_id
@@ -1764,10 +1773,21 @@ def audit_show(
             console.print(Panel(structured_json, border_style="yellow"))
 
         # Console output
-        console_output = output_data.get("console", "")
+        console_output = output_data.get("console", {})
         if console_output and show_console:
             console.print(f"\n[bold]💻 Console Output:[/bold]")
-            console_text = console_output
+            # Handle both string and dict formats for console output
+            if isinstance(console_output, dict):
+                stdout = console_output.get("stdout", "")
+                stderr = console_output.get("stderr", "")
+                console_text = (
+                    f"STDOUT:\n{stdout}\n\nSTDERR:\n{stderr}"
+                    if stdout or stderr
+                    else "No console output"
+                )
+            else:
+                console_text = str(console_output)
+
             if len(console_text) > 1000:
                 console_text = console_text[:1000] + "\n... (truncated)"
             console.print(Panel(console_text, border_style="cyan"))
@@ -2080,12 +2100,20 @@ def audit_verify(
 
     # 3. Console vs structured output consistency
     output_data = audit_data.get("output", {})
-    console_output = output_data.get("console", "")
+    console_output = output_data.get("console", {})
     structured = output_data.get("structured", {})
 
     if console_output and structured:
         # Check for error messages in console but success in structured output
-        console_lower = console_output.lower()
+        if isinstance(console_output, dict):
+            console_text = (
+                console_output.get("stdout", "")
+                + " "
+                + console_output.get("stderr", "")
+            )
+        else:
+            console_text = str(console_output)
+        console_lower = console_text.lower()
         if any(
             error_word in console_lower
             for error_word in ["error", "failed", "exception", "traceback"]

@@ -61,37 +61,59 @@ class AIWorkflowAudit(BaseModel):
     session_id: Optional[str] = Field(description="Session ID if part of a session")
     user_query: str = Field(description="Original user query that triggered workflow")
     timestamp_start: str = Field(description="Workflow start timestamp")
-    timestamp_end: Optional[str] = Field(description="Workflow completion timestamp")
+    timestamp_end: Optional[str] = Field(
+        default=None, description="Workflow completion timestamp"
+    )
 
     # AI reasoning chain
     reasoning_steps: List[AIReasoningStep] = Field(
-        description="Complete reasoning chain"
+        default_factory=list, description="Complete reasoning chain"
     )
-    total_reasoning_steps: int = Field(description="Total number of reasoning steps")
+    total_reasoning_steps: int = Field(
+        default=0, description="Total number of reasoning steps"
+    )
 
     # Tool execution tracking
-    tools_executed: List[str] = Field(description="Tools actually executed")
+    tools_executed: List[str] = Field(
+        default_factory=list, description="Tools actually executed"
+    )
     tool_execution_order: List[Tuple[str, str]] = Field(
-        description="(tool, timestamp) execution order"
+        default_factory=list, description="(tool, timestamp) execution order"
     )
     tool_audit_files: List[str] = Field(
-        description="Paths to individual tool audit files"
+        default_factory=list, description="Paths to individual tool audit files"
     )
 
     # Workflow outcomes
-    final_result: str = Field(description="AI's final response/conclusion")
-    success: bool = Field(description="Whether workflow completed successfully")
-    error_message: Optional[str] = Field(description="Error message if workflow failed")
+    final_result: str = Field(default="", description="AI's final response/conclusion")
+    success: bool = Field(
+        default=False, description="Whether workflow completed successfully"
+    )
+    error_message: Optional[str] = Field(
+        default=None, description="Error message if workflow failed"
+    )
 
     # Verification metadata
-    ai_confidence_final: float = Field(description="AI's final confidence score")
-    reasoning_coherence: float = Field(description="Coherence score of reasoning chain")
-    tool_selection_accuracy: float = Field(description="Accuracy of tool selections")
+    ai_confidence_final: float = Field(
+        default=0.0, description="AI's final confidence score"
+    )
+    reasoning_coherence: float = Field(
+        default=0.0, description="Coherence score of reasoning chain"
+    )
+    tool_selection_accuracy: float = Field(
+        default=0.0, description="Accuracy of tool selections"
+    )
 
     # Performance metrics
-    total_duration_seconds: float = Field(description="Total workflow duration")
-    ai_thinking_time_seconds: float = Field(description="Time spent on AI reasoning")
-    tool_execution_time_seconds: float = Field(description="Time spent executing tools")
+    total_duration_seconds: float = Field(
+        default=0.0, description="Total workflow duration"
+    )
+    ai_thinking_time_seconds: float = Field(
+        default=0.0, description="Time spent on AI reasoning"
+    )
+    tool_execution_time_seconds: float = Field(
+        default=0.0, description="Time spent executing tools"
+    )
 
 
 class AIDecisionVerifier:
