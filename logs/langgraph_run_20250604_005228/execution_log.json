@@ -1,0 +1,64 @@
+[
+  {
+    "timestamp": "2025-06-04T00:52:28.395060",
+    "step": "enhanced_planning",
+    "data": {
+      "iteration": 0,
+      "decision": "single_tool",
+      "tools_to_call": [
+        "analyze_metabolic_model"
+      ],
+      "completed_tools": [],
+      "total_planned_tools": 3,
+      "intent_analysis": {
+        "primary_intent": "structural_analysis",
+        "secondary_intents": [
+          "growth_analysis",
+          "pathway_analysis",
+          "comprehensive"
+        ],
+        "suggested_tools": [
+          "analyze_metabolic_model",
+          "run_metabolic_fba",
+          "analyze_pathway"
+        ],
+        "workflow_complexity": "complex",
+        "estimated_tools": 3,
+        "analysis_depth": "comprehensive"
+      },
+      "workflow_complexity": "complex"
+    }
+  },
+  {
+    "timestamp": "2025-06-04T00:52:28.396902",
+    "step": "enhanced_planning",
+    "data": {
+      "iteration": 0,
+      "decision": "single_tool",
+      "tools_to_call": [
+        "analyze_pathway"
+      ],
+      "completed_tools": [
+        "analyze_metabolic_model"
+      ],
+      "total_planned_tools": 3,
+      "intent_analysis": {
+        "primary_intent": "structural_analysis",
+        "secondary_intents": [
+          "growth_analysis",
+          "pathway_analysis",
+          "comprehensive"
+        ],
+        "suggested_tools": [
+          "analyze_metabolic_model",
+          "run_metabolic_fba",
+          "analyze_pathway"
+        ],
+        "workflow_complexity": "complex",
+        "estimated_tools": 3,
+        "analysis_depth": "comprehensive"
+      },
+      "workflow_complexity": "complex"
+    }
+  }
+]

@@ -1,0 +1,91 @@
+{
+  "workflow_id": "122e2f1b",
+  "session_id": "test_session",
+  "user_query": "Test query for audit system verification",
+  "timestamp_start": "2025-06-06T15:30:30.920276",
+  "timestamp_end": "2025-06-06T15:30:30.920293",
+  "reasoning_steps": [
+    {
+      "step_id": "122e2f1b_step_1",
+      "step_number": 1,
+      "timestamp": "2025-06-06T15:30:30.920295",
+      "ai_thought": "I need to analyze this query to determine the best tool to use for comprehensive metabolic analysis.",
+      "context_analysis": "The query asks for comprehensive analysis, suggesting multiple tools may be needed.",
+      "available_tools": [
+        "run_metabolic_fba",
+        "find_minimal_media",
+        "analyze_essentiality"
+      ],
+      "selected_tool": "run_metabolic_fba",
+      "selection_rationale": "FBA provides foundational growth analysis that informs subsequent tool selection.",
+      "confidence_score": 0.85,
+      "expected_result": "Growth rate and flux distribution for the model",
+      "success_criteria": [
+        "Tool executes successfully",
+        "Returns valid growth rate"
+      ],
+      "alternative_tools": [
+        "analyze_essentiality",
+        "find_minimal_media"
+      ],
+      "rejection_reasons": {
+        "analyze_essentiality": "Should be done after establishing baseline growth",
+        "find_minimal_media": "Requires growth analysis first"
+      }
+    },
+    {
+      "step_id": "122e2f1b_step_2",
+      "step_number": 2,
+      "timestamp": "2025-06-06T15:30:30.920297",
+      "ai_thought": "Based on the FBA results showing good growth, I should now analyze essential components.",
+      "context_analysis": "FBA showed growth rate of 0.87, so the model is viable. Essential gene analysis will provide complementary insights.",
+      "available_tools": [
+        "analyze_essentiality",
+        "find_minimal_media",
+        "run_flux_variability_analysis"
+      ],
+      "selected_tool": "analyze_essentiality",
+      "selection_rationale": "Essentiality analysis will identify critical genes and reactions for model understanding.",
+      "confidence_score": 0.9,
+      "expected_result": "List of essential genes and reactions",
+      "success_criteria": [
+        "Identifies essential components",
+        "Provides functional categorization"
+      ],
+      "alternative_tools": [
+        "find_minimal_media"
+      ],
+      "rejection_reasons": {
+        "find_minimal_media": "Essential genes are more fundamental than media requirements"
+      }
+    }
+  ],
+  "total_reasoning_steps": 2,
+  "tools_executed": [
+    "run_metabolic_fba",
+    "analyze_essentiality"
+  ],
+  "tool_execution_order": [
+    [
+      "run_metabolic_fba",
+      "2025-06-06T15:30:30.920299"
+    ],
+    [
+      "analyze_essentiality",
+      "2025-06-06T15:30:30.920300"
+    ]
+  ],
+  "tool_audit_files": [
+    "logs/test_session/tool_audits/fba_122e2f1b.json",
+    "logs/test_session/tool_audits/essentiality_122e2f1b.json"
+  ],
+  "final_result": "Comprehensive analysis completed. The E. coli core model shows viable growth (0.87 h\u207b\u00b9) with 45 essential genes identified across key metabolic pathways including glycolysis, TCA cycle, and biomass synthesis.",
+  "success": true,
+  "error_message": null,
+  "ai_confidence_final": 0.88,
+  "reasoning_coherence": 0.92,
+  "tool_selection_accuracy": 0.89,
+  "total_duration_seconds": 15.6,
+  "ai_thinking_time_seconds": 3.2,
+  "tool_execution_time_seconds": 12.4
+}

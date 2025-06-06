@@ -1,0 +1,35 @@
+{
+  "audit_id": "f6e0d9d1-4232-4013-87da-930a4e82631c",
+  "session_id": null,
+  "tool_name": "find_minimal_media",
+  "timestamp": "2025-06-06T10:34:43.094648",
+  "input": {
+    "raw_input": "default analysis",
+    "type": "str"
+  },
+  "output": {
+    "structured": {
+      "success": false,
+      "message": "Error determining minimal media.",
+      "data": null,
+      "metadata": {},
+      "error": "Failed to load model: Model file not found: \"default analysis\""
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 1.9817800521850586,
+    "success": false,
+    "error": null,
+    "timestamp_end": "2025-06-06T10:34:43.094732"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "audit_id": "a83f9836-445d-476d-a9c4-38e108f7c3f2",
+  "session_id": null,
+  "tool_name": "run_metabolic_fba",
+  "timestamp": "2025-06-06T10:36:02.692720",
+  "input": {
+    "raw_input": "default analysis",
+    "type": "str"
+  },
+  "output": {
+    "structured": {
+      "success": false,
+      "message": "Error running FBA simulation",
+      "data": null,
+      "metadata": {},
+      "error": "Model file must be in SBML format (.xml or .sbml)"
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 1.9995501041412354,
+    "success": false,
+    "error": null,
+    "timestamp_end": "2025-06-06T10:36:02.692817"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

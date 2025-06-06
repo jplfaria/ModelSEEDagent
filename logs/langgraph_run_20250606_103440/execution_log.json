@@ -1,0 +1,104 @@
+[
+  {
+    "timestamp": "2025-06-06T10:34:41.105734",
+    "step": "enhanced_planning",
+    "data": {
+      "iteration": 0,
+      "decision": "single_tool",
+      "tools_to_call": [
+        "find_minimal_media"
+      ],
+      "completed_tools": [],
+      "total_planned_tools": 2,
+      "intent_analysis": {
+        "primary_intent": "growth_analysis",
+        "secondary_intents": [
+          "optimization"
+        ],
+        "suggested_tools": [
+          "find_minimal_media",
+          "run_metabolic_fba"
+        ],
+        "workflow_complexity": "moderate",
+        "estimated_tools": 2,
+        "analysis_depth": "detailed"
+      },
+      "workflow_complexity": "moderate"
+    }
+  },
+  {
+    "timestamp": "2025-06-06T10:34:48.048610",
+    "step": "enhanced_planning",
+    "data": {
+      "iteration": 0,
+      "decision": "single_tool",
+      "tools_to_call": [
+        "run_metabolic_fba"
+      ],
+      "completed_tools": [
+        "find_minimal_media"
+      ],
+      "total_planned_tools": 2,
+      "intent_analysis": {
+        "primary_intent": "growth_analysis",
+        "secondary_intents": [
+          "optimization"
+        ],
+        "suggested_tools": [
+          "find_minimal_media",
+          "run_metabolic_fba"
+        ],
+        "workflow_complexity": "moderate",
+        "estimated_tools": 2,
+        "analysis_depth": "detailed"
+      },
+      "workflow_complexity": "moderate"
+    }
+  },
+  {
+    "timestamp": "2025-06-06T10:34:55.511636",
+    "step": "enhanced_finalization",
+    "data": {
+      "total_iterations": 0,
+      "tools_used": [
+        "run_metabolic_fba",
+        "find_minimal_media"
+      ],
+      "total_errors": 0,
+      "final_answer_length": 211,
+      "execution_summary": {
+        "run_id": "20250606_103440",
+        "query": "Run FBA, essentiality analysis, minimal media, and flux variability analysis",
+        "total_iterations": 0,
+        "tools_executed": [
+          "run_metabolic_fba",
+          "find_minimal_media"
+        ],
+        "parallel_executions": 0,
+        "errors_encountered": 0,
+        "recovery_attempts": 0,
+        "final_status": "completed",
+        "execution_time": "2025-06-06T10:34:48.048578"
+      },
+      "performance_metrics": {
+        "find_minimal_media": {
+          "execution_time": 3.9832310676574707,
+          "data_size": 0,
+          "category": "optimization"
+        },
+        "run_metabolic_fba": {
+          "execution_time": 3.934480905532837,
+          "data_size": 0,
+          "category": "functional"
+        }
+      },
+      "workflow_complexity": "moderate",
+      "total_execution_time": 7.917711973190308,
+      "visualizations_created": [
+        "/Users/jplfaria/repos/ModelSEEDagent/logs/langgraph_run_20250606_103440/visualizations/workflow_graph.html",
+        "/Users/jplfaria/repos/ModelSEEDagent/logs/langgraph_run_20250606_103440/visualizations/workflow_graph.html",
+        "/Users/jplfaria/repos/ModelSEEDagent/logs/langgraph_run_20250606_103440/visualizations/performance_dashboard.html"
+      ]
+    }
+  }
+]

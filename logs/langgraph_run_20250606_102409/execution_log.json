@@ -1,0 +1,71 @@
+[
+  {
+    "timestamp": "2025-06-06T10:24:09.535677",
+    "step": "enhanced_planning",
+    "data": {
+      "iteration": 0,
+      "decision": "single_tool",
+      "tools_to_call": [
+        "analyze_metabolic_model"
+      ],
+      "completed_tools": [],
+      "total_planned_tools": 4,
+      "intent_analysis": {
+        "primary_intent": "growth_analysis",
+        "secondary_intents": [
+          "optimization",
+          "comprehensive"
+        ],
+        "suggested_tools": [
+          "find_minimal_media",
+          "analyze_metabolic_model",
+          "analyze_pathway",
+          "run_metabolic_fba"
+        ],
+        "workflow_complexity": "complex",
+        "estimated_tools": 4,
+        "analysis_depth": "comprehensive"
+      },
+      "workflow_complexity": "complex"
+    }
+  },
+  {
+    "timestamp": "2025-06-06T10:24:16.093548",
+    "step": "enhanced_finalization",
+    "data": {
+      "total_iterations": 0,
+      "tools_used": [
+        "analyze_metabolic_model"
+      ],
+      "total_errors": 0,
+      "final_answer_length": 206,
+      "execution_summary": {
+        "run_id": "20250606_102409",
+        "query": "Comprehensive metabolic analysis including FBA, gene deletion, essentiality analysis, minimal media, and flux variability analysis",
+        "total_iterations": 0,
+        "tools_executed": [
+          "analyze_metabolic_model"
+        ],
+        "parallel_executions": 0,
+        "errors_encountered": 0,
+        "recovery_attempts": 0,
+        "final_status": "completed",
+        "execution_time": "2025-06-06T10:24:09.385685"
+      },
+      "performance_metrics": {
+        "analyze_metabolic_model": {
+          "execution_time": 3.760608673095703,
+          "data_size": 0,
+          "category": "structural"
+        }
+      },
+      "workflow_complexity": "complex",
+      "total_execution_time": 3.760608673095703,
+      "visualizations_created": [
+        "/Users/jplfaria/repos/ModelSEEDagent/logs/langgraph_run_20250606_102409/visualizations/workflow_graph.html",
+        "/Users/jplfaria/repos/ModelSEEDagent/logs/langgraph_run_20250606_102409/visualizations/workflow_graph.html",
+        "/Users/jplfaria/repos/ModelSEEDagent/logs/langgraph_run_20250606_102409/visualizations/performance_dashboard.html"
+      ]
+    }
+  }
+]

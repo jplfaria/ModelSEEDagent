@@ -1,0 +1,74 @@
+[
+  {
+    "timestamp": "2025-06-06T10:23:52.612953",
+    "step": "enhanced_planning",
+    "data": {
+      "iteration": 0,
+      "decision": "single_tool",
+      "tools_to_call": [
+        "analyze_metabolic_model"
+      ],
+      "completed_tools": [],
+      "total_planned_tools": 5,
+      "intent_analysis": {
+        "primary_intent": "growth_analysis",
+        "secondary_intents": [
+          "optimization",
+          "validation",
+          "comprehensive"
+        ],
+        "suggested_tools": [
+          "check_missing_media",
+          "analyze_metabolic_model",
+          "find_minimal_media",
+          "analyze_pathway",
+          "check_auxotrophy",
+          "run_metabolic_fba"
+        ],
+        "workflow_complexity": "complex",
+        "estimated_tools": 6,
+        "analysis_depth": "comprehensive"
+      },
+      "workflow_complexity": "complex"
+    }
+  },
+  {
+    "timestamp": "2025-06-06T10:23:59.397247",
+    "step": "enhanced_finalization",
+    "data": {
+      "total_iterations": 0,
+      "tools_used": [
+        "analyze_metabolic_model"
+      ],
+      "total_errors": 0,
+      "final_answer_length": 241,
+      "execution_summary": {
+        "run_id": "20250606_102352",
+        "query": "Perform comprehensive metabolic analysis including FBA, FVA, gene deletion, essentiality, minimal media, auxotrophy, flux sampling, and biochemistry database lookups",
+        "total_iterations": 0,
+        "tools_executed": [
+          "analyze_metabolic_model"
+        ],
+        "parallel_executions": 0,
+        "errors_encountered": 0,
+        "recovery_attempts": 0,
+        "final_status": "completed",
+        "execution_time": "2025-06-06T10:23:52.400407"
+      },
+      "performance_metrics": {
+        "analyze_metabolic_model": {
+          "execution_time": 4.0726318359375,
+          "data_size": 0,
+          "category": "structural"
+        }
+      },
+      "workflow_complexity": "complex",
+      "total_execution_time": 4.0726318359375,
+      "visualizations_created": [
+        "/Users/jplfaria/repos/ModelSEEDagent/logs/langgraph_run_20250606_102352/visualizations/workflow_graph.html",
+        "/Users/jplfaria/repos/ModelSEEDagent/logs/langgraph_run_20250606_102352/visualizations/workflow_graph.html",
+        "/Users/jplfaria/repos/ModelSEEDagent/logs/langgraph_run_20250606_102352/visualizations/performance_dashboard.html"
+      ]
+    }
+  }
+]
