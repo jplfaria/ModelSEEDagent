@@ -43,6 +43,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from src.agents import create_real_time_agent
 from src.agents.langgraph_metabolic import LangGraphMetabolicAgent
 from src.agents.tool_integration import EnhancedToolIntegration
+from src.cli.audit_viewer import audit_app as ai_audit_app
 from src.interactive.streaming_interface import RealTimeStreamingInterface
 from src.llm.argo import ArgoLLM
 from src.llm.local_llm import LocalLLM
@@ -1560,6 +1561,7 @@ audit_app = typer.Typer(
 )
 
 app.add_typer(audit_app, name="audit")
+app.add_typer(ai_audit_app, name="ai-audit")
 
 
 @audit_app.command("list")

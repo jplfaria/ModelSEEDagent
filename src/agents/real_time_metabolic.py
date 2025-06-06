@@ -22,7 +22,9 @@ from langchain_core.prompts import ChatPromptTemplate
 
 from ..llm.base import BaseLLM
 from ..tools import ToolRegistry
+from ..tools.ai_audit import create_ai_decision_verifier, get_ai_audit_logger
 from ..tools.base import BaseTool, ToolResult
+from ..tools.realtime_verification import create_realtime_detector
 from .base import AgentConfig, AgentResult, BaseAgent
 
 logger = logging.getLogger(__name__)
@@ -51,6 +53,19 @@ class RealTimeMetabolicAgent(BaseAgent):
             Path(__file__).parent.parent.parent / "logs" / f"realtime_run_{self.run_id}"
         )
         self.run_dir.mkdir(parents=True, exist_ok=True)
+
+        # Initialize AI audit system
+        self.ai_audit_logger = get_ai_audit_logger(
+            logs_dir=self.run_dir.parent, session_id=f"realtime_run_{self.run_id}"
+        )
+        self.ai_verifier = create_ai_decision_verifier(self.run_dir.parent)
+        self.current_workflow_id = None
+
+        # Initialize real-time verification system
+        self.realtime_detector = create_realtime_detector(
+            logs_dir=self.run_dir.parent,
+            enable_display=True,  # Enable live verification display
+        )
 
         # Tool management
         self._tools_dict = {t.tool_name: t for t in tools}
@@ -91,6 +106,14 @@ class RealTimeMetabolicAgent(BaseAgent):
         try:
             # Initialize session
             self._init_session(query)
+
+            # Start AI workflow auditing
+            self.current_workflow_id = self.ai_audit_logger.start_workflow(query)
+            logger.info(f"🔍 AI workflow audit started: {self.current_workflow_id}")
+
+            # Start real-time verification monitoring
+            self.realtime_detector.start_monitoring(self.current_workflow_id, query)
+            logger.info(f"🔍 Real-time verification monitoring started")
 
             # Step 1: AI Query Analysis & First Tool Selection
             first_tool, reasoning = self._ai_analyze_query_for_first_tool(query)
@@ -160,6 +183,23 @@ class RealTimeMetabolicAgent(BaseAgent):
             # Save complete audit trail
             self._save_complete_audit_trail(query, final_conclusions)
 
+            # Complete AI workflow audit and real-time verification
+            if self.current_workflow_id:
+                ai_audit_file = self.ai_audit_logger.complete_workflow(
+                    final_result=final_conclusions["summary"],
+                    success=True,
+                    ai_confidence_final=final_conclusions.get("confidence_score", 0.8),
+                )
+                logger.info(f"🔍 AI workflow audit completed: {ai_audit_file}")
+
+                # Complete real-time verification
+                final_metrics = self.realtime_detector.complete_monitoring(
+                    self.current_workflow_id, success=True
+                )
+                logger.info(
+                    f"🔍 Real-time verification completed with score: {final_metrics.overall_confidence:.2f}"
+                )
+
             # Create successful result
             return AgentResult(
                 success=True,
@@ -180,6 +220,31 @@ class RealTimeMetabolicAgent(BaseAgent):
 
         except Exception as e:
             logger.error(f"Real-time agent execution failed: {e}")
+
+            # Complete AI workflow audit and real-time verification for failure case
+            if self.current_workflow_id:
+                try:
+                    ai_audit_file = self.ai_audit_logger.complete_workflow(
+                        final_result=f"Workflow failed: {str(e)}",
+                        success=False,
+                        error_message=str(e),
+                        ai_confidence_final=0.0,
+                    )
+                    logger.info(
+                        f"🔍 AI workflow audit completed (failed): {ai_audit_file}"
+                    )
+
+                    # Complete real-time verification for failed workflow
+                    final_metrics = self.realtime_detector.complete_monitoring(
+                        self.current_workflow_id, success=False
+                    )
+                    logger.info(
+                        f"🔍 Real-time verification completed (failed) with score: {final_metrics.overall_confidence:.2f}"
+                    )
+
+                except Exception as audit_error:
+                    logger.error(f"Failed to complete AI audit: {audit_error}")
+
             return self._create_error_result(f"Execution failed: {str(e)}")
 
     def _init_session(self, query: str):
@@ -240,6 +305,35 @@ Think step by step about the query requirements and tool capabilities."""
                     reasoning = line.replace("REASONING:", "").strip()
                 elif reasoning and line.strip():
                     reasoning += " " + line.strip()
+
+            # Log AI reasoning step
+            if self.current_workflow_id:
+                context_analysis = f"Query requests: {query[:100]}... Available tools: {len(available_tools)} options"
+                self.ai_audit_logger.log_reasoning_step(
+                    ai_thought=response_text,
+                    context_analysis=context_analysis,
+                    available_tools=available_tools,
+                    selected_tool=selected_tool,
+                    selection_rationale=reasoning,
+                    confidence_score=0.8,  # High confidence for initial selection
+                    expected_result=f"Foundational data for {query[:50]}...",
+                    success_criteria=[
+                        "Tool executes successfully",
+                        "Provides relevant baseline data",
+                    ],
+                )
+
+                # Get the reasoning step for real-time verification
+                reasoning_steps = self.ai_audit_logger.current_workflow.reasoning_steps
+                if reasoning_steps:
+                    latest_step = reasoning_steps[-1]
+                    alerts = self.realtime_detector.process_reasoning_step(
+                        self.current_workflow_id, latest_step
+                    )
+                    if alerts:
+                        logger.info(
+                            f"🔍 Real-time verification generated {len(alerts)} alerts"
+                        )
 
             # Validate tool exists
             if selected_tool and selected_tool in self._tools_dict:
@@ -322,6 +416,49 @@ Make your decision based on the ACTUAL DATA PATTERNS you see, not generic workfl
                     decision["reasoning"] = full_reasoning
                     break
 
+            # Log AI reasoning step for this decision
+            if self.current_workflow_id:
+                available_tools = list(self._tools_dict.keys())
+                context_analysis = f"Step {step_number}: Analyzing {len(knowledge_base)} previous results to decide next action"
+
+                # Determine alternative tools that were considered
+                alternative_tools = [
+                    t for t in available_tools if t != decision.get("tool")
+                ]
+
+                self.ai_audit_logger.log_reasoning_step(
+                    ai_thought=response_text,
+                    context_analysis=context_analysis,
+                    available_tools=available_tools,
+                    selected_tool=decision.get("tool"),
+                    selection_rationale=decision.get("reasoning", ""),
+                    confidence_score=0.7,  # Moderate confidence for subsequent decisions
+                    expected_result=f"Additional insights for step {step_number}",
+                    success_criteria=[
+                        "Tool provides new information",
+                        "Results complement existing data",
+                    ],
+                    alternative_tools=alternative_tools[
+                        :3
+                    ],  # Limit to first 3 alternatives
+                    rejection_reasons={
+                        tool: "Not selected by AI analysis"
+                        for tool in alternative_tools[:3]
+                    },
+                )
+
+                # Real-time verification for subsequent steps
+                reasoning_steps = self.ai_audit_logger.current_workflow.reasoning_steps
+                if reasoning_steps:
+                    latest_step = reasoning_steps[-1]
+                    alerts = self.realtime_detector.process_reasoning_step(
+                        self.current_workflow_id, latest_step
+                    )
+                    if alerts:
+                        logger.info(
+                            f"🔍 Step {step_number} verification generated {len(alerts)} alerts"
+                        )
+
             return decision
 
         except Exception as e:
@@ -374,6 +511,16 @@ Make your decision based on the ACTUAL DATA PATTERNS you see, not generic workfl
                 }
 
                 self.audit_trail.append(audit_record)
+
+                # Log tool execution in AI audit system
+                if (
+                    self.current_workflow_id
+                    and hasattr(result, "metadata")
+                    and result.metadata.get("audit_file")
+                ):
+                    self.ai_audit_logger.log_tool_execution(
+                        tool_name, result.metadata["audit_file"]
+                    )
 
                 # Log success
                 summary = self._create_execution_summary(tool_name, result.data)
