@@ -7,9 +7,11 @@ with intelligent workflow capabilities, real-time visualization,
 and comprehensive observability.
 """
 
+import glob
 import json
 import os
 import sys
+import uuid
 import webbrowser
 from datetime import datetime
 from pathlib import Path
@@ -414,6 +416,9 @@ def main(
         )
         commands_table.add_row(
             "modelseed-agent status", "📊 Show system status and metrics"
+        )
+        commands_table.add_row(
+            "modelseed-agent audit list", "🔍 Review tool execution history"
         )
         commands_table.add_row(
             "modelseed-agent --help", "❓ Show detailed help information"
@@ -1452,6 +1457,639 @@ def switch(
     except Exception as e:
         print_error(f"Failed to switch to {backend}: {e}")
         return
+
+
+# Create audit subcommand group
+audit_app = typer.Typer(
+    name="audit",
+    help="🔍 Tool Execution Audit System - Review and analyze tool execution history for hallucination detection",
+    rich_markup_mode="rich",
+)
+
+app.add_typer(audit_app, name="audit")
+
+
+@audit_app.command("list")
+def audit_list(
+    limit: int = typer.Option(
+        10, "--limit", "-l", help="Number of recent audits to show"
+    ),
+    session_id: Optional[str] = typer.Option(
+        None, "--session", "-s", help="Filter by session ID"
+    ),
+    tool_name: Optional[str] = typer.Option(
+        None, "--tool", "-t", help="Filter by tool name"
+    ),
+):
+    """
+    📋 List recent tool executions
+
+    Shows recent tool audit records with execution details and success status.
+    """
+    console.print("[bold blue]🔍 Tool Execution Audit History[/bold blue]\n")
+
+    # Find audit files
+    logs_dir = Path("logs")
+    if not logs_dir.exists():
+        print_warning("No logs directory found. No audit records available.")
+        return
+
+    # Collect audit files
+    audit_files = []
+    search_pattern = "*/tool_audits/*.json"
+
+    if session_id:
+        search_pattern = f"{session_id}/tool_audits/*.json"
+
+    for audit_file in logs_dir.glob(search_pattern):
+        try:
+            with open(audit_file, "r") as f:
+                audit_data = json.load(f)
+
+            # Filter by tool name if specified
+            if tool_name and audit_data.get("tool_name") != tool_name:
+                continue
+
+            audit_files.append((audit_file, audit_data))
+        except Exception:
+            # Skip corrupted files
+            continue
+
+    # Sort by timestamp (newest first)
+    audit_files.sort(key=lambda x: x[1].get("timestamp", ""), reverse=True)
+
+    if not audit_files:
+        print_warning("No audit records found matching the criteria.")
+        return
+
+    # Create results table
+    audit_table = Table(box=box.ROUNDED)
+    audit_table.add_column("Audit ID", style="bold cyan", width=12)
+    audit_table.add_column("Tool", style="bold yellow", width=20)
+    audit_table.add_column("Timestamp", style="bold white", width=19)
+    audit_table.add_column("Duration", style="bold green", width=10)
+    audit_table.add_column("Status", style="bold", width=10)
+    audit_table.add_column("Session", style="dim cyan", width=12)
+
+    # Show requested number of records
+    for audit_file, audit_data in audit_files[:limit]:
+        audit_id = audit_data.get("audit_id", "unknown")[:8]  # Short ID
+        tool_name = audit_data.get("tool_name", "unknown")
+        timestamp = audit_data.get("timestamp", "")
+
+        # Format timestamp
+        if timestamp:
+            try:
+                dt = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+                formatted_time = dt.strftime("%Y-%m-%d %H:%M:%S")
+            except:
+                formatted_time = timestamp[:19]
+        else:
+            formatted_time = "unknown"
+
+        # Execution details
+        execution = audit_data.get("execution", {})
+        duration = execution.get("duration_seconds", 0)
+        success = execution.get("success", False)
+
+        duration_str = f"{duration:.2f}s" if duration else "N/A"
+        status_str = "[green]✅ Success[/green]" if success else "[red]❌ Failed[/red]"
+
+        session_id = audit_data.get("session_id", "unknown")[:8]  # Short session ID
+
+        audit_table.add_row(
+            audit_id, tool_name, formatted_time, duration_str, status_str, session_id
+        )
+
+    console.print(audit_table)
+
+    # Summary info
+    total_shown = min(limit, len(audit_files))
+    total_available = len(audit_files)
+
+    console.print(
+        f"\n[dim]Showing {total_shown} of {total_available} audit records[/dim]"
+    )
+
+    if session_id:
+        console.print(f"[dim]Filtered by session: {session_id}[/dim]")
+    if tool_name:
+        console.print(f"[dim]Filtered by tool: {tool_name}[/dim]")
+
+    console.print(
+        f"\n[dim]Use 'modelseed-agent audit show <audit_id>' to view detailed execution data[/dim]"
+    )
+
+
+@audit_app.command("show")
+def audit_show(
+    audit_id: str = typer.Argument(..., help="Audit ID to display (full or partial)"),
+    show_console: bool = typer.Option(
+        True, "--console/--no-console", help="Show console output"
+    ),
+    show_files: bool = typer.Option(
+        True, "--files/--no-files", help="Show created files"
+    ),
+):
+    """
+    🔍 Show detailed audit information for a specific tool execution
+
+    Displays comprehensive execution details including inputs, outputs, console logs,
+    and file artifacts for hallucination detection analysis.
+    """
+    console.print(f"[bold blue]🔍 Tool Execution Audit: {audit_id}[/bold blue]\n")
+
+    # Find matching audit file
+    logs_dir = Path("logs")
+    if not logs_dir.exists():
+        print_error("No logs directory found.")
+        return
+
+    # Search for audit files matching the ID
+    matching_files = []
+    for audit_file in logs_dir.glob("*/tool_audits/*.json"):
+        try:
+            with open(audit_file, "r") as f:
+                audit_data = json.load(f)
+
+            full_audit_id = audit_data.get("audit_id", "")
+            if audit_id in full_audit_id:
+                matching_files.append((audit_file, audit_data))
+        except:
+            continue
+
+    if not matching_files:
+        print_error(f"No audit record found matching ID: {audit_id}")
+        return
+
+    if len(matching_files) > 1:
+        print_warning(f"Multiple matches found for '{audit_id}'. Showing first match.")
+
+    audit_file, audit_data = matching_files[0]
+
+    # Display audit header
+    header_table = Table(show_header=False, box=box.SIMPLE)
+    header_table.add_column("Field", style="bold cyan")
+    header_table.add_column("Value", style="bold white")
+
+    header_table.add_row("Audit ID", audit_data.get("audit_id", "N/A"))
+    header_table.add_row("Session ID", audit_data.get("session_id", "N/A"))
+    header_table.add_row("Tool Name", audit_data.get("tool_name", "N/A"))
+    header_table.add_row("Timestamp", audit_data.get("timestamp", "N/A"))
+
+    console.print(
+        Panel(
+            header_table,
+            title="[bold blue]📋 Audit Header[/bold blue]",
+            border_style="blue",
+        )
+    )
+
+    # Input data
+    input_data = audit_data.get("input", {})
+    if input_data:
+        console.print(f"\n[bold green]📥 Input Data:[/bold green]")
+        input_json = json.dumps(input_data, indent=2)
+        if len(input_json) > 500:
+            input_json = input_json[:500] + "\n... (truncated)"
+        console.print(Panel(input_json, border_style="green"))
+
+    # Output data
+    output_data = audit_data.get("output", {})
+    if output_data:
+        console.print(f"\n[bold yellow]📤 Output Data:[/bold yellow]")
+
+        # Structured output
+        structured = output_data.get("structured", {})
+        if structured:
+            console.print(f"\n[bold]🔧 Structured Results:[/bold]")
+            structured_json = json.dumps(structured, indent=2)
+            if len(structured_json) > 1000:
+                structured_json = structured_json[:1000] + "\n... (truncated)"
+            console.print(Panel(structured_json, border_style="yellow"))
+
+        # Console output
+        console_output = output_data.get("console", "")
+        if console_output and show_console:
+            console.print(f"\n[bold]💻 Console Output:[/bold]")
+            console_text = console_output
+            if len(console_text) > 1000:
+                console_text = console_text[:1000] + "\n... (truncated)"
+            console.print(Panel(console_text, border_style="cyan"))
+
+        # Created files
+        files = output_data.get("files", [])
+        if files and show_files:
+            console.print(f"\n[bold]📄 Created Files:[/bold]")
+            files_table = Table(box=box.ROUNDED)
+            files_table.add_column("File", style="cyan")
+            files_table.add_column("Exists", style="bold")
+            files_table.add_column("Size", style="green")
+
+            for file_path in files:
+                file_obj = Path(file_path)
+                exists = file_obj.exists()
+                if exists:
+                    size = file_obj.stat().st_size
+                    size_str = f"{size} bytes" if size < 1024 else f"{size/1024:.1f} KB"
+                    status = "[green]✅ Yes[/green]"
+                else:
+                    size_str = "N/A"
+                    status = "[red]❌ No[/red]"
+
+                files_table.add_row(str(file_path), status, size_str)
+
+            console.print(files_table)
+
+    # Execution details
+    execution = audit_data.get("execution", {})
+    if execution:
+        console.print(f"\n[bold blue]⚡ Execution Details:[/bold blue]")
+
+        exec_table = Table(show_header=False, box=box.SIMPLE)
+        exec_table.add_column("Metric", style="bold cyan")
+        exec_table.add_column("Value", style="bold white")
+
+        duration = execution.get("duration_seconds", 0)
+        success = execution.get("success", False)
+        error = execution.get("error")
+
+        exec_table.add_row("Duration", f"{duration:.3f} seconds")
+        exec_table.add_row("Success", "✅ Yes" if success else "❌ No")
+
+        if error:
+            exec_table.add_row(
+                "Error",
+                str(error)[:100] + "..." if len(str(error)) > 100 else str(error),
+            )
+
+        console.print(exec_table)
+
+    console.print(f"\n[dim]Audit file: {audit_file}[/dim]")
+
+
+@audit_app.command("session")
+def audit_session(
+    session_id: str = typer.Argument(..., help="Session ID to analyze"),
+    summary: bool = typer.Option(
+        False, "--summary", "-s", help="Show summary statistics only"
+    ),
+):
+    """
+    📊 Show all tool executions for a specific session
+
+    Displays comprehensive session-level audit information for workflow analysis
+    and hallucination pattern detection.
+    """
+    console.print(f"[bold blue]📊 Session Audit: {session_id}[/bold blue]\n")
+
+    # Find session directory
+    logs_dir = Path("logs")
+    session_dir = logs_dir / session_id
+
+    if not session_dir.exists():
+        print_error(f"Session directory not found: {session_id}")
+        return
+
+    audit_dir = session_dir / "tool_audits"
+    if not audit_dir.exists():
+        print_warning(f"No tool audits found for session: {session_id}")
+        return
+
+    # Load all audit files for this session
+    audit_records = []
+    for audit_file in audit_dir.glob("*.json"):
+        try:
+            with open(audit_file, "r") as f:
+                audit_data = json.load(f)
+            audit_records.append(audit_data)
+        except Exception as e:
+            print_warning(f"Could not load audit file {audit_file}: {e}")
+            continue
+
+    if not audit_records:
+        print_warning(f"No valid audit records found for session: {session_id}")
+        return
+
+    # Sort by timestamp
+    audit_records.sort(key=lambda x: x.get("timestamp", ""))
+
+    # Session summary statistics
+    total_tools = len(audit_records)
+    successful_tools = sum(
+        1 for r in audit_records if r.get("execution", {}).get("success", False)
+    )
+    total_duration = sum(
+        r.get("execution", {}).get("duration_seconds", 0) for r in audit_records
+    )
+    unique_tools = len(set(r.get("tool_name") for r in audit_records))
+
+    # Display session summary
+    summary_table = Table(box=box.ROUNDED)
+    summary_table.add_column("Metric", style="bold cyan")
+    summary_table.add_column("Value", style="bold white")
+
+    summary_table.add_row("Session ID", session_id)
+    summary_table.add_row("Total Executions", str(total_tools))
+    summary_table.add_row(
+        "Successful", f"{successful_tools} ({successful_tools/total_tools*100:.1f}%)"
+    )
+    summary_table.add_row("Failed", str(total_tools - successful_tools))
+    summary_table.add_row("Total Duration", f"{total_duration:.2f} seconds")
+    summary_table.add_row("Unique Tools", str(unique_tools))
+
+    if audit_records:
+        first_time = audit_records[0].get("timestamp", "")
+        last_time = audit_records[-1].get("timestamp", "")
+        if first_time and last_time:
+            try:
+                start_dt = datetime.fromisoformat(first_time.replace("Z", "+00:00"))
+                end_dt = datetime.fromisoformat(last_time.replace("Z", "+00:00"))
+                session_duration = (end_dt - start_dt).total_seconds()
+                summary_table.add_row(
+                    "Session Duration", f"{session_duration:.0f} seconds"
+                )
+            except:
+                pass
+
+    console.print(
+        Panel(
+            summary_table,
+            title="[bold blue]📊 Session Summary[/bold blue]",
+            border_style="blue",
+        )
+    )
+
+    if summary:
+        return
+
+    # Detailed tool execution timeline
+    console.print(f"\n[bold green]📋 Tool Execution Timeline:[/bold green]")
+
+    timeline_table = Table(box=box.ROUNDED)
+    timeline_table.add_column("#", style="bold blue", width=3)
+    timeline_table.add_column("Tool", style="bold yellow", width=25)
+    timeline_table.add_column("Time", style="bold white", width=8)
+    timeline_table.add_column("Duration", style="bold green", width=10)
+    timeline_table.add_column("Status", style="bold", width=10)
+    timeline_table.add_column("Files", style="cyan", width=8)
+
+    for i, record in enumerate(audit_records, 1):
+        tool_name = record.get("tool_name", "unknown")
+        timestamp = record.get("timestamp", "")
+
+        # Format time (just time part)
+        if timestamp:
+            try:
+                dt = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+                time_str = dt.strftime("%H:%M:%S")
+            except:
+                time_str = timestamp[11:19] if len(timestamp) > 19 else "unknown"
+        else:
+            time_str = "unknown"
+
+        execution = record.get("execution", {})
+        duration = execution.get("duration_seconds", 0)
+        success = execution.get("success", False)
+
+        duration_str = f"{duration:.2f}s"
+        status_str = "[green]✅[/green]" if success else "[red]❌[/red]"
+
+        # Count created files
+        files_count = len(record.get("output", {}).get("files", []))
+        files_str = str(files_count) if files_count > 0 else "-"
+
+        timeline_table.add_row(
+            str(i), tool_name, time_str, duration_str, status_str, files_str
+        )
+
+    console.print(timeline_table)
+
+    # Tool usage statistics
+    tool_stats = {}
+    for record in audit_records:
+        tool_name = record.get("tool_name", "unknown")
+        if tool_name not in tool_stats:
+            tool_stats[tool_name] = {"count": 0, "successes": 0, "total_duration": 0}
+
+        tool_stats[tool_name]["count"] += 1
+        if record.get("execution", {}).get("success", False):
+            tool_stats[tool_name]["successes"] += 1
+        tool_stats[tool_name]["total_duration"] += record.get("execution", {}).get(
+            "duration_seconds", 0
+        )
+
+    console.print(f"\n[bold yellow]🔧 Tool Usage Statistics:[/bold yellow]")
+
+    stats_table = Table(box=box.ROUNDED)
+    stats_table.add_column("Tool", style="bold cyan")
+    stats_table.add_column("Count", style="bold white")
+    stats_table.add_column("Success Rate", style="bold green")
+    stats_table.add_column("Avg Duration", style="bold yellow")
+
+    for tool_name, stats in sorted(
+        tool_stats.items(), key=lambda x: x[1]["count"], reverse=True
+    ):
+        count = stats["count"]
+        successes = stats["successes"]
+        success_rate = f"{successes/count*100:.1f}%" if count > 0 else "0%"
+        avg_duration = f"{stats['total_duration']/count:.2f}s" if count > 0 else "0s"
+
+        stats_table.add_row(tool_name, str(count), success_rate, avg_duration)
+
+    console.print(stats_table)
+
+    console.print(
+        f"\n[dim]Use 'modelseed-agent audit show <audit_id>' to view specific execution details[/dim]"
+    )
+
+
+@audit_app.command("verify")
+def audit_verify(
+    audit_id: str = typer.Argument(..., help="Audit ID to verify for hallucinations"),
+    check_files: bool = typer.Option(
+        True, "--check-files/--no-check-files", help="Verify file outputs exist"
+    ),
+    check_claims: bool = typer.Option(
+        True, "--check-claims/--no-check-claims", help="Compare claims vs data"
+    ),
+):
+    """
+    🔍 Verify tool execution for potential hallucinations
+
+    Performs automated checks to detect discrepancies between tool claims
+    and actual execution results, helping identify AI hallucinations.
+    """
+    console.print(f"[bold blue]🔍 Hallucination Verification: {audit_id}[/bold blue]\n")
+
+    # Find and load audit record
+    logs_dir = Path("logs")
+    if not logs_dir.exists():
+        print_error("No logs directory found.")
+        return
+
+    # Find matching audit file
+    audit_data = None
+    for candidate_file in logs_dir.glob("*/tool_audits/*.json"):
+        try:
+            with open(candidate_file, "r") as f:
+                data = json.load(f)
+
+            if audit_id in data.get("audit_id", ""):
+                audit_data = data
+                break
+        except:
+            continue
+
+    if not audit_data:
+        print_error(f"No audit record found matching ID: {audit_id}")
+        return
+
+    console.print(
+        f"[bold green]📋 Verifying: {audit_data.get('tool_name', 'unknown')}[/bold green]\n"
+    )
+
+    # Verification results
+    issues = []
+    verifications = []
+
+    # 1. Basic execution verification
+    execution = audit_data.get("execution", {})
+    success = execution.get("success", False)
+    error = execution.get("error")
+
+    if success:
+        verifications.append("✅ Tool execution completed successfully")
+    else:
+        issues.append(f"❌ Tool execution failed: {error}")
+
+    # 2. File verification
+    if check_files:
+        files = audit_data.get("output", {}).get("files", [])
+        if files:
+            existing_files = 0
+            for file_path in files:
+                if Path(file_path).exists():
+                    existing_files += 1
+                else:
+                    issues.append(f"❌ Claimed file does not exist: {file_path}")
+
+            if existing_files == len(files):
+                verifications.append(f"✅ All {len(files)} claimed files exist")
+            else:
+                issues.append(
+                    f"⚠️ Only {existing_files}/{len(files)} claimed files exist"
+                )
+        else:
+            verifications.append("ℹ️ No file outputs claimed")
+
+    # 3. Console vs structured output consistency
+    output_data = audit_data.get("output", {})
+    console_output = output_data.get("console", "")
+    structured = output_data.get("structured", {})
+
+    if console_output and structured:
+        # Check for error messages in console but success in structured output
+        console_lower = console_output.lower()
+        if any(
+            error_word in console_lower
+            for error_word in ["error", "failed", "exception", "traceback"]
+        ):
+            if structured.get("success", True):  # Assuming success if not specified
+                issues.append(
+                    "⚠️ Console shows errors but structured output indicates success"
+                )
+            else:
+                verifications.append(
+                    "✅ Console errors match structured failure status"
+                )
+        else:
+            verifications.append("✅ No obvious error patterns in console output")
+
+    # 4. Data consistency checks
+    if structured:
+        # Check for None/null values in critical fields
+        def check_none_values(obj, path=""):
+            none_fields = []
+            if isinstance(obj, dict):
+                for key, value in obj.items():
+                    current_path = f"{path}.{key}" if path else key
+                    if value is None:
+                        none_fields.append(current_path)
+                    elif isinstance(value, (dict, list)):
+                        none_fields.extend(check_none_values(value, current_path))
+            elif isinstance(obj, list):
+                for i, item in enumerate(obj):
+                    current_path = f"{path}[{i}]"
+                    if item is None:
+                        none_fields.append(current_path)
+                    elif isinstance(item, (dict, list)):
+                        none_fields.extend(check_none_values(item, current_path))
+            return none_fields
+
+        none_fields = check_none_values(structured)
+        if none_fields:
+            issues.append(
+                f"⚠️ Found null/None values in: {', '.join(none_fields[:5])}{'...' if len(none_fields) > 5 else ''}"
+            )
+        else:
+            verifications.append("✅ No null/None values in structured output")
+
+    # 5. Execution time consistency
+    duration = execution.get("duration_seconds", 0)
+    if duration > 0:
+        if duration < 0.001:
+            issues.append("⚠️ Execution time suspiciously fast (< 1ms)")
+        elif duration > 300:  # 5 minutes
+            issues.append("⚠️ Execution time suspiciously long (> 5 minutes)")
+        else:
+            verifications.append(f"✅ Execution time reasonable ({duration:.3f}s)")
+
+    # Display verification results
+    if verifications:
+        console.print("[bold green]✅ Verification Passed:[/bold green]")
+        for verification in verifications:
+            console.print(f"  {verification}")
+
+    if issues:
+        console.print(f"\n[bold red]⚠️ Issues Found ({len(issues)}):[/bold red]")
+        for issue in issues:
+            console.print(f"  {issue}")
+
+    if not issues:
+        console.print(
+            f"\n[bold green]🎉 No hallucination indicators detected![/bold green]"
+        )
+        console.print(
+            "[dim]This execution appears to be consistent and trustworthy.[/dim]"
+        )
+    else:
+        console.print(
+            f"\n[bold yellow]🚨 Potential hallucination indicators found.[/bold yellow]"
+        )
+        console.print("[dim]Manual review recommended for this execution.[/dim]")
+
+    # Summary
+    console.print(f"\n[bold blue]📊 Verification Summary:[/bold blue]")
+    summary_table = Table(show_header=False, box=box.SIMPLE)
+    summary_table.add_column("Check", style="cyan")
+    summary_table.add_column("Result", style="bold")
+
+    summary_table.add_row("Total Checks", str(len(verifications) + len(issues)))
+    summary_table.add_row("Passed", f"[green]{len(verifications)}[/green]")
+    summary_table.add_row(
+        "Issues", f"[red]{len(issues)}[/red]" if issues else "[green]0[/green]"
+    )
+    summary_table.add_row(
+        "Trust Level",
+        (
+            "[green]High[/green]"
+            if not issues
+            else "[yellow]Medium[/yellow]" if len(issues) < 3 else "[red]Low[/red]"
+        ),
+    )
+
+    console.print(summary_table)
 
 
 if __name__ == "__main__":
