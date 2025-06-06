@@ -13,6 +13,7 @@ This replaces the static workflow approach with genuine AI-driven exploration.
 import json
 import logging
 import time
+import uuid
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
@@ -26,6 +27,10 @@ from ..tools.ai_audit import create_ai_decision_verifier, get_ai_audit_logger
 from ..tools.base import BaseTool, ToolResult
 from ..tools.realtime_verification import create_realtime_detector
 from .base import AgentConfig, AgentResult, BaseAgent
+from .collaborative_reasoning import create_collaborative_reasoning_system
+from .hypothesis_system import create_hypothesis_system
+from .pattern_memory import create_learning_system
+from .reasoning_chains import create_reasoning_chain_system
 
 logger = logging.getLogger(__name__)
 
@@ -72,6 +77,34 @@ class RealTimeMetabolicAgent(BaseAgent):
         self.knowledge_base = {}
         self.audit_trail = []
 
+        # Initialize Phase 8 Advanced Agentic Capabilities
+        tools_registry = {t.tool_name: t for t in tools}
+
+        # Phase 8.1: Multi-step reasoning chains
+        self.reasoning_planner, self.reasoning_executor = create_reasoning_chain_system(
+            llm, tools_registry, self, self.ai_audit_logger
+        )
+
+        # Phase 8.2: Hypothesis-driven analysis
+        self.hypothesis_manager = create_hypothesis_system(llm, self)
+
+        # Phase 8.3: Collaborative reasoning
+        self.collaborative_reasoner = create_collaborative_reasoning_system(
+            llm, interactive=True  # Enable interactive mode
+        )
+
+        # Phase 8.4: Cross-model learning
+        self.learning_memory = create_learning_system(
+            llm, storage_path=self.run_dir.parent / "learning_memory"
+        )
+
+        # Phase 8 state management
+        self.current_reasoning_chain = None
+        self.active_hypotheses = []
+        self.reasoning_mode = (
+            "dynamic"  # Can be "dynamic", "chain", "hypothesis", "collaborative"
+        )
+
         # Default model path for tools that need it
         self.default_model_path = str(
             Path(__file__).parent.parent.parent
@@ -90,18 +123,21 @@ class RealTimeMetabolicAgent(BaseAgent):
         """Create agent executor - not used in real-time agent"""
         return None
 
-    def run(self, input_data: Dict[str, Any]) -> AgentResult:
+    async def run(self, input_data: Dict[str, Any]) -> AgentResult:
         """
-        Run dynamic AI-driven metabolic analysis.
+        Run advanced AI-driven metabolic analysis with Phase 8 capabilities.
 
-        This method implements true dynamic decision-making where each tool
-        execution leads to AI analysis of results and intelligent selection
-        of the next tool based on what was discovered.
+        This method implements sophisticated AI reasoning including:
+        - Multi-step reasoning chains
+        - Hypothesis-driven analysis
+        - Collaborative decision-making
+        - Pattern learning and memory
         """
         query = input_data.get("query", input_data.get("input", ""))
         max_iterations = input_data.get("max_iterations", 6)
+        reasoning_mode = input_data.get("reasoning_mode", self.reasoning_mode)
 
-        logger.info(f"🧠 REAL-TIME AI AGENT STARTING: {query}")
+        logger.info(f"🧠 ADVANCED AI AGENT STARTING: {query} (Mode: {reasoning_mode})")
 
         try:
             # Initialize session
@@ -115,137 +151,34 @@ class RealTimeMetabolicAgent(BaseAgent):
             self.realtime_detector.start_monitoring(self.current_workflow_id, query)
             logger.info(f"🔍 Real-time verification monitoring started")
 
-            # Step 1: AI Query Analysis & First Tool Selection
-            first_tool, reasoning = self._ai_analyze_query_for_first_tool(query)
-            if not first_tool:
-                return self._create_error_result(
-                    "Could not determine appropriate starting tool"
-                )
-
-            self._log_ai_decision(
-                "initial_analysis",
-                {"query": query, "selected_tool": first_tool, "reasoning": reasoning},
+            # Get learning-based recommendations
+            model_characteristics = self._analyze_model_characteristics(query)
+            recommendations = self.learning_memory.get_recommended_approach(
+                query, model_characteristics
             )
 
-            # Execute first tool
-            step1_success, step1_data = self._execute_tool_with_audit(
-                first_tool, 1, query
-            )
-            if not step1_success:
-                return self._create_error_result(f"First tool {first_tool} failed")
-
-            # Dynamic tool selection loop
-            current_step = 2
-            while current_step <= max_iterations:
-                # AI analyzes results and decides next step
-                next_decision = self._ai_analyze_results_and_decide_next_step(
-                    self.knowledge_base, query, current_step
-                )
-
-                if next_decision["action"] == "finalize":
-                    logger.info("🤖 AI determined analysis is complete")
-                    break
-                elif next_decision["action"] == "execute_tool":
-                    tool_name = next_decision["tool"]
-                    reasoning = next_decision["reasoning"]
-
-                    self._log_ai_decision(
-                        f"step_{current_step}_selection",
-                        {
-                            "tool": tool_name,
-                            "reasoning": reasoning,
-                            "based_on_results": list(self.knowledge_base.keys()),
-                        },
-                    )
-
-                    # Execute the AI-selected tool
-                    success, data = self._execute_tool_with_audit(
-                        tool_name, current_step, query
-                    )
-                    if success:
-                        current_step += 1
-                    else:
-                        logger.warning(
-                            f"Tool {tool_name} failed, but continuing analysis"
-                        )
-                        current_step += 1
-                else:
-                    logger.warning(
-                        f"Unknown AI decision action: {next_decision['action']}"
-                    )
-                    break
-
-            # AI generates final conclusions
-            final_conclusions = self._ai_generate_final_conclusions(
-                query, self.knowledge_base
-            )
-
-            # Save complete audit trail
-            self._save_complete_audit_trail(query, final_conclusions)
-
-            # Complete AI workflow audit and real-time verification
-            if self.current_workflow_id:
-                ai_audit_file = self.ai_audit_logger.complete_workflow(
-                    final_result=final_conclusions["summary"],
-                    success=True,
-                    ai_confidence_final=final_conclusions.get("confidence_score", 0.8),
-                )
-                logger.info(f"🔍 AI workflow audit completed: {ai_audit_file}")
-
-                # Complete real-time verification
-                final_metrics = self.realtime_detector.complete_monitoring(
-                    self.current_workflow_id, success=True
-                )
+            if recommendations["confidence"] > 0.7:
                 logger.info(
-                    f"🔍 Real-time verification completed with score: {final_metrics.overall_confidence:.2f}"
+                    f"🧠 Learning memory suggests: {recommendations['rationale']}"
                 )
 
-            # Create successful result
-            return AgentResult(
-                success=True,
-                message=final_conclusions["summary"],
-                data=self.knowledge_base,
-                intermediate_steps=self.audit_trail,
-                metadata={
-                    "run_id": self.run_id,
-                    "ai_reasoning_steps": len(self.audit_trail),
-                    "tools_executed": list(self.knowledge_base.keys()),
-                    "quantitative_findings": final_conclusions.get(
-                        "quantitative_findings", {}
-                    ),
-                    "ai_confidence": final_conclusions.get("confidence_score", 0.0),
-                    "audit_file": str(self.run_dir / "complete_audit_trail.json"),
-                },
-            )
+            # Select reasoning approach based on query complexity and mode
+            if reasoning_mode == "chain" or self._should_use_reasoning_chains(query):
+                return await self._run_with_reasoning_chains(query, max_iterations)
+            elif reasoning_mode == "hypothesis" or self._should_use_hypothesis_driven(
+                query
+            ):
+                return await self._run_with_hypothesis_testing(query, max_iterations)
+            elif reasoning_mode == "collaborative":
+                return await self._run_with_collaborative_reasoning(
+                    query, max_iterations
+                )
+            else:
+                return await self._run_dynamic_analysis(query, max_iterations)
 
         except Exception as e:
-            logger.error(f"Real-time agent execution failed: {e}")
-
-            # Complete AI workflow audit and real-time verification for failure case
-            if self.current_workflow_id:
-                try:
-                    ai_audit_file = self.ai_audit_logger.complete_workflow(
-                        final_result=f"Workflow failed: {str(e)}",
-                        success=False,
-                        error_message=str(e),
-                        ai_confidence_final=0.0,
-                    )
-                    logger.info(
-                        f"🔍 AI workflow audit completed (failed): {ai_audit_file}"
-                    )
-
-                    # Complete real-time verification for failed workflow
-                    final_metrics = self.realtime_detector.complete_monitoring(
-                        self.current_workflow_id, success=False
-                    )
-                    logger.info(
-                        f"🔍 Real-time verification completed (failed) with score: {final_metrics.overall_confidence:.2f}"
-                    )
-
-                except Exception as audit_error:
-                    logger.error(f"Failed to complete AI audit: {audit_error}")
-
-            return self._create_error_result(f"Execution failed: {str(e)}")
+            logger.error(f"Advanced AI agent execution failed: {e}")
+            return await self._handle_execution_failure(e)
 
     def _init_session(self, query: str):
         """Initialize analysis session"""
@@ -769,7 +702,7 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
             metadata={"run_id": self.run_id},
         )
 
-    def analyze_model(
+    async def analyze_model(
         self, query: str, model_path: Optional[str] = None
     ) -> AgentResult:
         """Analyze a metabolic model - compatibility method"""
@@ -777,4 +710,4 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
         if model_path:
             self.default_model_path = model_path
 
-        return self.run(input_data)
+        return await self.run(input_data)
