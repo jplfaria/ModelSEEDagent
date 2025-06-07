@@ -168,13 +168,11 @@ class RealTimeMetabolicAgent(BaseAgent):
             elif reasoning_mode == "hypothesis" or self._should_use_hypothesis_driven(
                 query
             ):
-                return await self._run_with_hypothesis_testing(query, max_iterations)
+                return await self._run_with_hypothesis_mode(query, max_iterations)
             elif reasoning_mode == "collaborative":
-                return await self._run_with_collaborative_reasoning(
-                    query, max_iterations
-                )
+                return await self._run_with_collaborative_mode(query, max_iterations)
             else:
-                return await self._run_dynamic_analysis(query, max_iterations)
+                return await self._run_standard_analysis(query, max_iterations)
 
         except Exception as e:
             logger.error(f"Advanced AI agent execution failed: {e}")
@@ -700,6 +698,210 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
             intermediate_steps=self.audit_trail,
             error=error_message,
             metadata={"run_id": self.run_id},
+        )
+
+    def _analyze_model_characteristics(self, query: str) -> Dict[str, Any]:
+        """Extract model characteristics from query for learning recommendations"""
+        characteristics = {
+            "model_type": "unknown",
+            "organism": "unknown",
+            "query_type": "general",
+            "complexity": "medium",
+        }
+
+        query_lower = query.lower()
+
+        # Identify model type
+        if "e. coli" in query_lower or "ecoli" in query_lower:
+            characteristics["organism"] = "e_coli"
+        elif "yeast" in query_lower:
+            characteristics["organism"] = "yeast"
+        elif "human" in query_lower:
+            characteristics["organism"] = "human"
+
+        # Identify query type
+        if "comprehensive" in query_lower:
+            characteristics["query_type"] = "comprehensive"
+            characteristics["complexity"] = "high"
+        elif "growth" in query_lower:
+            characteristics["query_type"] = "growth_analysis"
+        elif "essential" in query_lower:
+            characteristics["query_type"] = "essentiality"
+        elif "media" in query_lower or "nutrition" in query_lower:
+            characteristics["query_type"] = "nutritional"
+
+        return characteristics
+
+    def _should_use_reasoning_chains(self, query: str) -> bool:
+        """Determine if multi-step reasoning chains should be used"""
+        indicators = ["comprehensive", "systematic", "step by step", "analyze all"]
+        query_lower = query.lower()
+        return any(indicator in query_lower for indicator in indicators)
+
+    def _should_use_hypothesis_driven(self, query: str) -> bool:
+        """Determine if hypothesis-driven analysis should be used"""
+        indicators = [
+            "why",
+            "investigate",
+            "hypothesis",
+            "might be",
+            "could be",
+            "reason",
+        ]
+        query_lower = query.lower()
+        return any(indicator in query_lower for indicator in indicators)
+
+    async def _run_with_reasoning_chains(
+        self, query: str, max_iterations: int
+    ) -> AgentResult:
+        """Run analysis using multi-step reasoning chains"""
+        # For now, fallback to standard execution
+        # Full reasoning chain implementation would go here
+        return await self._run_standard_analysis(query, max_iterations)
+
+    async def _run_with_hypothesis_mode(
+        self, query: str, max_iterations: int
+    ) -> AgentResult:
+        """Run analysis using hypothesis-driven approach"""
+        # For now, fallback to standard execution
+        # Full hypothesis mode implementation would go here
+        return await self._run_standard_analysis(query, max_iterations)
+
+    async def _run_with_collaborative_mode(
+        self, query: str, max_iterations: int
+    ) -> AgentResult:
+        """Run analysis with collaborative reasoning"""
+        # For now, fallback to standard execution
+        # Full collaborative mode implementation would go here
+        return await self._run_standard_analysis(query, max_iterations)
+
+    async def _run_standard_analysis(
+        self, query: str, max_iterations: int
+    ) -> AgentResult:
+        """Run standard dynamic analysis workflow"""
+        logger.info("🚀 Starting standard dynamic analysis workflow")
+
+        # Initial tool selection
+        first_tool, reasoning = self._ai_analyze_query_for_first_tool(query)
+
+        if not first_tool:
+            logger.warning("⚠️ Could not determine initial tool, using FBA as default")
+            first_tool = "run_metabolic_fba"
+            reasoning = "Starting with growth analysis as baseline"
+
+        self.knowledge_base["ai_initial_reasoning"] = reasoning
+        self._log_ai_decision(
+            "initial_tool_selection",
+            {"selected_tool": first_tool, "reasoning": reasoning},
+        )
+
+        # Execute first tool
+        logger.info(f"🔧 Executing first tool: {first_tool}")
+        result = await self._execute_tool_with_audit(first_tool, query)
+
+        if not result.success:
+            return self._create_error_result(f"First tool failed: {result.error}")
+
+        self.knowledge_base[first_tool] = result.data
+        self.tool_execution_history.append(
+            {"tool": first_tool, "reasoning": reasoning, "success": True}
+        )
+
+        # Dynamic analysis loop
+        iteration = 1
+        while iteration < max_iterations:
+            # AI decides next step based on all accumulated knowledge
+            next_tool, should_continue, reasoning = (
+                self._ai_analyze_results_and_decide_next_step(
+                    query, self.knowledge_base
+                )
+            )
+
+            if not should_continue:
+                logger.info("✅ AI determined analysis is complete")
+                break
+
+            if next_tool:
+                logger.info(f"🔧 AI selected next tool: {next_tool}")
+                logger.info(f"💭 Reasoning: {reasoning}")
+
+                result = await self._execute_tool_with_audit(next_tool, query)
+
+                if result.success:
+                    self.knowledge_base[next_tool] = result.data
+                    self.tool_execution_history.append(
+                        {"tool": next_tool, "reasoning": reasoning, "success": True}
+                    )
+                else:
+                    logger.warning(f"⚠️ Tool {next_tool} failed: {result.error}")
+                    self.tool_execution_history.append(
+                        {
+                            "tool": next_tool,
+                            "reasoning": reasoning,
+                            "success": False,
+                            "error": result.error,
+                        }
+                    )
+
+            iteration += 1
+
+        # Generate final conclusions
+        final_conclusions = self._ai_generate_final_conclusions(
+            query, self.knowledge_base, self.tool_execution_history
+        )
+
+        # Save audit trail
+        self._save_complete_audit_trail(query, final_conclusions)
+
+        # Log to AI audit system
+        self.ai_audit_logger.log_ai_decision(
+            self.current_workflow_id,
+            "final_synthesis",
+            final_conclusions,
+            {"knowledge_base": self.knowledge_base},
+        )
+
+        # Complete workflow
+        self.ai_audit_logger.complete_workflow(
+            self.current_workflow_id,
+            final_conclusions["conclusions"],
+            {
+                "tools_executed": len(self.tool_execution_history),
+                "ai_decisions": len(self.audit_trail),
+            },
+        )
+
+        # Stop real-time monitoring
+        verification_report = self.realtime_detector.stop_monitoring(
+            self.current_workflow_id
+        )
+        if verification_report["confidence_score"] < 0.8:
+            logger.warning(
+                f"⚠️ Low confidence score: {verification_report['confidence_score']}"
+            )
+
+        # Update learning memory
+        self.learning_memory.record_analysis(
+            query,
+            self._analyze_model_characteristics(query),
+            [t["tool"] for t in self.tool_execution_history if t["success"]],
+            final_conclusions["conclusions"],
+            verification_report["confidence_score"],
+        )
+
+        return AgentResult(
+            success=True,
+            message=final_conclusions["conclusions"],
+            data={
+                "knowledge_base": self.knowledge_base,
+                "execution_history": self.tool_execution_history,
+                "ai_reasoning": final_conclusions,
+            },
+            metadata={
+                "tools_executed": [t["tool"] for t in self.tool_execution_history],
+                "reasoning_steps": len(self.audit_trail),
+                "confidence_score": verification_report["confidence_score"],
+            },
         )
 
     async def analyze_model(
