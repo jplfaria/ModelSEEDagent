@@ -325,7 +325,13 @@ class TestDataFlowValidation:
         for compound, data in resolved_compounds.items():
             name = data.get("primary_name", "")
             assert len(name) > 0, f"Compound {compound} should have a name"
-            assert name != compound, f"Name should be different from ID for {compound}"
+
+            # Allow case where input name matches output (e.g., "ATP" -> "ATP")
+            # But for compound IDs, expect different names
+            if compound.startswith("cpd"):
+                assert (
+                    name != compound
+                ), f"Compound ID {compound} should resolve to a different name, got {name}"
 
             print(f"  {compound} → {name}")
 
