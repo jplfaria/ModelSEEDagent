@@ -15,23 +15,18 @@ Test Categories:
 import sys
 from pathlib import Path
 
-# Add src and tests to path
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-sys.path.insert(0, str(Path(__file__).parent))
-
-from functional.test_advanced_cobra_tools_correctness import (
+# Import test modules
+from tests.functional.test_advanced_cobra_tools_correctness import (
     run_advanced_cobra_functional_tests,
 )
-from functional.test_ai_reasoning_correctness import run_ai_reasoning_tests
-from functional.test_biochemistry_tools_correctness import (
+from tests.functional.test_ai_reasoning_correctness import run_ai_reasoning_tests
+from tests.functional.test_biochemistry_tools_correctness import (
     run_biochemistry_functional_tests,
 )
-
-# Import test modules
-from functional.test_metabolic_tools_correctness import (
+from tests.functional.test_metabolic_tools_correctness import (
     run_comprehensive_functional_tests,
 )
-from functional.test_workflow_correctness import run_workflow_correctness_tests
+from tests.functional.test_workflow_correctness import run_workflow_correctness_tests
 
 
 def run_all_functional_tests():

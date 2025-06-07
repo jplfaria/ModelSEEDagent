@@ -13,12 +13,8 @@ Tests validate:
 """
 
 import sys
-from pathlib import Path
 
 import pytest
-
-# Add src to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
 from src.tools.biochem.resolver import BiochemEntityResolverTool, BiochemSearchTool
 
@@ -46,19 +42,31 @@ class TestBiochemEntityResolverCorrectness:
             result = resolver_tool._run_tool({"entity_id": compound_id})
 
             if result.success:
-                name = result.data.get("name", "").lower()
+                primary_name = result.data.get("primary_name", "").lower()
                 aliases = result.data.get("aliases", [])
+                names = result.data.get("names", [])
 
-                # Check if expected name appears in name or aliases
-                name_found = expected_name_part.lower() in name or any(
-                    expected_name_part.lower() in alias.lower() for alias in aliases
+                # Check if expected name appears in primary_name, aliases, or alternative names
+                name_found = (
+                    expected_name_part.lower() in primary_name
+                    or any(
+                        expected_name_part.lower()
+                        in alias.get("external_id", "").lower()
+                        for alias in aliases
+                    )
+                    or any(
+                        expected_name_part.lower() in name.get("name", "").lower()
+                        for name in names
+                    )
                 )
 
                 if name_found:
                     successful_resolutions += 1
-                    print(f"✅ {compound_id} → {result.data.get('name')}")
+                    print(f"✅ {compound_id} → {result.data.get('primary_name')}")
                 else:
-                    print(f"⚠️  {compound_id} resolved but name mismatch: {name}")
+                    print(
+                        f"⚠️  {compound_id} resolved but name mismatch: {primary_name}"
+                    )
             else:
                 print(f"❌ {compound_id} resolution failed: {result.error}")
 

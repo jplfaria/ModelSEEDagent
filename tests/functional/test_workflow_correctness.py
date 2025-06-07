@@ -20,9 +20,6 @@ from pathlib import Path
 
 import pytest
 
-# Add src to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
-
 from src.tools.biochem.resolver import BiochemEntityResolverTool
 from src.tools.cobra.auxotrophy import AuxotrophyTool
 from src.tools.cobra.essentiality import EssentialityAnalysisTool
@@ -326,7 +323,7 @@ class TestDataFlowValidation:
 
         # Check that names are meaningful
         for compound, data in resolved_compounds.items():
-            name = data.get("name", "")
+            name = data.get("primary_name", "")
             assert len(name) > 0, f"Compound {compound} should have a name"
             assert name != compound, f"Name should be different from ID for {compound}"
 

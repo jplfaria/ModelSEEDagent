@@ -306,6 +306,8 @@ class BiochemEntityResolverTool(BaseTool):
                 {"name": row[0], "source": row[1]} for row in cursor.fetchall()
             ]
 
+        # Add empty suggestions for resolved entities
+        result["suggestions"] = []
         return result
 
     def _build_reaction_result(
@@ -343,6 +345,8 @@ class BiochemEntityResolverTool(BaseTool):
                 {"external_id": row[0], "source": row[1]} for row in cursor.fetchall()
             ]
 
+        # Add empty suggestions for resolved entities
+        result["suggestions"] = []
         return result
 
     def _get_compound_suggestions(
@@ -445,7 +449,7 @@ class BiochemEntityResolverTool(BaseTool):
 
                 return ToolResult(
                     success=True,
-                    data=output.dict(),
+                    data=output.model_dump(),
                     message=f"Resolved {input_obj.entity_id} as {entity_type}",
                 )
 
@@ -655,7 +659,7 @@ class BiochemSearchTool(BaseTool):
 
                 return ToolResult(
                     success=True,
-                    data=output.dict(),
+                    data=output.model_dump(),
                     message=f"Found {output.total_results} matches for '{input_obj.query}'",
                 )
 
