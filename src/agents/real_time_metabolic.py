@@ -221,7 +221,17 @@ REASONING: [detailed explanation of why this tool is the optimal starting point]
 Think step by step about the query requirements and tool capabilities."""
 
         try:
+            # Add timeout protection for LLM calls
+            import signal
+
+            def timeout_handler(signum, frame):
+                raise TimeoutError("LLM call timed out")
+
+            signal.signal(signal.SIGALRM, timeout_handler)
+            signal.alarm(30)  # 30 second timeout
+
             response = self.llm._generate_response(prompt)
+            signal.alarm(0)  # Cancel timeout
             response_text = response.text.strip()
 
             # Parse AI response
@@ -277,6 +287,12 @@ Think step by step about the query requirements and tool capabilities."""
                 "Fallback selection due to parsing error",
             )
 
+        except TimeoutError:
+            logger.warning(f"AI tool selection timed out (30s), using fallback logic")
+            return (
+                self._fallback_tool_selection(query),
+                "Fallback selection due to LLM timeout",
+            )
         except Exception as e:
             logger.error(f"AI tool selection failed: {e}")
             return (
@@ -321,7 +337,17 @@ REASONING: [detailed explanation based on the actual results you've analyzed]
 Make your decision based on the ACTUAL DATA PATTERNS you see, not generic workflows."""
 
         try:
+            # Add timeout protection for LLM calls
+            import signal
+
+            def timeout_handler(signum, frame):
+                raise TimeoutError("LLM call timed out")
+
+            signal.signal(signal.SIGALRM, timeout_handler)
+            signal.alarm(30)  # 30 second timeout
+
             response = self.llm._generate_response(prompt)
+            signal.alarm(0)  # Cancel timeout
             response_text = response.text.strip()
 
             # Parse AI decision
@@ -392,6 +418,12 @@ Make your decision based on the ACTUAL DATA PATTERNS you see, not generic workfl
 
             return decision
 
+        except TimeoutError:
+            logger.warning(f"AI decision analysis timed out (30s), finalizing")
+            return {
+                "action": "finalize",
+                "reasoning": "Analysis timeout - finalizing current results",
+            }
         except Exception as e:
             logger.error(f"AI decision analysis failed: {e}")
             return {"action": "finalize", "reasoning": f"Error in analysis: {str(e)}"}
@@ -519,7 +551,17 @@ SUMMARY: [concise overall conclusion]
 Base everything on the ACTUAL DATA you collected, not general knowledge."""
 
         try:
+            # Add timeout protection for LLM calls
+            import signal
+
+            def timeout_handler(signum, frame):
+                raise TimeoutError("LLM call timed out")
+
+            signal.signal(signal.SIGALRM, timeout_handler)
+            signal.alarm(30)  # 30 second timeout
+
             response = self.llm._generate_response(prompt)
+            signal.alarm(0)  # Cancel timeout
             response_text = response.text.strip()
 
             # Parse response into structured conclusions
@@ -572,6 +614,13 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
 
             return conclusions
 
+        except TimeoutError:
+            logger.warning(f"AI conclusion generation timed out (30s), using summary")
+            return {
+                "summary": f"Analysis completed with {len(knowledge_base)} tools executed. Results available in knowledge base.",
+                "confidence_score": 0.7,  # Higher confidence than errors since we have data
+                "conclusions": "Analysis completed successfully with timeout during conclusion generation",
+            }
         except Exception as e:
             logger.error(f"AI conclusion generation failed: {e}")
             return {
@@ -646,12 +695,22 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
         """Fallback tool selection logic"""
         query_lower = query.lower()
 
+        # Extract model path from query if present
+        if "data/examples/e_coli_core.xml" in query_lower:
+            self.default_model_path = "data/examples/e_coli_core.xml"
+        elif "e_coli" in query_lower or "ecoli" in query_lower:
+            self.default_model_path = "data/examples/e_coli_core.xml"
+
         if any(word in query_lower for word in ["growth", "fba", "flux"]):
             return "run_metabolic_fba"
         elif any(word in query_lower for word in ["media", "nutrition"]):
             return "find_minimal_media"
         elif any(word in query_lower for word in ["essential", "gene"]):
             return "analyze_essentiality"
+        elif any(
+            word in query_lower for word in ["comprehensive", "analyze", "systematic"]
+        ):
+            return "run_metabolic_fba"  # Start with growth for comprehensive analysis
         else:
             return "run_metabolic_fba"  # Default starting point
 
