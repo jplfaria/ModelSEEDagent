@@ -5,6 +5,7 @@ Replaces the old templated system with real AI-powered conversation
 using the RealTimeMetabolicAgent for genuine dynamic decision-making.
 """
 
+import asyncio
 import json
 import time
 from dataclasses import dataclass, field
@@ -81,6 +82,7 @@ class ConversationResponse:
     metadata: Dict[str, Any] = field(default_factory=dict)
     processing_time: float = 0.0
     ai_reasoning_steps: int = 0
+    clarification_needed: bool = False
 
 
 class DynamicAIConversationEngine:
@@ -276,8 +278,8 @@ class DynamicAIConversationEngine:
                 "Analyzing your query and planning the analysis approach..."
             )
 
-            # Run the dynamic AI agent
-            result = self.ai_agent.run({"query": user_input})
+            # Run the dynamic AI agent (async method)
+            result = asyncio.run(self.ai_agent.run({"query": user_input}))
 
             processing_time = time.time() - start_time
 
