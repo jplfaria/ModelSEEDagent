@@ -119,14 +119,24 @@ class FBATool(BaseTool):
             raise ValueError("Model file must be in SBML format (.xml or .sbml)")
 
     def _run_tool(self, input_data: Any) -> ToolResult:
+        import logging
+
+        logger = logging.getLogger(__name__)
+        logger.info(f"🔍 FBA TOOL DEBUG: input_data = {repr(input_data)}")
+        logger.info(f"🔍 FBA TOOL DEBUG: type(input_data) = {type(input_data)}")
+
         try:
             # Support both dict and string inputs
             if isinstance(input_data, dict):
+                logger.info(f"🔍 FBA TOOL DEBUG: Processing as dict")
                 model_path = input_data.get("model_path")
                 output_dir = input_data.get("output_dir", None)
+                logger.info(f"🔍 FBA TOOL DEBUG: model_path = {repr(model_path)}")
             else:
+                logger.info(f"🔍 FBA TOOL DEBUG: Processing as string/other")
                 model_path = input_data
                 output_dir = None
+                logger.info(f"🔍 FBA TOOL DEBUG: model_path = {repr(model_path)}")
 
             self.validate_input(model_path)
             model = self._utils.load_model(model_path)

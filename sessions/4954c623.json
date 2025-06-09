@@ -1,0 +1,15 @@
+{
+  "id": "4954c623",
+  "name": "debug_test",
+  "created_at": "2025-06-08T20:55:36.111262",
+  "last_active": "2025-06-08T20:55:36.111276",
+  "status": "active",
+  "description": "Debug test session",
+  "model_files": [],
+  "interactions": [],
+  "context": {},
+  "metadata": {},
+  "total_queries": 0,
+  "total_execution_time": 0.0,
+  "success_rate": 1.0
+}

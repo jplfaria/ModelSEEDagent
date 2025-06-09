@@ -945,19 +945,36 @@ Provide a concise analysis and indicate if you need to continue or can finalize.
         # Complete if analysis clearly indicates we're done
         return complete_score <= continue_score
 
-    def _prepare_tool_input(self, state: AgentState, tool_name: str) -> Any:
-        """Prepare input for tool execution"""
-        # This would be customized based on each tool's input requirements
-        # For now, providing a basic implementation
+    def _prepare_tool_input(self, state: AgentState, tool_name: str) -> Dict[str, Any]:
+        """Prepare appropriate input for each tool"""
+        query = state["query"]
 
-        if "model" in state["query"].lower() or "xml" in state["query"].lower():
-            # Try to extract model path from query
-            model_match = re.search(r"(\w+\.xml)", state["query"])
-            if model_match:
-                return model_match.group(1)
+        # Most tools need a model path
+        if tool_name in [
+            "run_metabolic_fba",
+            "find_minimal_media",
+            "analyze_essentiality",
+            "run_flux_variability_analysis",
+            "identify_auxotrophies",
+        ]:
+            # Use default E. coli core model path
+            default_model_path = str(
+                Path(__file__).parent.parent.parent
+                / "data"
+                / "examples"
+                / "e_coli_core.xml"
+            )
+            return {"model_path": default_model_path}
 
-        # Default to query text
-        return state["query"]
+        # Biochemistry tools need query
+        elif tool_name in ["search_biochem"]:
+            return {"query": "ATP"}  # Default biochemistry query
+
+        elif tool_name in ["resolve_biochem_entity"]:
+            return {"entity_id": "cpd00027"}  # ATP entity ID
+
+        # Default to simple input
+        return {"input": query}
 
     def _simplify_query(self, query: str) -> str:
         """Simplify query for error recovery"""

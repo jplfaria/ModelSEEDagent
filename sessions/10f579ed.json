@@ -1,0 +1,54 @@
+{
+  "id": "10f579ed",
+  "name": "Analysis_20250607_2234",
+  "created_at": "2025-06-07T22:34:54.792801",
+  "last_active": "2025-06-07T22:35:06.391515",
+  "status": "active",
+  "description": "Interactive metabolic modeling analysis",
+  "model_files": [],
+  "interactions": [
+    {
+      "id": "ai_0",
+      "timestamp": "2025-06-07T22:35:06.391493",
+      "type": "query",
+      "input_data": "I need a comprehensive metabolic analysis of E. coli",
+      "output_data": "Error: First tool failed: Failed to load model: expected str, bytes or os.PathLike object, not dict",
+      "metadata": {
+        "ai_agent_used": true,
+        "tools_executed": [],
+        "ai_reasoning_steps": 0,
+        "audit_file": null,
+        "dynamic_decision_making": true,
+        "success": false
+      },
+      "execution_time": 10.329744815826416,
+      "success": false,
+      "error_message": null
+    }
+  ],
+  "context": {
+    "last_interaction": {
+      "id": "ai_0",
+      "timestamp": "2025-06-07T22:35:06.391493",
+      "type": "query",
+      "input_data": "I need a comprehensive metabolic analysis of E. coli",
+      "output_data": "Error: First tool failed: Failed to load model: expected str, bytes or os.PathLike object, not dict",
+      "metadata": {
+        "ai_agent_used": true,
+        "tools_executed": [],
+        "ai_reasoning_steps": 0,
+        "audit_file": null,
+        "dynamic_decision_making": true,
+        "success": false
+      },
+      "execution_time": 10.329744815826416,
+      "success": false,
+      "error_message": null
+    },
+    "last_query": "I need a comprehensive metabolic analysis of E. coli"
+  },
+  "metadata": {},
+  "total_queries": 1,
+  "total_execution_time": 10.329744815826416,
+  "success_rate": 0.0
+}

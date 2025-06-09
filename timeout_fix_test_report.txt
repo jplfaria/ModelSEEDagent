@@ -1,0 +1,29 @@
+
+=== TIMEOUT FIX COMPREHENSIVE TEST REPORT ===
+Generated: 2025-06-07 22:03:10
+
+Tests Performed:
+1. ✅ ArgoLLM timeout configuration validation
+2. ✅ Agent timeout detection logic
+3. ✅ Manual timeout logic validation
+4. ✅ Signal timeout mechanism testing
+
+Key Findings:
+- o1 models (gpto1, gpto1mini, etc.) correctly use 120s timeouts
+- Standard models (gpt4o, etc.) correctly use 30s timeouts
+- Signal-based timeout mechanism is functional
+- Debug logging provides comprehensive timeout information
+
+Expected Behavior:
+- When using gpto1 model, you should see "Using 120s timeout" in logs
+- When using gpt4o model, you should see "Using 30s timeout" in logs
+- No more "timed out (30s)" warnings for o1 models
+- Comprehensive debug logs showing timeout detection
+
+Next Steps:
+1. Test with actual interactive CLI: `modelseed-agent interactive`
+2. Monitor logs for timeout debug messages
+3. Verify no 30s timeout warnings for o1 models
+4. Confirm improved performance with longer timeouts
+
+=== END REPORT ===

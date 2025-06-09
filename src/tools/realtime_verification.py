@@ -148,7 +148,8 @@ class RealTimeHallucinationDetector:
         if self.enable_live_display and not self.live_display:
             self._start_live_display()
 
-        console.print(f"🔍 Real-time verification started for workflow: {workflow_id}")
+        # Disabled to reduce console clutter
+        # console.print(f"🔍 Real-time verification started for workflow: {workflow_id}")
 
     def process_reasoning_step(
         self, workflow_id: str, reasoning_step: AIReasoningStep
@@ -201,9 +202,10 @@ class RealTimeHallucinationDetector:
         if not self.active_workflows and self.live_display:
             self._stop_live_display()
 
-        console.print(
-            f"✅ Real-time verification completed for workflow: {workflow_id}"
-        )
+        # Disabled to reduce console clutter
+        # console.print(
+        #     f"✅ Real-time verification completed for workflow: {workflow_id}"
+        # )
         return final_metrics
 
     def _analyze_reasoning_step(
@@ -642,19 +644,38 @@ class RealTimeHallucinationDetector:
     def _start_live_display(self) -> None:
         """Start live display of verification status"""
 
-        layout = Layout()
-        layout.split_column(Layout(name="header", size=3), Layout(name="main"))
+        # DISABLED: Live display causes empty box rendering issues
+        # Simply log that monitoring is active instead
+        import logging
 
-        layout["main"].split_row(Layout(name="workflows"), Layout(name="alerts"))
-
-        self.live_display = Live(layout, console=console, refresh_per_second=2)
-        self.live_display.start()
-
-        # Start update thread
-        self.display_thread = threading.Thread(
-            target=self._update_live_display, daemon=True
+        logger = logging.getLogger(__name__)
+        logger.info(
+            f"🔍 Real-time verification monitoring active (display disabled for stability)"
         )
-        self.display_thread.start()
+
+        # Disable live display completely
+        self.enable_live_display = False
+        self.live_display = None
+
+        # Original code commented out:
+        # try:
+        #     layout = Layout()
+        #     layout.split_column(Layout(name="header", size=3), Layout(name="main"))
+        #     layout["main"].split_row(Layout(name="workflows"), Layout(name="alerts"))
+        #     self.live_display = Live(layout, console=console, refresh_per_second=2)
+        #     self.live_display.start()
+        #     # Start update thread
+        #     self.display_thread = threading.Thread(
+        #         target=self._update_live_display, daemon=True
+        #     )
+        #     self.display_thread.start()
+        # except Exception as e:
+        #     # If display fails (e.g., another display is active), disable live display
+        #     import logging
+        #     logger = logging.getLogger(__name__)
+        #     logger.warning(f"Could not start live display: {e}")
+        #     self.enable_live_display = False
+        #     self.live_display = None
 
     def _update_live_display(self) -> None:
         """Update live display continuously"""

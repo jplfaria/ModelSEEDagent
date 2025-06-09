@@ -7,10 +7,12 @@ using the RealTimeMetabolicAgent for genuine dynamic decision-making.
 
 import asyncio
 import json
+import logging
 import time
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
+from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
 from rich import box
@@ -29,6 +31,7 @@ from .session_manager import AnalysisSession, Interaction, InteractionType
 from .streaming_interface import RealTimeStreamingInterface
 
 console = Console()
+logger = logging.getLogger(__name__)
 
 
 class ConversationState(Enum):
@@ -96,24 +99,84 @@ class DynamicAIConversationEngine:
         self.streaming_interface = RealTimeStreamingInterface()
         self._initialize_ai_agent()
 
+    def _load_cli_config(self) -> Dict[str, Any]:
+        """Load CLI configuration from persistent storage"""
+        cli_config_file = Path.home() / ".modelseed-agent-cli.json"
+
+        if cli_config_file.exists():
+            try:
+                with open(cli_config_file, "r") as f:
+                    config = json.load(f)
+                    console.print(
+                        f"📁 Loaded CLI config: {config.get('llm_backend', 'unknown')} backend with {config.get('llm_config', {}).get('model_name', 'unknown')} model",
+                        style="dim",
+                    )
+                    return config
+            except Exception as e:
+                console.print(f"⚠️ Could not load CLI config: {e}", style="yellow")
+
+        console.print(
+            "⚠️ No CLI config found. Run 'modelseed-agent setup' first.", style="yellow"
+        )
+        return {}
+
     def _initialize_ai_agent(self):
-        """Initialize the real AI agent"""
+        """Initialize the real AI agent using saved CLI configuration"""
         try:
-            # Try to create LLM (Argo first, then OpenAI fallback)
-            llm_config = {
-                "model_name": "gpt-4o-mini",
-                "system_content": "You are an expert metabolic modeling AI agent that makes real-time decisions based on data analysis.",
-                "temperature": 0.7,
-                "max_tokens": 4000,
-            }
+            # Load saved CLI configuration
+            cli_config = self._load_cli_config()
+
+            # Use saved configuration if available, otherwise fallback to defaults
+            if cli_config.get("llm_backend") and cli_config.get("llm_config"):
+                llm_backend = cli_config["llm_backend"]
+                llm_config = cli_config["llm_config"].copy()
+
+                console.print(
+                    f"🔧 Using saved config: {llm_backend} backend with {llm_config.get('model_name', 'unknown')} model",
+                    style="green",
+                )
+
+                # Ensure system content is set for interactive mode
+                if "system_content" not in llm_config:
+                    llm_config["system_content"] = (
+                        "You are an expert metabolic modeling AI agent that makes real-time decisions based on data analysis."
+                    )
+
+            else:
+                # Fallback to default configuration
+                console.print(
+                    "⚠️ No saved configuration found, using defaults", style="yellow"
+                )
+                llm_backend = "argo"
+                llm_config = {
+                    "model_name": "gpt-4o-mini",
+                    "system_content": "You are an expert metabolic modeling AI agent that makes real-time decisions based on data analysis.",
+                    "temperature": 0.7,
+                    "max_tokens": 4000,
+                }
 
             try:
-                llm = LLMFactory.create("argo", llm_config)
-                console.print("🔗 Connected to Argo Gateway LLM", style="green")
-            except Exception:
+                llm = LLMFactory.create(llm_backend, llm_config)
+                console.print(
+                    f"🔗 Connected to {llm_backend.title()} LLM with model: {llm_config.get('model_name', 'unknown')}",
+                    style="green",
+                )
+            except Exception as e:
+                console.print(
+                    f"❌ Failed to connect to {llm_backend}: {e}", style="red"
+                )
+                # Try fallback to argo with default config
                 try:
-                    llm = LLMFactory.create("openai", llm_config)
-                    console.print("🔗 Connected to OpenAI LLM", style="green")
+                    fallback_config = {
+                        "model_name": "gpt-4o-mini",
+                        "system_content": "You are an expert metabolic modeling AI agent that makes real-time decisions based on data analysis.",
+                        "temperature": 0.7,
+                        "max_tokens": 4000,
+                    }
+                    llm = LLMFactory.create("argo", fallback_config)
+                    console.print(
+                        "🔗 Connected to Argo Gateway LLM (fallback)", style="yellow"
+                    )
                 except Exception:
                     console.print(
                         "⚠️ No LLM available - using fallback mode", style="yellow"
@@ -128,14 +191,25 @@ class DynamicAIConversationEngine:
                     try:
                         tool = ToolRegistry.create_tool(tool_name, {})
                         tools.append(tool)
+                        console.print(f"✅ Loaded tool: {tool_name}", style="dim")
                     except Exception as e:
                         console.print(
-                            f"⚠️ Could not load tool {tool_name}: {e}", style="dim"
+                            f"⚠️ Could not load tool {tool_name}: {e}", style="yellow"
                         )
 
                 # Create the real AI agent
                 config = {"max_iterations": 6}
                 self.ai_agent = create_real_time_agent(llm, tools, config)
+
+                # DEBUG: Log what agent we actually created
+                console.print(
+                    f"🔍 DEBUG: Created agent type: {type(self.ai_agent).__name__}",
+                    style="dim",
+                )
+                console.print(
+                    f"🔍 DEBUG: Agent has _prepare_tool_input: {hasattr(self.ai_agent, '_prepare_tool_input')}",
+                    style="dim",
+                )
                 self.context.ai_agent = self.ai_agent
 
                 console.print(
@@ -203,8 +277,8 @@ class DynamicAIConversationEngine:
         if not self.ai_agent:
             return self._handle_no_ai_fallback(user_input)
 
-        # Use real AI agent for processing with streaming
-        return self._process_with_streaming_ai(user_input, start_time)
+        # Use real AI agent for processing - disable streaming for now to fix display issues
+        return self._process_with_simple_ai(user_input, start_time)
 
     def _process_with_real_ai(
         self, user_input: str, start_time: float
@@ -278,8 +352,32 @@ class DynamicAIConversationEngine:
                 "Analyzing your query and planning the analysis approach..."
             )
 
-            # Run the dynamic AI agent (async method)
-            result = asyncio.run(self.ai_agent.run({"query": user_input}))
+            # Run the dynamic AI agent with streaming callbacks
+            if hasattr(self.ai_agent, "run"):
+                # Handle async run method
+                import asyncio
+
+                try:
+                    # Check if run method is async
+                    import inspect
+
+                    if inspect.iscoroutinefunction(self.ai_agent.run):
+                        result = asyncio.run(self.ai_agent.run({"query": user_input}))
+                    else:
+                        result = self.ai_agent.run({"query": user_input})
+                except Exception as e:
+                    # Fallback if asyncio.run fails
+                    logger.error(f"Error running agent: {e}")
+                    from ..agents.base import AgentResult
+
+                    result = AgentResult(
+                        success=False,
+                        message=f"Agent execution failed: {str(e)}",
+                        error=str(e),
+                    )
+            else:
+                # Fallback for agents without run method
+                result = self.ai_agent.process({"query": user_input})
 
             processing_time = time.time() - start_time
 
@@ -342,6 +440,209 @@ class DynamicAIConversationEngine:
             )
             time.sleep(1)
             self.streaming_interface.stop_streaming()
+            return self._handle_unexpected_error(
+                user_input, str(e), time.time() - start_time
+            )
+
+    def _run_agent_sync(self, user_input: str):
+        """
+        Synchronous wrapper for the async agent.run() method.
+        Fallback to direct sync execution when in event loop context.
+        """
+        import asyncio
+
+        try:
+            # Try to use asyncio.run first
+            return asyncio.run(self.ai_agent.run({"query": user_input}))
+        except RuntimeError as e:
+            if "asyncio.run() cannot be called from a running event loop" in str(e):
+                # We're in an event loop, so we need to call the agent differently
+                # Let's try to call the agent's sync methods directly if possible
+                logger.warning(
+                    "Running in event loop context, using direct agent execution"
+                )
+
+                # Instead of trying complex async handling, let's use a simpler approach
+                # Call the agent's standard analysis workflow directly
+                try:
+                    # Use the synchronous version if available, or fall back to a simple result
+                    return self._run_agent_directly_sync(user_input)
+                except Exception as direct_error:
+                    logger.error(f"Direct agent execution failed: {direct_error}")
+                    from ..agents.base import AgentResult
+
+                    return AgentResult(
+                        success=False,
+                        message=f"Agent execution failed in event loop context: {str(direct_error)}",
+                        error=str(direct_error),
+                        data={},
+                    )
+            else:
+                # Different RuntimeError, re-raise
+                raise
+        except Exception as e:
+            logger.error(f"Error in agent execution: {e}")
+            from ..agents.base import AgentResult
+
+            return AgentResult(
+                success=False,
+                message=f"Agent execution failed: {str(e)}",
+                error=str(e),
+                data={},
+            )
+
+    def _run_agent_directly_sync(self, user_input: str):
+        """
+        Run a simplified version of the agent workflow synchronously.
+        This bypasses the async complexity when in event loop context.
+        """
+        from ..agents.base import AgentResult
+
+        try:
+            # This is a simplified approach - just run the essential analysis tools directly
+            logger.info("Running simplified synchronous agent workflow")
+
+            # Use the agent's tool selection but skip the async workflow
+            if hasattr(self.ai_agent, "_ai_analyze_query_for_first_tool"):
+                first_tool, reasoning = self.ai_agent._ai_analyze_query_for_first_tool(
+                    user_input
+                )
+                logger.info(f"Selected tool: {first_tool}")
+
+                if (
+                    first_tool
+                    and hasattr(self.ai_agent, "_tools_dict")
+                    and first_tool in self.ai_agent._tools_dict
+                ):
+                    # Prepare and execute the tool
+                    tool_input = self.ai_agent._prepare_tool_input(
+                        first_tool, user_input
+                    )
+                    tool = self.ai_agent._tools_dict[first_tool]
+                    result = tool._run_tool(tool_input)
+
+                    if result.success:
+                        # Create a simplified success result
+                        summary = f"Analysis completed using {first_tool}. Key findings: {str(result.data)[:200]}..."
+
+                        return AgentResult(
+                            success=True,
+                            message=summary,
+                            data={
+                                "tool_executed": first_tool,
+                                "tool_result": result.data,
+                                "ai_reasoning": reasoning,
+                                "simplified_execution": True,
+                            },
+                            metadata={
+                                "tools_executed": [first_tool],
+                                "ai_reasoning_steps": 1,
+                                "execution_mode": "simplified_sync",
+                            },
+                        )
+                    else:
+                        return AgentResult(
+                            success=False,
+                            message=f"Tool execution failed: {result.error}",
+                            error=result.error,
+                            data={},
+                        )
+                else:
+                    return AgentResult(
+                        success=False,
+                        message="Could not select appropriate tool for analysis",
+                        error="Tool selection failed",
+                        data={},
+                    )
+            else:
+                return AgentResult(
+                    success=False,
+                    message="Agent does not support simplified execution",
+                    error="Missing required agent methods",
+                    data={},
+                )
+
+        except Exception as e:
+            logger.error(f"Simplified agent execution failed: {e}")
+            return AgentResult(
+                success=False,
+                message=f"Simplified agent execution failed: {str(e)}",
+                error=str(e),
+                data={},
+            )
+
+    def _process_with_simple_ai(
+        self, user_input: str, start_time: float
+    ) -> ConversationResponse:
+        """Process query using the real AI agent with simple display (no streaming)"""
+        self.state = ConversationState.AI_THINKING
+
+        try:
+            # Message already shown by CLI, no need to duplicate it
+
+            # Simple approach: just run the agent directly with asyncio.run if needed
+            import asyncio
+            import inspect
+
+            if hasattr(self.ai_agent, "run"):
+                if inspect.iscoroutinefunction(self.ai_agent.run):
+                    try:
+                        # Try to get the current loop to see if we're in one
+                        asyncio.get_running_loop()
+                        # We're in a loop, so we need to handle this differently
+                        # Use our synchronous wrapper
+                        result = self._run_agent_sync(user_input)
+                    except RuntimeError:
+                        # No event loop running, safe to use asyncio.run
+                        result = asyncio.run(self.ai_agent.run({"query": user_input}))
+                else:
+                    result = self.ai_agent.run({"query": user_input})
+            else:
+                # Fallback for agents without run method
+                result = self.ai_agent.process({"query": user_input})
+
+            processing_time = time.time() - start_time
+
+            if result.success:
+                # Create rich response showing AI reasoning
+                content = self._format_ai_response(result, user_input)
+
+                # Extract suggested follow-ups
+                suggested_actions = self._extract_follow_up_suggestions(result)
+
+                self.context.successful_queries += 1
+                self.state = ConversationState.WAITING_INPUT
+
+                # Log successful interaction
+                self._log_ai_interaction(user_input, result, processing_time, True)
+
+                return ConversationResponse(
+                    content=content,
+                    response_type=ResponseType.AI_ANALYSIS,
+                    suggested_actions=suggested_actions,
+                    requires_input=True,
+                    metadata={
+                        "ai_agent_result": True,
+                        "tools_executed": result.metadata.get("tools_executed", []),
+                        "ai_reasoning_steps": result.metadata.get(
+                            "ai_reasoning_steps", 0
+                        ),
+                        "audit_file": result.metadata.get("audit_file"),
+                        "quantitative_findings": result.metadata.get(
+                            "quantitative_findings", {}
+                        ),
+                        "simple_display_used": True,
+                    },
+                    processing_time=processing_time,
+                    ai_reasoning_steps=result.metadata.get("ai_reasoning_steps", 0),
+                )
+
+            else:
+                # Handle AI agent failure
+                return self._handle_ai_error(user_input, result, processing_time)
+
+        except Exception as e:
+            # Handle unexpected errors
             return self._handle_unexpected_error(
                 user_input, str(e), time.time() - start_time
             )

@@ -421,39 +421,61 @@ class LiveVisualizer:
             "start_time": datetime.now(),
         }
 
-        # Create live display layout
-        progress = Progress(
-            SpinnerColumn(),
-            TextColumn("[progress.description]{task.description}"),
-            BarColumn(),
-            TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
-            TimeElapsedColumn(),
-            console=console,
-        )
+        try:
+            # Create live display layout
+            progress = Progress(
+                SpinnerColumn(),
+                TextColumn("[progress.description]{task.description}"),
+                BarColumn(),
+                TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
+                TimeElapsedColumn(),
+                console=console,
+            )
 
-        task = progress.add_task(
-            description=self.current_progress["current_step"], total=total_steps
-        )
+            # Ensure step description is not empty
+            step_description = self.current_progress.get(
+                "current_step", "Processing..."
+            )
+            if not step_description or step_description.strip() == "":
+                step_description = "Processing..."
 
-        self.live_display = Live(progress, console=console, refresh_per_second=4)
-        self.live_display.start()
+            task = progress.add_task(description=step_description, total=total_steps)
 
-        # Store task ID for updates
-        self.current_progress["task_id"] = task
-        self.current_progress["progress_obj"] = progress
+            self.live_display = Live(progress, console=console, refresh_per_second=4)
+            self.live_display.start()
+
+            # Store task ID for updates
+            self.current_progress["task_id"] = task
+            self.current_progress["progress_obj"] = progress
+
+        except Exception as e:
+            # Fallback to console output if live display fails
+            console.print(f"[yellow]Live progress display unavailable: {e}[/yellow]")
+            console.print(f"[dim]Starting {step_description}...[/dim]")
+            self.live_display = None
 
     def update_progress(self, step: str, advance: int = 1) -> None:
         """Update live progress display"""
         if not self.live_display or "progress_obj" not in self.current_progress:
+            # Fallback to console output
+            console.print(f"[dim]▶ {step}[/dim]")
             return
+
+        # Validate step content
+        if not step or step.strip() == "":
+            step = "Processing..."
 
         self.current_progress["completed"] += advance
         self.current_progress["current_step"] = step
 
-        progress = self.current_progress["progress_obj"]
-        task_id = self.current_progress["task_id"]
+        try:
+            progress = self.current_progress["progress_obj"]
+            task_id = self.current_progress["task_id"]
 
-        progress.update(task_id, description=step, advance=advance)
+            progress.update(task_id, description=step, advance=advance)
+        except Exception:
+            # Fallback if update fails
+            console.print(f"[dim]▶ {step}[/dim]")
 
     def stop_live_progress(self) -> None:
         """Stop live progress display"""

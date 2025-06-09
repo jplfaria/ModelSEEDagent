@@ -90,8 +90,10 @@ def load_cli_config() -> Dict[str, Any]:
             with open(CLI_CONFIG_FILE, "r") as f:
                 config = json.load(f)
 
-            # Auto-recreate tools and agent if llm_config exists
-            if config.get("llm_config") and config.get("llm_backend"):
+            # Don't auto-recreate tools and agent during config loading to avoid creating agents unnecessarily
+            # This prevents import-time agent creation that was causing repeated initialization issues
+            # Agent creation should be done explicitly when needed, not during config loading
+            if False:  # config.get("llm_config") and config.get("llm_backend"):
                 try:
                     # Recreate LLM
                     llm_config = config["llm_config"]

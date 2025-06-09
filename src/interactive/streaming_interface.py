@@ -74,21 +74,42 @@ class RealTimeStreamingInterface:
         self.ai_decisions: List[str] = []
 
     def start_streaming(self, query: str) -> None:
-        """Start the streaming interface for a new query"""
+        """Start the streaming interface for a new query with robust initialization"""
+        # Initialize state first (order matters!)
         self.is_streaming = True
-        self.events.clear()
-        self.executed_tools.clear()
-        self.ai_decisions.clear()
         self.start_time = time.time()
+
+        # Initialize collections safely
+        self.events = []
+        self.executed_tools = []
+        self.ai_decisions = []
+
+        # Initialize content to prevent empty panels (BEFORE creating layout)
+        self.current_ai_thought = "🧠 AI agent starting analysis..."
+        self.current_tool = ""
+
+        # Validate query
+        if query is None:
+            query = "Unknown query"
+        query = str(query).strip()
+        if not query:
+            query = "Analysis in progress"
 
         # Create the streaming layout
         layout = self._create_streaming_layout(query)
 
-        # Start live display
-        self.current_live = Live(layout, console=self.console, refresh_per_second=4)
-        self.current_live.start()
+        # Start live display with robust error handling
+        try:
+            self.current_live = Live(layout, console=self.console, refresh_per_second=4)
+            self.current_live.start()
+        except Exception as e:
+            # Fallback to non-live display with details
+            self.console.print(
+                f"[yellow]Live display unavailable ({e}), using standard output[/yellow]"
+            )
+            self.current_live = None
 
-        # Initial event
+        # Initial event (after everything is set up)
         self.add_event(
             StreamingEventType.AI_THINKING, "🧠 AI agent starting analysis..."
         )
@@ -169,24 +190,49 @@ class RealTimeStreamingInterface:
         return layout
 
     def _create_ai_thinking_panel(self) -> Panel:
-        """Create the AI thinking panel"""
-        if not self.current_ai_thought:
+        """Create the AI thinking panel with robust content validation"""
+        # Robust content validation
+        thought = self.current_ai_thought
+        if thought is None:
+            thought = ""
+
+        thought_str = str(thought).strip()
+        if not thought_str:
             content = "[dim]🤔 Waiting for AI analysis...[/dim]"
         else:
-            content = f"🧠 {self.current_ai_thought}"
+            content = f"🧠 {thought_str}"
+
+        # Final safety check
+        if not content or not str(content).strip():
+            content = "[dim]🤔 AI thinking panel ready...[/dim]"
 
         return Panel(
             content, title="[bold cyan]🤖 AI Reasoning[/bold cyan]", border_style="cyan"
         )
 
     def _create_decisions_panel(self) -> Panel:
-        """Create the AI decisions panel"""
-        if not self.ai_decisions:
+        """Create the AI decisions panel with robust content validation"""
+        # Robust content validation for decisions list
+        decisions = self.ai_decisions
+        if not decisions or not isinstance(decisions, list):
             content = "[dim]📋 AI decisions will appear here...[/dim]"
         else:
-            content = "\n".join(
-                [f"• {decision}" for decision in self.ai_decisions[-5:]]
-            )  # Last 5
+            # Filter and validate each decision
+            valid_decisions = []
+            for decision in decisions[-5:]:  # Last 5 decisions
+                if decision is not None:
+                    decision_str = str(decision).strip()
+                    if decision_str:
+                        valid_decisions.append(f"• {decision_str}")
+
+            if valid_decisions:
+                content = "\n".join(valid_decisions)
+            else:
+                content = "[dim]📋 Waiting for AI decisions...[/dim]"
+
+        # Final safety check
+        if not content or not str(content).strip():
+            content = "[dim]📋 AI decisions panel ready...[/dim]"
 
         return Panel(
             content,
@@ -195,27 +241,50 @@ class RealTimeStreamingInterface:
         )
 
     def _create_tool_progress_panel(self) -> Panel:
-        """Create the tool progress panel"""
-        if not self.current_tool and not self.executed_tools:
-            content = "[dim]🔧 Tool execution will appear here...[/dim]"
-        else:
-            lines = []
+        """Create the tool progress panel with robust content validation"""
+        lines = []
 
-            # Current tool
-            if self.current_tool:
-                lines.append(
-                    f"⚡ Currently executing: [bold]{self.current_tool}[/bold]"
-                )
+        # Current tool validation
+        current_tool = self.current_tool
+        if current_tool is not None:
+            current_tool_str = str(current_tool).strip()
+            if current_tool_str:
+                lines.append(f"⚡ Currently executing: [bold]{current_tool_str}[/bold]")
                 lines.append("")
 
-            # Completed tools
-            if self.executed_tools:
-                lines.append("✅ Completed tools:")
-                for tool in self.executed_tools[-3:]:  # Last 3
-                    status = "✅" if tool["success"] else "❌"
-                    lines.append(f"  {status} {tool['name']} ({tool['duration']:.1f}s)")
+        # Completed tools validation
+        executed_tools = self.executed_tools
+        if (
+            executed_tools
+            and isinstance(executed_tools, list)
+            and len(executed_tools) > 0
+        ):
+            lines.append("✅ Completed tools:")
+            for tool in executed_tools[-3:]:  # Last 3
+                if tool and isinstance(tool, dict) and "name" in tool:
+                    tool_name = tool.get("name")
+                    if tool_name is not None:
+                        tool_name_str = str(tool_name).strip()
+                        if tool_name_str:
+                            status = "✅" if tool.get("success", True) else "❌"
+                            duration = tool.get("duration", 0.0)
+                            try:
+                                duration_float = float(duration)
+                            except (ValueError, TypeError):
+                                duration_float = 0.0
+                            lines.append(
+                                f"  {status} {tool_name_str} ({duration_float:.1f}s)"
+                            )
 
+        # Generate content
+        if lines:
             content = "\n".join(lines)
+        else:
+            content = "[dim]🔧 Tool execution will appear here...[/dim]"
+
+        # Final safety check
+        if not content or not str(content).strip():
+            content = "[dim]🔧 Tool execution panel ready...[/dim]"
 
         return Panel(
             content,
@@ -224,13 +293,39 @@ class RealTimeStreamingInterface:
         )
 
     def _create_results_panel(self) -> Panel:
-        """Create the results panel"""
-        elapsed = time.time() - self.start_time
+        """Create the results panel with robust content validation"""
+        try:
+            # Safe time calculation
+            start_time = getattr(self, "start_time", time.time())
+            elapsed = time.time() - start_time
+            if elapsed < 0:
+                elapsed = 0.0
 
-        content = f"""⏱️ Elapsed: {elapsed:.1f}s
-🔧 Tools executed: {len(self.executed_tools)}
-🧠 AI decisions: {len(self.ai_decisions)}
-📊 Events: {len(self.events)}"""
+            # Safe counting with validation
+            tools_count = 0
+            if self.executed_tools and isinstance(self.executed_tools, list):
+                tools_count = len(self.executed_tools)
+
+            decisions_count = 0
+            if self.ai_decisions and isinstance(self.ai_decisions, list):
+                decisions_count = len(self.ai_decisions)
+
+            events_count = 0
+            if self.events and isinstance(self.events, list):
+                events_count = len(self.events)
+
+            content = f"""⏱️ Elapsed: {elapsed:.1f}s
+🔧 Tools executed: {tools_count}
+🧠 AI decisions: {decisions_count}
+📊 Events: {events_count}"""
+
+        except Exception:
+            # Fallback content if anything goes wrong
+            content = "📊 Statistics loading..."
+
+        # Final safety check
+        if not content or not str(content).strip():
+            content = "📊 Live statistics panel ready..."
 
         return Panel(
             content,
@@ -239,18 +334,78 @@ class RealTimeStreamingInterface:
         )
 
     def _update_live_display(self, event: StreamingEvent) -> None:
-        """Update the live display with new event"""
+        """Update the live display with new event using robust error handling"""
         if not self.current_live:
+            # If live display is not available, log the event instead
+            self.console.print(f"[dim]{event.event_type.value}: {event.message}[/dim]")
             return
 
-        # Get current layout
-        layout = self.current_live.renderable
+        try:
+            # Get current layout with validation
+            layout = self.current_live.renderable
+            if not layout or not hasattr(layout, "__getitem__"):
+                return
 
-        # Update panels
-        layout["ai_thinking"].update(self._create_ai_thinking_panel())
-        layout["decisions"].update(self._create_decisions_panel())
-        layout["tool_progress"].update(self._create_tool_progress_panel())
-        layout["results"].update(self._create_results_panel())
+            # Create panels with robust error handling
+            panels = {}
+            try:
+                panels["ai_thinking"] = self._create_ai_thinking_panel()
+            except Exception:
+                panels["ai_thinking"] = Panel(
+                    "[red]AI panel error[/red]", title="AI Thinking", border_style="red"
+                )
+
+            try:
+                panels["decisions"] = self._create_decisions_panel()
+            except Exception:
+                panels["decisions"] = Panel(
+                    "[red]Decisions panel error[/red]",
+                    title="Decisions",
+                    border_style="red",
+                )
+
+            try:
+                panels["tool_progress"] = self._create_tool_progress_panel()
+            except Exception:
+                panels["tool_progress"] = Panel(
+                    "[red]Tools panel error[/red]", title="Tools", border_style="red"
+                )
+
+            try:
+                panels["results"] = self._create_results_panel()
+            except Exception:
+                panels["results"] = Panel(
+                    "[red]Results panel error[/red]",
+                    title="Results",
+                    border_style="red",
+                )
+
+            # Update layout with each panel, handling errors individually
+            for panel_name, panel in panels.items():
+                if panel:
+                    try:
+                        layout[panel_name].update(panel)
+                    except (KeyError, AttributeError) as e:
+                        # Log missing layout sections but don't crash
+                        import logging
+
+                        logging.debug(f"Layout section '{panel_name}' not found: {e}")
+                    except Exception as e:
+                        # Log other update errors but don't crash
+                        import logging
+
+                        logging.warning(f"Failed to update {panel_name}: {e}")
+
+        except Exception as e:
+            # Final safety net - log error but don't crash the streaming
+            import logging
+
+            logging.error(f"Live display critical error: {e}")
+            # Try to show error in console as fallback
+            try:
+                self.console.print(f"[red]Display error: {event.message}[/red]")
+            except:
+                pass  # Even the fallback failed, but don't crash
 
     def show_tool_execution(self, tool_name: str, reasoning: str) -> None:
         """Show tool execution starting"""

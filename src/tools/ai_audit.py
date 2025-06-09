@@ -531,9 +531,34 @@ class AIAuditLogger:
         )
         self.current_workflow.tool_audit_files.append(audit_file_path)
 
+    def log_ai_decision(
+        self,
+        workflow_id: str,
+        decision_type: str,
+        decision_data: Dict[str, Any],
+        context: Optional[Dict[str, Any]] = None,
+    ):
+        """Log an AI decision for audit purposes"""
+
+        if not self.current_workflow:
+            return
+
+        # Add decision as a reasoning step
+        self.log_reasoning_step(
+            ai_thought=f"AI Decision: {decision_type}",
+            context_analysis=str(context or {}),
+            available_tools=[],
+            selection_rationale=str(decision_data),
+            confidence_score=0.8,
+            expected_result=f"Decision: {decision_type}",
+            success_criteria=["Decision logged successfully"],
+        )
+
     def complete_workflow(
         self,
+        workflow_id: str,
         final_result: str,
+        metadata: Optional[Dict[str, Any]] = None,
         success: bool = True,
         error_message: Optional[str] = None,
         ai_confidence_final: float = 0.8,

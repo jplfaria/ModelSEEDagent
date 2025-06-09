@@ -6,6 +6,8 @@ real-time visualization, and intelligent session management.
 """
 
 import asyncio
+import logging
+import os
 import signal
 import sys
 from datetime import datetime
@@ -23,6 +25,20 @@ from rich.prompt import Confirm
 from rich.table import Table
 from rich.text import Text
 
+# Configure logging
+logger = logging.getLogger(__name__)
+
+# Debug flag from environment variable
+DEBUG_MODE = os.getenv("MODELSEED_DEBUG", "false").lower() == "true"
+
+if DEBUG_MODE:
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    )
+    logger.info("🔍 DEBUG MODE ENABLED")
+
+from ..cli.argo_health import display_argo_health
 from .conversation_engine import ConversationResponse, DynamicAIConversationEngine
 from .live_visualizer import LiveVisualizer
 from .query_processor import QueryAnalysis, QueryProcessor
@@ -85,6 +101,12 @@ class InteractiveCLI:
 
         # Print banner
         self._print_banner()
+
+        # Argo Gateway health check and configuration display
+        try:
+            display_argo_health()
+        except Exception as e:
+            console.print(f"⚠️ [yellow]Argo health check failed: {e}[/yellow]")
 
         # Session selection or creation
         session = self._select_or_create_session()
@@ -199,9 +221,55 @@ This interface provides:
                 if self._handle_special_commands(user_input):
                     continue
 
-                # Process with conversation engine
-                with console.status("🤔 Processing your request...", spinner="dots"):
-                    response = self.conversation_engine.process_user_input(user_input)
+                # Process with conversation engine (avoid Rich status that interferes with agent output)
+                console.print(
+                    "🧠 [cyan]AI analyzing your query and executing tools...[/cyan]"
+                )
+
+                # Debug mode indicator
+                if DEBUG_MODE:
+                    console.print("[yellow]🔍 DEBUG MODE: Processing query[/yellow]")
+                    logger.debug(f"🔍 Processing user input: '{user_input[:50]}...'")
+                    logger.debug(
+                        f"🔍 Conversation engine type: {type(self.conversation_engine).__name__}"
+                    )
+                    logger.debug(f"🔍 Session: {self.current_session.id}")
+
+                # Add timeout protection for the entire interaction
+                import time
+
+                start_time = time.time()
+                timeout_seconds = 300  # 5 minutes total timeout
+
+                try:
+                    # Use asyncio to add timeout to the synchronous call
+                    response = self._process_with_timeout(user_input, timeout_seconds)
+
+                    processing_time = time.time() - start_time
+                    if DEBUG_MODE:
+                        logger.debug(
+                            f"🔍 Processing completed in {processing_time:.2f}s"
+                        )
+                        logger.debug(f"🔍 Response type: {response.response_type}")
+                        logger.debug(
+                            f"🔍 Response success: {response.metadata.get('ai_agent_result', 'unknown')}"
+                        )
+
+                except TimeoutError:
+                    console.print(
+                        f"[red]⏰ Request timed out after {timeout_seconds}s[/red]"
+                    )
+                    console.print(
+                        "[yellow]This may indicate a complex analysis or system issue.[/yellow]"
+                    )
+                    continue
+                except Exception as e:
+                    if DEBUG_MODE:
+                        logger.error(f"🔍 Processing failed with error: {e}")
+                        import traceback
+
+                        logger.debug(f"🔍 Full traceback: {traceback.format_exc()}")
+                    raise
 
                 # Display response
                 self._display_response(response)
@@ -230,7 +298,8 @@ This interface provides:
                 if len(self.current_session.name) > 15
                 else self.current_session.name
             )
-            prompt_text = f"[bold blue]{session_name}[/bold blue] [cyan]❯[/cyan] "
+            # Use plain text for questionary (no Rich markup)
+            prompt_text = f"{session_name} ❯ "
 
             user_input = questionary.text(
                 "", qmark=prompt_text, style=custom_style
@@ -287,6 +356,35 @@ This interface provides:
 
         return False
 
+    def _process_with_timeout(
+        self, user_input: str, timeout_seconds: int
+    ) -> ConversationResponse:
+        """Process user input with timeout protection"""
+        import signal
+        import threading
+
+        # Use signal-based timeout if in main thread, otherwise use simple timeout
+        if threading.current_thread() is threading.main_thread():
+
+            def timeout_handler(signum, frame):
+                raise TimeoutError(f"Processing timed out after {timeout_seconds}s")
+
+            old_handler = signal.signal(signal.SIGALRM, timeout_handler)
+            signal.alarm(timeout_seconds)
+
+            try:
+                response = self.conversation_engine.process_user_input(user_input)
+                signal.alarm(0)  # Cancel timeout
+                return response
+            except TimeoutError:
+                signal.alarm(0)  # Cancel timeout
+                raise
+            finally:
+                signal.signal(signal.SIGALRM, old_handler)  # Restore old handler
+        else:
+            # Fallback for non-main threads
+            return self.conversation_engine.process_user_input(user_input)
+
     def _show_help(self) -> None:
         """Display help information"""
         help_table = Table(title="🔧 Interactive Commands", box=box.ROUNDED)
@@ -304,6 +402,14 @@ This interface provides:
             ("clear, cls", "Clear the terminal"),
             ("exit, quit, q", "Exit the interactive session"),
         ]
+
+        # Add debug mode indicator
+        if DEBUG_MODE:
+            commands.append(("DEBUG MODE", "🔍 Detailed logging enabled"))
+        else:
+            commands.append(
+                ("Debug Mode", "Set MODELSEED_DEBUG=true for detailed logs")
+            )
 
         for cmd, desc in commands:
             help_table.add_row(cmd, desc)

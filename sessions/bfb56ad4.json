@@ -1,0 +1,54 @@
+{
+  "id": "bfb56ad4",
+  "name": "Analysis_20250607_2240",
+  "created_at": "2025-06-07T22:40:13.436519",
+  "last_active": "2025-06-07T22:40:27.981235",
+  "status": "active",
+  "description": "Interactive metabolic modeling analysis",
+  "model_files": [],
+  "interactions": [
+    {
+      "id": "ai_0",
+      "timestamp": "2025-06-07T22:40:27.981212",
+      "type": "query",
+      "input_data": "I need a comprehensive metabolic analysis of E. coli",
+      "output_data": "Error: First tool failed: MSBuilder.__init__() missing 1 required positional argument: 'genome'",
+      "metadata": {
+        "ai_agent_used": true,
+        "tools_executed": [],
+        "ai_reasoning_steps": 0,
+        "audit_file": null,
+        "dynamic_decision_making": true,
+        "success": false
+      },
+      "execution_time": 13.313944101333618,
+      "success": false,
+      "error_message": null
+    }
+  ],
+  "context": {
+    "last_interaction": {
+      "id": "ai_0",
+      "timestamp": "2025-06-07T22:40:27.981212",
+      "type": "query",
+      "input_data": "I need a comprehensive metabolic analysis of E. coli",
+      "output_data": "Error: First tool failed: MSBuilder.__init__() missing 1 required positional argument: 'genome'",
+      "metadata": {
+        "ai_agent_used": true,
+        "tools_executed": [],
+        "ai_reasoning_steps": 0,
+        "audit_file": null,
+        "dynamic_decision_making": true,
+        "success": false
+      },
+      "execution_time": 13.313944101333618,
+      "success": false,
+      "error_message": null
+    },
+    "last_query": "I need a comprehensive metabolic analysis of E. coli"
+  },
+  "metadata": {},
+  "total_queries": 1,
+  "total_execution_time": 13.313944101333618,
+  "success_rate": 0.0
+}

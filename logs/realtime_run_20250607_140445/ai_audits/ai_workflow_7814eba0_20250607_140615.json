@@ -1,0 +1,39 @@
+{
+  "workflow_id": "7814eba0",
+  "session_id": "realtime_run_20250607_140445",
+  "user_query": "analyze data/examples/e_coli_core.xml",
+  "timestamp_start": "2025-06-07T14:04:45.051355",
+  "timestamp_end": "2025-06-07T14:06:15.226280",
+  "reasoning_steps": [
+    {
+      "step_id": "7814eba0_step_1",
+      "step_number": 1,
+      "timestamp": "2025-06-07T14:06:15.226098",
+      "ai_thought": "AI Decision: final_synthesis",
+      "context_analysis": "{'knowledge_base': {'ai_initial_reasoning': 'Fallback selection due to LLM timeout', 'run_metabolic_fba': {'objective_value': 518.422085517607, 'status': 'optimal', 'significant_fluxes': {'PFK': 7.477381962160286, 'PGI': 4.860861146496822, 'PGK': -16.02352614316761, 'PGL': 4.959984944574652, 'PGM': -14.716139568742836, 'PIt2r': 3.2148950476848035, 'PPC': 2.5043094703687356, 'ACONTa': 6.0072495753503405, 'ACONTb': 6.0072495753503405, 'ATPM': 8.39, 'AKGDH': 5.0643756614820985, 'ATPS4r': 45.51400977451748, 'PYK': 1.7581774441067881, 'BIOMASS_Ecoli_core_w_GAM': 0.8739215069684303, 'CO2t': -22.80983331020497, 'RPE': 2.6784818505075263, 'CS': 6.00724957535034, 'RPI': -2.2815030940671246, 'CYTBD': 43.59898531199755, 'ENO': 14.716139568742836, 'SUCDi': 5.0643756614820985, 'SUCOAS': -5.0643756614820985, 'TALA': 1.4969837572615647, 'TKT1': 1.4969837572615645, 'TKT2': 1.1814980932459616, 'TPI': 7.477381962160286, 'EX_co2_e': 22.80983331020497, 'EX_glc__D_e': -10.0, 'EX_h_e': 17.530865429786694, 'EX_h2o_e': 29.17582713556585, 'EX_nh4_e': -4.765319193197456, 'EX_o2_e': -21.799492655998773, 'EX_pi_e': -3.2148950476848035, 'FBA': 7.477381962160286, 'FUM': 5.064375661482098, 'G6PDH2r': 4.959984944574652, 'GAPD': 16.023526143167608, 'GLCpts': 10.000000000000002, 'GLNS': 0.2234617293318276, 'GLUDy': -4.541857463865629, 'GND': 4.95998494457465, 'H2Ot': -29.17582713556585, 'ICDHyr': 6.0072495753503405, 'MDH': 5.0643756614820985, 'NADH16': 38.53460965051545, 'NH4t': 4.765319193197456, 'O2t': 21.799492655998773, 'PDH': 9.28253259916662}, 'subsystem_fluxes': {'Unknown': [('PFK', 7.477381962160286), ('PGI', 4.860861146496822), ('PGK', -16.02352614316761), ('PGL', 4.959984944574652), ('PGM', -14.716139568742836), ('PIt2r', 3.2148950476848035), ('PPC', 2.5043094703687356), ('ACONTa', 6.0072495753503405), ('ACONTb', 6.0072495753503405), ('ATPM', 8.39), ('AKGDH', 5.0643756614820985), ('ATPS4r', 45.51400977451748), ('PYK', 1.7581774441067881), ('BIOMASS_Ecoli_core_w_GAM', 0.8739215069684303), ('CO2t', -22.80983331020497), ('RPE', 2.6784818505075263), ('CS', 6.00724957535034), ('RPI', -2.2815030940671246), ('CYTBD', 43.59898531199755), ('ENO', 14.716139568742836), ('SUCDi', 5.0643756614820985), ('SUCOAS', -5.0643756614820985), ('TALA', 1.4969837572615647), ('TKT1', 1.4969837572615645), ('TKT2', 1.1814980932459616), ('TPI', 7.477381962160286), ('EX_co2_e', 22.80983331020497), ('EX_glc__D_e', -10.0), ('EX_h_e', 17.530865429786694), ('EX_h2o_e', 29.17582713556585), ('EX_nh4_e', -4.765319193197456), ('EX_o2_e', -21.799492655998773), ('EX_pi_e', -3.2148950476848035), ('FBA', 7.477381962160286), ('FUM', 5.064375661482098), ('G6PDH2r', 4.959984944574652), ('GAPD', 16.023526143167608), ('GLCpts', 10.000000000000002), ('GLNS', 0.2234617293318276), ('GLUDy', -4.541857463865629), ('GND', 4.95998494457465), ('H2Ot', -29.17582713556585), ('ICDHyr', 6.0072495753503405), ('MDH', 5.0643756614820985), ('NADH16', 38.53460965051545), ('NH4t', 4.765319193197456), ('O2t', 21.799492655998773), ('PDH', 9.28253259916662)]}, 'result_file': None}}}",
+      "available_tools": [],
+      "selected_tool": null,
+      "selection_rationale": "{'summary': 'Analysis completed with 2 tools executed. Results available in knowledge base.', 'confidence_score': 0.7, 'conclusions': 'Analysis completed successfully with timeout during conclusion generation'}",
+      "confidence_score": 0.8,
+      "expected_result": "Decision: final_synthesis",
+      "success_criteria": [
+        "Decision logged successfully"
+      ],
+      "alternative_tools": [],
+      "rejection_reasons": {}
+    }
+  ],
+  "total_reasoning_steps": 1,
+  "tools_executed": [],
+  "tool_execution_order": [],
+  "tool_audit_files": [],
+  "final_result": "Analysis completed successfully with timeout during conclusion generation",
+  "success": true,
+  "error_message": null,
+  "ai_confidence_final": 0.8,
+  "reasoning_coherence": 0.0,
+  "tool_selection_accuracy": 0.0,
+  "total_duration_seconds": 90.174925,
+  "ai_thinking_time_seconds": 0.0,
+  "tool_execution_time_seconds": 0.0
+}

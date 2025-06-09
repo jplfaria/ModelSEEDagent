@@ -487,6 +487,43 @@ class LearningMemory:
         # Save to storage
         self._save_experience(experience)
 
+    def record_analysis(
+        self,
+        query: str,
+        model_characteristics: Dict[str, Any],
+        tools_used: List[str],
+        outcome: str,
+        confidence: float,
+    ):
+        """Record analysis for learning purposes - compatibility method"""
+        try:
+            from datetime import datetime
+
+            # Create an AnalysisExperience from the parameters
+            experience = AnalysisExperience(
+                experience_id=str(datetime.now().timestamp()),
+                session_id="pattern_memory_session",  # Default session ID
+                timestamp=datetime.now().isoformat(),
+                user_query=query,
+                model_characteristics=model_characteristics,
+                tools_used=tools_used,
+                tool_sequence=tools_used,  # Same as tools_used for simplicity
+                success=confidence > 0.5,
+                insights_discovered=[],  # Changed from insights_gained
+                execution_time=0.0,  # Not provided
+                effective_strategies=[],  # Required field
+                ineffective_strategies=[],  # Required field
+                missed_opportunities=[],  # Required field
+            )
+
+            self.record_analysis_experience(experience)
+        except Exception as e:
+            # Silently ignore errors to avoid breaking the main workflow
+            import logging
+
+            logger = logging.getLogger(__name__)
+            logger.warning(f"Could not record analysis experience: {e}")
+
     def get_recommended_approach(
         self, query: str, model_characteristics: Dict[str, Any]
     ) -> Dict[str, Any]:
