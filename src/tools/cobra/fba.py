@@ -20,7 +20,7 @@ class FBAConfig(BaseModel):
     model_config = {"protected_namespaces": ()}
     default_objective: str = "biomass_reaction"
     solver: str = "glpk"
-    tolerance: float = 1e-6
+    flux_threshold: float = 1e-6
     additional_constraints: Dict[str, float] = Field(default_factory=dict)
     simulation_method: str = "pfba"  # Options: "fba", "pfba", "geometric", "slim", etc.
 
@@ -99,7 +99,7 @@ class FBATool(BaseTool):
                     fba_config_dict, "default_objective", "biomass_reaction"
                 ),
                 solver=getattr(fba_config_dict, "solver", "glpk"),
-                tolerance=getattr(fba_config_dict, "tolerance", 1e-6),
+                flux_threshold=getattr(fba_config_dict, "flux_threshold", 1e-6),
                 additional_constraints=getattr(
                     fba_config_dict, "additional_constraints", {}
                 ),
@@ -142,7 +142,7 @@ class FBATool(BaseTool):
             model = self._utils.load_model(model_path)
 
             model.solver = self.fba_config.solver
-            model.tolerance = self.fba_config.tolerance
+            model.tolerance = self.fba_config.flux_threshold
 
             # Set objective if available
             if hasattr(model, self.fba_config.default_objective):
@@ -167,7 +167,7 @@ class FBATool(BaseTool):
             significant_fluxes = {
                 rxn.id: float(solution.fluxes[rxn.id])
                 for rxn in model.reactions
-                if abs(solution.fluxes[rxn.id]) > self.fba_config.tolerance
+                if abs(solution.fluxes[rxn.id]) > self.fba_config.flux_threshold
             }
 
             subsystem_fluxes = {}
@@ -192,11 +192,21 @@ class FBATool(BaseTool):
                 json_path, csv_path = store.export_results(result_id, output_dir)
                 result_file = {"json": json_path, "csv": csv_path}
 
+            # Extract the actual growth rate from biomass reaction flux
+            growth_rate = solution.objective_value
+            biomass_reactions = [
+                rxn for rxn in model.reactions if rxn.objective_coefficient != 0
+            ]
+            if biomass_reactions:
+                # Use the actual biomass flux value (growth rate)
+                biomass_rxn = biomass_reactions[0]
+                growth_rate = float(solution.fluxes[biomass_rxn.id])
+
             return ToolResult(
                 success=True,
                 message="FBA simulation completed successfully",
                 data={
-                    "objective_value": solution.objective_value,
+                    "objective_value": growth_rate,  # Correct growth rate
                     "status": solution.status,
                     "significant_fluxes": significant_fluxes,
                     "subsystem_fluxes": subsystem_fluxes,

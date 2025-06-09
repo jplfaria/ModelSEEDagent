@@ -282,12 +282,19 @@ class PathwayAnalysisTool(BaseTool):
         super().__init__(config)
         self._utils = ModelUtils()
 
-    def _run_tool(self, input_data: Dict[str, Any]) -> ToolResult:
+    def _run_tool(self, input_data: Any) -> ToolResult:
         try:
-            model_path = input_data.get("model_path")
-            pathway = input_data.get("pathway")
-            if not model_path or not pathway:
-                raise ValueError("Both model_path and pathway must be provided")
+            # Support both dict and string inputs (for consistency with other tools)
+            if isinstance(input_data, dict):
+                model_path = input_data.get("model_path")
+                pathway = input_data.get("pathway")
+                if not model_path or not pathway:
+                    raise ValueError("Both model_path and pathway must be provided")
+            else:
+                # For string input, we can't determine pathway, so raise an error
+                raise ValueError(
+                    "PathwayAnalysisTool requires dictionary input with model_path and pathway keys"
+                )
 
             model = self._utils.load_model(model_path)
 

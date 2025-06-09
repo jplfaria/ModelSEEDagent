@@ -17,7 +17,9 @@ class EssentialityConfig(BaseModel):
     """Configuration for Essentiality Analysis"""
 
     model_config = {"protected_namespaces": ()}
-    threshold: float = 0.01  # Growth threshold for essentiality (1% of wild-type)
+    growth_threshold: float = (
+        0.01  # Growth threshold for essentiality (1% of wild-type)
+    )
     include_genes: bool = True
     include_reactions: bool = True
     solver: str = "glpk"
@@ -42,7 +44,9 @@ class EssentialityAnalysisTool(BaseTool):
             self._essentiality_config = EssentialityConfig(**essentiality_config_dict)
         else:
             self._essentiality_config = EssentialityConfig(
-                threshold=getattr(essentiality_config_dict, "threshold", 0.01),
+                growth_threshold=getattr(
+                    essentiality_config_dict, "growth_threshold", 0.01
+                ),
                 include_genes=getattr(essentiality_config_dict, "include_genes", True),
                 include_reactions=getattr(
                     essentiality_config_dict, "include_reactions", True
@@ -63,7 +67,7 @@ class EssentialityAnalysisTool(BaseTool):
             if isinstance(input_data, dict):
                 model_path = input_data.get("model_path")
                 threshold = input_data.get(
-                    "threshold", self.essentiality_config.threshold
+                    "growth_threshold", self.essentiality_config.growth_threshold
                 )
                 include_genes = input_data.get(
                     "include_genes", self.essentiality_config.include_genes
@@ -73,7 +77,7 @@ class EssentialityAnalysisTool(BaseTool):
                 )
             else:
                 model_path = input_data
-                threshold = self.essentiality_config.threshold
+                threshold = self.essentiality_config.growth_threshold
                 include_genes = self.essentiality_config.include_genes
                 include_reactions = self.essentiality_config.include_reactions
 

@@ -20,6 +20,7 @@ class FluxSamplingConfig(BaseModel):
     processes: Optional[int] = None
     seed: Optional[int] = None
     solver: str = "glpk"
+    flux_threshold: float = 1e-6  # Threshold for determining significant fluxes
 
 
 @ToolRegistry.register
@@ -46,6 +47,7 @@ class FluxSamplingTool(BaseTool):
                 processes=getattr(sampling_config_dict, "processes", None),
                 seed=getattr(sampling_config_dict, "seed", None),
                 solver=getattr(sampling_config_dict, "solver", "glpk"),
+                flux_threshold=getattr(sampling_config_dict, "flux_threshold", 1e-6),
             )
         self._utils = ModelUtils()
 
@@ -135,7 +137,7 @@ class FluxSamplingTool(BaseTool):
         }
 
         # Identify flux patterns
-        tolerance = 1e-6
+        tolerance = self.sampling_config.flux_threshold
 
         # Always active reactions (non-zero in all samples)
         always_active = []
@@ -264,22 +266,25 @@ class FluxSamplingTool(BaseTool):
         if hasattr(model, "objective") and model.objective:
             # Try to find objective reaction in samples
             try:
-                # For newer CobraP versions
-                obj_coeffs = model.objective.get_linear_coefficients(model.variables)
-                obj_reactions = [rxn.id for rxn in obj_coeffs.keys()]
-            except TypeError:
-                # For older CobraP versions or fallback
+                # Simple approach: get reactions with non-zero objective coefficients
+                obj_reactions = [
+                    rxn.id for rxn in model.reactions if rxn.objective_coefficient != 0
+                ]
+            except:
+                # Fallback: try to extract from objective expression
                 try:
+                    # Get the objective expression and extract reaction IDs
+                    obj_expr = str(model.objective.expression)
+                    # Look for reactions in samples that appear in objective
                     obj_reactions = [
-                        rxn.id
-                        for rxn in model.objective.get_linear_coefficients().keys()
+                        rxn_id for rxn_id in samples.columns if rxn_id in obj_expr
                     ]
                 except:
-                    # Final fallback - get from objective expression
+                    # Final fallback: assume biomass reactions
                     obj_reactions = [
-                        var.name
-                        for var in model.objective.variables
-                        if hasattr(var, "name")
+                        rxn.id
+                        for rxn in model.reactions
+                        if "biomass" in rxn.id.lower() or "growth" in rxn.id.lower()
                     ]
 
             for obj_rxn in obj_reactions:

@@ -18,7 +18,7 @@ from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
-from ...tools.base import BaseTool, ToolRegistry, ToolResult
+from ..base import BaseTool, ToolRegistry, ToolResult
 
 
 class BiochemEntityResolverInput(BaseModel):

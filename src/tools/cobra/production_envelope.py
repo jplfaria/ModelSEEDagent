@@ -50,7 +50,7 @@ class ProductionEnvelopeTool(BaseTool):
 
     def _run_tool(self, input_data: Any) -> ToolResult:
         try:
-            # Parse input
+            # Support both dict and string inputs (for consistency with other tools)
             if isinstance(input_data, dict):
                 model_path = input_data.get("model_path")
                 reactions = input_data.get("reactions")
@@ -58,13 +58,14 @@ class ProductionEnvelopeTool(BaseTool):
                 objective = input_data.get("objective", None)
                 c_source = input_data.get("c_source", None)
                 c_uptake_rates = input_data.get("c_uptake_rates", None)
-            else:
-                raise ValueError(
-                    "Input must be a dictionary with model_path and reactions"
-                )
 
-            if not model_path or not reactions:
-                raise ValueError("Both model_path and reactions must be provided")
+                if not model_path or not reactions:
+                    raise ValueError("Both model_path and reactions must be provided")
+            else:
+                # For string input, we can't determine reactions, so raise an error
+                raise ValueError(
+                    "ProductionEnvelopeTool requires dictionary input with model_path and reactions keys"
+                )
 
             # Load model
             model = self._utils.load_model(model_path)

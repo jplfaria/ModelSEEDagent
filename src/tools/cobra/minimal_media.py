@@ -63,22 +63,65 @@ class MinimalMediaTool(BaseTool):
                 result_file = {"json": json_path, "csv": csv_path}
 
             minimal_media = {}
+            essential_nutrients = set()
+
+            # Store original bounds for all exchange reactions
+            original_bounds = {rxn.id: rxn.bounds for rxn in model.exchanges}
+
+            # Test each exchange reaction individually
             for rxn in model.exchanges:
-                original_bounds = rxn.bounds
+                # Only test uptake reactions (negative lower bound)
+                if rxn.lower_bound >= 0:
+                    continue
+
+                # Save current bounds and block this nutrient uptake
+                current_bounds = rxn.bounds
                 rxn.lower_bound = 0
+
+                # Test if growth is still possible without this nutrient
                 test_solution = run_simulation(model, method="fba")
+
                 if test_solution.objective_value < self._config.growth_threshold:
-                    minimal_media[rxn.id] = original_bounds
+                    # Growth fails without this nutrient - it's essential
+                    essential_nutrients.add(rxn.id)
+                    minimal_media[rxn.id] = original_bounds[rxn.id]
                 else:
-                    minimal_media[rxn.id] = (0, original_bounds[1])
-                rxn.bounds = original_bounds
+                    # Growth succeeds without this nutrient - it's not essential
+                    minimal_media[rxn.id] = (0, original_bounds[rxn.id][1])
+
+                # Always restore original bounds for next test
+                rxn.bounds = current_bounds
+            # Create more detailed results
+            essential_media = {
+                rxn_id: bounds
+                for rxn_id, bounds in minimal_media.items()
+                if rxn_id in essential_nutrients
+            }
+
+            non_essential_media = {
+                rxn_id: bounds
+                for rxn_id, bounds in minimal_media.items()
+                if rxn_id not in essential_nutrients
+            }
+
             return ToolResult(
                 success=True,
-                message="Minimal media determination completed.",
+                message=f"Minimal media determination completed. Found {len(essential_nutrients)} essential nutrients.",
                 data={
                     "minimal_media": minimal_media,
+                    "essential_nutrients": essential_media,
+                    "non_essential_nutrients": non_essential_media,
                     "complete_solution": complete_solution.objective_value,
                     "result_file": result_file,
+                },
+                metadata={
+                    "model_id": model.id,
+                    "num_exchange_reactions": len(
+                        [rxn for rxn in model.exchanges if rxn.lower_bound < 0]
+                    ),
+                    "num_essential_nutrients": len(essential_nutrients),
+                    "num_non_essential_nutrients": len(non_essential_media),
+                    "growth_threshold": self._config.growth_threshold,
                 },
             )
         except Exception as e:

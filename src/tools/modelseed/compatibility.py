@@ -21,7 +21,7 @@ from typing import Any, Dict, List, Optional, Tuple
 import numpy as np
 from pydantic import BaseModel, Field
 
-from ...tools.base import BaseTool, ToolRegistry, ToolResult
+from ..base import BaseTool, ToolRegistry, ToolResult
 from ..cobra.utils import ModelUtils
 
 
