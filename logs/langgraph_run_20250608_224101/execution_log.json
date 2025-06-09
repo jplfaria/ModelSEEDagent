@@ -1,0 +1,67 @@
+[
+  {
+    "timestamp": "2025-06-08T22:41:01.284103",
+    "step": "enhanced_planning",
+    "data": {
+      "iteration": 0,
+      "decision": "single_tool",
+      "tools_to_call": [
+        "analyze_metabolic_model"
+      ],
+      "completed_tools": [],
+      "total_planned_tools": 3,
+      "intent_analysis": {
+        "primary_intent": "comprehensive",
+        "secondary_intents": [],
+        "suggested_tools": [
+          "run_metabolic_fba",
+          "analyze_pathway",
+          "analyze_metabolic_model"
+        ],
+        "workflow_complexity": "complex",
+        "estimated_tools": 3,
+        "analysis_depth": "comprehensive"
+      },
+      "workflow_complexity": "complex"
+    }
+  },
+  {
+    "timestamp": "2025-06-08T22:41:13.355775",
+    "step": "enhanced_finalization",
+    "data": {
+      "total_iterations": 0,
+      "tools_used": [
+        "analyze_metabolic_model"
+      ],
+      "total_errors": 0,
+      "final_answer_length": 128,
+      "execution_summary": {
+        "run_id": "20250608_224101",
+        "query": "I need a comprehensive metabolic analysis of E. coli",
+        "total_iterations": 0,
+        "tools_executed": [
+          "analyze_metabolic_model"
+        ],
+        "parallel_executions": 0,
+        "errors_encountered": 0,
+        "recovery_attempts": 0,
+        "final_status": "completed",
+        "execution_time": "2025-06-08T22:41:01.242137"
+      },
+      "performance_metrics": {
+        "analyze_metabolic_model": {
+          "execution_time": 4.169219017028809,
+          "data_size": 0,
+          "category": "structural"
+        }
+      },
+      "workflow_complexity": "complex",
+      "total_execution_time": 4.169219017028809,
+      "visualizations_created": [
+        "/Users/jplfaria/repos/ModelSEEDagent/logs/langgraph_run_20250608_224101/visualizations/workflow_graph.html",
+        "/Users/jplfaria/repos/ModelSEEDagent/logs/langgraph_run_20250608_224101/visualizations/workflow_graph.html",
+        "/Users/jplfaria/repos/ModelSEEDagent/logs/langgraph_run_20250608_224101/visualizations/performance_dashboard.html"
+      ]
+    }
+  }
+]
