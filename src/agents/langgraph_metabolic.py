@@ -820,9 +820,29 @@ class LangGraphMetabolicAgent(BaseAgent):
         return "finalize"
 
     def _analyze_results(self, state: AgentState) -> str:
-        """Determine next action after analysis"""
+        """Determine next action after analysis with optimized logic"""
         if state.get("errors"):
             return "error"
+
+        # For comprehensive queries, skip intermediate analysis if more tools are planned
+        query_lower = state["query"].lower()
+        is_comprehensive = any(
+            word in query_lower
+            for word in ["comprehensive", "complete", "full", "detailed", "thorough"]
+        )
+
+        # Get planned tools
+        planned_tools = []
+        if "intent_analysis" in state and "suggested_tools" in state["intent_analysis"]:
+            planned_tools = state["intent_analysis"]["suggested_tools"]
+
+        tools_called = len(state["tools_called"])
+        planned_count = len(planned_tools)
+
+        # For comprehensive analysis, skip intermediate LLM analysis to improve performance
+        if is_comprehensive and tools_called < planned_count:
+            state["iteration"] += 1
+            return "continue"
 
         if (
             state.get("continue_analysis", False)
@@ -925,34 +945,40 @@ Choose the most efficient approach:"""
         return "analyze", []
 
     def _create_analysis_prompt(self, state: AgentState) -> str:
-        """Create prompt for analysis phase"""
+        """Create enhanced analysis prompt with rich tool data"""
         results_summary = ""
-        for tool_name, result in state["tool_results"].items():
-            results_summary += f"\n{tool_name}: {result.get('message', 'No message')}"
 
-        return f"""Analyze the tool execution results and determine if you have enough information to answer the query.
+        for tool_name, result in state["tool_results"].items():
+            status = "Success" if result.get("success", True) else "Failed"
+            message = result.get("message", "No message")
+
+            # Include rich data summary for better analysis
+            data_summary = ""
+            data = result.get("data")
+            if data and isinstance(data, dict):
+                # Provide key insights from the data
+                data_summary = self._summarize_tool_data(tool_name, data)
+
+            results_summary += f"\n\n{tool_name} ({status}):\n- Message: {message}"
+            if data_summary:
+                results_summary += f"\n- Key Findings: {data_summary}"
+
+        return f"""You are analyzing metabolic modeling results. Based on the tool execution results, provide insights and determine next steps.
 
 Original query: {state["query"]}
 
-Tool results:{results_summary}
+Detailed tool results:{results_summary}
 
-Based on these results:
-1. Do you have sufficient information to provide a complete answer?
-2. What additional analysis or tools might be needed?
-3. Summarize the key findings so far.
+Please provide:
+1. Key metabolic insights discovered so far
+2. Whether you have sufficient information for a comprehensive answer
+3. What additional analysis might enhance the results
+4. A brief summary of the most important findings
 
-Provide a concise analysis and indicate if you need to continue or can finalize."""
+Respond with actionable metabolic insights, not just procedural information."""
 
     def _should_continue_analysis(self, analysis: str, state: AgentState) -> bool:
-        """Determine if analysis should continue based on LLM response"""
-        analysis_lower = analysis.lower()
-
-        # For comprehensive queries, execute all planned tools unless explicitly told to stop
-        query_lower = state["query"].lower()
-        is_comprehensive = any(
-            word in query_lower
-            for word in ["comprehensive", "complete", "full", "detailed", "thorough"]
-        )
+        """Optimized analysis continuation logic - reduce LLM overhead"""
 
         # Get planned tools from intent analysis
         planned_tools = []
@@ -962,40 +988,39 @@ Provide a concise analysis and indicate if you need to continue or can finalize.
         tools_called = len(state["tools_called"])
         planned_count = len(planned_tools)
 
-        # Keywords that suggest continuation
-        continue_keywords = [
-            "need more",
-            "additional",
-            "further analysis",
-            "not sufficient",
-            "incomplete",
-        ]
-
-        # Keywords that suggest completion
-        complete_keywords = [
-            "sufficient",
-            "complete",
-            "ready to answer",
-            "have enough",
-            "can conclude",
-        ]
-
-        continue_score = sum(
-            1 for keyword in continue_keywords if keyword in analysis_lower
-        )
-        complete_score = sum(
-            1 for keyword in complete_keywords if keyword in analysis_lower
+        # For comprehensive queries, execute all planned tools with minimal LLM analysis
+        query_lower = state["query"].lower()
+        is_comprehensive = any(
+            word in query_lower
+            for word in ["comprehensive", "complete", "full", "detailed", "thorough"]
         )
 
-        # For comprehensive analysis, continue until we've executed planned tools
-        if is_comprehensive and tools_called < planned_count:
-            # Only stop if AI explicitly says it's sufficient and we have at least 2 tools
-            if complete_score > continue_score and tools_called >= 2:
-                return False
-            return True
+        if is_comprehensive:
+            # Simple rule: continue until all planned tools are executed
+            return tools_called < planned_count
 
-        # For non-comprehensive queries, use keyword-based logic
-        return continue_score > complete_score
+        # For non-comprehensive queries, use lightweight analysis
+        if tools_called >= planned_count:
+            return False
+
+        # Check for obvious completion signals without complex analysis
+        analysis_lower = analysis.lower()
+        if (
+            any(
+                phrase in analysis_lower
+                for phrase in [
+                    "sufficient",
+                    "complete",
+                    "ready to answer",
+                    "have enough",
+                ]
+            )
+            and tools_called >= 2
+        ):
+            return False
+
+        # Default: continue if we haven't reached our target tool count
+        return tools_called < min(planned_count, 3)  # Cap at 3 tools for efficiency
 
     def _prepare_tool_input(self, state: AgentState, tool_name: str) -> Dict[str, Any]:
         """Prepare appropriate input for each tool"""
@@ -1052,18 +1077,147 @@ Provide a concise analysis and indicate if you need to continue or can finalize.
         return f"Encountered {len(errors)} errors: " + "; ".join(errors[:3])
 
     def _create_final_answer(self, state: AgentState) -> str:
-        """Create final answer from state"""
+        """Create comprehensive final answer with rich metabolic insights"""
         if not state["tool_results"]:
             return "I was unable to execute any tools to analyze your query. Please check your query and try again."
 
-        # Summarize all tool results
-        summary = f"Analysis Results for: {state['query']}\n\n"
+        # Create comprehensive summary with rich data
+        summary = f"# Comprehensive Metabolic Analysis Results\n\n"
+        summary += f"**Query:** {state['query']}\n\n"
 
+        total_tools = len(state["tool_results"])
+        successful_tools = sum(
+            1
+            for result in state["tool_results"].values()
+            if result.get("success", True)
+        )
+        summary += f"**Execution Summary:** {successful_tools}/{total_tools} tools completed successfully\n\n"
+
+        # Process each tool result with rich data display
         for tool_name, result in state["tool_results"].items():
-            summary += f"**{tool_name.upper()}:**\n"
-            summary += f"{result.get('message', 'No details available')}\n\n"
+            summary += f"## {tool_name.replace('_', ' ').title()}\n\n"
+
+            # Show basic status
+            status = "✅ Success" if result.get("success", True) else "❌ Failed"
+            summary += f"**Status:** {status}\n"
+            summary += (
+                f"**Message:** {result.get('message', 'No message available')}\n\n"
+            )
+
+            # Extract and display rich data if available
+            data = result.get("data")
+            if data and isinstance(data, dict):
+                summary += self._format_tool_data(tool_name, data)
+
+            summary += "\n---\n\n"
+
+        # Add performance summary
+        if "performance_metrics" in state and state["performance_metrics"]:
+            summary += "## Performance Summary\n\n"
+            total_time = sum(
+                metrics.get("execution_time", 0)
+                for metrics in state["performance_metrics"].values()
+            )
+            summary += f"**Total Tool Execution Time:** {total_time:.2f}s\n"
+
+            for tool, metrics in state["performance_metrics"].items():
+                exec_time = metrics.get("execution_time", 0)
+                data_size = metrics.get("data_size", 0)
+                summary += f"- {tool}: {exec_time:.2f}s ({data_size:,} bytes data)\n"
+            summary += "\n"
 
         return summary
+
+    def _format_tool_data(self, tool_name: str, data: Dict[str, Any]) -> str:
+        """Format rich tool data for display"""
+        formatted = ""
+
+        if tool_name == "analyze_metabolic_model":
+            if "model_statistics" in data:
+                stats = data["model_statistics"]
+                formatted += f"**Model Overview:**\n"
+                formatted += f"- Reactions: {stats.get('num_reactions', 'N/A')}\n"
+                formatted += f"- Metabolites: {stats.get('num_metabolites', 'N/A')}\n"
+                formatted += f"- Genes: {stats.get('num_genes', 'N/A')}\n"
+                formatted += f"- Subsystems: {stats.get('num_subsystems', 'N/A')}\n\n"
+
+            if "network_properties" in data:
+                network = data["network_properties"]
+                if "connectivity_summary" in network:
+                    conn = network["connectivity_summary"]
+                    formatted += f"**Network Connectivity:**\n"
+                    formatted += f"- Average connections per metabolite: {conn.get('avg_connections_per_metabolite', 0):.1f}\n"
+                    formatted += f"- Most connected metabolite: {conn.get('max_connections', 0)} connections\n\n"
+
+                if (
+                    "highly_connected_metabolites" in network
+                    and network["highly_connected_metabolites"]
+                ):
+                    formatted += f"**Hub Metabolites (top 3):**\n"
+                    for i, met in enumerate(
+                        network["highly_connected_metabolites"][:3]
+                    ):
+                        formatted += f"{i+1}. {met.get('name', met.get('id', 'Unknown'))}: {met.get('num_reactions', 0)} reactions\n"
+                    formatted += "\n"
+
+        elif tool_name == "run_metabolic_fba":
+            if "objective_value" in data:
+                formatted += f"**Growth Analysis:**\n"
+                formatted += f"- Predicted growth rate: {data.get('objective_value', 0):.4f} h⁻¹\n"
+                formatted += (
+                    f"- Optimization status: {data.get('status', 'Unknown')}\n\n"
+                )
+
+            if "active_reactions" in data:
+                active = data["active_reactions"]
+                formatted += f"**Metabolic Activity:**\n"
+                formatted += (
+                    f"- Active reactions: {len(active)} reactions carrying flux\n"
+                )
+                if active:
+                    formatted += f"- Key active reactions: {', '.join(list(active.keys())[:5])}\n"
+                formatted += "\n"
+
+        elif tool_name == "analyze_pathway":
+            if "summary" in data:
+                summary = data["summary"]
+                formatted += f"**Pathway Statistics:**\n"
+                formatted += (
+                    f"- Reactions in pathway: {summary.get('reaction_count', 0)}\n"
+                )
+                formatted += f"- Associated genes: {summary.get('gene_coverage', 0)}\n"
+                formatted += (
+                    f"- Metabolites involved: {summary.get('metabolite_count', 0)}\n"
+                )
+                formatted += f"- Reversible reactions: {summary.get('reversible_reactions', 0)}\n\n"
+
+        # Add data for other tools as needed
+        elif "summary" in data:
+            # Generic summary formatting
+            formatted += f"**Analysis Summary:**\n"
+            for key, value in data["summary"].items():
+                formatted += f"- {key.replace('_', ' ').title()}: {value}\n"
+            formatted += "\n"
+
+        return formatted
+
+    def _summarize_tool_data(self, tool_name: str, data: Dict[str, Any]) -> str:
+        """Create brief summary of tool data for analysis prompt"""
+        if tool_name == "analyze_metabolic_model" and "model_statistics" in data:
+            stats = data["model_statistics"]
+            return f"{stats.get('num_reactions', 0)} reactions, {stats.get('num_metabolites', 0)} metabolites, {stats.get('num_genes', 0)} genes"
+
+        elif tool_name == "run_metabolic_fba" and "objective_value" in data:
+            growth = data.get("objective_value", 0)
+            status = data.get("status", "unknown")
+            active = len(data.get("active_reactions", {}))
+            return f"Growth rate: {growth:.4f}, Status: {status}, Active reactions: {active}"
+
+        elif tool_name == "analyze_pathway" and "summary" in data:
+            summary = data["summary"]
+            return f"{summary.get('reaction_count', 0)} reactions, {summary.get('gene_coverage', 0)} genes"
+
+        return "Analysis completed with detailed results"
 
     def _create_execution_summary(self, state: AgentState) -> Dict[str, Any]:
         """Create comprehensive execution summary"""
