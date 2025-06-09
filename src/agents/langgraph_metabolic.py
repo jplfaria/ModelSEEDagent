@@ -419,9 +419,35 @@ class LangGraphMetabolicAgent(BaseAgent):
                 state["tools_to_call"] = [next_tools[0]]
                 logger.info(f"Planned single tool execution: {next_tools[0]}")
             elif len(completed_tools) < len(execution_plan):
-                # Still have tools to execute but dependencies not met
-                state["next_action"] = "analyze"
-                logger.info("Waiting for dependencies, analyzing current results")
+                # Still have tools to execute - find any tool without unsatisfied dependencies
+                remaining_tools = [
+                    p for p in execution_plan if p.tool_name not in completed_tools
+                ]
+
+                # Try to find a tool we can execute (ignore dependencies for comprehensive analysis)
+                query_lower = state["query"].lower()
+                is_comprehensive = any(
+                    word in query_lower
+                    for word in [
+                        "comprehensive",
+                        "complete",
+                        "full",
+                        "detailed",
+                        "thorough",
+                    ]
+                )
+
+                if is_comprehensive and remaining_tools:
+                    # For comprehensive analysis, execute remaining tools regardless of dependencies
+                    state["next_action"] = "single_tool"
+                    state["tools_to_call"] = [remaining_tools[0].tool_name]
+                    logger.info(
+                        f"Comprehensive analysis: executing remaining tool {remaining_tools[0].tool_name}"
+                    )
+                else:
+                    # Original dependency logic
+                    state["next_action"] = "analyze"
+                    logger.info("Waiting for dependencies, analyzing current results")
             else:
                 # All tools completed
                 state["next_action"] = "finalize"

@@ -1,0 +1,334 @@
+[
+  {
+    "timestamp": "2025-06-08T22:51:26.283169",
+    "step": "enhanced_planning",
+    "data": {
+      "iteration": 0,
+      "decision": "single_tool",
+      "tools_to_call": [
+        "analyze_metabolic_model"
+      ],
+      "completed_tools": [],
+      "total_planned_tools": 3,
+      "intent_analysis": {
+        "primary_intent": "comprehensive",
+        "secondary_intents": [],
+        "suggested_tools": [
+          "analyze_metabolic_model",
+          "analyze_pathway",
+          "run_metabolic_fba"
+        ],
+        "workflow_complexity": "complex",
+        "estimated_tools": 3,
+        "analysis_depth": "comprehensive"
+      },
+      "workflow_complexity": "complex"
+    }
+  },
+  {
+    "timestamp": "2025-06-08T22:51:41.189859",
+    "step": "enhanced_planning",
+    "data": {
+      "iteration": 0,
+      "decision": "single_tool",
+      "tools_to_call": [
+        "analyze_pathway"
+      ],
+      "completed_tools": [
+        "analyze_metabolic_model"
+      ],
+      "total_planned_tools": 3,
+      "intent_analysis": {
+        "primary_intent": "comprehensive",
+        "secondary_intents": [],
+        "suggested_tools": [
+          "analyze_metabolic_model",
+          "analyze_pathway",
+          "run_metabolic_fba"
+        ],
+        "workflow_complexity": "complex",
+        "estimated_tools": 3,
+        "analysis_depth": "comprehensive"
+      },
+      "workflow_complexity": "complex"
+    }
+  },
+  {
+    "timestamp": "2025-06-08T22:51:50.605295",
+    "step": "enhanced_planning",
+    "data": {
+      "iteration": 0,
+      "decision": "analyze",
+      "tools_to_call": [
+        "analyze_pathway"
+      ],
+      "completed_tools": [
+        "analyze_metabolic_model",
+        "analyze_pathway"
+      ],
+      "total_planned_tools": 3,
+      "intent_analysis": {
+        "primary_intent": "comprehensive",
+        "secondary_intents": [],
+        "suggested_tools": [
+          "analyze_metabolic_model",
+          "analyze_pathway",
+          "run_metabolic_fba"
+        ],
+        "workflow_complexity": "complex",
+        "estimated_tools": 3,
+        "analysis_depth": "comprehensive"
+      },
+      "workflow_complexity": "complex"
+    }
+  },
+  {
+    "timestamp": "2025-06-08T22:51:58.980803",
+    "step": "enhanced_planning",
+    "data": {
+      "iteration": 0,
+      "decision": "analyze",
+      "tools_to_call": [
+        "analyze_pathway"
+      ],
+      "completed_tools": [
+        "analyze_metabolic_model",
+        "analyze_pathway"
+      ],
+      "total_planned_tools": 3,
+      "intent_analysis": {
+        "primary_intent": "comprehensive",
+        "secondary_intents": [],
+        "suggested_tools": [
+          "analyze_metabolic_model",
+          "analyze_pathway",
+          "run_metabolic_fba"
+        ],
+        "workflow_complexity": "complex",
+        "estimated_tools": 3,
+        "analysis_depth": "comprehensive"
+      },
+      "workflow_complexity": "complex"
+    }
+  },
+  {
+    "timestamp": "2025-06-08T22:52:03.590680",
+    "step": "enhanced_planning",
+    "data": {
+      "iteration": 0,
+      "decision": "analyze",
+      "tools_to_call": [
+        "analyze_pathway"
+      ],
+      "completed_tools": [
+        "analyze_metabolic_model",
+        "analyze_pathway"
+      ],
+      "total_planned_tools": 3,
+      "intent_analysis": {
+        "primary_intent": "comprehensive",
+        "secondary_intents": [],
+        "suggested_tools": [
+          "analyze_metabolic_model",
+          "analyze_pathway",
+          "run_metabolic_fba"
+        ],
+        "workflow_complexity": "complex",
+        "estimated_tools": 3,
+        "analysis_depth": "comprehensive"
+      },
+      "workflow_complexity": "complex"
+    }
+  },
+  {
+    "timestamp": "2025-06-08T22:52:07.486340",
+    "step": "enhanced_planning",
+    "data": {
+      "iteration": 0,
+      "decision": "analyze",
+      "tools_to_call": [
+        "analyze_pathway"
+      ],
+      "completed_tools": [
+        "analyze_metabolic_model",
+        "analyze_pathway"
+      ],
+      "total_planned_tools": 3,
+      "intent_analysis": {
+        "primary_intent": "comprehensive",
+        "secondary_intents": [],
+        "suggested_tools": [
+          "analyze_metabolic_model",
+          "analyze_pathway",
+          "run_metabolic_fba"
+        ],
+        "workflow_complexity": "complex",
+        "estimated_tools": 3,
+        "analysis_depth": "comprehensive"
+      },
+      "workflow_complexity": "complex"
+    }
+  },
+  {
+    "timestamp": "2025-06-08T22:52:12.413812",
+    "step": "enhanced_planning",
+    "data": {
+      "iteration": 0,
+      "decision": "analyze",
+      "tools_to_call": [
+        "analyze_pathway"
+      ],
+      "completed_tools": [
+        "analyze_metabolic_model",
+        "analyze_pathway"
+      ],
+      "total_planned_tools": 3,
+      "intent_analysis": {
+        "primary_intent": "comprehensive",
+        "secondary_intents": [],
+        "suggested_tools": [
+          "analyze_metabolic_model",
+          "analyze_pathway",
+          "run_metabolic_fba"
+        ],
+        "workflow_complexity": "complex",
+        "estimated_tools": 3,
+        "analysis_depth": "comprehensive"
+      },
+      "workflow_complexity": "complex"
+    }
+  },
+  {
+    "timestamp": "2025-06-08T22:52:20.478441",
+    "step": "enhanced_planning",
+    "data": {
+      "iteration": 0,
+      "decision": "analyze",
+      "tools_to_call": [
+        "analyze_pathway"
+      ],
+      "completed_tools": [
+        "analyze_metabolic_model",
+        "analyze_pathway"
+      ],
+      "total_planned_tools": 3,
+      "intent_analysis": {
+        "primary_intent": "comprehensive",
+        "secondary_intents": [],
+        "suggested_tools": [
+          "analyze_metabolic_model",
+          "analyze_pathway",
+          "run_metabolic_fba"
+        ],
+        "workflow_complexity": "complex",
+        "estimated_tools": 3,
+        "analysis_depth": "comprehensive"
+      },
+      "workflow_complexity": "complex"
+    }
+  },
+  {
+    "timestamp": "2025-06-08T22:52:25.560963",
+    "step": "enhanced_planning",
+    "data": {
+      "iteration": 0,
+      "decision": "analyze",
+      "tools_to_call": [
+        "analyze_pathway"
+      ],
+      "completed_tools": [
+        "analyze_metabolic_model",
+        "analyze_pathway"
+      ],
+      "total_planned_tools": 3,
+      "intent_analysis": {
+        "primary_intent": "comprehensive",
+        "secondary_intents": [],
+        "suggested_tools": [
+          "analyze_metabolic_model",
+          "analyze_pathway",
+          "run_metabolic_fba"
+        ],
+        "workflow_complexity": "complex",
+        "estimated_tools": 3,
+        "analysis_depth": "comprehensive"
+      },
+      "workflow_complexity": "complex"
+    }
+  },
+  {
+    "timestamp": "2025-06-08T22:52:31.850493",
+    "step": "enhanced_planning",
+    "data": {
+      "iteration": 0,
+      "decision": "analyze",
+      "tools_to_call": [
+        "analyze_pathway"
+      ],
+      "completed_tools": [
+        "analyze_metabolic_model",
+        "analyze_pathway"
+      ],
+      "total_planned_tools": 3,
+      "intent_analysis": {
+        "primary_intent": "comprehensive",
+        "secondary_intents": [],
+        "suggested_tools": [
+          "analyze_metabolic_model",
+          "analyze_pathway",
+          "run_metabolic_fba"
+        ],
+        "workflow_complexity": "complex",
+        "estimated_tools": 3,
+        "analysis_depth": "comprehensive"
+      },
+      "workflow_complexity": "complex"
+    }
+  },
+  {
+    "timestamp": "2025-06-08T22:52:38.108979",
+    "step": "enhanced_finalization",
+    "data": {
+      "total_iterations": 0,
+      "tools_used": [
+        "analyze_metabolic_model",
+        "analyze_pathway"
+      ],
+      "total_errors": 0,
+      "final_answer_length": 190,
+      "execution_summary": {
+        "run_id": "20250608_225126",
+        "query": "I need a comprehensive metabolic analysis of E. coli",
+        "total_iterations": 0,
+        "tools_executed": [
+          "analyze_metabolic_model",
+          "analyze_pathway"
+        ],
+        "parallel_executions": 0,
+        "errors_encountered": 0,
+        "recovery_attempts": 0,
+        "final_status": "completed",
+        "execution_time": "2025-06-08T22:52:31.850426"
+      },
+      "performance_metrics": {
+        "analyze_metabolic_model": {
+          "execution_time": 3.8759448528289795,
+          "data_size": 12148,
+          "category": "structural"
+        },
+        "analyze_pathway": {
+          "execution_time": 3.856868028640747,
+          "data_size": 0,
+          "category": "structural"
+        }
+      },
+      "workflow_complexity": "complex",
+      "total_execution_time": 7.732812881469727,
+      "visualizations_created": [
+        "/Users/jplfaria/repos/ModelSEEDagent/logs/langgraph_run_20250608_225126/visualizations/workflow_graph.html",
+        "/Users/jplfaria/repos/ModelSEEDagent/logs/langgraph_run_20250608_225126/visualizations/workflow_graph.html",
+        "/Users/jplfaria/repos/ModelSEEDagent/logs/langgraph_run_20250608_225126/visualizations/performance_dashboard.html"
+      ]
+    }
+  }
+]

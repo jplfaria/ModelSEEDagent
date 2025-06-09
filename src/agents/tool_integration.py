@@ -332,7 +332,7 @@ class EnhancedToolIntegration:
             if plan.parameters:
                 input_data = plan.parameters
             else:
-                # For analysis tools, provide model path
+                # For analysis tools, provide model path and other parameters
                 if plan.tool_name in [
                     "run_metabolic_fba",
                     "find_minimal_media",
@@ -343,7 +343,6 @@ class EnhancedToolIntegration:
                     "run_gene_deletion_analysis",
                     "run_production_envelope",
                     "analyze_metabolic_model",
-                    "analyze_pathway",
                     "check_missing_media",
                     "analyze_reaction_expression",
                 ]:
@@ -356,6 +355,19 @@ class EnhancedToolIntegration:
                         / "e_coli_core.xml"
                     )
                     input_data = {"model_path": default_model_path}
+                elif plan.tool_name == "analyze_pathway":
+                    from pathlib import Path
+
+                    default_model_path = str(
+                        Path(__file__).parent.parent.parent
+                        / "data"
+                        / "examples"
+                        / "e_coli_core.xml"
+                    )
+                    input_data = {
+                        "model_path": default_model_path,
+                        "pathway": "glycolysis",
+                    }
                 else:
                     input_data = "default analysis"
 
