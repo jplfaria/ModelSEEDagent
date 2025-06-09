@@ -263,9 +263,25 @@ class FluxSamplingTool(BaseTool):
         objective_samples = None
         if hasattr(model, "objective") and model.objective:
             # Try to find objective reaction in samples
-            obj_reactions = [
-                rxn.id for rxn in model.objective.get_linear_coefficients().keys()
-            ]
+            try:
+                # For newer CobraP versions
+                obj_coeffs = model.objective.get_linear_coefficients(model.variables)
+                obj_reactions = [rxn.id for rxn in obj_coeffs.keys()]
+            except TypeError:
+                # For older CobraP versions or fallback
+                try:
+                    obj_reactions = [
+                        rxn.id
+                        for rxn in model.objective.get_linear_coefficients().keys()
+                    ]
+                except:
+                    # Final fallback - get from objective expression
+                    obj_reactions = [
+                        var.name
+                        for var in model.objective.variables
+                        if hasattr(var, "name")
+                    ]
+
             for obj_rxn in obj_reactions:
                 if obj_rxn in samples.columns:
                     objective_samples = samples[obj_rxn]

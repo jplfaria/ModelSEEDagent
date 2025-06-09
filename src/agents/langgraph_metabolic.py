@@ -1037,7 +1037,6 @@ Respond with actionable metabolic insights, not just procedural information."""
             "run_gene_deletion_analysis",
             "run_production_envelope",
             "analyze_metabolic_model",
-            "analyze_pathway",
             "check_missing_media",
             "analyze_reaction_expression",
         ]:
@@ -1049,6 +1048,16 @@ Respond with actionable metabolic insights, not just procedural information."""
                 / "e_coli_core.xml"
             )
             return {"model_path": default_model_path}
+
+        # analyze_pathway needs both model_path and pathway
+        elif tool_name == "analyze_pathway":
+            default_model_path = str(
+                Path(__file__).parent.parent.parent
+                / "data"
+                / "examples"
+                / "e_coli_core.xml"
+            )
+            return {"model_path": default_model_path, "pathway": "glycolysis"}
 
         # Biochemistry tools need query
         elif tool_name in ["search_biochem"]:
@@ -1163,7 +1172,29 @@ Respond with actionable metabolic insights, not just procedural information."""
         elif tool_name == "run_metabolic_fba":
             if "objective_value" in data:
                 formatted += f"**Growth Analysis:**\n"
-                formatted += f"- Predicted growth rate: {data.get('objective_value', 0):.4f} h⁻¹\n"
+
+                # Extract actual biomass growth rate from fluxes, not objective value
+                growth_rate = 0.0
+
+                # Check in both 'fluxes' and 'significant_fluxes' for biomass reaction
+                flux_data = None
+                if "fluxes" in data:
+                    flux_data = data["fluxes"]
+                elif "significant_fluxes" in data:
+                    flux_data = data["significant_fluxes"]
+
+                if flux_data:
+                    # Find biomass reaction (usually contains "BIOMASS" in the name)
+                    biomass_reactions = [
+                        k for k in flux_data.keys() if "BIOMASS" in k.upper()
+                    ]
+                    if biomass_reactions:
+                        growth_rate = flux_data[biomass_reactions[0]]
+
+                formatted += f"- Predicted growth rate: {growth_rate:.4f} h⁻¹\n"
+                formatted += (
+                    f"- FBA objective value: {data.get('objective_value', 0):.4f}\n"
+                )
                 formatted += (
                     f"- Optimization status: {data.get('status', 'Unknown')}\n\n"
                 )
@@ -1208,10 +1239,26 @@ Respond with actionable metabolic insights, not just procedural information."""
             return f"{stats.get('num_reactions', 0)} reactions, {stats.get('num_metabolites', 0)} metabolites, {stats.get('num_genes', 0)} genes"
 
         elif tool_name == "run_metabolic_fba" and "objective_value" in data:
-            growth = data.get("objective_value", 0)
+            # Extract actual biomass growth rate from fluxes
+            growth_rate = 0.0
+
+            # Check in both 'fluxes' and 'significant_fluxes' for biomass reaction
+            flux_data = None
+            if "fluxes" in data:
+                flux_data = data["fluxes"]
+            elif "significant_fluxes" in data:
+                flux_data = data["significant_fluxes"]
+
+            if flux_data:
+                biomass_reactions = [
+                    k for k in flux_data.keys() if "BIOMASS" in k.upper()
+                ]
+                if biomass_reactions:
+                    growth_rate = flux_data[biomass_reactions[0]]
+
             status = data.get("status", "unknown")
             active = len(data.get("active_reactions", {}))
-            return f"Growth rate: {growth:.4f}, Status: {status}, Active reactions: {active}"
+            return f"Growth rate: {growth_rate:.4f}, Status: {status}, Active reactions: {active}"
 
         elif tool_name == "analyze_pathway" and "summary" in data:
             summary = data["summary"]
@@ -1255,23 +1302,85 @@ Respond with actionable metabolic insights, not just procedural information."""
             json.dump(self.execution_log, f, indent=2)
 
     def _extract_model_path(self, query: str) -> Optional[str]:
-        """Extract model path from query if present"""
-        # Look for common model file patterns
+        """Enhanced model path extraction with dynamic model registry"""
         import re
+        from pathlib import Path
 
-        patterns = [
-            r"(\w+\.xml)",
-            r"(\w+\.sbml)",
-            r"(data/models/\w+\.xml)",
-            r"models/(\w+)",
+        # Model registry for production scalability
+        model_registry = {
+            # E. coli models
+            "ecoli_core": "data/examples/e_coli_core.xml",
+            "e_coli_core": "data/examples/e_coli_core.xml",
+            "core": "data/examples/e_coli_core.xml",
+            "iml1515": "data/models/iML1515.xml",
+            "ecoli_full": "data/models/iML1515.xml",
+            "full": "data/models/iML1515.xml",
+            # Pattern-based matching for user models
+            "default": "data/examples/e_coli_core.xml",
+        }
+
+        query_lower = query.lower()
+
+        # 1. Check for explicit model names in query
+        for model_key, model_path in model_registry.items():
+            if model_key in query_lower:
+                full_path = Path(__file__).parent.parent.parent / model_path
+                if full_path.exists():
+                    logger.info(
+                        f"Model selected from query: {model_key} -> {model_path}"
+                    )
+                    return str(full_path)
+
+        # 2. Look for direct file patterns
+        file_patterns = [
+            r"([\w-]+\.xml)",
+            r"([\w-]+\.sbml)",
+            r"(data/models/[\w-]+\.xml)",
+            r"models/([\w-]+)",
         ]
 
-        for pattern in patterns:
-            match = re.search(pattern, query.lower())
+        for pattern in file_patterns:
+            match = re.search(pattern, query_lower)
             if match:
-                return match.group(1)
+                file_ref = match.group(1)
+                # Try to resolve to actual file
+                potential_paths = [
+                    Path(__file__).parent.parent.parent
+                    / "data"
+                    / "examples"
+                    / file_ref,
+                    Path(__file__).parent.parent.parent / "data" / "models" / file_ref,
+                    Path(file_ref),  # Direct path
+                ]
+                for path in potential_paths:
+                    if path.exists():
+                        logger.info(f"Model file found: {file_ref} -> {path}")
+                        return str(path)
 
-        # Default model for testing
+        # 3. Numeric model IDs (future-proofing for production)
+        numeric_patterns = [
+            r"model[_\s]+(\d+)",
+            r"genome[_\s]+(\d+)",
+            r"organism[_\s]+(\d+)",
+        ]
+
+        for pattern in numeric_patterns:
+            match = re.search(pattern, query_lower)
+            if match:
+                model_id = match.group(1)
+                # Future: query database/API for model_id mapping
+                # For now, return default with informative logging
+                logger.info(
+                    f"Numeric model ID detected: {model_id}, using default model (future: query model database)"
+                )
+                break
+
+        # 4. Default fallback
+        default_path = Path(__file__).parent.parent.parent / model_registry["default"]
+        if default_path.exists():
+            logger.info(f"Using default model: {default_path}")
+            return str(default_path)
+
         return None
 
     # -------------------------------

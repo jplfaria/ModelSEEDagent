@@ -378,6 +378,13 @@ class EnhancedToolIntegration:
                 and "model_path" in input_data
             ):
                 result = tool._run(input_data["model_path"])
+            elif plan.tool_name == "analyze_pathway":
+                # analyze_pathway requires both model_path and pathway parameters
+                if isinstance(input_data, dict) and "model_path" in input_data:
+                    # Ensure pathway parameter is included
+                    if "pathway" not in input_data:
+                        input_data["pathway"] = "glycolysis"  # Default pathway
+                result = tool._run(input_data)
             else:
                 result = tool._run(input_data)
             execution_time = time.time() - start_time
