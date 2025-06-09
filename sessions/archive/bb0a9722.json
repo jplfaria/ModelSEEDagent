@@ -1,0 +1,78 @@
+{
+  "id": "bb0a9722",
+  "name": "Analysis_20250608_2343",
+  "created_at": "2025-06-08T23:43:54.350499",
+  "last_active": "2025-06-08T23:50:16.609516",
+  "status": "active",
+  "description": "Interactive metabolic modeling analysis",
+  "model_files": [],
+  "interactions": [
+    {
+      "id": "ai_0",
+      "timestamp": "2025-06-08T23:46:38.607205",
+      "type": "query",
+      "input_data": "i need a comprehensive analysis of data/examples/e_coli_core.xml",
+      "output_data": "# Comprehensive Metabolic Analysis Results\n\n**Query:** i need a comprehensive analysis of data/examples/e_coli_core.xml\n\n**Execution Summary:** 2/3 tools completed successfully\n\n## Analyze Metabolic Model\n\n**Status:** \u2705 Success\n**Message:** Model analysis completed successfully\n\n**Model Overview:**\n- Reactions: 95\n- Metabolites: 72\n- Genes: 137\n- Subsystems: 0\n\n**Network Connectivity:**\n- Average connections per metabolite: 5.0\n- Most connected metabolite: 35 connections\n\n**Hub Metabolites (top 3):**\n1. H+: 35 reactions\n2. H2O H2O: 18 reactions\n3. H+: 17 reactions\n\n\n---\n\n## Analyze Pathway\n\n**Status:** \u274c Failed\n**Message:** Error analyzing pathway\n\n\n---\n\n## Run Metabolic Fba\n\n**Status:** \u2705 Success\n**Message:** FBA simulation completed successfully\n\n**Growth Analysis:**\n- Predicted growth rate: 0.0000 h\u207b\u00b9\n- FBA objective value: 518.4221\n- Optimization status: optimal\n\n\n---\n\n## Performance Summary\n\n**Total Tool Execution Time:** 11.90s\n- analyze_metabolic_model: 4.21s (12,148 bytes data)\n- analyze_pathway: 3.78s (0 bytes data)\n- run_metabolic_fba: 3.91s (2,940 bytes data)\n\n",
+      "metadata": {
+        "ai_agent_used": true,
+        "tools_executed": [],
+        "ai_reasoning_steps": 0,
+        "audit_file": null,
+        "dynamic_decision_making": true,
+        "success": true
+      },
+      "execution_time": 56.83614683151245,
+      "success": true,
+      "error_message": null
+    },
+    {
+      "id": "ai_1",
+      "timestamp": "2025-06-08T23:50:16.609476",
+      "type": "query",
+      "input_data": "can you give me nore details on the network connectivity analysis?",
+      "output_data": " Under the given conditions, the model\u2019s connectivity is highly constrained, with roughly half the reactions blocked and the rest largely carrying fixed fluxes. Only two reactions (SUCDi and FRD7) exhibit broad variability, highlighting potential flexibility in succinate/fumarate metabolism. The findings underscore the centrality of the TCA cycle and key glycolytic reactions for supporting biomass production in this scenario.",
+      "metadata": {
+        "ai_agent_used": true,
+        "tools_executed": [
+          "run_flux_variability_analysis",
+          "run_flux_sampling"
+        ],
+        "ai_reasoning_steps": 0,
+        "audit_file": null,
+        "dynamic_decision_making": true,
+        "success": true
+      },
+      "execution_time": 171.12297797203064,
+      "success": true,
+      "error_message": null
+    }
+  ],
+  "context": {
+    "last_interaction": {
+      "id": "ai_1",
+      "timestamp": "2025-06-08T23:50:16.609476",
+      "type": "query",
+      "input_data": "can you give me nore details on the network connectivity analysis?",
+      "output_data": " Under the given conditions, the model\u2019s connectivity is highly constrained, with roughly half the reactions blocked and the rest largely carrying fixed fluxes. Only two reactions (SUCDi and FRD7) exhibit broad variability, highlighting potential flexibility in succinate/fumarate metabolism. The findings underscore the centrality of the TCA cycle and key glycolytic reactions for supporting biomass production in this scenario.",
+      "metadata": {
+        "ai_agent_used": true,
+        "tools_executed": [
+          "run_flux_variability_analysis",
+          "run_flux_sampling"
+        ],
+        "ai_reasoning_steps": 0,
+        "audit_file": null,
+        "dynamic_decision_making": true,
+        "success": true
+      },
+      "execution_time": 171.12297797203064,
+      "success": true,
+      "error_message": null
+    },
+    "last_query": "can you give me nore details on the network connectivity analysis?"
+  },
+  "metadata": {},
+  "total_queries": 2,
+  "total_execution_time": 227.9591248035431,
+  "success_rate": 1.0
+}
