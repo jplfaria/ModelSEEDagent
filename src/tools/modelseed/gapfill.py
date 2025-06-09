@@ -1,7 +1,6 @@
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-import modelseedpy
 from pydantic import BaseModel, Field
 
 from ...tools.base import BaseTool, ToolRegistry, ToolResult
@@ -65,6 +64,9 @@ class GapFillTool(BaseTool):
             media_condition = input_data.get(
                 "media_condition", self._gapfill_config.media_condition
             )
+
+            # Lazy import modelseedpy only when needed
+            import modelseedpy
 
             # Initialize MSGapfill
             gapfiller = modelseedpy.MSGapfill(

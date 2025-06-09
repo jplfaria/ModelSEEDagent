@@ -1,7 +1,6 @@
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-import modelseedpy
 from pydantic import BaseModel, Field
 
 from ...tools.base import BaseTool, ToolRegistry, ToolResult
@@ -50,6 +49,9 @@ class ModelBuildTool(BaseTool):
             # Validate inputs
             model_id = input_data.get("model_id", "model")
             output_path = input_data.get("output_path", f"{model_id}.xml")
+
+            # Lazy import modelseedpy only when needed
+            import modelseedpy
 
             # Initialize MSBuilder
             builder = modelseedpy.MSBuilder()

@@ -18,9 +18,6 @@ import warnings
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-import cobra
-import cobrakbase
-import modelseedpy
 import numpy as np
 from pydantic import BaseModel, Field
 
@@ -174,13 +171,16 @@ class ModelCompatibilityTool(BaseTool):
 
     def _test_sbml_roundtrip(
         self, ms_model
-    ) -> Tuple[Optional[cobra.Model], bool, List[str]]:
+    ) -> Tuple[Optional[object], bool, List[str]]:
         """Test SBML round-trip: ModelSEED → SBML → COBRApy"""
 
         conversion_errors = []
         cobra_model = None
 
         try:
+            # Lazy import cobra only when needed
+            import cobra
+
             # Create temporary SBML file
             with tempfile.NamedTemporaryFile(suffix=".xml", delete=False) as tmp_file:
                 tmp_path = tmp_file.name
@@ -458,6 +458,9 @@ def verify_cobra_tool_compatibility(
         tmp_path = tmp_file.name
 
     try:
+        # Lazy import cobra only when needed
+        import cobra
+
         ms_model.write_sbml_file(tmp_path)
         cobra_model = cobra.io.read_sbml_model(tmp_path)
 

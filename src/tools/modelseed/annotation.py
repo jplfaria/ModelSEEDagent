@@ -1,7 +1,6 @@
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-import modelseedpy
 from pydantic import BaseModel, Field
 
 from ...tools.base import BaseTool, ToolRegistry, ToolResult
@@ -54,6 +53,9 @@ class RastAnnotationTool(BaseTool):
 
             genome_name = input_data.get("genome_name", genome_file.stem)
             output_path = input_data.get("output_path", f"{genome_name}_annotated")
+
+            # Lazy import modelseedpy only when needed
+            import modelseedpy
 
             # Initialize RAST client
             rast_client = modelseedpy.RastClient()
@@ -160,6 +162,9 @@ class ProteinAnnotationTool(BaseTool):
             ToolResult containing the protein annotation results
         """
         try:
+            # Lazy import modelseedpy only when needed
+            import modelseedpy
+
             # Initialize RAST client
             rast_client = modelseedpy.RastClient()
 
