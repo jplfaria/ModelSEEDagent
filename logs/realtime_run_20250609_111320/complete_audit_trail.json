@@ -1,0 +1,5042 @@
+{
+  "analysis_session": {
+    "query": "explore the predicte dgrowth rate in more detail and give me a summry of what you learn",
+    "timestamp": "2025-06-09T11:19:43.120903",
+    "agent_type": "Real-Time Dynamic AI Agent",
+    "run_id": "20250609_111320"
+  },
+  "execution_sequence": [
+    {
+      "step": "session_initialization",
+      "timestamp": "2025-06-09T11:13:38.203136",
+      "data": {
+        "session_id": "20250609_111320",
+        "query": "I need a comprehensive metabolic analysis of E. col for our data examples ecoli cor emodel",
+        "timestamp": "2025-06-09T11:13:38.203109",
+        "agent_type": "Real-Time Dynamic AI Agent",
+        "available_tools": [
+          "resolve_biochem_entity",
+          "search_biochem",
+          "analyze_metabolic_model",
+          "analyze_pathway",
+          "run_metabolic_fba",
+          "identify_auxotrophies",
+          "analyze_essentiality",
+          "run_flux_sampling",
+          "run_flux_variability_analysis",
+          "run_gene_deletion_analysis",
+          "find_minimal_media",
+          "check_missing_media",
+          "run_production_envelope",
+          "analyze_reaction_expression",
+          "annotate_genome_rast",
+          "annotate_proteins_rast",
+          "build_metabolic_model",
+          "test_modelseed_cobra_compatibility",
+          "gapfill_model"
+        ]
+      }
+    },
+    {
+      "step": "session_initialization",
+      "timestamp": "2025-06-09T11:15:32.659888",
+      "data": {
+        "session_id": "20250609_111320",
+        "query": "explore the predicte dgrowth rate in more detail and give me a summry of what you learn",
+        "timestamp": "2025-06-09T11:15:32.659877",
+        "agent_type": "Real-Time Dynamic AI Agent",
+        "available_tools": [
+          "resolve_biochem_entity",
+          "search_biochem",
+          "analyze_metabolic_model",
+          "analyze_pathway",
+          "run_metabolic_fba",
+          "identify_auxotrophies",
+          "analyze_essentiality",
+          "run_flux_sampling",
+          "run_flux_variability_analysis",
+          "run_gene_deletion_analysis",
+          "find_minimal_media",
+          "check_missing_media",
+          "run_production_envelope",
+          "analyze_reaction_expression",
+          "annotate_genome_rast",
+          "annotate_proteins_rast",
+          "build_metabolic_model",
+          "test_modelseed_cobra_compatibility",
+          "gapfill_model"
+        ]
+      }
+    },
+    {
+      "timestamp": "2025-06-09T11:15:37.059606",
+      "decision_type": "initial_tool_selection",
+      "ai_reasoning": {
+        "selected_tool": "run_metabolic_fba",
+        "reasoning": "The user wants to explore predicted growth-rate behavior in more detail, which is most directly addressed by flux balance analysis (FBA). Since we already have a model (rather than building one from scratch) and are focusing on growth-rate predictions, \u201crun_metabolic_fba\u201d is the best first step."
+      }
+    },
+    {
+      "tool": "run_metabolic_fba",
+      "start_time": "2025-06-09T11:15:37.059880",
+      "inputs": {
+        "model_path": "/Users/jplfaria/repos/ModelSEEDagent/data/examples/e_coli_core.xml"
+      },
+      "end_time": "2025-06-09T11:15:37.180787",
+      "execution_time_seconds": 0.12085723876953125,
+      "success": true,
+      "result_data": {
+        "objective_value": 518.422085517607,
+        "status": "optimal",
+        "significant_fluxes": {
+          "PFK": 7.477381962160286,
+          "PGI": 4.860861146496822,
+          "PGK": -16.02352614316761,
+          "PGL": 4.959984944574652,
+          "PGM": -14.716139568742836,
+          "PIt2r": 3.2148950476848035,
+          "PPC": 2.5043094703687356,
+          "ACONTa": 6.0072495753503405,
+          "ACONTb": 6.0072495753503405,
+          "ATPM": 8.39,
+          "AKGDH": 5.0643756614820985,
+          "ATPS4r": 45.51400977451748,
+          "PYK": 1.7581774441067881,
+          "BIOMASS_Ecoli_core_w_GAM": 0.8739215069684303,
+          "CO2t": -22.80983331020497,
+          "RPE": 2.6784818505075263,
+          "CS": 6.00724957535034,
+          "RPI": -2.2815030940671246,
+          "CYTBD": 43.59898531199755,
+          "ENO": 14.716139568742836,
+          "SUCDi": 5.0643756614820985,
+          "SUCOAS": -5.0643756614820985,
+          "TALA": 1.4969837572615647,
+          "TKT1": 1.4969837572615645,
+          "TKT2": 1.1814980932459616,
+          "TPI": 7.477381962160286,
+          "EX_co2_e": 22.80983331020497,
+          "EX_glc__D_e": -10.0,
+          "EX_h_e": 17.530865429786694,
+          "EX_h2o_e": 29.17582713556585,
+          "EX_nh4_e": -4.765319193197456,
+          "EX_o2_e": -21.799492655998773,
+          "EX_pi_e": -3.2148950476848035,
+          "FBA": 7.477381962160286,
+          "FUM": 5.064375661482098,
+          "G6PDH2r": 4.959984944574652,
+          "GAPD": 16.023526143167608,
+          "GLCpts": 10.000000000000002,
+          "GLNS": 0.2234617293318276,
+          "GLUDy": -4.541857463865629,
+          "GND": 4.95998494457465,
+          "H2Ot": -29.17582713556585,
+          "ICDHyr": 6.0072495753503405,
+          "MDH": 5.0643756614820985,
+          "NADH16": 38.53460965051545,
+          "NH4t": 4.765319193197456,
+          "O2t": 21.799492655998773,
+          "PDH": 9.28253259916662
+        },
+        "subsystem_fluxes": {
+          "Unknown": [
+            [
+              "PFK",
+              7.477381962160286
+            ],
+            [
+              "PGI",
+              4.860861146496822
+            ],
+            [
+              "PGK",
+              -16.02352614316761
+            ],
+            [
+              "PGL",
+              4.959984944574652
+            ],
+            [
+              "PGM",
+              -14.716139568742836
+            ],
+            [
+              "PIt2r",
+              3.2148950476848035
+            ],
+            [
+              "PPC",
+              2.5043094703687356
+            ],
+            [
+              "ACONTa",
+              6.0072495753503405
+            ],
+            [
+              "ACONTb",
+              6.0072495753503405
+            ],
+            [
+              "ATPM",
+              8.39
+            ],
+            [
+              "AKGDH",
+              5.0643756614820985
+            ],
+            [
+              "ATPS4r",
+              45.51400977451748
+            ],
+            [
+              "PYK",
+              1.7581774441067881
+            ],
+            [
+              "BIOMASS_Ecoli_core_w_GAM",
+              0.8739215069684303
+            ],
+            [
+              "CO2t",
+              -22.80983331020497
+            ],
+            [
+              "RPE",
+              2.6784818505075263
+            ],
+            [
+              "CS",
+              6.00724957535034
+            ],
+            [
+              "RPI",
+              -2.2815030940671246
+            ],
+            [
+              "CYTBD",
+              43.59898531199755
+            ],
+            [
+              "ENO",
+              14.716139568742836
+            ],
+            [
+              "SUCDi",
+              5.0643756614820985
+            ],
+            [
+              "SUCOAS",
+              -5.0643756614820985
+            ],
+            [
+              "TALA",
+              1.4969837572615647
+            ],
+            [
+              "TKT1",
+              1.4969837572615645
+            ],
+            [
+              "TKT2",
+              1.1814980932459616
+            ],
+            [
+              "TPI",
+              7.477381962160286
+            ],
+            [
+              "EX_co2_e",
+              22.80983331020497
+            ],
+            [
+              "EX_glc__D_e",
+              -10.0
+            ],
+            [
+              "EX_h_e",
+              17.530865429786694
+            ],
+            [
+              "EX_h2o_e",
+              29.17582713556585
+            ],
+            [
+              "EX_nh4_e",
+              -4.765319193197456
+            ],
+            [
+              "EX_o2_e",
+              -21.799492655998773
+            ],
+            [
+              "EX_pi_e",
+              -3.2148950476848035
+            ],
+            [
+              "FBA",
+              7.477381962160286
+            ],
+            [
+              "FUM",
+              5.064375661482098
+            ],
+            [
+              "G6PDH2r",
+              4.959984944574652
+            ],
+            [
+              "GAPD",
+              16.023526143167608
+            ],
+            [
+              "GLCpts",
+              10.000000000000002
+            ],
+            [
+              "GLNS",
+              0.2234617293318276
+            ],
+            [
+              "GLUDy",
+              -4.541857463865629
+            ],
+            [
+              "GND",
+              4.95998494457465
+            ],
+            [
+              "H2Ot",
+              -29.17582713556585
+            ],
+            [
+              "ICDHyr",
+              6.0072495753503405
+            ],
+            [
+              "MDH",
+              5.0643756614820985
+            ],
+            [
+              "NADH16",
+              38.53460965051545
+            ],
+            [
+              "NH4t",
+              4.765319193197456
+            ],
+            [
+              "O2t",
+              21.799492655998773
+            ],
+            [
+              "PDH",
+              9.28253259916662
+            ]
+          ]
+        },
+        "result_file": null
+      },
+      "result_message": "FBA simulation completed successfully"
+    },
+    {
+      "tool": "run_flux_variability_analysis",
+      "start_time": "2025-06-09T11:15:48.203887",
+      "inputs": {
+        "model_path": "/Users/jplfaria/repos/ModelSEEDagent/data/examples/e_coli_core.xml"
+      },
+      "end_time": "2025-06-09T11:17:03.047796",
+      "execution_time_seconds": 74.84384894371033,
+      "success": true,
+      "result_data": {
+        "fva_results": {
+          "minimum": {
+            "PFK": 7.477381962160245,
+            "PFL": 0.0,
+            "PGI": 4.860861146497068,
+            "PGK": -16.02352614316751,
+            "PGL": 4.959984944574876,
+            "ACALD": 1.291061902284148e-14,
+            "AKGt2r": -4.422332864701749e-15,
+            "PGM": -14.716139568742774,
+            "PIt2r": 3.2148950476847657,
+            "ALCD2x": 1.1244732697313543e-14,
+            "ACALDt": 2.9519865872862908e-15,
+            "ACKr": 2.3630750943433006e-14,
+            "PPC": 2.504309470368518,
+            "ACONTa": 6.0072495753503965,
+            "ACONTb": 6.0072495753503965,
+            "ATPM": 8.39,
+            "PPCK": 0.0,
+            "ACt2r": 2.0403524934882754e-14,
+            "PPS": 0.0,
+            "ADK1": 0.0,
+            "AKGDH": 5.064375661481848,
+            "ATPS4r": 45.514009774517646,
+            "PTAr": 0.0,
+            "PYK": 1.758177444106869,
+            "BIOMASS_Ecoli_core_w_GAM": 0.8739215069684307,
+            "PYRt2": 1.0754181756343647e-14,
+            "CO2t": -22.809833310204947,
+            "RPE": 2.6784818505076085,
+            "CS": 6.007249575350396,
+            "RPI": -2.2815030940670433,
+            "SUCCt2_2": 0.0,
+            "CYTBD": 43.59898531199752,
+            "D_LACt2": 1.3420104282813407e-14,
+            "ENO": 14.71613956874291,
+            "SUCCt3": 0.0,
+            "ETOHt2r": 1.4395416398071152e-14,
+            "SUCDi": 5.06437566148206,
+            "SUCOAS": -5.0643756614819955,
+            "TALA": 1.4969837572616396,
+            "THD2": 0.0,
+            "TKT1": 1.496983757261524,
+            "TKT2": 1.1814980932460362,
+            "TPI": 7.477381962160246,
+            "EX_ac_e": 0.0,
+            "EX_acald_e": 0.0,
+            "EX_akg_e": 0.0,
+            "EX_co2_e": 22.80983331020502,
+            "EX_etoh_e": 0.0,
+            "EX_for_e": 0.0,
+            "EX_fru_e": 0.0,
+            "EX_fum_e": 0.0,
+            "EX_glc__D_e": -10.0,
+            "EX_gln__L_e": 0.0,
+            "EX_glu__L_e": 0.0,
+            "EX_h_e": 17.53086542978673,
+            "EX_h2o_e": 29.175827135565818,
+            "EX_lac__D_e": 0.0,
+            "EX_mal__L_e": 0.0,
+            "EX_nh4_e": -4.765319193197456,
+            "EX_o2_e": -21.799492655998765,
+            "EX_pi_e": -3.2148950476847853,
+            "EX_pyr_e": 0.0,
+            "EX_succ_e": 0.0,
+            "FBA": 7.477381962160246,
+            "FBP": 0.0,
+            "FORt2": 0.0,
+            "FORt": -2.1227197750568408e-13,
+            "FRD7": 0.0,
+            "FRUpts2": 7.156075405050717e-16,
+            "FUM": 5.064375661482153,
+            "FUMt2_2": 1.2396053009450152e-14,
+            "G6PDH2r": 4.959984944574803,
+            "GAPD": 16.023526143167565,
+            "GLCpts": 10.000000000000007,
+            "GLNS": 0.22346172933182773,
+            "GLNabc": 5.942937640256787e-15,
+            "GLUDy": -4.541857463865632,
+            "GLUN": 0.0,
+            "GLUSy": 0.0,
+            "GLUt2r": -3.930962546401554e-15,
+            "GND": 4.959984944575065,
+            "H2Ot": -29.175827135565793,
+            "ICDHyr": 6.007249575350743,
+            "ICL": 0.0,
+            "LDH_D": 1.448018539450033e-14,
+            "MALS": 0.0,
+            "MALt2_2": 0.0,
+            "MDH": 5.0643756614822015,
+            "ME1": 0.0,
+            "ME2": 0.0,
+            "NADH16": 38.53460965051548,
+            "NADTRHD": 0.0,
+            "NH4t": 4.765319193197459,
+            "O2t": 21.799492655998773,
+            "PDH": 9.282532599166668
+          },
+          "maximum": {
+            "PFK": 7.477381962160341,
+            "PFL": -6.31919046843905e-14,
+            "PGI": 4.860861146496709,
+            "PGK": -16.023526143167672,
+            "PGL": 4.959984944574406,
+            "ACALD": 0.0,
+            "AKGt2r": 0.0,
+            "PGM": -14.716139568742792,
+            "PIt2r": 3.2148950476847635,
+            "ALCD2x": 0.0,
+            "ACALDt": 0.0,
+            "ACKr": 0.0,
+            "PPC": 2.5043094703688005,
+            "ACONTa": 6.007249575350361,
+            "ACONTb": 6.007249575350254,
+            "ATPM": 8.389999999999914,
+            "PPCK": -3.429736491021469e-14,
+            "ACt2r": 0.0,
+            "PPS": 5.306799437642104e-14,
+            "ADK1": -6.00835600778742e-14,
+            "AKGDH": 5.064375661482042,
+            "ATPS4r": 45.51400977451736,
+            "PTAr": -2.4792106018900303e-14,
+            "PYK": 1.7581774441064044,
+            "BIOMASS_Ecoli_core_w_GAM": 0.8739215069684307,
+            "PYRt2": 0.0,
+            "CO2t": -22.80983331020496,
+            "RPE": 2.678481850507465,
+            "CS": 6.007249575350232,
+            "RPI": -2.2815030940672,
+            "SUCCt2_2": 7.075732583522802e-14,
+            "CYTBD": 43.598985311997495,
+            "D_LACt2": 0.0,
+            "ENO": 14.716139568742774,
+            "SUCCt3": -1.176717072685205e-13,
+            "ETOHt2r": 0.0,
+            "SUCDi": 1000.0,
+            "SUCOAS": -5.064375661482433,
+            "TALA": 1.4969837572628395,
+            "THD2": 6.523959500220526e-12,
+            "TKT1": 1.4969837572614828,
+            "TKT2": 1.181498093245864,
+            "TPI": 7.477381962160327,
+            "EX_ac_e": -1.9365928534262206e-14,
+            "EX_acald_e": -1.716170120829668e-14,
+            "EX_akg_e": -8.861531603787373e-15,
+            "EX_co2_e": 22.80983331020495,
+            "EX_etoh_e": -6.0257926278720256e-15,
+            "EX_for_e": 3.5378662917614e-14,
+            "EX_fru_e": -2.336595418108557e-15,
+            "EX_fum_e": -1.4324170477390836e-14,
+            "EX_glc__D_e": -10.000000000000002,
+            "EX_gln__L_e": -3.7047801959668865e-15,
+            "EX_glu__L_e": -8.148932822409951e-16,
+            "EX_h_e": 17.530865429786818,
+            "EX_h2o_e": 29.17582713556578,
+            "EX_lac__D_e": -6.1781701034708065e-15,
+            "EX_mal__L_e": 0.0,
+            "EX_nh4_e": -4.765319193197459,
+            "EX_o2_e": -21.799492655998783,
+            "EX_pi_e": -3.214895047684784,
+            "EX_pyr_e": -1.0754181756343645e-14,
+            "EX_succ_e": -1.2332346690021399e-14,
+            "FBA": 7.477381962160242,
+            "FBP": -8.825378045139038e-14,
+            "FORt2": -3.7915142810634337e-13,
+            "FORt": 0.0,
+            "FRD7": 994.9356243385179,
+            "FRUpts2": 0.0,
+            "FUM": 5.064375661481983,
+            "FUMt2_2": 0.0,
+            "G6PDH2r": 4.959984944574406,
+            "GAPD": 16.023526143167647,
+            "GLCpts": 10.000000000000002,
+            "GLNS": 0.22346172933173947,
+            "GLNabc": 0.0,
+            "GLUDy": -4.541857463865727,
+            "GLUN": -3.578074412293319e-14,
+            "GLUSy": 5.306799437642092e-14,
+            "GLUt2r": 0.0,
+            "GND": 4.959984944574576,
+            "H2Ot": -29.175827135565868,
+            "ICDHyr": 6.007249575350293,
+            "ICL": -3.485867136167227e-13,
+            "LDH_D": 0.0,
+            "MALS": -2.581934337463338e-13,
+            "MALt2_2": 0.0,
+            "MDH": 5.064375661481791,
+            "ME1": -9.181586220697228e-14,
+            "ME2": -1.1493463200291452e-14,
+            "NADH16": 38.53460965051533,
+            "NADTRHD": -4.336980626610584e-13,
+            "NH4t": 4.76531919319745,
+            "O2t": 21.799492655998765,
+            "PDH": 9.282532599166453
+          }
+        },
+        "summary": {
+          "fixed_reactions": [
+            {
+              "reaction_id": "PFK",
+              "minimum": 7.477381962160245,
+              "maximum": 7.477381962160341,
+              "range": 9.592326932761353e-14
+            },
+            {
+              "reaction_id": "PGI",
+              "minimum": 4.860861146497068,
+              "maximum": 4.860861146496709,
+              "range": -3.588240815588506e-13
+            },
+            {
+              "reaction_id": "PGK",
+              "minimum": -16.02352614316751,
+              "maximum": -16.023526143167672,
+              "range": -1.6342482922482304e-13
+            },
+            {
+              "reaction_id": "PGL",
+              "minimum": 4.959984944574876,
+              "maximum": 4.959984944574406,
+              "range": -4.698463840213662e-13
+            },
+            {
+              "reaction_id": "PGM",
+              "minimum": -14.716139568742774,
+              "maximum": -14.716139568742792,
+              "range": -1.7763568394002505e-14
+            },
+            {
+              "reaction_id": "PIt2r",
+              "minimum": 3.2148950476847657,
+              "maximum": 3.2148950476847635,
+              "range": -2.220446049250313e-15
+            },
+            {
+              "reaction_id": "PPC",
+              "minimum": 2.504309470368518,
+              "maximum": 2.5043094703688005,
+              "range": 2.824407374646398e-13
+            },
+            {
+              "reaction_id": "ACONTa",
+              "minimum": 6.0072495753503965,
+              "maximum": 6.007249575350361,
+              "range": -3.552713678800501e-14
+            },
+            {
+              "reaction_id": "ACONTb",
+              "minimum": 6.0072495753503965,
+              "maximum": 6.007249575350254,
+              "range": -1.4210854715202004e-13
+            },
+            {
+              "reaction_id": "ATPM",
+              "minimum": 8.39,
+              "maximum": 8.389999999999914,
+              "range": -8.704148513061227e-14
+            },
+            {
+              "reaction_id": "AKGDH",
+              "minimum": 5.064375661481848,
+              "maximum": 5.064375661482042,
+              "range": 1.936228954946273e-13
+            },
+            {
+              "reaction_id": "ATPS4r",
+              "minimum": 45.514009774517646,
+              "maximum": 45.51400977451736,
+              "range": -2.8421709430404007e-13
+            },
+            {
+              "reaction_id": "PYK",
+              "minimum": 1.758177444106869,
+              "maximum": 1.7581774441064044,
+              "range": -4.645173135031655e-13
+            },
+            {
+              "reaction_id": "BIOMASS_Ecoli_core_w_GAM",
+              "minimum": 0.8739215069684307,
+              "maximum": 0.8739215069684307,
+              "range": 0.0
+            },
+            {
+              "reaction_id": "CO2t",
+              "minimum": -22.809833310204947,
+              "maximum": -22.80983331020496,
+              "range": -1.4210854715202004e-14
+            },
+            {
+              "reaction_id": "RPE",
+              "minimum": 2.6784818505076085,
+              "maximum": 2.678481850507465,
+              "range": -1.4344081478157023e-13
+            },
+            {
+              "reaction_id": "CS",
+              "minimum": 6.007249575350396,
+              "maximum": 6.007249575350232,
+              "range": -1.6342482922482304e-13
+            },
+            {
+              "reaction_id": "RPI",
+              "minimum": -2.2815030940670433,
+              "maximum": -2.2815030940672,
+              "range": -1.567634910770721e-13
+            },
+            {
+              "reaction_id": "CYTBD",
+              "minimum": 43.59898531199752,
+              "maximum": 43.598985311997495,
+              "range": -2.1316282072803006e-14
+            },
+            {
+              "reaction_id": "ENO",
+              "minimum": 14.71613956874291,
+              "maximum": 14.716139568742774,
+              "range": -1.3677947663381929e-13
+            },
+            {
+              "reaction_id": "SUCOAS",
+              "minimum": -5.0643756614819955,
+              "maximum": -5.064375661482433,
+              "range": -4.3787196091216174e-13
+            },
+            {
+              "reaction_id": "TALA",
+              "minimum": 1.4969837572616396,
+              "maximum": 1.4969837572628395,
+              "range": 1.1999290450148692e-12
+            },
+            {
+              "reaction_id": "TKT1",
+              "minimum": 1.496983757261524,
+              "maximum": 1.4969837572614828,
+              "range": -4.1300296516055823e-14
+            },
+            {
+              "reaction_id": "TKT2",
+              "minimum": 1.1814980932460362,
+              "maximum": 1.181498093245864,
+              "range": -1.7208456881689926e-13
+            },
+            {
+              "reaction_id": "TPI",
+              "minimum": 7.477381962160246,
+              "maximum": 7.477381962160327,
+              "range": 8.08242361927114e-14
+            },
+            {
+              "reaction_id": "EX_co2_e",
+              "minimum": 22.80983331020502,
+              "maximum": 22.80983331020495,
+              "range": -6.750155989720952e-14
+            },
+            {
+              "reaction_id": "EX_glc__D_e",
+              "minimum": -10.0,
+              "maximum": -10.000000000000002,
+              "range": -1.7763568394002505e-15
+            },
+            {
+              "reaction_id": "EX_h_e",
+              "minimum": 17.53086542978673,
+              "maximum": 17.530865429786818,
+              "range": 8.881784197001252e-14
+            },
+            {
+              "reaction_id": "EX_h2o_e",
+              "minimum": 29.175827135565818,
+              "maximum": 29.17582713556578,
+              "range": -3.907985046680551e-14
+            },
+            {
+              "reaction_id": "EX_nh4_e",
+              "minimum": -4.765319193197456,
+              "maximum": -4.765319193197459,
+              "range": -2.6645352591003757e-15
+            },
+            {
+              "reaction_id": "EX_o2_e",
+              "minimum": -21.799492655998765,
+              "maximum": -21.799492655998783,
+              "range": -1.7763568394002505e-14
+            },
+            {
+              "reaction_id": "EX_pi_e",
+              "minimum": -3.2148950476847853,
+              "maximum": -3.214895047684784,
+              "range": 1.3322676295501878e-15
+            },
+            {
+              "reaction_id": "FBA",
+              "minimum": 7.477381962160246,
+              "maximum": 7.477381962160242,
+              "range": -3.552713678800501e-15
+            },
+            {
+              "reaction_id": "FUM",
+              "minimum": 5.064375661482153,
+              "maximum": 5.064375661481983,
+              "range": -1.6964207816272392e-13
+            },
+            {
+              "reaction_id": "G6PDH2r",
+              "minimum": 4.959984944574803,
+              "maximum": 4.959984944574406,
+              "range": -3.97015753605956e-13
+            },
+            {
+              "reaction_id": "GAPD",
+              "minimum": 16.023526143167565,
+              "maximum": 16.023526143167647,
+              "range": 8.171241461241152e-14
+            },
+            {
+              "reaction_id": "GLCpts",
+              "minimum": 10.000000000000007,
+              "maximum": 10.000000000000002,
+              "range": -5.329070518200751e-15
+            },
+            {
+              "reaction_id": "GLNS",
+              "minimum": 0.22346172933182773,
+              "maximum": 0.22346172933173947,
+              "range": -8.826273045769994e-14
+            },
+            {
+              "reaction_id": "GLUDy",
+              "minimum": -4.541857463865632,
+              "maximum": -4.541857463865727,
+              "range": -9.50350909079134e-14
+            },
+            {
+              "reaction_id": "GND",
+              "minimum": 4.959984944575065,
+              "maximum": 4.959984944574576,
+              "range": -4.884981308350689e-13
+            },
+            {
+              "reaction_id": "H2Ot",
+              "minimum": -29.175827135565793,
+              "maximum": -29.175827135565868,
+              "range": -7.460698725481052e-14
+            },
+            {
+              "reaction_id": "ICDHyr",
+              "minimum": 6.007249575350743,
+              "maximum": 6.007249575350293,
+              "range": -4.503064587879635e-13
+            },
+            {
+              "reaction_id": "MDH",
+              "minimum": 5.0643756614822015,
+              "maximum": 5.064375661481791,
+              "range": -4.1033842990145786e-13
+            },
+            {
+              "reaction_id": "NADH16",
+              "minimum": 38.53460965051548,
+              "maximum": 38.53460965051533,
+              "range": -1.4921397450962104e-13
+            },
+            {
+              "reaction_id": "NH4t",
+              "minimum": 4.765319193197459,
+              "maximum": 4.76531919319745,
+              "range": -8.881784197001252e-15
+            },
+            {
+              "reaction_id": "O2t",
+              "minimum": 21.799492655998773,
+              "maximum": 21.799492655998765,
+              "range": -7.105427357601002e-15
+            },
+            {
+              "reaction_id": "PDH",
+              "minimum": 9.282532599166668,
+              "maximum": 9.282532599166453,
+              "range": -2.149391775674303e-13
+            }
+          ],
+          "variable_reactions": [
+            {
+              "reaction_id": "SUCDi",
+              "minimum": 5.06437566148206,
+              "maximum": 1000.0,
+              "range": 994.935624338518
+            },
+            {
+              "reaction_id": "FRD7",
+              "minimum": 0.0,
+              "maximum": 994.9356243385179,
+              "range": 994.9356243385179
+            }
+          ],
+          "blocked_reactions": [
+            {
+              "reaction_id": "PFL",
+              "minimum": 0.0,
+              "maximum": -6.31919046843905e-14,
+              "range": -6.31919046843905e-14
+            },
+            {
+              "reaction_id": "ACALD",
+              "minimum": 1.291061902284148e-14,
+              "maximum": 0.0,
+              "range": -1.291061902284148e-14
+            },
+            {
+              "reaction_id": "AKGt2r",
+              "minimum": -4.422332864701749e-15,
+              "maximum": 0.0,
+              "range": 4.422332864701749e-15
+            },
+            {
+              "reaction_id": "ALCD2x",
+              "minimum": 1.1244732697313543e-14,
+              "maximum": 0.0,
+              "range": -1.1244732697313543e-14
+            },
+            {
+              "reaction_id": "ACALDt",
+              "minimum": 2.9519865872862908e-15,
+              "maximum": 0.0,
+              "range": -2.9519865872862908e-15
+            },
+            {
+              "reaction_id": "ACKr",
+              "minimum": 2.3630750943433006e-14,
+              "maximum": 0.0,
+              "range": -2.3630750943433006e-14
+            },
+            {
+              "reaction_id": "PPCK",
+              "minimum": 0.0,
+              "maximum": -3.429736491021469e-14,
+              "range": -3.429736491021469e-14
+            },
+            {
+              "reaction_id": "ACt2r",
+              "minimum": 2.0403524934882754e-14,
+              "maximum": 0.0,
+              "range": -2.0403524934882754e-14
+            },
+            {
+              "reaction_id": "PPS",
+              "minimum": 0.0,
+              "maximum": 5.306799437642104e-14,
+              "range": 5.306799437642104e-14
+            },
+            {
+              "reaction_id": "ADK1",
+              "minimum": 0.0,
+              "maximum": -6.00835600778742e-14,
+              "range": -6.00835600778742e-14
+            },
+            {
+              "reaction_id": "PTAr",
+              "minimum": 0.0,
+              "maximum": -2.4792106018900303e-14,
+              "range": -2.4792106018900303e-14
+            },
+            {
+              "reaction_id": "PYRt2",
+              "minimum": 1.0754181756343647e-14,
+              "maximum": 0.0,
+              "range": -1.0754181756343647e-14
+            },
+            {
+              "reaction_id": "SUCCt2_2",
+              "minimum": 0.0,
+              "maximum": 7.075732583522802e-14,
+              "range": 7.075732583522802e-14
+            },
+            {
+              "reaction_id": "D_LACt2",
+              "minimum": 1.3420104282813407e-14,
+              "maximum": 0.0,
+              "range": -1.3420104282813407e-14
+            },
+            {
+              "reaction_id": "SUCCt3",
+              "minimum": 0.0,
+              "maximum": -1.176717072685205e-13,
+              "range": -1.176717072685205e-13
+            },
+            {
+              "reaction_id": "ETOHt2r",
+              "minimum": 1.4395416398071152e-14,
+              "maximum": 0.0,
+              "range": -1.4395416398071152e-14
+            },
+            {
+              "reaction_id": "THD2",
+              "minimum": 0.0,
+              "maximum": 6.523959500220526e-12,
+              "range": 6.523959500220526e-12
+            },
+            {
+              "reaction_id": "EX_ac_e",
+              "minimum": 0.0,
+              "maximum": -1.9365928534262206e-14,
+              "range": -1.9365928534262206e-14
+            },
+            {
+              "reaction_id": "EX_acald_e",
+              "minimum": 0.0,
+              "maximum": -1.716170120829668e-14,
+              "range": -1.716170120829668e-14
+            },
+            {
+              "reaction_id": "EX_akg_e",
+              "minimum": 0.0,
+              "maximum": -8.861531603787373e-15,
+              "range": -8.861531603787373e-15
+            },
+            {
+              "reaction_id": "EX_etoh_e",
+              "minimum": 0.0,
+              "maximum": -6.0257926278720256e-15,
+              "range": -6.0257926278720256e-15
+            },
+            {
+              "reaction_id": "EX_for_e",
+              "minimum": 0.0,
+              "maximum": 3.5378662917614e-14,
+              "range": 3.5378662917614e-14
+            },
+            {
+              "reaction_id": "EX_fru_e",
+              "minimum": 0.0,
+              "maximum": -2.336595418108557e-15,
+              "range": -2.336595418108557e-15
+            },
+            {
+              "reaction_id": "EX_fum_e",
+              "minimum": 0.0,
+              "maximum": -1.4324170477390836e-14,
+              "range": -1.4324170477390836e-14
+            },
+            {
+              "reaction_id": "EX_gln__L_e",
+              "minimum": 0.0,
+              "maximum": -3.7047801959668865e-15,
+              "range": -3.7047801959668865e-15
+            },
+            {
+              "reaction_id": "EX_glu__L_e",
+              "minimum": 0.0,
+              "maximum": -8.148932822409951e-16,
+              "range": -8.148932822409951e-16
+            },
+            {
+              "reaction_id": "EX_lac__D_e",
+              "minimum": 0.0,
+              "maximum": -6.1781701034708065e-15,
+              "range": -6.1781701034708065e-15
+            },
+            {
+              "reaction_id": "EX_mal__L_e",
+              "minimum": 0.0,
+              "maximum": 0.0,
+              "range": 0.0
+            },
+            {
+              "reaction_id": "EX_pyr_e",
+              "minimum": 0.0,
+              "maximum": -1.0754181756343645e-14,
+              "range": -1.0754181756343645e-14
+            },
+            {
+              "reaction_id": "EX_succ_e",
+              "minimum": 0.0,
+              "maximum": -1.2332346690021399e-14,
+              "range": -1.2332346690021399e-14
+            },
+            {
+              "reaction_id": "FBP",
+              "minimum": 0.0,
+              "maximum": -8.825378045139038e-14,
+              "range": -8.825378045139038e-14
+            },
+            {
+              "reaction_id": "FORt2",
+              "minimum": 0.0,
+              "maximum": -3.7915142810634337e-13,
+              "range": -3.7915142810634337e-13
+            },
+            {
+              "reaction_id": "FORt",
+              "minimum": -2.1227197750568408e-13,
+              "maximum": 0.0,
+              "range": 2.1227197750568408e-13
+            },
+            {
+              "reaction_id": "FRUpts2",
+              "minimum": 7.156075405050717e-16,
+              "maximum": 0.0,
+              "range": -7.156075405050717e-16
+            },
+            {
+              "reaction_id": "FUMt2_2",
+              "minimum": 1.2396053009450152e-14,
+              "maximum": 0.0,
+              "range": -1.2396053009450152e-14
+            },
+            {
+              "reaction_id": "GLNabc",
+              "minimum": 5.942937640256787e-15,
+              "maximum": 0.0,
+              "range": -5.942937640256787e-15
+            },
+            {
+              "reaction_id": "GLUN",
+              "minimum": 0.0,
+              "maximum": -3.578074412293319e-14,
+              "range": -3.578074412293319e-14
+            },
+            {
+              "reaction_id": "GLUSy",
+              "minimum": 0.0,
+              "maximum": 5.306799437642092e-14,
+              "range": 5.306799437642092e-14
+            },
+            {
+              "reaction_id": "GLUt2r",
+              "minimum": -3.930962546401554e-15,
+              "maximum": 0.0,
+              "range": 3.930962546401554e-15
+            },
+            {
+              "reaction_id": "ICL",
+              "minimum": 0.0,
+              "maximum": -3.485867136167227e-13,
+              "range": -3.485867136167227e-13
+            },
+            {
+              "reaction_id": "LDH_D",
+              "minimum": 1.448018539450033e-14,
+              "maximum": 0.0,
+              "range": -1.448018539450033e-14
+            },
+            {
+              "reaction_id": "MALS",
+              "minimum": 0.0,
+              "maximum": -2.581934337463338e-13,
+              "range": -2.581934337463338e-13
+            },
+            {
+              "reaction_id": "MALt2_2",
+              "minimum": 0.0,
+              "maximum": 0.0,
+              "range": 0.0
+            },
+            {
+              "reaction_id": "ME1",
+              "minimum": 0.0,
+              "maximum": -9.181586220697228e-14,
+              "range": -9.181586220697228e-14
+            },
+            {
+              "reaction_id": "ME2",
+              "minimum": 0.0,
+              "maximum": -1.1493463200291452e-14,
+              "range": -1.1493463200291452e-14
+            },
+            {
+              "reaction_id": "NADTRHD",
+              "minimum": 0.0,
+              "maximum": -4.336980626610584e-13,
+              "range": -4.336980626610584e-13
+            }
+          ],
+          "essential_reactions": [
+            {
+              "reaction_id": "PFK",
+              "minimum": 7.477381962160245,
+              "maximum": 7.477381962160341,
+              "range": 9.592326932761353e-14
+            },
+            {
+              "reaction_id": "PGI",
+              "minimum": 4.860861146497068,
+              "maximum": 4.860861146496709,
+              "range": -3.588240815588506e-13
+            },
+            {
+              "reaction_id": "PGK",
+              "minimum": -16.02352614316751,
+              "maximum": -16.023526143167672,
+              "range": -1.6342482922482304e-13
+            },
+            {
+              "reaction_id": "PGL",
+              "minimum": 4.959984944574876,
+              "maximum": 4.959984944574406,
+              "range": -4.698463840213662e-13
+            },
+            {
+              "reaction_id": "PGM",
+              "minimum": -14.716139568742774,
+              "maximum": -14.716139568742792,
+              "range": -1.7763568394002505e-14
+            },
+            {
+              "reaction_id": "PIt2r",
+              "minimum": 3.2148950476847657,
+              "maximum": 3.2148950476847635,
+              "range": -2.220446049250313e-15
+            },
+            {
+              "reaction_id": "PPC",
+              "minimum": 2.504309470368518,
+              "maximum": 2.5043094703688005,
+              "range": 2.824407374646398e-13
+            },
+            {
+              "reaction_id": "ACONTa",
+              "minimum": 6.0072495753503965,
+              "maximum": 6.007249575350361,
+              "range": -3.552713678800501e-14
+            },
+            {
+              "reaction_id": "ACONTb",
+              "minimum": 6.0072495753503965,
+              "maximum": 6.007249575350254,
+              "range": -1.4210854715202004e-13
+            },
+            {
+              "reaction_id": "ATPM",
+              "minimum": 8.39,
+              "maximum": 8.389999999999914,
+              "range": -8.704148513061227e-14
+            },
+            {
+              "reaction_id": "AKGDH",
+              "minimum": 5.064375661481848,
+              "maximum": 5.064375661482042,
+              "range": 1.936228954946273e-13
+            },
+            {
+              "reaction_id": "ATPS4r",
+              "minimum": 45.514009774517646,
+              "maximum": 45.51400977451736,
+              "range": -2.8421709430404007e-13
+            },
+            {
+              "reaction_id": "PYK",
+              "minimum": 1.758177444106869,
+              "maximum": 1.7581774441064044,
+              "range": -4.645173135031655e-13
+            },
+            {
+              "reaction_id": "BIOMASS_Ecoli_core_w_GAM",
+              "minimum": 0.8739215069684307,
+              "maximum": 0.8739215069684307,
+              "range": 0.0
+            },
+            {
+              "reaction_id": "CO2t",
+              "minimum": -22.809833310204947,
+              "maximum": -22.80983331020496,
+              "range": -1.4210854715202004e-14
+            },
+            {
+              "reaction_id": "RPE",
+              "minimum": 2.6784818505076085,
+              "maximum": 2.678481850507465,
+              "range": -1.4344081478157023e-13
+            },
+            {
+              "reaction_id": "CS",
+              "minimum": 6.007249575350396,
+              "maximum": 6.007249575350232,
+              "range": -1.6342482922482304e-13
+            },
+            {
+              "reaction_id": "RPI",
+              "minimum": -2.2815030940670433,
+              "maximum": -2.2815030940672,
+              "range": -1.567634910770721e-13
+            },
+            {
+              "reaction_id": "CYTBD",
+              "minimum": 43.59898531199752,
+              "maximum": 43.598985311997495,
+              "range": -2.1316282072803006e-14
+            },
+            {
+              "reaction_id": "ENO",
+              "minimum": 14.71613956874291,
+              "maximum": 14.716139568742774,
+              "range": -1.3677947663381929e-13
+            },
+            {
+              "reaction_id": "SUCDi",
+              "minimum": 5.06437566148206,
+              "maximum": 1000.0,
+              "range": 994.935624338518
+            },
+            {
+              "reaction_id": "SUCOAS",
+              "minimum": -5.0643756614819955,
+              "maximum": -5.064375661482433,
+              "range": -4.3787196091216174e-13
+            },
+            {
+              "reaction_id": "TALA",
+              "minimum": 1.4969837572616396,
+              "maximum": 1.4969837572628395,
+              "range": 1.1999290450148692e-12
+            },
+            {
+              "reaction_id": "TKT1",
+              "minimum": 1.496983757261524,
+              "maximum": 1.4969837572614828,
+              "range": -4.1300296516055823e-14
+            },
+            {
+              "reaction_id": "TKT2",
+              "minimum": 1.1814980932460362,
+              "maximum": 1.181498093245864,
+              "range": -1.7208456881689926e-13
+            },
+            {
+              "reaction_id": "TPI",
+              "minimum": 7.477381962160246,
+              "maximum": 7.477381962160327,
+              "range": 8.08242361927114e-14
+            },
+            {
+              "reaction_id": "EX_co2_e",
+              "minimum": 22.80983331020502,
+              "maximum": 22.80983331020495,
+              "range": -6.750155989720952e-14
+            },
+            {
+              "reaction_id": "EX_glc__D_e",
+              "minimum": -10.0,
+              "maximum": -10.000000000000002,
+              "range": -1.7763568394002505e-15
+            },
+            {
+              "reaction_id": "EX_h_e",
+              "minimum": 17.53086542978673,
+              "maximum": 17.530865429786818,
+              "range": 8.881784197001252e-14
+            },
+            {
+              "reaction_id": "EX_h2o_e",
+              "minimum": 29.175827135565818,
+              "maximum": 29.17582713556578,
+              "range": -3.907985046680551e-14
+            },
+            {
+              "reaction_id": "EX_nh4_e",
+              "minimum": -4.765319193197456,
+              "maximum": -4.765319193197459,
+              "range": -2.6645352591003757e-15
+            },
+            {
+              "reaction_id": "EX_o2_e",
+              "minimum": -21.799492655998765,
+              "maximum": -21.799492655998783,
+              "range": -1.7763568394002505e-14
+            },
+            {
+              "reaction_id": "EX_pi_e",
+              "minimum": -3.2148950476847853,
+              "maximum": -3.214895047684784,
+              "range": 1.3322676295501878e-15
+            },
+            {
+              "reaction_id": "FBA",
+              "minimum": 7.477381962160246,
+              "maximum": 7.477381962160242,
+              "range": -3.552713678800501e-15
+            },
+            {
+              "reaction_id": "FUM",
+              "minimum": 5.064375661482153,
+              "maximum": 5.064375661481983,
+              "range": -1.6964207816272392e-13
+            },
+            {
+              "reaction_id": "G6PDH2r",
+              "minimum": 4.959984944574803,
+              "maximum": 4.959984944574406,
+              "range": -3.97015753605956e-13
+            },
+            {
+              "reaction_id": "GAPD",
+              "minimum": 16.023526143167565,
+              "maximum": 16.023526143167647,
+              "range": 8.171241461241152e-14
+            },
+            {
+              "reaction_id": "GLCpts",
+              "minimum": 10.000000000000007,
+              "maximum": 10.000000000000002,
+              "range": -5.329070518200751e-15
+            },
+            {
+              "reaction_id": "GLNS",
+              "minimum": 0.22346172933182773,
+              "maximum": 0.22346172933173947,
+              "range": -8.826273045769994e-14
+            },
+            {
+              "reaction_id": "GLUDy",
+              "minimum": -4.541857463865632,
+              "maximum": -4.541857463865727,
+              "range": -9.50350909079134e-14
+            },
+            {
+              "reaction_id": "GND",
+              "minimum": 4.959984944575065,
+              "maximum": 4.959984944574576,
+              "range": -4.884981308350689e-13
+            },
+            {
+              "reaction_id": "H2Ot",
+              "minimum": -29.175827135565793,
+              "maximum": -29.175827135565868,
+              "range": -7.460698725481052e-14
+            },
+            {
+              "reaction_id": "ICDHyr",
+              "minimum": 6.007249575350743,
+              "maximum": 6.007249575350293,
+              "range": -4.503064587879635e-13
+            },
+            {
+              "reaction_id": "MDH",
+              "minimum": 5.0643756614822015,
+              "maximum": 5.064375661481791,
+              "range": -4.1033842990145786e-13
+            },
+            {
+              "reaction_id": "NADH16",
+              "minimum": 38.53460965051548,
+              "maximum": 38.53460965051533,
+              "range": -1.4921397450962104e-13
+            },
+            {
+              "reaction_id": "NH4t",
+              "minimum": 4.765319193197459,
+              "maximum": 4.76531919319745,
+              "range": -8.881784197001252e-15
+            },
+            {
+              "reaction_id": "O2t",
+              "minimum": 21.799492655998773,
+              "maximum": 21.799492655998765,
+              "range": -7.105427357601002e-15
+            },
+            {
+              "reaction_id": "PDH",
+              "minimum": 9.282532599166668,
+              "maximum": 9.282532599166453,
+              "range": -2.149391775674303e-13
+            }
+          ]
+        },
+        "statistics": {
+          "total_reactions": 95,
+          "blocked_reactions": 46,
+          "fixed_reactions": 47,
+          "variable_reactions": 2,
+          "essential_reactions": 48
+        }
+      },
+      "result_message": "FVA completed for 95 reactions"
+    },
+    {
+      "tool": "run_flux_sampling",
+      "start_time": "2025-06-09T11:17:31.545139",
+      "inputs": {
+        "model_path": "/Users/jplfaria/repos/ModelSEEDagent/data/examples/e_coli_core.xml"
+      },
+      "end_time": "2025-06-09T11:18:09.670376",
+      "execution_time_seconds": 38.1251699924469,
+      "success": false,
+      "error": "'Variable' object has no attribute 'id'"
+    },
+    {
+      "tool": "run_gene_deletion_analysis",
+      "start_time": "2025-06-09T11:18:29.396703",
+      "inputs": {
+        "model_path": "/Users/jplfaria/repos/ModelSEEDagent/data/examples/e_coli_core.xml"
+      },
+      "end_time": "2025-06-09T11:19:07.315557",
+      "execution_time_seconds": 37.91879987716675,
+      "success": true,
+      "result_data": {
+        "deletion_results": {
+          "ids": {
+            "0": "{'b4301'}",
+            "1": "{'b2285'}",
+            "2": "{'b1854'}",
+            "3": "{'b4395'}",
+            "4": "{'b1818'}",
+            "5": "{'b1817'}",
+            "6": "{'b4232'}",
+            "7": "{'b0356'}",
+            "8": "{'b0118'}",
+            "9": "{'b1761'}",
+            "10": "{'b1602'}",
+            "11": "{'b0720'}",
+            "12": "{'b1101'}",
+            "13": "{'b0811'}",
+            "14": "{'b2287'}",
+            "15": "{'b2935'}",
+            "16": "{'b3962'}",
+            "17": "{'b3916'}",
+            "18": "{'b2463'}",
+            "19": "{'b3493'}",
+            "20": "{'b3951'}",
+            "21": "{'b2296'}",
+            "22": "{'b1611'}",
+            "23": "{'b2283'}",
+            "24": "{'b3919'}",
+            "25": "{'b0979'}",
+            "26": "{'b2297'}",
+            "27": "{'b2779'}",
+            "28": "{'b0721'}",
+            "29": "{'b1241'}",
+            "30": "{'b0729'}",
+            "31": "{'b0733'}",
+            "32": "{'b1612'}",
+            "33": "{'b4025'}",
+            "34": "{'b3236'}",
+            "35": "{'b1524'}",
+            "36": "{'b1723'}",
+            "37": "{'b3737'}",
+            "38": "{'b2288'}",
+            "39": "{'b0727'}",
+            "40": "{'b0978'}",
+            "41": "{'b3213'}",
+            "42": "{'b3612'}",
+            "43": "{'b4090'}",
+            "44": "{'b2417'}",
+            "45": "{'b1136'}",
+            "46": "{'b1478'}",
+            "47": "{'b1380'}",
+            "48": "{'b2975'}",
+            "49": "{'b0810'}",
+            "50": "{'b2133'}",
+            "51": "{'b0723'}",
+            "52": "{'b2281'}",
+            "53": "{'b3403'}",
+            "54": "{'b4154'}",
+            "55": "{'b4122'}",
+            "56": "{'s0001'}",
+            "57": "{'b4015'}",
+            "58": "{'b2097'}",
+            "59": "{'b3528'}",
+            "60": "{'b0114'}",
+            "61": "{'b1479'}",
+            "62": "{'b0904'}",
+            "63": "{'b2279'}",
+            "64": "{'b2276'}",
+            "65": "{'b3731'}",
+            "66": "{'b1773'}",
+            "67": "{'b2914'}",
+            "68": "{'b0875'}",
+            "69": "{'b0451'}",
+            "70": "{'b2976'}",
+            "71": "{'b3738'}",
+            "72": "{'b2926'}",
+            "73": "{'b2987'}",
+            "74": "{'b2925'}",
+            "75": "{'b3603'}",
+            "76": "{'b2286'}",
+            "77": "{'b3732'}",
+            "78": "{'b3956'}",
+            "79": "{'b0351'}",
+            "80": "{'b0726'}",
+            "81": "{'b0008'}",
+            "82": "{'b2277'}",
+            "83": "{'b1819'}",
+            "84": "{'b1276'}",
+            "85": "{'b2278'}",
+            "86": "{'b3870'}",
+            "87": "{'b3735'}",
+            "88": "{'b2492'}",
+            "89": "{'b0724'}",
+            "90": "{'b2458'}",
+            "91": "{'b2282'}",
+            "92": "{'b3925'}",
+            "93": "{'b1852'}",
+            "94": "{'b0809'}",
+            "95": "{'b3115'}",
+            "96": "{'b1621'}",
+            "97": "{'b4151'}",
+            "98": "{'b0474'}",
+            "99": "{'b0485'}",
+            "100": "{'b0755'}",
+            "101": "{'b3734'}",
+            "102": "{'b4152'}",
+            "103": "{'b0902'}",
+            "104": "{'b3739'}",
+            "105": "{'b1812'}",
+            "106": "{'b0903'}",
+            "107": "{'b2029'}",
+            "108": "{'b3386'}",
+            "109": "{'b0767'}",
+            "110": "{'b0116'}",
+            "111": "{'b2280'}",
+            "112": "{'b0728'}",
+            "113": "{'b0722'}",
+            "114": "{'b2464'}",
+            "115": "{'b2284'}",
+            "116": "{'b2416'}",
+            "117": "{'b0115'}",
+            "118": "{'b4153'}",
+            "119": "{'b1676'}",
+            "120": "{'b2579'}",
+            "121": "{'b4014'}",
+            "122": "{'b3736'}",
+            "123": "{'b0734'}",
+            "124": "{'b3114'}",
+            "125": "{'b3952'}",
+            "126": "{'b2465'}",
+            "127": "{'b3733'}",
+            "128": "{'b1603'}",
+            "129": "{'b2587'}",
+            "130": "{'b2415'}",
+            "131": "{'b1849'}",
+            "132": "{'b1297'}",
+            "133": "{'b4077'}",
+            "134": "{'b1779'}",
+            "135": "{'b1702'}",
+            "136": "{'b3212'}"
+          },
+          "growth": {
+            "0": 0.8739215069684307,
+            "1": 0.2116629497353117,
+            "2": 0.8739215069684307,
+            "3": 0.8739215069684307,
+            "4": 0.8739215069684307,
+            "5": 0.8739215069684307,
+            "6": 0.8739215069684307,
+            "7": 0.8739215069684307,
+            "8": 0.8739215069684307,
+            "9": 0.8513885233462087,
+            "10": 0.8739215069684307,
+            "11": 8.706511087863455e-16,
+            "12": 0.8739215069684303,
+            "13": 0.8739215069684307,
+            "14": 0.2116629497353117,
+            "15": 0.8739215069684307,
+            "16": 0.8739215069684307,
+            "17": 0.8739215069684307,
+            "18": 0.8739215069684307,
+            "19": 0.8739215069684307,
+            "20": 0.8739215069684307,
+            "21": 0.8739215069684307,
+            "22": 0.8739215069684307,
+            "23": 0.2116629497353117,
+            "24": 0.7040369478590252,
+            "25": 0.8739215069684306,
+            "26": 0.8739215069684307,
+            "27": 5.397211701984698e-16,
+            "28": 0.81429750753253,
+            "29": 0.8739215069684302,
+            "30": 0.8583074080226892,
+            "31": 0.8739215069684306,
+            "32": 0.8739215069684307,
+            "33": 0.8631595522084184,
+            "34": 0.8258192905969889,
+            "35": 0.8739215069684306,
+            "36": 0.8739215069684307,
+            "37": 0.37422987493310916,
+            "38": 0.21166294973531058,
+            "39": 0.8583074080226893,
+            "40": 0.873921506968431,
+            "41": 0.8739215069684307,
+            "42": 0.8739215069684307,
+            "43": 0.8739215069684307,
+            "44": 0.8739215069684307,
+            "45": 2.651910454632972e-17,
+            "46": 0.873921506968431,
+            "47": 0.8739215069684307,
+            "48": 0.8739215069684307,
+            "49": 0.8739215069684307,
+            "50": 0.8739215069684307,
+            "51": 0.8142975075325303,
+            "52": 0.2116629497353107,
+            "53": 0.8739215069684311,
+            "54": 0.8739215069684307,
+            "55": 0.8739215069684307,
+            "56": 0.21114065257211773,
+            "57": 0.8739215069684305,
+            "58": 0.8739215069684307,
+            "59": 0.8739215069684307,
+            "60": 0.7966959254309572,
+            "61": 0.8739215069684306,
+            "62": 0.8739215069684307,
+            "63": 0.2116629497353108,
+            "64": 0.21166294973531075,
+            "65": 0.37422987493310916,
+            "66": 0.8739215069684305,
+            "67": 0.8739215069684307,
+            "68": 0.8739215069684307,
+            "69": 0.8739215069684307,
+            "70": 0.8739215069684307,
+            "71": 0.3742298749331094,
+            "72": 3.991725949931768e-16,
+            "73": 0.8739215069684307,
+            "74": 0.8739215069684307,
+            "75": 0.8739215069684307,
+            "76": 0.2116629497353117,
+            "77": 0.37422987493310994,
+            "78": 0.8707448062160252,
+            "79": 0.8739215069684306,
+            "80": 0.8583074080226892,
+            "81": 0.873921506968431,
+            "82": 0.21166294973531127,
+            "83": 0.8739215069684307,
+            "84": 0.8739215069684307,
+            "85": 0.2116629497353117,
+            "86": 0.8739215069684307,
+            "87": 0.37422987493310933,
+            "88": 0.8739215069684307,
+            "89": 0.8142975075325306,
+            "90": 0.8739215069684302,
+            "91": 0.21166294973531039,
+            "92": 0.8739215069684307,
+            "93": 0.863813309504001,
+            "94": 0.8739215069684306,
+            "95": 0.8739215069684307,
+            "96": 0.8739215069684307,
+            "97": 0.8739215069684307,
+            "98": 0.8739215069684307,
+            "99": 0.8739215069684307,
+            "100": 0.8739215069684307,
+            "101": 0.37422987493310933,
+            "102": 0.8739215069684307,
+            "103": 0.8739215069684307,
+            "104": 0.8739215069684307,
+            "105": 0.8739215069684307,
+            "106": 0.8739215069684307,
+            "107": 0.863813309504001,
+            "108": 0.8739215069684306,
+            "109": 0.863813309504001,
+            "110": 0.7823510529477393,
+            "111": 0.21166294973531077,
+            "112": 0.8583074080226893,
+            "113": 0.8142975075325307,
+            "114": 0.8739215069684299,
+            "115": 0.21166294973531036,
+            "116": NaN,
+            "117": 0.796695925430956,
+            "118": 0.8739215069684306,
+            "119": 0.8739215069684307,
+            "120": 0.8739215069684307,
+            "121": 0.8739215069684307,
+            "122": 0.37422987493310916,
+            "123": 0.8739215069684305,
+            "124": 0.8739215069684307,
+            "125": 0.8739215069684307,
+            "126": 0.8739215069684307,
+            "127": 0.3742298749331094,
+            "128": 0.8739215069684307,
+            "129": 0.8739215069684307,
+            "130": NaN,
+            "131": 0.8739215069684307,
+            "132": 0.8739215069684307,
+            "133": 0.8739215069684307,
+            "134": 2.929418757457103e-17,
+            "135": 0.8739215069684317,
+            "136": 0.8739215069684307
+          },
+          "status": {
+            "0": "optimal",
+            "1": "optimal",
+            "2": "optimal",
+            "3": "optimal",
+            "4": "optimal",
+            "5": "optimal",
+            "6": "optimal",
+            "7": "optimal",
+            "8": "optimal",
+            "9": "optimal",
+            "10": "optimal",
+            "11": "optimal",
+            "12": "optimal",
+            "13": "optimal",
+            "14": "optimal",
+            "15": "optimal",
+            "16": "optimal",
+            "17": "optimal",
+            "18": "optimal",
+            "19": "optimal",
+            "20": "optimal",
+            "21": "optimal",
+            "22": "optimal",
+            "23": "optimal",
+            "24": "optimal",
+            "25": "optimal",
+            "26": "optimal",
+            "27": "optimal",
+            "28": "optimal",
+            "29": "optimal",
+            "30": "optimal",
+            "31": "optimal",
+            "32": "optimal",
+            "33": "optimal",
+            "34": "optimal",
+            "35": "optimal",
+            "36": "optimal",
+            "37": "optimal",
+            "38": "optimal",
+            "39": "optimal",
+            "40": "optimal",
+            "41": "optimal",
+            "42": "optimal",
+            "43": "optimal",
+            "44": "optimal",
+            "45": "optimal",
+            "46": "optimal",
+            "47": "optimal",
+            "48": "optimal",
+            "49": "optimal",
+            "50": "optimal",
+            "51": "optimal",
+            "52": "optimal",
+            "53": "optimal",
+            "54": "optimal",
+            "55": "optimal",
+            "56": "optimal",
+            "57": "optimal",
+            "58": "optimal",
+            "59": "optimal",
+            "60": "optimal",
+            "61": "optimal",
+            "62": "optimal",
+            "63": "optimal",
+            "64": "optimal",
+            "65": "optimal",
+            "66": "optimal",
+            "67": "optimal",
+            "68": "optimal",
+            "69": "optimal",
+            "70": "optimal",
+            "71": "optimal",
+            "72": "optimal",
+            "73": "optimal",
+            "74": "optimal",
+            "75": "optimal",
+            "76": "optimal",
+            "77": "optimal",
+            "78": "optimal",
+            "79": "optimal",
+            "80": "optimal",
+            "81": "optimal",
+            "82": "optimal",
+            "83": "optimal",
+            "84": "optimal",
+            "85": "optimal",
+            "86": "optimal",
+            "87": "optimal",
+            "88": "optimal",
+            "89": "optimal",
+            "90": "optimal",
+            "91": "optimal",
+            "92": "optimal",
+            "93": "optimal",
+            "94": "optimal",
+            "95": "optimal",
+            "96": "optimal",
+            "97": "optimal",
+            "98": "optimal",
+            "99": "optimal",
+            "100": "optimal",
+            "101": "optimal",
+            "102": "optimal",
+            "103": "optimal",
+            "104": "optimal",
+            "105": "optimal",
+            "106": "optimal",
+            "107": "optimal",
+            "108": "optimal",
+            "109": "optimal",
+            "110": "optimal",
+            "111": "optimal",
+            "112": "optimal",
+            "113": "optimal",
+            "114": "optimal",
+            "115": "optimal",
+            "116": "infeasible",
+            "117": "optimal",
+            "118": "optimal",
+            "119": "optimal",
+            "120": "optimal",
+            "121": "optimal",
+            "122": "optimal",
+            "123": "optimal",
+            "124": "optimal",
+            "125": "optimal",
+            "126": "optimal",
+            "127": "optimal",
+            "128": "optimal",
+            "129": "optimal",
+            "130": "infeasible",
+            "131": "optimal",
+            "132": "optimal",
+            "133": "optimal",
+            "134": "optimal",
+            "135": "optimal",
+            "136": "optimal"
+          }
+        },
+        "analysis": {
+          "essential_genes": [
+            {
+              "genes": 45,
+              "growth": 2.651910454632972e-17,
+              "growth_rate_ratio": 3.0344950129814913e-17
+            },
+            {
+              "genes": 134,
+              "growth": 2.929418757457103e-17,
+              "growth_rate_ratio": 3.352038751877204e-17
+            },
+            {
+              "genes": 72,
+              "growth": 3.991725949931768e-16,
+              "growth_rate_ratio": 4.567602374014999e-16
+            },
+            {
+              "genes": 27,
+              "growth": 5.397211701984698e-16,
+              "growth_rate_ratio": 6.17585407722397e-16
+            },
+            {
+              "genes": 11,
+              "growth": 8.706511087863455e-16,
+              "growth_rate_ratio": 9.962577895657588e-16
+            }
+          ],
+          "severely_impaired": [],
+          "moderately_impaired": [
+            {
+              "genes": 56,
+              "growth": 0.21114065257211773,
+              "growth_rate_ratio": 0.24160139198833672
+            },
+            {
+              "genes": 115,
+              "growth": 0.21166294973531036,
+              "growth_rate_ratio": 0.24219903967068343
+            },
+            {
+              "genes": 91,
+              "growth": 0.21166294973531039,
+              "growth_rate_ratio": 0.24219903967068346
+            },
+            {
+              "genes": 38,
+              "growth": 0.21166294973531058,
+              "growth_rate_ratio": 0.2421990396706837
+            },
+            {
+              "genes": 52,
+              "growth": 0.2116629497353107,
+              "growth_rate_ratio": 0.24219903967068382
+            },
+            {
+              "genes": 64,
+              "growth": 0.21166294973531075,
+              "growth_rate_ratio": 0.24219903967068387
+            },
+            {
+              "genes": 111,
+              "growth": 0.21166294973531077,
+              "growth_rate_ratio": 0.24219903967068393
+            },
+            {
+              "genes": 63,
+              "growth": 0.2116629497353108,
+              "growth_rate_ratio": 0.24219903967068396
+            },
+            {
+              "genes": 82,
+              "growth": 0.21166294973531127,
+              "growth_rate_ratio": 0.24219903967068449
+            },
+            {
+              "genes": 1,
+              "growth": 0.2116629497353117,
+              "growth_rate_ratio": 0.24219903967068496
+            },
+            {
+              "genes": 14,
+              "growth": 0.2116629497353117,
+              "growth_rate_ratio": 0.24219903967068496
+            },
+            {
+              "genes": 23,
+              "growth": 0.2116629497353117,
+              "growth_rate_ratio": 0.24219903967068496
+            },
+            {
+              "genes": 76,
+              "growth": 0.2116629497353117,
+              "growth_rate_ratio": 0.24219903967068496
+            },
+            {
+              "genes": 85,
+              "growth": 0.2116629497353117,
+              "growth_rate_ratio": 0.24219903967068496
+            },
+            {
+              "genes": 37,
+              "growth": 0.37422987493310916,
+              "growth_rate_ratio": 0.42821909284654763
+            },
+            {
+              "genes": 65,
+              "growth": 0.37422987493310916,
+              "growth_rate_ratio": 0.42821909284654763
+            },
+            {
+              "genes": 122,
+              "growth": 0.37422987493310916,
+              "growth_rate_ratio": 0.42821909284654763
+            },
+            {
+              "genes": 87,
+              "growth": 0.37422987493310933,
+              "growth_rate_ratio": 0.4282190928465478
+            },
+            {
+              "genes": 101,
+              "growth": 0.37422987493310933,
+              "growth_rate_ratio": 0.4282190928465478
+            },
+            {
+              "genes": 71,
+              "growth": 0.3742298749331094,
+              "growth_rate_ratio": 0.42821909284654786
+            },
+            {
+              "genes": 127,
+              "growth": 0.3742298749331094,
+              "growth_rate_ratio": 0.42821909284654786
+            },
+            {
+              "genes": 77,
+              "growth": 0.37422987493310994,
+              "growth_rate_ratio": 0.4282190928465485
+            }
+          ],
+          "mildly_impaired": [
+            {
+              "genes": 24,
+              "growth": 0.7040369478590252,
+              "growth_rate_ratio": 0.805606615977764
+            },
+            {
+              "genes": 110,
+              "growth": 0.7823510529477393,
+              "growth_rate_ratio": 0.8952189031960749
+            }
+          ],
+          "no_effect": [
+            {
+              "genes": 117,
+              "growth": 0.796695925430956,
+              "growth_rate_ratio": 0.9116332749317907
+            },
+            {
+              "genes": 60,
+              "growth": 0.7966959254309572,
+              "growth_rate_ratio": 0.911633274931792
+            },
+            {
+              "genes": 28,
+              "growth": 0.81429750753253,
+              "growth_rate_ratio": 0.9317741937228072
+            },
+            {
+              "genes": 51,
+              "growth": 0.8142975075325303,
+              "growth_rate_ratio": 0.9317741937228076
+            },
+            {
+              "genes": 89,
+              "growth": 0.8142975075325306,
+              "growth_rate_ratio": 0.9317741937228079
+            },
+            {
+              "genes": 113,
+              "growth": 0.8142975075325307,
+              "growth_rate_ratio": 0.931774193722808
+            },
+            {
+              "genes": 34,
+              "growth": 0.8258192905969889,
+              "growth_rate_ratio": 0.9449581959158956
+            },
+            {
+              "genes": 9,
+              "growth": 0.8513885233462087,
+              "growth_rate_ratio": 0.9742162385951719
+            },
+            {
+              "genes": 30,
+              "growth": 0.8583074080226892,
+              "growth_rate_ratio": 0.9821332936410897
+            },
+            {
+              "genes": 80,
+              "growth": 0.8583074080226892,
+              "growth_rate_ratio": 0.9821332936410897
+            },
+            {
+              "genes": 39,
+              "growth": 0.8583074080226893,
+              "growth_rate_ratio": 0.9821332936410899
+            },
+            {
+              "genes": 112,
+              "growth": 0.8583074080226893,
+              "growth_rate_ratio": 0.9821332936410899
+            },
+            {
+              "genes": 33,
+              "growth": 0.8631595522084184,
+              "growth_rate_ratio": 0.9876854446604197
+            },
+            {
+              "genes": 93,
+              "growth": 0.863813309504001,
+              "growth_rate_ratio": 0.9884335179031192
+            },
+            {
+              "genes": 107,
+              "growth": 0.863813309504001,
+              "growth_rate_ratio": 0.9884335179031192
+            },
+            {
+              "genes": 109,
+              "growth": 0.863813309504001,
+              "growth_rate_ratio": 0.9884335179031192
+            },
+            {
+              "genes": 78,
+              "growth": 0.8707448062160252,
+              "growth_rate_ratio": 0.9963650044917363
+            },
+            {
+              "genes": 114,
+              "growth": 0.8739215069684299,
+              "growth_rate_ratio": 0.9999999999999992
+            },
+            {
+              "genes": 29,
+              "growth": 0.8739215069684302,
+              "growth_rate_ratio": 0.9999999999999997
+            },
+            {
+              "genes": 90,
+              "growth": 0.8739215069684302,
+              "growth_rate_ratio": 0.9999999999999997
+            },
+            {
+              "genes": 12,
+              "growth": 0.8739215069684303,
+              "growth_rate_ratio": 0.9999999999999998
+            },
+            {
+              "genes": 57,
+              "growth": 0.8739215069684305,
+              "growth_rate_ratio": 1.0
+            },
+            {
+              "genes": 66,
+              "growth": 0.8739215069684305,
+              "growth_rate_ratio": 1.0
+            },
+            {
+              "genes": 123,
+              "growth": 0.8739215069684305,
+              "growth_rate_ratio": 1.0
+            },
+            {
+              "genes": 25,
+              "growth": 0.8739215069684306,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 31,
+              "growth": 0.8739215069684306,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 35,
+              "growth": 0.8739215069684306,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 61,
+              "growth": 0.8739215069684306,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 79,
+              "growth": 0.8739215069684306,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 94,
+              "growth": 0.8739215069684306,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 108,
+              "growth": 0.8739215069684306,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 118,
+              "growth": 0.8739215069684306,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 0,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 2,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 3,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 4,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 5,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 6,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 7,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 8,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 10,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 13,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 15,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 16,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 17,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 18,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 19,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 20,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 21,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 22,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 26,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 32,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 36,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 41,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 42,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 43,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 44,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 47,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 48,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 49,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 50,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 54,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 55,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 58,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 59,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 62,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 67,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 68,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 69,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 70,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 73,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 74,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 75,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 83,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 84,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 86,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 88,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 92,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 95,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 96,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 97,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 98,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 99,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 100,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 102,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 103,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 104,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 105,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 106,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 119,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 120,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 121,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 124,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 125,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 126,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 128,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 133,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 81,
+              "growth": 0.873921506968431,
+              "growth_rate_ratio": 1.0000000000000004
+            },
+            {
+              "genes": 116,
+              "growth": NaN,
+              "growth_rate_ratio": NaN
+            },
+            {
+              "genes": 129,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 130,
+              "growth": NaN,
+              "growth_rate_ratio": NaN
+            },
+            {
+              "genes": 131,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 132,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 136,
+              "growth": 0.8739215069684307,
+              "growth_rate_ratio": 1.0000000000000002
+            },
+            {
+              "genes": 40,
+              "growth": 0.873921506968431,
+              "growth_rate_ratio": 1.0000000000000004
+            },
+            {
+              "genes": 46,
+              "growth": 0.873921506968431,
+              "growth_rate_ratio": 1.0000000000000004
+            },
+            {
+              "genes": 53,
+              "growth": 0.8739215069684311,
+              "growth_rate_ratio": 1.0000000000000007
+            },
+            {
+              "genes": 135,
+              "growth": 0.8739215069684317,
+              "growth_rate_ratio": 1.0000000000000013
+            }
+          ],
+          "improved_growth": [],
+          "summary": {
+            "total_genes_tested": 137,
+            "essential_count": 5,
+            "impaired_count": 24,
+            "no_effect_count": 108,
+            "improved_count": 0,
+            "essentiality_rate": 0.0364963503649635
+          }
+        },
+        "wild_type_growth": 0.8739215069684305
+      },
+      "result_message": "Single gene deletion analysis completed for 137 genes"
+    }
+  ],
+  "knowledge_accumulated": {
+    "ai_initial_reasoning": "The user wants to explore predicted growth-rate behavior in more detail, which is most directly addressed by flux balance analysis (FBA). Since we already have a model (rather than building one from scratch) and are focusing on growth-rate predictions, \u201crun_metabolic_fba\u201d is the best first step.",
+    "run_metabolic_fba": {
+      "objective_value": 518.422085517607,
+      "status": "optimal",
+      "significant_fluxes": {
+        "PFK": 7.477381962160286,
+        "PGI": 4.860861146496822,
+        "PGK": -16.02352614316761,
+        "PGL": 4.959984944574652,
+        "PGM": -14.716139568742836,
+        "PIt2r": 3.2148950476848035,
+        "PPC": 2.5043094703687356,
+        "ACONTa": 6.0072495753503405,
+        "ACONTb": 6.0072495753503405,
+        "ATPM": 8.39,
+        "AKGDH": 5.0643756614820985,
+        "ATPS4r": 45.51400977451748,
+        "PYK": 1.7581774441067881,
+        "BIOMASS_Ecoli_core_w_GAM": 0.8739215069684303,
+        "CO2t": -22.80983331020497,
+        "RPE": 2.6784818505075263,
+        "CS": 6.00724957535034,
+        "RPI": -2.2815030940671246,
+        "CYTBD": 43.59898531199755,
+        "ENO": 14.716139568742836,
+        "SUCDi": 5.0643756614820985,
+        "SUCOAS": -5.0643756614820985,
+        "TALA": 1.4969837572615647,
+        "TKT1": 1.4969837572615645,
+        "TKT2": 1.1814980932459616,
+        "TPI": 7.477381962160286,
+        "EX_co2_e": 22.80983331020497,
+        "EX_glc__D_e": -10.0,
+        "EX_h_e": 17.530865429786694,
+        "EX_h2o_e": 29.17582713556585,
+        "EX_nh4_e": -4.765319193197456,
+        "EX_o2_e": -21.799492655998773,
+        "EX_pi_e": -3.2148950476848035,
+        "FBA": 7.477381962160286,
+        "FUM": 5.064375661482098,
+        "G6PDH2r": 4.959984944574652,
+        "GAPD": 16.023526143167608,
+        "GLCpts": 10.000000000000002,
+        "GLNS": 0.2234617293318276,
+        "GLUDy": -4.541857463865629,
+        "GND": 4.95998494457465,
+        "H2Ot": -29.17582713556585,
+        "ICDHyr": 6.0072495753503405,
+        "MDH": 5.0643756614820985,
+        "NADH16": 38.53460965051545,
+        "NH4t": 4.765319193197456,
+        "O2t": 21.799492655998773,
+        "PDH": 9.28253259916662
+      },
+      "subsystem_fluxes": {
+        "Unknown": [
+          [
+            "PFK",
+            7.477381962160286
+          ],
+          [
+            "PGI",
+            4.860861146496822
+          ],
+          [
+            "PGK",
+            -16.02352614316761
+          ],
+          [
+            "PGL",
+            4.959984944574652
+          ],
+          [
+            "PGM",
+            -14.716139568742836
+          ],
+          [
+            "PIt2r",
+            3.2148950476848035
+          ],
+          [
+            "PPC",
+            2.5043094703687356
+          ],
+          [
+            "ACONTa",
+            6.0072495753503405
+          ],
+          [
+            "ACONTb",
+            6.0072495753503405
+          ],
+          [
+            "ATPM",
+            8.39
+          ],
+          [
+            "AKGDH",
+            5.0643756614820985
+          ],
+          [
+            "ATPS4r",
+            45.51400977451748
+          ],
+          [
+            "PYK",
+            1.7581774441067881
+          ],
+          [
+            "BIOMASS_Ecoli_core_w_GAM",
+            0.8739215069684303
+          ],
+          [
+            "CO2t",
+            -22.80983331020497
+          ],
+          [
+            "RPE",
+            2.6784818505075263
+          ],
+          [
+            "CS",
+            6.00724957535034
+          ],
+          [
+            "RPI",
+            -2.2815030940671246
+          ],
+          [
+            "CYTBD",
+            43.59898531199755
+          ],
+          [
+            "ENO",
+            14.716139568742836
+          ],
+          [
+            "SUCDi",
+            5.0643756614820985
+          ],
+          [
+            "SUCOAS",
+            -5.0643756614820985
+          ],
+          [
+            "TALA",
+            1.4969837572615647
+          ],
+          [
+            "TKT1",
+            1.4969837572615645
+          ],
+          [
+            "TKT2",
+            1.1814980932459616
+          ],
+          [
+            "TPI",
+            7.477381962160286
+          ],
+          [
+            "EX_co2_e",
+            22.80983331020497
+          ],
+          [
+            "EX_glc__D_e",
+            -10.0
+          ],
+          [
+            "EX_h_e",
+            17.530865429786694
+          ],
+          [
+            "EX_h2o_e",
+            29.17582713556585
+          ],
+          [
+            "EX_nh4_e",
+            -4.765319193197456
+          ],
+          [
+            "EX_o2_e",
+            -21.799492655998773
+          ],
+          [
+            "EX_pi_e",
+            -3.2148950476848035
+          ],
+          [
+            "FBA",
+            7.477381962160286
+          ],
+          [
+            "FUM",
+            5.064375661482098
+          ],
+          [
+            "G6PDH2r",
+            4.959984944574652
+          ],
+          [
+            "GAPD",
+            16.023526143167608
+          ],
+          [
+            "GLCpts",
+            10.000000000000002
+          ],
+          [
+            "GLNS",
+            0.2234617293318276
+          ],
+          [
+            "GLUDy",
+            -4.541857463865629
+          ],
+          [
+            "GND",
+            4.95998494457465
+          ],
+          [
+            "H2Ot",
+            -29.17582713556585
+          ],
+          [
+            "ICDHyr",
+            6.0072495753503405
+          ],
+          [
+            "MDH",
+            5.0643756614820985
+          ],
+          [
+            "NADH16",
+            38.53460965051545
+          ],
+          [
+            "NH4t",
+            4.765319193197456
+          ],
+          [
+            "O2t",
+            21.799492655998773
+          ],
+          [
+            "PDH",
+            9.28253259916662
+          ]
+        ]
+      },
+      "result_file": null
+    },
+    "run_flux_variability_analysis": {
+      "fva_results": {
+        "minimum": {
+          "PFK": 7.477381962160245,
+          "PFL": 0.0,
+          "PGI": 4.860861146497068,
+          "PGK": -16.02352614316751,
+          "PGL": 4.959984944574876,
+          "ACALD": 1.291061902284148e-14,
+          "AKGt2r": -4.422332864701749e-15,
+          "PGM": -14.716139568742774,
+          "PIt2r": 3.2148950476847657,
+          "ALCD2x": 1.1244732697313543e-14,
+          "ACALDt": 2.9519865872862908e-15,
+          "ACKr": 2.3630750943433006e-14,
+          "PPC": 2.504309470368518,
+          "ACONTa": 6.0072495753503965,
+          "ACONTb": 6.0072495753503965,
+          "ATPM": 8.39,
+          "PPCK": 0.0,
+          "ACt2r": 2.0403524934882754e-14,
+          "PPS": 0.0,
+          "ADK1": 0.0,
+          "AKGDH": 5.064375661481848,
+          "ATPS4r": 45.514009774517646,
+          "PTAr": 0.0,
+          "PYK": 1.758177444106869,
+          "BIOMASS_Ecoli_core_w_GAM": 0.8739215069684307,
+          "PYRt2": 1.0754181756343647e-14,
+          "CO2t": -22.809833310204947,
+          "RPE": 2.6784818505076085,
+          "CS": 6.007249575350396,
+          "RPI": -2.2815030940670433,
+          "SUCCt2_2": 0.0,
+          "CYTBD": 43.59898531199752,
+          "D_LACt2": 1.3420104282813407e-14,
+          "ENO": 14.71613956874291,
+          "SUCCt3": 0.0,
+          "ETOHt2r": 1.4395416398071152e-14,
+          "SUCDi": 5.06437566148206,
+          "SUCOAS": -5.0643756614819955,
+          "TALA": 1.4969837572616396,
+          "THD2": 0.0,
+          "TKT1": 1.496983757261524,
+          "TKT2": 1.1814980932460362,
+          "TPI": 7.477381962160246,
+          "EX_ac_e": 0.0,
+          "EX_acald_e": 0.0,
+          "EX_akg_e": 0.0,
+          "EX_co2_e": 22.80983331020502,
+          "EX_etoh_e": 0.0,
+          "EX_for_e": 0.0,
+          "EX_fru_e": 0.0,
+          "EX_fum_e": 0.0,
+          "EX_glc__D_e": -10.0,
+          "EX_gln__L_e": 0.0,
+          "EX_glu__L_e": 0.0,
+          "EX_h_e": 17.53086542978673,
+          "EX_h2o_e": 29.175827135565818,
+          "EX_lac__D_e": 0.0,
+          "EX_mal__L_e": 0.0,
+          "EX_nh4_e": -4.765319193197456,
+          "EX_o2_e": -21.799492655998765,
+          "EX_pi_e": -3.2148950476847853,
+          "EX_pyr_e": 0.0,
+          "EX_succ_e": 0.0,
+          "FBA": 7.477381962160246,
+          "FBP": 0.0,
+          "FORt2": 0.0,
+          "FORt": -2.1227197750568408e-13,
+          "FRD7": 0.0,
+          "FRUpts2": 7.156075405050717e-16,
+          "FUM": 5.064375661482153,
+          "FUMt2_2": 1.2396053009450152e-14,
+          "G6PDH2r": 4.959984944574803,
+          "GAPD": 16.023526143167565,
+          "GLCpts": 10.000000000000007,
+          "GLNS": 0.22346172933182773,
+          "GLNabc": 5.942937640256787e-15,
+          "GLUDy": -4.541857463865632,
+          "GLUN": 0.0,
+          "GLUSy": 0.0,
+          "GLUt2r": -3.930962546401554e-15,
+          "GND": 4.959984944575065,
+          "H2Ot": -29.175827135565793,
+          "ICDHyr": 6.007249575350743,
+          "ICL": 0.0,
+          "LDH_D": 1.448018539450033e-14,
+          "MALS": 0.0,
+          "MALt2_2": 0.0,
+          "MDH": 5.0643756614822015,
+          "ME1": 0.0,
+          "ME2": 0.0,
+          "NADH16": 38.53460965051548,
+          "NADTRHD": 0.0,
+          "NH4t": 4.765319193197459,
+          "O2t": 21.799492655998773,
+          "PDH": 9.282532599166668
+        },
+        "maximum": {
+          "PFK": 7.477381962160341,
+          "PFL": -6.31919046843905e-14,
+          "PGI": 4.860861146496709,
+          "PGK": -16.023526143167672,
+          "PGL": 4.959984944574406,
+          "ACALD": 0.0,
+          "AKGt2r": 0.0,
+          "PGM": -14.716139568742792,
+          "PIt2r": 3.2148950476847635,
+          "ALCD2x": 0.0,
+          "ACALDt": 0.0,
+          "ACKr": 0.0,
+          "PPC": 2.5043094703688005,
+          "ACONTa": 6.007249575350361,
+          "ACONTb": 6.007249575350254,
+          "ATPM": 8.389999999999914,
+          "PPCK": -3.429736491021469e-14,
+          "ACt2r": 0.0,
+          "PPS": 5.306799437642104e-14,
+          "ADK1": -6.00835600778742e-14,
+          "AKGDH": 5.064375661482042,
+          "ATPS4r": 45.51400977451736,
+          "PTAr": -2.4792106018900303e-14,
+          "PYK": 1.7581774441064044,
+          "BIOMASS_Ecoli_core_w_GAM": 0.8739215069684307,
+          "PYRt2": 0.0,
+          "CO2t": -22.80983331020496,
+          "RPE": 2.678481850507465,
+          "CS": 6.007249575350232,
+          "RPI": -2.2815030940672,
+          "SUCCt2_2": 7.075732583522802e-14,
+          "CYTBD": 43.598985311997495,
+          "D_LACt2": 0.0,
+          "ENO": 14.716139568742774,
+          "SUCCt3": -1.176717072685205e-13,
+          "ETOHt2r": 0.0,
+          "SUCDi": 1000.0,
+          "SUCOAS": -5.064375661482433,
+          "TALA": 1.4969837572628395,
+          "THD2": 6.523959500220526e-12,
+          "TKT1": 1.4969837572614828,
+          "TKT2": 1.181498093245864,
+          "TPI": 7.477381962160327,
+          "EX_ac_e": -1.9365928534262206e-14,
+          "EX_acald_e": -1.716170120829668e-14,
+          "EX_akg_e": -8.861531603787373e-15,
+          "EX_co2_e": 22.80983331020495,
+          "EX_etoh_e": -6.0257926278720256e-15,
+          "EX_for_e": 3.5378662917614e-14,
+          "EX_fru_e": -2.336595418108557e-15,
+          "EX_fum_e": -1.4324170477390836e-14,
+          "EX_glc__D_e": -10.000000000000002,
+          "EX_gln__L_e": -3.7047801959668865e-15,
+          "EX_glu__L_e": -8.148932822409951e-16,
+          "EX_h_e": 17.530865429786818,
+          "EX_h2o_e": 29.17582713556578,
+          "EX_lac__D_e": -6.1781701034708065e-15,
+          "EX_mal__L_e": 0.0,
+          "EX_nh4_e": -4.765319193197459,
+          "EX_o2_e": -21.799492655998783,
+          "EX_pi_e": -3.214895047684784,
+          "EX_pyr_e": -1.0754181756343645e-14,
+          "EX_succ_e": -1.2332346690021399e-14,
+          "FBA": 7.477381962160242,
+          "FBP": -8.825378045139038e-14,
+          "FORt2": -3.7915142810634337e-13,
+          "FORt": 0.0,
+          "FRD7": 994.9356243385179,
+          "FRUpts2": 0.0,
+          "FUM": 5.064375661481983,
+          "FUMt2_2": 0.0,
+          "G6PDH2r": 4.959984944574406,
+          "GAPD": 16.023526143167647,
+          "GLCpts": 10.000000000000002,
+          "GLNS": 0.22346172933173947,
+          "GLNabc": 0.0,
+          "GLUDy": -4.541857463865727,
+          "GLUN": -3.578074412293319e-14,
+          "GLUSy": 5.306799437642092e-14,
+          "GLUt2r": 0.0,
+          "GND": 4.959984944574576,
+          "H2Ot": -29.175827135565868,
+          "ICDHyr": 6.007249575350293,
+          "ICL": -3.485867136167227e-13,
+          "LDH_D": 0.0,
+          "MALS": -2.581934337463338e-13,
+          "MALt2_2": 0.0,
+          "MDH": 5.064375661481791,
+          "ME1": -9.181586220697228e-14,
+          "ME2": -1.1493463200291452e-14,
+          "NADH16": 38.53460965051533,
+          "NADTRHD": -4.336980626610584e-13,
+          "NH4t": 4.76531919319745,
+          "O2t": 21.799492655998765,
+          "PDH": 9.282532599166453
+        }
+      },
+      "summary": {
+        "fixed_reactions": [
+          {
+            "reaction_id": "PFK",
+            "minimum": 7.477381962160245,
+            "maximum": 7.477381962160341,
+            "range": 9.592326932761353e-14
+          },
+          {
+            "reaction_id": "PGI",
+            "minimum": 4.860861146497068,
+            "maximum": 4.860861146496709,
+            "range": -3.588240815588506e-13
+          },
+          {
+            "reaction_id": "PGK",
+            "minimum": -16.02352614316751,
+            "maximum": -16.023526143167672,
+            "range": -1.6342482922482304e-13
+          },
+          {
+            "reaction_id": "PGL",
+            "minimum": 4.959984944574876,
+            "maximum": 4.959984944574406,
+            "range": -4.698463840213662e-13
+          },
+          {
+            "reaction_id": "PGM",
+            "minimum": -14.716139568742774,
+            "maximum": -14.716139568742792,
+            "range": -1.7763568394002505e-14
+          },
+          {
+            "reaction_id": "PIt2r",
+            "minimum": 3.2148950476847657,
+            "maximum": 3.2148950476847635,
+            "range": -2.220446049250313e-15
+          },
+          {
+            "reaction_id": "PPC",
+            "minimum": 2.504309470368518,
+            "maximum": 2.5043094703688005,
+            "range": 2.824407374646398e-13
+          },
+          {
+            "reaction_id": "ACONTa",
+            "minimum": 6.0072495753503965,
+            "maximum": 6.007249575350361,
+            "range": -3.552713678800501e-14
+          },
+          {
+            "reaction_id": "ACONTb",
+            "minimum": 6.0072495753503965,
+            "maximum": 6.007249575350254,
+            "range": -1.4210854715202004e-13
+          },
+          {
+            "reaction_id": "ATPM",
+            "minimum": 8.39,
+            "maximum": 8.389999999999914,
+            "range": -8.704148513061227e-14
+          },
+          {
+            "reaction_id": "AKGDH",
+            "minimum": 5.064375661481848,
+            "maximum": 5.064375661482042,
+            "range": 1.936228954946273e-13
+          },
+          {
+            "reaction_id": "ATPS4r",
+            "minimum": 45.514009774517646,
+            "maximum": 45.51400977451736,
+            "range": -2.8421709430404007e-13
+          },
+          {
+            "reaction_id": "PYK",
+            "minimum": 1.758177444106869,
+            "maximum": 1.7581774441064044,
+            "range": -4.645173135031655e-13
+          },
+          {
+            "reaction_id": "BIOMASS_Ecoli_core_w_GAM",
+            "minimum": 0.8739215069684307,
+            "maximum": 0.8739215069684307,
+            "range": 0.0
+          },
+          {
+            "reaction_id": "CO2t",
+            "minimum": -22.809833310204947,
+            "maximum": -22.80983331020496,
+            "range": -1.4210854715202004e-14
+          },
+          {
+            "reaction_id": "RPE",
+            "minimum": 2.6784818505076085,
+            "maximum": 2.678481850507465,
+            "range": -1.4344081478157023e-13
+          },
+          {
+            "reaction_id": "CS",
+            "minimum": 6.007249575350396,
+            "maximum": 6.007249575350232,
+            "range": -1.6342482922482304e-13
+          },
+          {
+            "reaction_id": "RPI",
+            "minimum": -2.2815030940670433,
+            "maximum": -2.2815030940672,
+            "range": -1.567634910770721e-13
+          },
+          {
+            "reaction_id": "CYTBD",
+            "minimum": 43.59898531199752,
+            "maximum": 43.598985311997495,
+            "range": -2.1316282072803006e-14
+          },
+          {
+            "reaction_id": "ENO",
+            "minimum": 14.71613956874291,
+            "maximum": 14.716139568742774,
+            "range": -1.3677947663381929e-13
+          },
+          {
+            "reaction_id": "SUCOAS",
+            "minimum": -5.0643756614819955,
+            "maximum": -5.064375661482433,
+            "range": -4.3787196091216174e-13
+          },
+          {
+            "reaction_id": "TALA",
+            "minimum": 1.4969837572616396,
+            "maximum": 1.4969837572628395,
+            "range": 1.1999290450148692e-12
+          },
+          {
+            "reaction_id": "TKT1",
+            "minimum": 1.496983757261524,
+            "maximum": 1.4969837572614828,
+            "range": -4.1300296516055823e-14
+          },
+          {
+            "reaction_id": "TKT2",
+            "minimum": 1.1814980932460362,
+            "maximum": 1.181498093245864,
+            "range": -1.7208456881689926e-13
+          },
+          {
+            "reaction_id": "TPI",
+            "minimum": 7.477381962160246,
+            "maximum": 7.477381962160327,
+            "range": 8.08242361927114e-14
+          },
+          {
+            "reaction_id": "EX_co2_e",
+            "minimum": 22.80983331020502,
+            "maximum": 22.80983331020495,
+            "range": -6.750155989720952e-14
+          },
+          {
+            "reaction_id": "EX_glc__D_e",
+            "minimum": -10.0,
+            "maximum": -10.000000000000002,
+            "range": -1.7763568394002505e-15
+          },
+          {
+            "reaction_id": "EX_h_e",
+            "minimum": 17.53086542978673,
+            "maximum": 17.530865429786818,
+            "range": 8.881784197001252e-14
+          },
+          {
+            "reaction_id": "EX_h2o_e",
+            "minimum": 29.175827135565818,
+            "maximum": 29.17582713556578,
+            "range": -3.907985046680551e-14
+          },
+          {
+            "reaction_id": "EX_nh4_e",
+            "minimum": -4.765319193197456,
+            "maximum": -4.765319193197459,
+            "range": -2.6645352591003757e-15
+          },
+          {
+            "reaction_id": "EX_o2_e",
+            "minimum": -21.799492655998765,
+            "maximum": -21.799492655998783,
+            "range": -1.7763568394002505e-14
+          },
+          {
+            "reaction_id": "EX_pi_e",
+            "minimum": -3.2148950476847853,
+            "maximum": -3.214895047684784,
+            "range": 1.3322676295501878e-15
+          },
+          {
+            "reaction_id": "FBA",
+            "minimum": 7.477381962160246,
+            "maximum": 7.477381962160242,
+            "range": -3.552713678800501e-15
+          },
+          {
+            "reaction_id": "FUM",
+            "minimum": 5.064375661482153,
+            "maximum": 5.064375661481983,
+            "range": -1.6964207816272392e-13
+          },
+          {
+            "reaction_id": "G6PDH2r",
+            "minimum": 4.959984944574803,
+            "maximum": 4.959984944574406,
+            "range": -3.97015753605956e-13
+          },
+          {
+            "reaction_id": "GAPD",
+            "minimum": 16.023526143167565,
+            "maximum": 16.023526143167647,
+            "range": 8.171241461241152e-14
+          },
+          {
+            "reaction_id": "GLCpts",
+            "minimum": 10.000000000000007,
+            "maximum": 10.000000000000002,
+            "range": -5.329070518200751e-15
+          },
+          {
+            "reaction_id": "GLNS",
+            "minimum": 0.22346172933182773,
+            "maximum": 0.22346172933173947,
+            "range": -8.826273045769994e-14
+          },
+          {
+            "reaction_id": "GLUDy",
+            "minimum": -4.541857463865632,
+            "maximum": -4.541857463865727,
+            "range": -9.50350909079134e-14
+          },
+          {
+            "reaction_id": "GND",
+            "minimum": 4.959984944575065,
+            "maximum": 4.959984944574576,
+            "range": -4.884981308350689e-13
+          },
+          {
+            "reaction_id": "H2Ot",
+            "minimum": -29.175827135565793,
+            "maximum": -29.175827135565868,
+            "range": -7.460698725481052e-14
+          },
+          {
+            "reaction_id": "ICDHyr",
+            "minimum": 6.007249575350743,
+            "maximum": 6.007249575350293,
+            "range": -4.503064587879635e-13
+          },
+          {
+            "reaction_id": "MDH",
+            "minimum": 5.0643756614822015,
+            "maximum": 5.064375661481791,
+            "range": -4.1033842990145786e-13
+          },
+          {
+            "reaction_id": "NADH16",
+            "minimum": 38.53460965051548,
+            "maximum": 38.53460965051533,
+            "range": -1.4921397450962104e-13
+          },
+          {
+            "reaction_id": "NH4t",
+            "minimum": 4.765319193197459,
+            "maximum": 4.76531919319745,
+            "range": -8.881784197001252e-15
+          },
+          {
+            "reaction_id": "O2t",
+            "minimum": 21.799492655998773,
+            "maximum": 21.799492655998765,
+            "range": -7.105427357601002e-15
+          },
+          {
+            "reaction_id": "PDH",
+            "minimum": 9.282532599166668,
+            "maximum": 9.282532599166453,
+            "range": -2.149391775674303e-13
+          }
+        ],
+        "variable_reactions": [
+          {
+            "reaction_id": "SUCDi",
+            "minimum": 5.06437566148206,
+            "maximum": 1000.0,
+            "range": 994.935624338518
+          },
+          {
+            "reaction_id": "FRD7",
+            "minimum": 0.0,
+            "maximum": 994.9356243385179,
+            "range": 994.9356243385179
+          }
+        ],
+        "blocked_reactions": [
+          {
+            "reaction_id": "PFL",
+            "minimum": 0.0,
+            "maximum": -6.31919046843905e-14,
+            "range": -6.31919046843905e-14
+          },
+          {
+            "reaction_id": "ACALD",
+            "minimum": 1.291061902284148e-14,
+            "maximum": 0.0,
+            "range": -1.291061902284148e-14
+          },
+          {
+            "reaction_id": "AKGt2r",
+            "minimum": -4.422332864701749e-15,
+            "maximum": 0.0,
+            "range": 4.422332864701749e-15
+          },
+          {
+            "reaction_id": "ALCD2x",
+            "minimum": 1.1244732697313543e-14,
+            "maximum": 0.0,
+            "range": -1.1244732697313543e-14
+          },
+          {
+            "reaction_id": "ACALDt",
+            "minimum": 2.9519865872862908e-15,
+            "maximum": 0.0,
+            "range": -2.9519865872862908e-15
+          },
+          {
+            "reaction_id": "ACKr",
+            "minimum": 2.3630750943433006e-14,
+            "maximum": 0.0,
+            "range": -2.3630750943433006e-14
+          },
+          {
+            "reaction_id": "PPCK",
+            "minimum": 0.0,
+            "maximum": -3.429736491021469e-14,
+            "range": -3.429736491021469e-14
+          },
+          {
+            "reaction_id": "ACt2r",
+            "minimum": 2.0403524934882754e-14,
+            "maximum": 0.0,
+            "range": -2.0403524934882754e-14
+          },
+          {
+            "reaction_id": "PPS",
+            "minimum": 0.0,
+            "maximum": 5.306799437642104e-14,
+            "range": 5.306799437642104e-14
+          },
+          {
+            "reaction_id": "ADK1",
+            "minimum": 0.0,
+            "maximum": -6.00835600778742e-14,
+            "range": -6.00835600778742e-14
+          },
+          {
+            "reaction_id": "PTAr",
+            "minimum": 0.0,
+            "maximum": -2.4792106018900303e-14,
+            "range": -2.4792106018900303e-14
+          },
+          {
+            "reaction_id": "PYRt2",
+            "minimum": 1.0754181756343647e-14,
+            "maximum": 0.0,
+            "range": -1.0754181756343647e-14
+          },
+          {
+            "reaction_id": "SUCCt2_2",
+            "minimum": 0.0,
+            "maximum": 7.075732583522802e-14,
+            "range": 7.075732583522802e-14
+          },
+          {
+            "reaction_id": "D_LACt2",
+            "minimum": 1.3420104282813407e-14,
+            "maximum": 0.0,
+            "range": -1.3420104282813407e-14
+          },
+          {
+            "reaction_id": "SUCCt3",
+            "minimum": 0.0,
+            "maximum": -1.176717072685205e-13,
+            "range": -1.176717072685205e-13
+          },
+          {
+            "reaction_id": "ETOHt2r",
+            "minimum": 1.4395416398071152e-14,
+            "maximum": 0.0,
+            "range": -1.4395416398071152e-14
+          },
+          {
+            "reaction_id": "THD2",
+            "minimum": 0.0,
+            "maximum": 6.523959500220526e-12,
+            "range": 6.523959500220526e-12
+          },
+          {
+            "reaction_id": "EX_ac_e",
+            "minimum": 0.0,
+            "maximum": -1.9365928534262206e-14,
+            "range": -1.9365928534262206e-14
+          },
+          {
+            "reaction_id": "EX_acald_e",
+            "minimum": 0.0,
+            "maximum": -1.716170120829668e-14,
+            "range": -1.716170120829668e-14
+          },
+          {
+            "reaction_id": "EX_akg_e",
+            "minimum": 0.0,
+            "maximum": -8.861531603787373e-15,
+            "range": -8.861531603787373e-15
+          },
+          {
+            "reaction_id": "EX_etoh_e",
+            "minimum": 0.0,
+            "maximum": -6.0257926278720256e-15,
+            "range": -6.0257926278720256e-15
+          },
+          {
+            "reaction_id": "EX_for_e",
+            "minimum": 0.0,
+            "maximum": 3.5378662917614e-14,
+            "range": 3.5378662917614e-14
+          },
+          {
+            "reaction_id": "EX_fru_e",
+            "minimum": 0.0,
+            "maximum": -2.336595418108557e-15,
+            "range": -2.336595418108557e-15
+          },
+          {
+            "reaction_id": "EX_fum_e",
+            "minimum": 0.0,
+            "maximum": -1.4324170477390836e-14,
+            "range": -1.4324170477390836e-14
+          },
+          {
+            "reaction_id": "EX_gln__L_e",
+            "minimum": 0.0,
+            "maximum": -3.7047801959668865e-15,
+            "range": -3.7047801959668865e-15
+          },
+          {
+            "reaction_id": "EX_glu__L_e",
+            "minimum": 0.0,
+            "maximum": -8.148932822409951e-16,
+            "range": -8.148932822409951e-16
+          },
+          {
+            "reaction_id": "EX_lac__D_e",
+            "minimum": 0.0,
+            "maximum": -6.1781701034708065e-15,
+            "range": -6.1781701034708065e-15
+          },
+          {
+            "reaction_id": "EX_mal__L_e",
+            "minimum": 0.0,
+            "maximum": 0.0,
+            "range": 0.0
+          },
+          {
+            "reaction_id": "EX_pyr_e",
+            "minimum": 0.0,
+            "maximum": -1.0754181756343645e-14,
+            "range": -1.0754181756343645e-14
+          },
+          {
+            "reaction_id": "EX_succ_e",
+            "minimum": 0.0,
+            "maximum": -1.2332346690021399e-14,
+            "range": -1.2332346690021399e-14
+          },
+          {
+            "reaction_id": "FBP",
+            "minimum": 0.0,
+            "maximum": -8.825378045139038e-14,
+            "range": -8.825378045139038e-14
+          },
+          {
+            "reaction_id": "FORt2",
+            "minimum": 0.0,
+            "maximum": -3.7915142810634337e-13,
+            "range": -3.7915142810634337e-13
+          },
+          {
+            "reaction_id": "FORt",
+            "minimum": -2.1227197750568408e-13,
+            "maximum": 0.0,
+            "range": 2.1227197750568408e-13
+          },
+          {
+            "reaction_id": "FRUpts2",
+            "minimum": 7.156075405050717e-16,
+            "maximum": 0.0,
+            "range": -7.156075405050717e-16
+          },
+          {
+            "reaction_id": "FUMt2_2",
+            "minimum": 1.2396053009450152e-14,
+            "maximum": 0.0,
+            "range": -1.2396053009450152e-14
+          },
+          {
+            "reaction_id": "GLNabc",
+            "minimum": 5.942937640256787e-15,
+            "maximum": 0.0,
+            "range": -5.942937640256787e-15
+          },
+          {
+            "reaction_id": "GLUN",
+            "minimum": 0.0,
+            "maximum": -3.578074412293319e-14,
+            "range": -3.578074412293319e-14
+          },
+          {
+            "reaction_id": "GLUSy",
+            "minimum": 0.0,
+            "maximum": 5.306799437642092e-14,
+            "range": 5.306799437642092e-14
+          },
+          {
+            "reaction_id": "GLUt2r",
+            "minimum": -3.930962546401554e-15,
+            "maximum": 0.0,
+            "range": 3.930962546401554e-15
+          },
+          {
+            "reaction_id": "ICL",
+            "minimum": 0.0,
+            "maximum": -3.485867136167227e-13,
+            "range": -3.485867136167227e-13
+          },
+          {
+            "reaction_id": "LDH_D",
+            "minimum": 1.448018539450033e-14,
+            "maximum": 0.0,
+            "range": -1.448018539450033e-14
+          },
+          {
+            "reaction_id": "MALS",
+            "minimum": 0.0,
+            "maximum": -2.581934337463338e-13,
+            "range": -2.581934337463338e-13
+          },
+          {
+            "reaction_id": "MALt2_2",
+            "minimum": 0.0,
+            "maximum": 0.0,
+            "range": 0.0
+          },
+          {
+            "reaction_id": "ME1",
+            "minimum": 0.0,
+            "maximum": -9.181586220697228e-14,
+            "range": -9.181586220697228e-14
+          },
+          {
+            "reaction_id": "ME2",
+            "minimum": 0.0,
+            "maximum": -1.1493463200291452e-14,
+            "range": -1.1493463200291452e-14
+          },
+          {
+            "reaction_id": "NADTRHD",
+            "minimum": 0.0,
+            "maximum": -4.336980626610584e-13,
+            "range": -4.336980626610584e-13
+          }
+        ],
+        "essential_reactions": [
+          {
+            "reaction_id": "PFK",
+            "minimum": 7.477381962160245,
+            "maximum": 7.477381962160341,
+            "range": 9.592326932761353e-14
+          },
+          {
+            "reaction_id": "PGI",
+            "minimum": 4.860861146497068,
+            "maximum": 4.860861146496709,
+            "range": -3.588240815588506e-13
+          },
+          {
+            "reaction_id": "PGK",
+            "minimum": -16.02352614316751,
+            "maximum": -16.023526143167672,
+            "range": -1.6342482922482304e-13
+          },
+          {
+            "reaction_id": "PGL",
+            "minimum": 4.959984944574876,
+            "maximum": 4.959984944574406,
+            "range": -4.698463840213662e-13
+          },
+          {
+            "reaction_id": "PGM",
+            "minimum": -14.716139568742774,
+            "maximum": -14.716139568742792,
+            "range": -1.7763568394002505e-14
+          },
+          {
+            "reaction_id": "PIt2r",
+            "minimum": 3.2148950476847657,
+            "maximum": 3.2148950476847635,
+            "range": -2.220446049250313e-15
+          },
+          {
+            "reaction_id": "PPC",
+            "minimum": 2.504309470368518,
+            "maximum": 2.5043094703688005,
+            "range": 2.824407374646398e-13
+          },
+          {
+            "reaction_id": "ACONTa",
+            "minimum": 6.0072495753503965,
+            "maximum": 6.007249575350361,
+            "range": -3.552713678800501e-14
+          },
+          {
+            "reaction_id": "ACONTb",
+            "minimum": 6.0072495753503965,
+            "maximum": 6.007249575350254,
+            "range": -1.4210854715202004e-13
+          },
+          {
+            "reaction_id": "ATPM",
+            "minimum": 8.39,
+            "maximum": 8.389999999999914,
+            "range": -8.704148513061227e-14
+          },
+          {
+            "reaction_id": "AKGDH",
+            "minimum": 5.064375661481848,
+            "maximum": 5.064375661482042,
+            "range": 1.936228954946273e-13
+          },
+          {
+            "reaction_id": "ATPS4r",
+            "minimum": 45.514009774517646,
+            "maximum": 45.51400977451736,
+            "range": -2.8421709430404007e-13
+          },
+          {
+            "reaction_id": "PYK",
+            "minimum": 1.758177444106869,
+            "maximum": 1.7581774441064044,
+            "range": -4.645173135031655e-13
+          },
+          {
+            "reaction_id": "BIOMASS_Ecoli_core_w_GAM",
+            "minimum": 0.8739215069684307,
+            "maximum": 0.8739215069684307,
+            "range": 0.0
+          },
+          {
+            "reaction_id": "CO2t",
+            "minimum": -22.809833310204947,
+            "maximum": -22.80983331020496,
+            "range": -1.4210854715202004e-14
+          },
+          {
+            "reaction_id": "RPE",
+            "minimum": 2.6784818505076085,
+            "maximum": 2.678481850507465,
+            "range": -1.4344081478157023e-13
+          },
+          {
+            "reaction_id": "CS",
+            "minimum": 6.007249575350396,
+            "maximum": 6.007249575350232,
+            "range": -1.6342482922482304e-13
+          },
+          {
+            "reaction_id": "RPI",
+            "minimum": -2.2815030940670433,
+            "maximum": -2.2815030940672,
+            "range": -1.567634910770721e-13
+          },
+          {
+            "reaction_id": "CYTBD",
+            "minimum": 43.59898531199752,
+            "maximum": 43.598985311997495,
+            "range": -2.1316282072803006e-14
+          },
+          {
+            "reaction_id": "ENO",
+            "minimum": 14.71613956874291,
+            "maximum": 14.716139568742774,
+            "range": -1.3677947663381929e-13
+          },
+          {
+            "reaction_id": "SUCDi",
+            "minimum": 5.06437566148206,
+            "maximum": 1000.0,
+            "range": 994.935624338518
+          },
+          {
+            "reaction_id": "SUCOAS",
+            "minimum": -5.0643756614819955,
+            "maximum": -5.064375661482433,
+            "range": -4.3787196091216174e-13
+          },
+          {
+            "reaction_id": "TALA",
+            "minimum": 1.4969837572616396,
+            "maximum": 1.4969837572628395,
+            "range": 1.1999290450148692e-12
+          },
+          {
+            "reaction_id": "TKT1",
+            "minimum": 1.496983757261524,
+            "maximum": 1.4969837572614828,
+            "range": -4.1300296516055823e-14
+          },
+          {
+            "reaction_id": "TKT2",
+            "minimum": 1.1814980932460362,
+            "maximum": 1.181498093245864,
+            "range": -1.7208456881689926e-13
+          },
+          {
+            "reaction_id": "TPI",
+            "minimum": 7.477381962160246,
+            "maximum": 7.477381962160327,
+            "range": 8.08242361927114e-14
+          },
+          {
+            "reaction_id": "EX_co2_e",
+            "minimum": 22.80983331020502,
+            "maximum": 22.80983331020495,
+            "range": -6.750155989720952e-14
+          },
+          {
+            "reaction_id": "EX_glc__D_e",
+            "minimum": -10.0,
+            "maximum": -10.000000000000002,
+            "range": -1.7763568394002505e-15
+          },
+          {
+            "reaction_id": "EX_h_e",
+            "minimum": 17.53086542978673,
+            "maximum": 17.530865429786818,
+            "range": 8.881784197001252e-14
+          },
+          {
+            "reaction_id": "EX_h2o_e",
+            "minimum": 29.175827135565818,
+            "maximum": 29.17582713556578,
+            "range": -3.907985046680551e-14
+          },
+          {
+            "reaction_id": "EX_nh4_e",
+            "minimum": -4.765319193197456,
+            "maximum": -4.765319193197459,
+            "range": -2.6645352591003757e-15
+          },
+          {
+            "reaction_id": "EX_o2_e",
+            "minimum": -21.799492655998765,
+            "maximum": -21.799492655998783,
+            "range": -1.7763568394002505e-14
+          },
+          {
+            "reaction_id": "EX_pi_e",
+            "minimum": -3.2148950476847853,
+            "maximum": -3.214895047684784,
+            "range": 1.3322676295501878e-15
+          },
+          {
+            "reaction_id": "FBA",
+            "minimum": 7.477381962160246,
+            "maximum": 7.477381962160242,
+            "range": -3.552713678800501e-15
+          },
+          {
+            "reaction_id": "FUM",
+            "minimum": 5.064375661482153,
+            "maximum": 5.064375661481983,
+            "range": -1.6964207816272392e-13
+          },
+          {
+            "reaction_id": "G6PDH2r",
+            "minimum": 4.959984944574803,
+            "maximum": 4.959984944574406,
+            "range": -3.97015753605956e-13
+          },
+          {
+            "reaction_id": "GAPD",
+            "minimum": 16.023526143167565,
+            "maximum": 16.023526143167647,
+            "range": 8.171241461241152e-14
+          },
+          {
+            "reaction_id": "GLCpts",
+            "minimum": 10.000000000000007,
+            "maximum": 10.000000000000002,
+            "range": -5.329070518200751e-15
+          },
+          {
+            "reaction_id": "GLNS",
+            "minimum": 0.22346172933182773,
+            "maximum": 0.22346172933173947,
+            "range": -8.826273045769994e-14
+          },
+          {
+            "reaction_id": "GLUDy",
+            "minimum": -4.541857463865632,
+            "maximum": -4.541857463865727,
+            "range": -9.50350909079134e-14
+          },
+          {
+            "reaction_id": "GND",
+            "minimum": 4.959984944575065,
+            "maximum": 4.959984944574576,
+            "range": -4.884981308350689e-13
+          },
+          {
+            "reaction_id": "H2Ot",
+            "minimum": -29.175827135565793,
+            "maximum": -29.175827135565868,
+            "range": -7.460698725481052e-14
+          },
+          {
+            "reaction_id": "ICDHyr",
+            "minimum": 6.007249575350743,
+            "maximum": 6.007249575350293,
+            "range": -4.503064587879635e-13
+          },
+          {
+            "reaction_id": "MDH",
+            "minimum": 5.0643756614822015,
+            "maximum": 5.064375661481791,
+            "range": -4.1033842990145786e-13
+          },
+          {
+            "reaction_id": "NADH16",
+            "minimum": 38.53460965051548,
+            "maximum": 38.53460965051533,
+            "range": -1.4921397450962104e-13
+          },
+          {
+            "reaction_id": "NH4t",
+            "minimum": 4.765319193197459,
+            "maximum": 4.76531919319745,
+            "range": -8.881784197001252e-15
+          },
+          {
+            "reaction_id": "O2t",
+            "minimum": 21.799492655998773,
+            "maximum": 21.799492655998765,
+            "range": -7.105427357601002e-15
+          },
+          {
+            "reaction_id": "PDH",
+            "minimum": 9.282532599166668,
+            "maximum": 9.282532599166453,
+            "range": -2.149391775674303e-13
+          }
+        ]
+      },
+      "statistics": {
+        "total_reactions": 95,
+        "blocked_reactions": 46,
+        "fixed_reactions": 47,
+        "variable_reactions": 2,
+        "essential_reactions": 48
+      }
+    },
+    "run_flux_sampling": null,
+    "run_gene_deletion_analysis": {
+      "deletion_results": {
+        "ids": {
+          "0": "{'b4301'}",
+          "1": "{'b2285'}",
+          "2": "{'b1854'}",
+          "3": "{'b4395'}",
+          "4": "{'b1818'}",
+          "5": "{'b1817'}",
+          "6": "{'b4232'}",
+          "7": "{'b0356'}",
+          "8": "{'b0118'}",
+          "9": "{'b1761'}",
+          "10": "{'b1602'}",
+          "11": "{'b0720'}",
+          "12": "{'b1101'}",
+          "13": "{'b0811'}",
+          "14": "{'b2287'}",
+          "15": "{'b2935'}",
+          "16": "{'b3962'}",
+          "17": "{'b3916'}",
+          "18": "{'b2463'}",
+          "19": "{'b3493'}",
+          "20": "{'b3951'}",
+          "21": "{'b2296'}",
+          "22": "{'b1611'}",
+          "23": "{'b2283'}",
+          "24": "{'b3919'}",
+          "25": "{'b0979'}",
+          "26": "{'b2297'}",
+          "27": "{'b2779'}",
+          "28": "{'b0721'}",
+          "29": "{'b1241'}",
+          "30": "{'b0729'}",
+          "31": "{'b0733'}",
+          "32": "{'b1612'}",
+          "33": "{'b4025'}",
+          "34": "{'b3236'}",
+          "35": "{'b1524'}",
+          "36": "{'b1723'}",
+          "37": "{'b3737'}",
+          "38": "{'b2288'}",
+          "39": "{'b0727'}",
+          "40": "{'b0978'}",
+          "41": "{'b3213'}",
+          "42": "{'b3612'}",
+          "43": "{'b4090'}",
+          "44": "{'b2417'}",
+          "45": "{'b1136'}",
+          "46": "{'b1478'}",
+          "47": "{'b1380'}",
+          "48": "{'b2975'}",
+          "49": "{'b0810'}",
+          "50": "{'b2133'}",
+          "51": "{'b0723'}",
+          "52": "{'b2281'}",
+          "53": "{'b3403'}",
+          "54": "{'b4154'}",
+          "55": "{'b4122'}",
+          "56": "{'s0001'}",
+          "57": "{'b4015'}",
+          "58": "{'b2097'}",
+          "59": "{'b3528'}",
+          "60": "{'b0114'}",
+          "61": "{'b1479'}",
+          "62": "{'b0904'}",
+          "63": "{'b2279'}",
+          "64": "{'b2276'}",
+          "65": "{'b3731'}",
+          "66": "{'b1773'}",
+          "67": "{'b2914'}",
+          "68": "{'b0875'}",
+          "69": "{'b0451'}",
+          "70": "{'b2976'}",
+          "71": "{'b3738'}",
+          "72": "{'b2926'}",
+          "73": "{'b2987'}",
+          "74": "{'b2925'}",
+          "75": "{'b3603'}",
+          "76": "{'b2286'}",
+          "77": "{'b3732'}",
+          "78": "{'b3956'}",
+          "79": "{'b0351'}",
+          "80": "{'b0726'}",
+          "81": "{'b0008'}",
+          "82": "{'b2277'}",
+          "83": "{'b1819'}",
+          "84": "{'b1276'}",
+          "85": "{'b2278'}",
+          "86": "{'b3870'}",
+          "87": "{'b3735'}",
+          "88": "{'b2492'}",
+          "89": "{'b0724'}",
+          "90": "{'b2458'}",
+          "91": "{'b2282'}",
+          "92": "{'b3925'}",
+          "93": "{'b1852'}",
+          "94": "{'b0809'}",
+          "95": "{'b3115'}",
+          "96": "{'b1621'}",
+          "97": "{'b4151'}",
+          "98": "{'b0474'}",
+          "99": "{'b0485'}",
+          "100": "{'b0755'}",
+          "101": "{'b3734'}",
+          "102": "{'b4152'}",
+          "103": "{'b0902'}",
+          "104": "{'b3739'}",
+          "105": "{'b1812'}",
+          "106": "{'b0903'}",
+          "107": "{'b2029'}",
+          "108": "{'b3386'}",
+          "109": "{'b0767'}",
+          "110": "{'b0116'}",
+          "111": "{'b2280'}",
+          "112": "{'b0728'}",
+          "113": "{'b0722'}",
+          "114": "{'b2464'}",
+          "115": "{'b2284'}",
+          "116": "{'b2416'}",
+          "117": "{'b0115'}",
+          "118": "{'b4153'}",
+          "119": "{'b1676'}",
+          "120": "{'b2579'}",
+          "121": "{'b4014'}",
+          "122": "{'b3736'}",
+          "123": "{'b0734'}",
+          "124": "{'b3114'}",
+          "125": "{'b3952'}",
+          "126": "{'b2465'}",
+          "127": "{'b3733'}",
+          "128": "{'b1603'}",
+          "129": "{'b2587'}",
+          "130": "{'b2415'}",
+          "131": "{'b1849'}",
+          "132": "{'b1297'}",
+          "133": "{'b4077'}",
+          "134": "{'b1779'}",
+          "135": "{'b1702'}",
+          "136": "{'b3212'}"
+        },
+        "growth": {
+          "0": 0.8739215069684307,
+          "1": 0.2116629497353117,
+          "2": 0.8739215069684307,
+          "3": 0.8739215069684307,
+          "4": 0.8739215069684307,
+          "5": 0.8739215069684307,
+          "6": 0.8739215069684307,
+          "7": 0.8739215069684307,
+          "8": 0.8739215069684307,
+          "9": 0.8513885233462087,
+          "10": 0.8739215069684307,
+          "11": 8.706511087863455e-16,
+          "12": 0.8739215069684303,
+          "13": 0.8739215069684307,
+          "14": 0.2116629497353117,
+          "15": 0.8739215069684307,
+          "16": 0.8739215069684307,
+          "17": 0.8739215069684307,
+          "18": 0.8739215069684307,
+          "19": 0.8739215069684307,
+          "20": 0.8739215069684307,
+          "21": 0.8739215069684307,
+          "22": 0.8739215069684307,
+          "23": 0.2116629497353117,
+          "24": 0.7040369478590252,
+          "25": 0.8739215069684306,
+          "26": 0.8739215069684307,
+          "27": 5.397211701984698e-16,
+          "28": 0.81429750753253,
+          "29": 0.8739215069684302,
+          "30": 0.8583074080226892,
+          "31": 0.8739215069684306,
+          "32": 0.8739215069684307,
+          "33": 0.8631595522084184,
+          "34": 0.8258192905969889,
+          "35": 0.8739215069684306,
+          "36": 0.8739215069684307,
+          "37": 0.37422987493310916,
+          "38": 0.21166294973531058,
+          "39": 0.8583074080226893,
+          "40": 0.873921506968431,
+          "41": 0.8739215069684307,
+          "42": 0.8739215069684307,
+          "43": 0.8739215069684307,
+          "44": 0.8739215069684307,
+          "45": 2.651910454632972e-17,
+          "46": 0.873921506968431,
+          "47": 0.8739215069684307,
+          "48": 0.8739215069684307,
+          "49": 0.8739215069684307,
+          "50": 0.8739215069684307,
+          "51": 0.8142975075325303,
+          "52": 0.2116629497353107,
+          "53": 0.8739215069684311,
+          "54": 0.8739215069684307,
+          "55": 0.8739215069684307,
+          "56": 0.21114065257211773,
+          "57": 0.8739215069684305,
+          "58": 0.8739215069684307,
+          "59": 0.8739215069684307,
+          "60": 0.7966959254309572,
+          "61": 0.8739215069684306,
+          "62": 0.8739215069684307,
+          "63": 0.2116629497353108,
+          "64": 0.21166294973531075,
+          "65": 0.37422987493310916,
+          "66": 0.8739215069684305,
+          "67": 0.8739215069684307,
+          "68": 0.8739215069684307,
+          "69": 0.8739215069684307,
+          "70": 0.8739215069684307,
+          "71": 0.3742298749331094,
+          "72": 3.991725949931768e-16,
+          "73": 0.8739215069684307,
+          "74": 0.8739215069684307,
+          "75": 0.8739215069684307,
+          "76": 0.2116629497353117,
+          "77": 0.37422987493310994,
+          "78": 0.8707448062160252,
+          "79": 0.8739215069684306,
+          "80": 0.8583074080226892,
+          "81": 0.873921506968431,
+          "82": 0.21166294973531127,
+          "83": 0.8739215069684307,
+          "84": 0.8739215069684307,
+          "85": 0.2116629497353117,
+          "86": 0.8739215069684307,
+          "87": 0.37422987493310933,
+          "88": 0.8739215069684307,
+          "89": 0.8142975075325306,
+          "90": 0.8739215069684302,
+          "91": 0.21166294973531039,
+          "92": 0.8739215069684307,
+          "93": 0.863813309504001,
+          "94": 0.8739215069684306,
+          "95": 0.8739215069684307,
+          "96": 0.8739215069684307,
+          "97": 0.8739215069684307,
+          "98": 0.8739215069684307,
+          "99": 0.8739215069684307,
+          "100": 0.8739215069684307,
+          "101": 0.37422987493310933,
+          "102": 0.8739215069684307,
+          "103": 0.8739215069684307,
+          "104": 0.8739215069684307,
+          "105": 0.8739215069684307,
+          "106": 0.8739215069684307,
+          "107": 0.863813309504001,
+          "108": 0.8739215069684306,
+          "109": 0.863813309504001,
+          "110": 0.7823510529477393,
+          "111": 0.21166294973531077,
+          "112": 0.8583074080226893,
+          "113": 0.8142975075325307,
+          "114": 0.8739215069684299,
+          "115": 0.21166294973531036,
+          "116": NaN,
+          "117": 0.796695925430956,
+          "118": 0.8739215069684306,
+          "119": 0.8739215069684307,
+          "120": 0.8739215069684307,
+          "121": 0.8739215069684307,
+          "122": 0.37422987493310916,
+          "123": 0.8739215069684305,
+          "124": 0.8739215069684307,
+          "125": 0.8739215069684307,
+          "126": 0.8739215069684307,
+          "127": 0.3742298749331094,
+          "128": 0.8739215069684307,
+          "129": 0.8739215069684307,
+          "130": NaN,
+          "131": 0.8739215069684307,
+          "132": 0.8739215069684307,
+          "133": 0.8739215069684307,
+          "134": 2.929418757457103e-17,
+          "135": 0.8739215069684317,
+          "136": 0.8739215069684307
+        },
+        "status": {
+          "0": "optimal",
+          "1": "optimal",
+          "2": "optimal",
+          "3": "optimal",
+          "4": "optimal",
+          "5": "optimal",
+          "6": "optimal",
+          "7": "optimal",
+          "8": "optimal",
+          "9": "optimal",
+          "10": "optimal",
+          "11": "optimal",
+          "12": "optimal",
+          "13": "optimal",
+          "14": "optimal",
+          "15": "optimal",
+          "16": "optimal",
+          "17": "optimal",
+          "18": "optimal",
+          "19": "optimal",
+          "20": "optimal",
+          "21": "optimal",
+          "22": "optimal",
+          "23": "optimal",
+          "24": "optimal",
+          "25": "optimal",
+          "26": "optimal",
+          "27": "optimal",
+          "28": "optimal",
+          "29": "optimal",
+          "30": "optimal",
+          "31": "optimal",
+          "32": "optimal",
+          "33": "optimal",
+          "34": "optimal",
+          "35": "optimal",
+          "36": "optimal",
+          "37": "optimal",
+          "38": "optimal",
+          "39": "optimal",
+          "40": "optimal",
+          "41": "optimal",
+          "42": "optimal",
+          "43": "optimal",
+          "44": "optimal",
+          "45": "optimal",
+          "46": "optimal",
+          "47": "optimal",
+          "48": "optimal",
+          "49": "optimal",
+          "50": "optimal",
+          "51": "optimal",
+          "52": "optimal",
+          "53": "optimal",
+          "54": "optimal",
+          "55": "optimal",
+          "56": "optimal",
+          "57": "optimal",
+          "58": "optimal",
+          "59": "optimal",
+          "60": "optimal",
+          "61": "optimal",
+          "62": "optimal",
+          "63": "optimal",
+          "64": "optimal",
+          "65": "optimal",
+          "66": "optimal",
+          "67": "optimal",
+          "68": "optimal",
+          "69": "optimal",
+          "70": "optimal",
+          "71": "optimal",
+          "72": "optimal",
+          "73": "optimal",
+          "74": "optimal",
+          "75": "optimal",
+          "76": "optimal",
+          "77": "optimal",
+          "78": "optimal",
+          "79": "optimal",
+          "80": "optimal",
+          "81": "optimal",
+          "82": "optimal",
+          "83": "optimal",
+          "84": "optimal",
+          "85": "optimal",
+          "86": "optimal",
+          "87": "optimal",
+          "88": "optimal",
+          "89": "optimal",
+          "90": "optimal",
+          "91": "optimal",
+          "92": "optimal",
+          "93": "optimal",
+          "94": "optimal",
+          "95": "optimal",
+          "96": "optimal",
+          "97": "optimal",
+          "98": "optimal",
+          "99": "optimal",
+          "100": "optimal",
+          "101": "optimal",
+          "102": "optimal",
+          "103": "optimal",
+          "104": "optimal",
+          "105": "optimal",
+          "106": "optimal",
+          "107": "optimal",
+          "108": "optimal",
+          "109": "optimal",
+          "110": "optimal",
+          "111": "optimal",
+          "112": "optimal",
+          "113": "optimal",
+          "114": "optimal",
+          "115": "optimal",
+          "116": "infeasible",
+          "117": "optimal",
+          "118": "optimal",
+          "119": "optimal",
+          "120": "optimal",
+          "121": "optimal",
+          "122": "optimal",
+          "123": "optimal",
+          "124": "optimal",
+          "125": "optimal",
+          "126": "optimal",
+          "127": "optimal",
+          "128": "optimal",
+          "129": "optimal",
+          "130": "infeasible",
+          "131": "optimal",
+          "132": "optimal",
+          "133": "optimal",
+          "134": "optimal",
+          "135": "optimal",
+          "136": "optimal"
+        }
+      },
+      "analysis": {
+        "essential_genes": [
+          {
+            "genes": 45,
+            "growth": 2.651910454632972e-17,
+            "growth_rate_ratio": 3.0344950129814913e-17
+          },
+          {
+            "genes": 134,
+            "growth": 2.929418757457103e-17,
+            "growth_rate_ratio": 3.352038751877204e-17
+          },
+          {
+            "genes": 72,
+            "growth": 3.991725949931768e-16,
+            "growth_rate_ratio": 4.567602374014999e-16
+          },
+          {
+            "genes": 27,
+            "growth": 5.397211701984698e-16,
+            "growth_rate_ratio": 6.17585407722397e-16
+          },
+          {
+            "genes": 11,
+            "growth": 8.706511087863455e-16,
+            "growth_rate_ratio": 9.962577895657588e-16
+          }
+        ],
+        "severely_impaired": [],
+        "moderately_impaired": [
+          {
+            "genes": 56,
+            "growth": 0.21114065257211773,
+            "growth_rate_ratio": 0.24160139198833672
+          },
+          {
+            "genes": 115,
+            "growth": 0.21166294973531036,
+            "growth_rate_ratio": 0.24219903967068343
+          },
+          {
+            "genes": 91,
+            "growth": 0.21166294973531039,
+            "growth_rate_ratio": 0.24219903967068346
+          },
+          {
+            "genes": 38,
+            "growth": 0.21166294973531058,
+            "growth_rate_ratio": 0.2421990396706837
+          },
+          {
+            "genes": 52,
+            "growth": 0.2116629497353107,
+            "growth_rate_ratio": 0.24219903967068382
+          },
+          {
+            "genes": 64,
+            "growth": 0.21166294973531075,
+            "growth_rate_ratio": 0.24219903967068387
+          },
+          {
+            "genes": 111,
+            "growth": 0.21166294973531077,
+            "growth_rate_ratio": 0.24219903967068393
+          },
+          {
+            "genes": 63,
+            "growth": 0.2116629497353108,
+            "growth_rate_ratio": 0.24219903967068396
+          },
+          {
+            "genes": 82,
+            "growth": 0.21166294973531127,
+            "growth_rate_ratio": 0.24219903967068449
+          },
+          {
+            "genes": 1,
+            "growth": 0.2116629497353117,
+            "growth_rate_ratio": 0.24219903967068496
+          },
+          {
+            "genes": 14,
+            "growth": 0.2116629497353117,
+            "growth_rate_ratio": 0.24219903967068496
+          },
+          {
+            "genes": 23,
+            "growth": 0.2116629497353117,
+            "growth_rate_ratio": 0.24219903967068496
+          },
+          {
+            "genes": 76,
+            "growth": 0.2116629497353117,
+            "growth_rate_ratio": 0.24219903967068496
+          },
+          {
+            "genes": 85,
+            "growth": 0.2116629497353117,
+            "growth_rate_ratio": 0.24219903967068496
+          },
+          {
+            "genes": 37,
+            "growth": 0.37422987493310916,
+            "growth_rate_ratio": 0.42821909284654763
+          },
+          {
+            "genes": 65,
+            "growth": 0.37422987493310916,
+            "growth_rate_ratio": 0.42821909284654763
+          },
+          {
+            "genes": 122,
+            "growth": 0.37422987493310916,
+            "growth_rate_ratio": 0.42821909284654763
+          },
+          {
+            "genes": 87,
+            "growth": 0.37422987493310933,
+            "growth_rate_ratio": 0.4282190928465478
+          },
+          {
+            "genes": 101,
+            "growth": 0.37422987493310933,
+            "growth_rate_ratio": 0.4282190928465478
+          },
+          {
+            "genes": 71,
+            "growth": 0.3742298749331094,
+            "growth_rate_ratio": 0.42821909284654786
+          },
+          {
+            "genes": 127,
+            "growth": 0.3742298749331094,
+            "growth_rate_ratio": 0.42821909284654786
+          },
+          {
+            "genes": 77,
+            "growth": 0.37422987493310994,
+            "growth_rate_ratio": 0.4282190928465485
+          }
+        ],
+        "mildly_impaired": [
+          {
+            "genes": 24,
+            "growth": 0.7040369478590252,
+            "growth_rate_ratio": 0.805606615977764
+          },
+          {
+            "genes": 110,
+            "growth": 0.7823510529477393,
+            "growth_rate_ratio": 0.8952189031960749
+          }
+        ],
+        "no_effect": [
+          {
+            "genes": 117,
+            "growth": 0.796695925430956,
+            "growth_rate_ratio": 0.9116332749317907
+          },
+          {
+            "genes": 60,
+            "growth": 0.7966959254309572,
+            "growth_rate_ratio": 0.911633274931792
+          },
+          {
+            "genes": 28,
+            "growth": 0.81429750753253,
+            "growth_rate_ratio": 0.9317741937228072
+          },
+          {
+            "genes": 51,
+            "growth": 0.8142975075325303,
+            "growth_rate_ratio": 0.9317741937228076
+          },
+          {
+            "genes": 89,
+            "growth": 0.8142975075325306,
+            "growth_rate_ratio": 0.9317741937228079
+          },
+          {
+            "genes": 113,
+            "growth": 0.8142975075325307,
+            "growth_rate_ratio": 0.931774193722808
+          },
+          {
+            "genes": 34,
+            "growth": 0.8258192905969889,
+            "growth_rate_ratio": 0.9449581959158956
+          },
+          {
+            "genes": 9,
+            "growth": 0.8513885233462087,
+            "growth_rate_ratio": 0.9742162385951719
+          },
+          {
+            "genes": 30,
+            "growth": 0.8583074080226892,
+            "growth_rate_ratio": 0.9821332936410897
+          },
+          {
+            "genes": 80,
+            "growth": 0.8583074080226892,
+            "growth_rate_ratio": 0.9821332936410897
+          },
+          {
+            "genes": 39,
+            "growth": 0.8583074080226893,
+            "growth_rate_ratio": 0.9821332936410899
+          },
+          {
+            "genes": 112,
+            "growth": 0.8583074080226893,
+            "growth_rate_ratio": 0.9821332936410899
+          },
+          {
+            "genes": 33,
+            "growth": 0.8631595522084184,
+            "growth_rate_ratio": 0.9876854446604197
+          },
+          {
+            "genes": 93,
+            "growth": 0.863813309504001,
+            "growth_rate_ratio": 0.9884335179031192
+          },
+          {
+            "genes": 107,
+            "growth": 0.863813309504001,
+            "growth_rate_ratio": 0.9884335179031192
+          },
+          {
+            "genes": 109,
+            "growth": 0.863813309504001,
+            "growth_rate_ratio": 0.9884335179031192
+          },
+          {
+            "genes": 78,
+            "growth": 0.8707448062160252,
+            "growth_rate_ratio": 0.9963650044917363
+          },
+          {
+            "genes": 114,
+            "growth": 0.8739215069684299,
+            "growth_rate_ratio": 0.9999999999999992
+          },
+          {
+            "genes": 29,
+            "growth": 0.8739215069684302,
+            "growth_rate_ratio": 0.9999999999999997
+          },
+          {
+            "genes": 90,
+            "growth": 0.8739215069684302,
+            "growth_rate_ratio": 0.9999999999999997
+          },
+          {
+            "genes": 12,
+            "growth": 0.8739215069684303,
+            "growth_rate_ratio": 0.9999999999999998
+          },
+          {
+            "genes": 57,
+            "growth": 0.8739215069684305,
+            "growth_rate_ratio": 1.0
+          },
+          {
+            "genes": 66,
+            "growth": 0.8739215069684305,
+            "growth_rate_ratio": 1.0
+          },
+          {
+            "genes": 123,
+            "growth": 0.8739215069684305,
+            "growth_rate_ratio": 1.0
+          },
+          {
+            "genes": 25,
+            "growth": 0.8739215069684306,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 31,
+            "growth": 0.8739215069684306,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 35,
+            "growth": 0.8739215069684306,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 61,
+            "growth": 0.8739215069684306,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 79,
+            "growth": 0.8739215069684306,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 94,
+            "growth": 0.8739215069684306,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 108,
+            "growth": 0.8739215069684306,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 118,
+            "growth": 0.8739215069684306,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 0,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 2,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 3,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 4,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 5,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 6,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 7,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 8,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 10,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 13,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 15,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 16,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 17,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 18,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 19,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 20,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 21,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 22,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 26,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 32,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 36,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 41,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 42,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 43,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 44,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 47,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 48,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 49,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 50,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 54,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 55,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 58,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 59,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 62,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 67,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 68,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 69,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 70,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 73,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 74,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 75,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 83,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 84,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 86,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 88,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 92,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 95,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 96,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 97,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 98,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 99,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 100,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 102,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 103,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 104,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 105,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 106,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 119,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 120,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 121,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 124,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 125,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 126,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 128,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 133,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 81,
+            "growth": 0.873921506968431,
+            "growth_rate_ratio": 1.0000000000000004
+          },
+          {
+            "genes": 116,
+            "growth": NaN,
+            "growth_rate_ratio": NaN
+          },
+          {
+            "genes": 129,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 130,
+            "growth": NaN,
+            "growth_rate_ratio": NaN
+          },
+          {
+            "genes": 131,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 132,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 136,
+            "growth": 0.8739215069684307,
+            "growth_rate_ratio": 1.0000000000000002
+          },
+          {
+            "genes": 40,
+            "growth": 0.873921506968431,
+            "growth_rate_ratio": 1.0000000000000004
+          },
+          {
+            "genes": 46,
+            "growth": 0.873921506968431,
+            "growth_rate_ratio": 1.0000000000000004
+          },
+          {
+            "genes": 53,
+            "growth": 0.8739215069684311,
+            "growth_rate_ratio": 1.0000000000000007
+          },
+          {
+            "genes": 135,
+            "growth": 0.8739215069684317,
+            "growth_rate_ratio": 1.0000000000000013
+          }
+        ],
+        "improved_growth": [],
+        "summary": {
+          "total_genes_tested": 137,
+          "essential_count": 5,
+          "impaired_count": 24,
+          "no_effect_count": 108,
+          "improved_count": 0,
+          "essentiality_rate": 0.0364963503649635
+        }
+      },
+      "wild_type_growth": 0.8739215069684305
+    }
+  },
+  "ai_conclusions": {
+    "summary": " These flux balance analysis results indicate an optimally growing aerobic E. coli cell on glucose at approximately 0.8739 h\u207b\u00b9. Essential reactions are concentrated in central carbon metabolism and ATP generation, while many fermentative and exchange reactions remain effectively blocked under these conditions. This underscores the organism\u2019s reliance on oxidative phosphorylation to achieve maximal growth.",
+    "quantitative_findings": " \u2022 Predicted growth rate (FBA solution): 0.8739 h\u207b\u00b9 \u2022 Objective function value (biomass flux): 0.8739 (linked to a reported solver objective of 518.4221) \u2022 Blocked reactions (flux = ~0): PFL, ACALD, AKGt2r, ALCD2x, among others listed (approx. 40+ reactions showing negligible flux). \u2022 Several reactions are fixed at a single value with zero variability (e.g., PFK at ~7.48, MDH at ~5.06). \u2022 SUCDi shows high variability (5.06 to as high as 1000.0), indicating alternative flux routing possibilities around the succinate node.",
+    "biological_insights": " \u2022 The model predicts robust aerobic growth on glucose, with a high maximum biomass production rate (~0.874 h\u207b\u00b9). \u2022 Core pathways in glycolysis (PFK, PGI, GAPD, etc.) and the TCA cycle (AKGDH, MDH, SUCDi, etc.) carry significant flux, reflecting their essential roles in energy production and biosynthesis. \u2022 Many alternative fermentative and transport reactions show negligible or zero flux under these conditions, highlighting the model\u2019s preference for oxidative phosphorylation and the TCA cycle in aerobic growth.",
+    "direct_answers": " \u2022 \u201cExplore the predicted growth rate in more detail\u201d \u2013 The model\u2019s maximum growth rate of 0.8739 h\u207b\u00b9 is achieved through active central carbon metabolism, primarily glycolysis and the TCA cycle, with respiratory pathways contributing significantly. \u2022 \u201cGive me a summary of what you learn\u201d \u2013 The organism leverages core metabolic routes in a highly efficient manner for biomass formation under aerobic glucose-fed conditions, with minimal usage of alternative fermentation reactions.",
+    "confidence_score": 0.8
+  },
+  "tool_decision_rationale": [
+    "Tool selection based on AI analysis of previous results",
+    "Dynamic workflow adaptation in real-time",
+    "Result-driven decision making at each step"
+  ]
+}

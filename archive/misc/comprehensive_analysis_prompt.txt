@@ -1,0 +1,17 @@
+Please perform a comprehensive metabolic analysis of the E. coli core model located at data/examples/e_coli_core.xml. I want you to:
+
+1. Load and analyze the basic model structure using analyze_metabolic_model
+2. Run flux balance analysis using run_metabolic_fba to determine growth rate
+3. Perform flux variability analysis using run_flux_variability_analysis to find reaction flux ranges
+4. Conduct gene deletion analysis using run_gene_deletion_analysis to identify essential genes
+5. Analyze essentiality using analyze_essentiality for comprehensive essential component identification
+6. Find minimal media requirements using find_minimal_media
+7. Identify auxotrophies using identify_auxotrophies
+8. Sample flux space using run_flux_sampling for statistical analysis
+9. Analyze production envelope using run_production_envelope for metabolic engineering insights
+10. Check reaction expression patterns using analyze_reaction_expression
+11. Verify missing media components using check_missing_media
+12. Test biochemistry database by resolving glucose (cpd00027) using resolve_biochem_entity
+13. Search for ATP in the biochemistry database using search_biochem
+
+Please use each tool systematically and provide detailed results for each analysis step. Save all results and provide a comprehensive summary of the E. coli core model's metabolic capabilities, essential genes, growth requirements, and flux patterns.

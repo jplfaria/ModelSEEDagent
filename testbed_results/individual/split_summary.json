@@ -1,0 +1,64 @@
+{
+  "split_metadata": {
+    "original_file": "testbed_results/20250609_115735_tool_testbed_results.json",
+    "split_timestamp": "2025-06-09T12:13:26.436606",
+    "original_timestamp": "2025-06-09T11:57:35.972101",
+    "models_processed": [
+      "e_coli_core",
+      "iML1515"
+    ],
+    "tools_processed": [
+      "FBA",
+      "ModelAnalysis",
+      "PathwayAnalysis",
+      "FluxVariability",
+      "GeneDeletion",
+      "Essentiality",
+      "FluxSampling",
+      "ProductionEnvelope",
+      "Auxotrophy",
+      "MinimalMedia",
+      "MissingMedia",
+      "ReactionExpression"
+    ],
+    "total_files_created": 24
+  },
+  "file_structure": {
+    "e_coli_core": {
+      "directory": "testbed_results/individual/e_coli_core/",
+      "files": [
+        "FBA_results.json",
+        "ModelAnalysis_results.json",
+        "PathwayAnalysis_results.json",
+        "FluxVariability_results.json",
+        "GeneDeletion_results.json",
+        "Essentiality_results.json",
+        "FluxSampling_results.json",
+        "ProductionEnvelope_results.json",
+        "Auxotrophy_results.json",
+        "MinimalMedia_results.json",
+        "MissingMedia_results.json",
+        "ReactionExpression_results.json"
+      ],
+      "file_count": 12
+    },
+    "iML1515": {
+      "directory": "testbed_results/individual/iML1515/",
+      "files": [
+        "FBA_results.json",
+        "ModelAnalysis_results.json",
+        "PathwayAnalysis_results.json",
+        "FluxVariability_results.json",
+        "GeneDeletion_results.json",
+        "Essentiality_results.json",
+        "FluxSampling_results.json",
+        "ProductionEnvelope_results.json",
+        "Auxotrophy_results.json",
+        "MinimalMedia_results.json",
+        "MissingMedia_results.json",
+        "ReactionExpression_results.json"
+      ],
+      "file_count": 12
+    }
+  }
+}

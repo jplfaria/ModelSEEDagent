@@ -1,0 +1,35 @@
+{
+  "audit_id": "8276cf04-7d74-4028-a2b8-b28eaca6bd79",
+  "session_id": null,
+  "tool_name": "analyze_metabolic_model",
+  "timestamp": "2025-06-07T22:09:03.558146",
+  "input": {
+    "raw_input": "default analysis",
+    "type": "str"
+  },
+  "output": {
+    "structured": {
+      "success": false,
+      "message": "Error analyzing model",
+      "data": null,
+      "metadata": {},
+      "error": "Failed to load model: Model file not found: \"default analysis\""
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 2.4402530193328857,
+    "success": false,
+    "error": null,
+    "timestamp_end": "2025-06-07T22:09:03.558250"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}
