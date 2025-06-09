@@ -507,7 +507,15 @@ class LangGraphMetabolicAgent(BaseAgent):
                 # Fallback to basic execution
                 tool = self._tools_dict[tool_name]
                 tool_input = self._prepare_tool_input(state, tool_name)
-                result = tool._run(tool_input)
+                # Handle special cases for tools that expect string instead of dict
+                if (
+                    tool_name == "analyze_metabolic_model"
+                    and isinstance(tool_input, dict)
+                    and "model_path" in tool_input
+                ):
+                    result = tool._run(tool_input["model_path"])
+                else:
+                    result = tool._run(tool_input)
 
                 state["tool_results"][tool_name] = (
                     result.model_dump()

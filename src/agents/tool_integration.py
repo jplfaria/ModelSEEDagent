@@ -359,8 +359,15 @@ class EnhancedToolIntegration:
                 else:
                     input_data = "default analysis"
 
-            # Execute tool
-            result = tool._run(input_data)
+            # Execute tool - handle special cases for tools that expect string instead of dict
+            if (
+                plan.tool_name == "analyze_metabolic_model"
+                and isinstance(input_data, dict)
+                and "model_path" in input_data
+            ):
+                result = tool._run(input_data["model_path"])
+            else:
+                result = tool._run(input_data)
             execution_time = time.time() - start_time
 
             # Create execution result
