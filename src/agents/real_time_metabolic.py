@@ -78,6 +78,22 @@ class RealTimeMetabolicAgent(BaseAgent):
         self.audit_trail = []
         self.tool_execution_history = []
 
+        # Performance optimization
+        self.enable_audit = (
+            config.get("enable_audit", True) if isinstance(config, dict) else True
+        )
+        self.enable_realtime_verification = (
+            config.get("enable_realtime_verification", False)
+            if isinstance(config, dict)
+            else False
+        )
+        self.cache_llm_responses = (
+            config.get("cache_llm_responses", True)
+            if isinstance(config, dict)
+            else True
+        )
+        self._llm_cache = {}
+
         # Initialize Phase 8 Advanced Agentic Capabilities
         tools_registry = {t.tool_name: t for t in tools}
 
@@ -199,13 +215,17 @@ class RealTimeMetabolicAgent(BaseAgent):
             # Initialize session
             self._init_session(query)
 
-            # Start AI workflow auditing
-            self.current_workflow_id = self.ai_audit_logger.start_workflow(query)
-            logger.info(f"🔍 AI workflow audit started: {self.current_workflow_id}")
+            # Start AI workflow auditing (only if enabled)
+            if self.enable_audit:
+                self.current_workflow_id = self.ai_audit_logger.start_workflow(query)
+                logger.info(f"🔍 AI workflow audit started: {self.current_workflow_id}")
+            else:
+                self.current_workflow_id = None
 
-            # Start real-time verification monitoring
-            self.realtime_detector.start_monitoring(self.current_workflow_id, query)
-            logger.info(f"🔍 Real-time verification monitoring started")
+            # Start real-time verification monitoring (only if enabled)
+            if self.enable_realtime_verification and self.current_workflow_id:
+                self.realtime_detector.start_monitoring(self.current_workflow_id, query)
+                logger.info(f"🔍 Real-time verification monitoring started")
 
             # Get learning-based recommendations
             model_characteristics = self._analyze_model_characteristics(query)
@@ -368,8 +388,8 @@ Think step by step about the query requirements and tool capabilities."""
                 elif reasoning and line.strip():
                     reasoning += " " + line.strip()
 
-            # Log AI reasoning step
-            if self.current_workflow_id:
+            # Log AI reasoning step (only if audit enabled)
+            if self.current_workflow_id and self.enable_audit:
                 context_analysis = f"Query requests: {query[:100]}... Available tools: {len(available_tools)} options"
                 self.ai_audit_logger.log_reasoning_step(
                     ai_thought=response_text,
@@ -385,17 +405,20 @@ Think step by step about the query requirements and tool capabilities."""
                     ],
                 )
 
-                # Get the reasoning step for real-time verification
-                reasoning_steps = self.ai_audit_logger.current_workflow.reasoning_steps
-                if reasoning_steps:
-                    latest_step = reasoning_steps[-1]
-                    alerts = self.realtime_detector.process_reasoning_step(
-                        self.current_workflow_id, latest_step
+                # Get the reasoning step for real-time verification (only if enabled)
+                if self.enable_realtime_verification:
+                    reasoning_steps = (
+                        self.ai_audit_logger.current_workflow.reasoning_steps
                     )
-                    if alerts:
-                        logger.info(
-                            f"🔍 Real-time verification generated {len(alerts)} alerts"
+                    if reasoning_steps:
+                        latest_step = reasoning_steps[-1]
+                        alerts = self.realtime_detector.process_reasoning_step(
+                            self.current_workflow_id, latest_step
                         )
+                        if alerts:
+                            logger.info(
+                                f"🔍 Real-time verification generated {len(alerts)} alerts"
+                            )
 
             # Validate tool exists
             if selected_tool and selected_tool in self._tools_dict:
@@ -925,6 +948,13 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
             "analyze_essentiality",
             "run_flux_variability_analysis",
             "identify_auxotrophies",
+            "run_flux_sampling",
+            "run_gene_deletion_analysis",
+            "run_production_envelope",
+            "analyze_metabolic_model",
+            "analyze_pathway",
+            "check_missing_media",
+            "analyze_reaction_expression",
         ]:
             # Ensure model_path is always a string
             model_path = (
@@ -1133,6 +1163,33 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
     ) -> AgentResult:
         """Run standard dynamic analysis workflow"""
         logger.info("🚀 Starting standard dynamic analysis workflow")
+
+        # For comprehensive analysis queries, delegate to LangGraph for better performance
+        if "comprehensive" in query.lower() and hasattr(self, "_tools_dict"):
+            logger.info(
+                "📊 Delegating comprehensive analysis to LangGraphMetabolicAgent"
+            )
+            try:
+                # Create a new LangGraph agent with current config
+                from .langgraph_metabolic import LangGraphMetabolicAgent
+
+                langgraph = LangGraphMetabolicAgent(
+                    llm=self.llm, tools=list(self._tools_dict.values()), config={}
+                )
+                result = langgraph.run({"query": query})
+
+                # Complete audit trail if enabled
+                if self.enable_audit and self.current_workflow_id:
+                    self.ai_audit_logger.complete_workflow(
+                        self.current_workflow_id,
+                        success=result.success,
+                        final_result=result.message,
+                    )
+
+                return result
+            except Exception as e:
+                logger.error(f"Failed to delegate to LangGraph: {e}")
+                # Continue with standard analysis
 
         # Initial tool selection
         logger.info(

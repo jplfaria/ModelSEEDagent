@@ -36,7 +36,6 @@ if DEBUG_MODE:
         level=logging.DEBUG,
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
-    logger.info("🔍 DEBUG MODE ENABLED")
 
 from ..cli.argo_health import display_argo_health
 from .conversation_engine import ConversationResponse, DynamicAIConversationEngine
@@ -98,6 +97,10 @@ class InteractiveCLI:
     def start_interactive_session(self) -> None:
         """Start the main interactive session"""
         self.running = True
+
+        # Log debug mode once at session start
+        if DEBUG_MODE:
+            logger.info("🔍 DEBUG MODE ENABLED")
 
         # Print banner
         self._print_banner()

@@ -956,6 +956,13 @@ Provide a concise analysis and indicate if you need to continue or can finalize.
             "analyze_essentiality",
             "run_flux_variability_analysis",
             "identify_auxotrophies",
+            "run_flux_sampling",
+            "run_gene_deletion_analysis",
+            "run_production_envelope",
+            "analyze_metabolic_model",
+            "analyze_pathway",
+            "check_missing_media",
+            "analyze_reaction_expression",
         ]:
             # Use default E. coli core model path
             default_model_path = str(
