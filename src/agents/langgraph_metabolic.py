@@ -921,6 +921,21 @@ Provide a concise analysis and indicate if you need to continue or can finalize.
         """Determine if analysis should continue based on LLM response"""
         analysis_lower = analysis.lower()
 
+        # For comprehensive queries, execute all planned tools unless explicitly told to stop
+        query_lower = state["query"].lower()
+        is_comprehensive = any(
+            word in query_lower
+            for word in ["comprehensive", "complete", "full", "detailed", "thorough"]
+        )
+
+        # Get planned tools from intent analysis
+        planned_tools = []
+        if "intent_analysis" in state and "suggested_tools" in state["intent_analysis"]:
+            planned_tools = state["intent_analysis"]["suggested_tools"]
+
+        tools_called = len(state["tools_called"])
+        planned_count = len(planned_tools)
+
         # Keywords that suggest continuation
         continue_keywords = [
             "need more",
@@ -946,12 +961,15 @@ Provide a concise analysis and indicate if you need to continue or can finalize.
             1 for keyword in complete_keywords if keyword in analysis_lower
         )
 
-        # Continue if we haven't used many tools and analysis suggests more work
-        if len(state["tools_called"]) < 2 and continue_score > complete_score:
+        # For comprehensive analysis, continue until we've executed planned tools
+        if is_comprehensive and tools_called < planned_count:
+            # Only stop if AI explicitly says it's sufficient and we have at least 2 tools
+            if complete_score > continue_score and tools_called >= 2:
+                return False
             return True
 
-        # Complete if analysis clearly indicates we're done
-        return complete_score <= continue_score
+        # For non-comprehensive queries, use keyword-based logic
+        return continue_score > complete_score
 
     def _prepare_tool_input(self, state: AgentState, tool_name: str) -> Dict[str, Any]:
         """Prepare appropriate input for each tool"""

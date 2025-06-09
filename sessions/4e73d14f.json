@@ -1,0 +1,54 @@
+{
+  "id": "4e73d14f",
+  "name": "Analysis_20250608_2247",
+  "created_at": "2025-06-08T22:47:18.952087",
+  "last_active": "2025-06-08T22:47:41.063095",
+  "status": "active",
+  "description": "Interactive metabolic modeling analysis",
+  "model_files": [],
+  "interactions": [
+    {
+      "id": "ai_0",
+      "timestamp": "2025-06-08T22:47:41.063090",
+      "type": "query",
+      "input_data": "I need a comprehensive metabolic analysis of E. coli",
+      "output_data": "Analysis Results for: I need a comprehensive metabolic analysis of E. coli\n\n**ANALYZE_METABOLIC_MODEL:**\nModel analysis completed successfully\n\n",
+      "metadata": {
+        "ai_agent_used": true,
+        "tools_executed": [],
+        "ai_reasoning_steps": 0,
+        "audit_file": null,
+        "dynamic_decision_making": true,
+        "success": true
+      },
+      "execution_time": 14.936375617980957,
+      "success": true,
+      "error_message": null
+    }
+  ],
+  "context": {
+    "last_interaction": {
+      "id": "ai_0",
+      "timestamp": "2025-06-08T22:47:41.063090",
+      "type": "query",
+      "input_data": "I need a comprehensive metabolic analysis of E. coli",
+      "output_data": "Analysis Results for: I need a comprehensive metabolic analysis of E. coli\n\n**ANALYZE_METABOLIC_MODEL:**\nModel analysis completed successfully\n\n",
+      "metadata": {
+        "ai_agent_used": true,
+        "tools_executed": [],
+        "ai_reasoning_steps": 0,
+        "audit_file": null,
+        "dynamic_decision_making": true,
+        "success": true
+      },
+      "execution_time": 14.936375617980957,
+      "success": true,
+      "error_message": null
+    },
+    "last_query": "I need a comprehensive metabolic analysis of E. coli"
+  },
+  "metadata": {},
+  "total_queries": 1,
+  "total_execution_time": 14.936375617980957,
+  "success_rate": 1.0
+}
