@@ -243,7 +243,19 @@ class MediaLibrary:
                 return dict(zip(df["compound_id"], df["flux"]))
             elif "compounds" in df.columns and "minFlux" in df.columns:
                 # ModelSEED TSV format with compounds and minFlux
-                return dict(zip(df["compounds"], df["minFlux"]))
+                # Use maxFlux for uptake limits (positive values become negative for uptake)
+                if "maxFlux" in df.columns:
+                    # Use maxFlux as the uptake limit (convert positive to negative)
+                    media_dict = {}
+                    for _, row in df.iterrows():
+                        compound = row["compounds"]
+                        max_flux = row["maxFlux"]
+                        # Convert positive maxFlux to negative uptake rate
+                        uptake_rate = -abs(max_flux) if max_flux > 0 else max_flux
+                        media_dict[compound] = uptake_rate
+                    return media_dict
+                else:
+                    return dict(zip(df["compounds"], df["minFlux"]))
             elif len(df.columns) >= 2:
                 # Default: first column is compound, check for numeric columns
                 compound_col = df.columns[0]
