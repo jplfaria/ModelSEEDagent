@@ -7,6 +7,7 @@ utilities to improve user experience and problem resolution.
 
 import difflib
 import glob
+import importlib
 import logging
 import os
 import warnings
@@ -19,6 +20,40 @@ from ..base import ToolResult
 
 # Set up logging
 logger = logging.getLogger(__name__)
+
+
+def get_available_solvers() -> Dict[str, Any]:
+    """
+    Get available optimization solvers compatible with current COBRApy version
+
+    Returns:
+        Dictionary mapping solver names to their interface modules
+    """
+    solver_interfaces = [
+        "glpk_interface",
+        "cplex_interface",
+        "gurobi_interface",
+        "scipy_interface",
+    ]
+    available = {}
+
+    for solver_name in solver_interfaces:
+        try:
+            module = importlib.import_module(f"optlang.{solver_name}")
+            if hasattr(module, "Model"):
+                try:
+                    # Test if solver actually works by creating a simple model
+                    _ = module.Model()
+                    solver_key = solver_name.replace("_interface", "")
+                    available[solver_key] = module
+                except Exception:
+                    # Solver module exists but not functional
+                    pass
+        except ImportError:
+            # Solver module not installed
+            pass
+
+    return available
 
 
 class ModelValidationError(Exception):
@@ -412,11 +447,7 @@ def safe_optimize(
             )
 
         else:
-            available_solvers = [
-                s
-                for s in cobra.solvers.core.solvers
-                if cobra.solvers.core.solvers[s].is_available()
-            ]
+            available_solvers = list(get_available_solvers().keys())
             raise OptimizationError(
                 f"{operation} failed with status: {solution.status}. "
                 f"Try different solver from: {available_solvers}"
@@ -424,11 +455,7 @@ def safe_optimize(
 
     except Exception as e:
         if "solver" in str(e).lower() or "glpk" in str(e).lower():
-            available_solvers = [
-                s
-                for s in cobra.solvers.core.solvers
-                if cobra.solvers.core.solvers[s].is_available()
-            ]
+            available_solvers = list(get_available_solvers().keys())
             raise OptimizationError(
                 f"{operation} failed due to solver issue: {str(e)}. "
                 f"Available solvers: {available_solvers}. "
@@ -450,11 +477,7 @@ def validate_solver_availability(solver: str) -> str:
     Raises:
         RuntimeError: If no solvers are available
     """
-    available_solvers = [
-        s
-        for s in cobra.solvers.core.solvers
-        if cobra.solvers.core.solvers[s].is_available()
-    ]
+    available_solvers = list(get_available_solvers().keys())
 
     if not available_solvers:
         raise RuntimeError(

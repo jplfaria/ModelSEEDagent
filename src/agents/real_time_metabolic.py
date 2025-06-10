@@ -12,6 +12,7 @@ This replaces the static workflow approach with genuine AI-driven exploration.
 
 import json
 import logging
+import re
 import time
 import uuid
 from datetime import datetime
@@ -384,18 +385,10 @@ Think step by step about the query requirements and tool capabilities."""
             )
             response_text = response.text.strip()
 
-            # Parse AI response
-            lines = response_text.split("\n")
-            selected_tool = None
-            reasoning = ""
-
-            for line in lines:
-                if line.startswith("TOOL:"):
-                    selected_tool = line.replace("TOOL:", "").strip()
-                elif line.startswith("REASONING:"):
-                    reasoning = line.replace("REASONING:", "").strip()
-                elif reasoning and line.strip():
-                    reasoning += " " + line.strip()
+            # Parse AI response with robust, flexible parsing
+            selected_tool, reasoning = self._parse_tool_selection_response(
+                response_text
+            )
 
             # Log AI reasoning step (only if audit enabled)
             if self.current_workflow_id and self.enable_audit:
@@ -585,28 +578,8 @@ Make your decision based on the ACTUAL DATA PATTERNS you see, not generic workfl
             )
             response_text = response.text.strip()
 
-            # Parse AI decision
-            decision = {"action": "finalize", "reasoning": "Default finalization"}
-
-            lines = response_text.split("\n")
-            for line in lines:
-                if line.startswith("ACTION:"):
-                    action = line.replace("ACTION:", "").strip().lower()
-                    decision["action"] = action
-                elif line.startswith("TOOL:"):
-                    tool = line.replace("TOOL:", "").strip()
-                    if tool in self._tools_dict:
-                        decision["tool"] = tool
-                elif line.startswith("REASONING:"):
-                    reasoning = line.replace("REASONING:", "").strip()
-                    # Collect remaining reasoning lines
-                    remaining_lines = lines[lines.index(line) + 1 :]
-                    full_reasoning = reasoning
-                    for remaining_line in remaining_lines:
-                        if remaining_line.strip():
-                            full_reasoning += " " + remaining_line.strip()
-                    decision["reasoning"] = full_reasoning
-                    break
+            # Parse AI decision with robust, flexible parsing
+            decision = self._parse_decision_response(response_text)
 
             # Log AI reasoning step for this decision
             if self.current_workflow_id:
@@ -1314,6 +1287,307 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
                 return f"Found {data['total_results']} biochemistry matches"
 
         return "Analysis completed successfully"
+
+    def _parse_tool_selection_response(
+        self, response_text: str
+    ) -> tuple[Optional[str], str]:
+        """
+        Robust parser for AI tool selection responses that handles various formatting styles.
+
+        This parser is designed to be flexible and handle:
+        - Extra backticks around responses (```markdown blocks)
+        - Additional whitespace and newlines
+        - Different markdown formatting
+        - Case variations in labels
+        - Missing colons or different separators
+        """
+        # Clean up the response text
+        cleaned_text = self._clean_response_text(response_text)
+
+        # Try multiple parsing strategies in order of preference
+        selected_tool = None
+        reasoning = ""
+
+        # Strategy 1: Standard format parsing (TOOL: xxx, REASONING: yyy)
+        tool_match = re.search(
+            r"(?i)(?:^|\n)\s*TOOL\s*[:]\s*([^\n]+)", cleaned_text, re.MULTILINE
+        )
+        reasoning_match = re.search(
+            r"(?i)(?:^|\n)\s*REASONING\s*[:]\s*(.*?)(?=\n\s*[A-Z]+\s*[:}]|\Z)",
+            cleaned_text,
+            re.DOTALL,
+        )
+
+        if tool_match:
+            selected_tool = tool_match.group(1).strip()
+        if reasoning_match:
+            reasoning = reasoning_match.group(1).strip()
+
+        # Strategy 2: Alternative formats and labels
+        if not selected_tool:
+            # Try variations like "Selected tool:", "Tool name:", etc.
+            alt_tool_patterns = [
+                r"(?i)(?:selected\s+)?tool\s*(?:name)?[:]\s*([^\n]+)",
+                r"(?i)choose\s*[:]\s*([^\n]+)",
+                r"(?i)next\s+tool\s*[:]\s*([^\n]+)",
+                r"(?i)execute\s*[:]\s*([^\n]+)",
+            ]
+
+            for pattern in alt_tool_patterns:
+                match = re.search(pattern, cleaned_text)
+                if match:
+                    selected_tool = match.group(1).strip()
+                    break
+
+        # Strategy 3: Extract from context if no explicit label found
+        if not selected_tool:
+            # Look for tool names mentioned in context
+            available_tools = (
+                list(self._tools_dict.keys()) if hasattr(self, "_tools_dict") else []
+            )
+            for tool in available_tools:
+                if re.search(rf"\b{re.escape(tool)}\b", cleaned_text, re.IGNORECASE):
+                    selected_tool = tool
+                    break
+
+        # Strategy 4: Extract reasoning from various formats
+        if not reasoning:
+            # Try alternative reasoning patterns
+            alt_reasoning_patterns = [
+                r"(?i)(?:^|\n)\s*(?:explanation|rationale|why|because)\s*[:]\s*(.*?)(?=\n\s*[A-Z]+\s*[:}]|\Z)",
+                r"(?i)(?:^|\n)\s*reasoning\s*[:\-]\s*(.*?)(?=\n\s*[A-Z]+\s*[:}]|\Z)",
+                r"(?i)I\s+(?:choose|select|recommend)\s+.*?because\s+(.*?)(?=\n|\Z)",
+            ]
+
+            for pattern in alt_reasoning_patterns:
+                match = re.search(pattern, cleaned_text, re.DOTALL)
+                if match:
+                    reasoning = match.group(1).strip()
+                    break
+
+        # Strategy 5: Fallback to extracting any explanation text
+        if not reasoning and selected_tool:
+            # Extract any explanatory text after tool selection
+            lines = cleaned_text.split("\n")
+            tool_found = False
+            explanation_lines = []
+
+            for line in lines:
+                line = line.strip()
+                if not line:
+                    continue
+
+                if selected_tool.lower() in line.lower():
+                    tool_found = True
+                    continue
+
+                if (
+                    tool_found
+                    and line
+                    and not line.upper().startswith(("TOOL", "ACTION", "SUMMARY"))
+                ):
+                    explanation_lines.append(line)
+                    if len(explanation_lines) >= 3:  # Limit to reasonable length
+                        break
+
+            if explanation_lines:
+                reasoning = " ".join(explanation_lines)
+
+        # Clean up extracted values
+        if selected_tool:
+            selected_tool = self._clean_tool_name(selected_tool)
+        if reasoning:
+            reasoning = self._clean_reasoning_text(reasoning)
+
+        # Validate the selected tool exists
+        if (
+            selected_tool
+            and hasattr(self, "_tools_dict")
+            and selected_tool not in self._tools_dict
+        ):
+            logger.warning(
+                f"🔍 PARSER: Extracted tool '{selected_tool}' not in available tools, attempting fuzzy match"
+            )
+            selected_tool = self._fuzzy_match_tool(selected_tool)
+
+        return selected_tool, reasoning or "AI analysis completed"
+
+    def _parse_decision_response(self, response_text: str) -> Dict[str, Any]:
+        """
+        Robust parser for AI decision responses that handles various formatting styles.
+        """
+        # Clean up the response text
+        cleaned_text = self._clean_response_text(response_text)
+
+        # Initialize default decision
+        decision = {"action": "finalize", "reasoning": "Default finalization"}
+
+        # Strategy 1: Standard format parsing (ACTION: xxx, TOOL: yyy, REASONING: zzz)
+        action_match = re.search(
+            r"(?i)(?:^|\n)\s*ACTION\s*[:]\s*([^\n]+)", cleaned_text, re.MULTILINE
+        )
+        tool_match = re.search(
+            r"(?i)(?:^|\n)\s*TOOL\s*[:]\s*([^\n]+)", cleaned_text, re.MULTILINE
+        )
+        reasoning_match = re.search(
+            r"(?i)(?:^|\n)\s*REASONING\s*[:]\s*(.*?)(?=\n\s*[A-Z]+\s*[:}]|\Z)",
+            cleaned_text,
+            re.DOTALL,
+        )
+
+        if action_match:
+            action = action_match.group(1).strip().lower()
+            decision["action"] = action
+
+        if tool_match:
+            tool = tool_match.group(1).strip()
+            tool = self._clean_tool_name(tool)
+            if hasattr(self, "_tools_dict") and tool in self._tools_dict:
+                decision["tool"] = tool
+
+        if reasoning_match:
+            reasoning = reasoning_match.group(1).strip()
+            decision["reasoning"] = self._clean_reasoning_text(reasoning)
+
+        # Strategy 2: Alternative action detection
+        if decision["action"] == "finalize":  # Default wasn't overridden
+            action_patterns = [
+                (r"(?i)\b(?:execute|run|use)\s+(?:tool|next)", "execute_tool"),
+                (r"(?i)\b(?:continue|proceed|next)", "execute_tool"),
+                (r"(?i)\b(?:finalize|complete|done|finish)", "finalize"),
+                (r"(?i)\b(?:stop|end)", "finalize"),
+            ]
+
+            for pattern, action_type in action_patterns:
+                if re.search(pattern, cleaned_text):
+                    decision["action"] = action_type
+                    break
+
+        # Strategy 3: Tool extraction from context if not found explicitly
+        if decision["action"] == "execute_tool" and "tool" not in decision:
+            available_tools = (
+                list(self._tools_dict.keys()) if hasattr(self, "_tools_dict") else []
+            )
+            for tool in available_tools:
+                if re.search(rf"\b{re.escape(tool)}\b", cleaned_text, re.IGNORECASE):
+                    decision["tool"] = tool
+                    break
+
+        # Strategy 4: Enhanced reasoning extraction
+        if decision["reasoning"] == "Default finalization":
+            # Try to extract any explanatory content
+            alt_reasoning_patterns = [
+                r"(?i)(?:explanation|rationale|because)\s*[:]\s*(.*?)(?=\n|\Z)",
+                r"(?i)I\s+(?:recommend|suggest|think)\s+(.*?)(?=\n|\Z)",
+                r"(?i)(?:next|this)\s+(?:step|tool)\s+(?:will|should)\s+(.*?)(?=\n|\Z)",
+            ]
+
+            for pattern in alt_reasoning_patterns:
+                match = re.search(pattern, cleaned_text, re.DOTALL)
+                if match:
+                    reasoning_text = match.group(1).strip()
+                    if len(reasoning_text) > 10:  # Meaningful reasoning
+                        decision["reasoning"] = self._clean_reasoning_text(
+                            reasoning_text
+                        )
+                        break
+
+        return decision
+
+    def _clean_response_text(self, text: str) -> str:
+        """Clean and normalize response text for parsing."""
+        # Remove markdown code block markers
+        text = re.sub(r"```(?:markdown|text)?\s*\n?", "", text, flags=re.IGNORECASE)
+        text = re.sub(r"```\s*$", "", text, flags=re.MULTILINE)
+
+        # Remove extra backticks and quotes
+        text = re.sub(r'^[`"\s]+|[`"\s]+$', "", text)
+
+        # Normalize whitespace but preserve line breaks
+        text = re.sub(r"[ \t]+", " ", text)
+        text = re.sub(r"\n\s*\n", "\n", text)
+
+        return text.strip()
+
+    def _clean_tool_name(self, tool_name: str) -> str:
+        """Clean and validate tool name."""
+        # Remove common prefixes/suffixes
+        tool_name = re.sub(
+            r"^(?:tool|function|method)[:]\s*", "", tool_name, flags=re.IGNORECASE
+        )
+        tool_name = re.sub(r'["`\s]+$', "", tool_name)
+        tool_name = re.sub(r'^["`\s]+', "", tool_name)
+
+        return tool_name.strip()
+
+    def _clean_reasoning_text(self, reasoning: str) -> str:
+        """Clean and format reasoning text."""
+        # Remove excessive whitespace
+        reasoning = re.sub(r"\s+", " ", reasoning)
+
+        # Remove common prefixes
+        reasoning = re.sub(
+            r"^(?:reasoning|explanation|because)[:]\s*",
+            "",
+            reasoning,
+            flags=re.IGNORECASE,
+        )
+
+        # Limit length to prevent overly long reasoning
+        if len(reasoning) > 500:
+            reasoning = reasoning[:500] + "..."
+
+        return reasoning.strip()
+
+    def _fuzzy_match_tool(self, tool_name: str) -> Optional[str]:
+        """Attempt fuzzy matching for tool names."""
+        if not hasattr(self, "_tools_dict"):
+            return None
+
+        available_tools = list(self._tools_dict.keys())
+        tool_lower = tool_name.lower()
+
+        # Try exact substring matches first
+        for available_tool in available_tools:
+            if (
+                tool_lower in available_tool.lower()
+                or available_tool.lower() in tool_lower
+            ):
+                logger.info(
+                    f"🔍 PARSER: Fuzzy matched '{tool_name}' to '{available_tool}'"
+                )
+                return available_tool
+
+        # Try space-separated word matching for multi-word queries
+        if " " in tool_lower:
+            tool_words = tool_lower.split()
+            for available_tool in available_tools:
+                available_lower = available_tool.lower()
+                if all(word in available_lower for word in tool_words):
+                    logger.info(
+                        f"🔍 PARSER: Multi-word fuzzy matched '{tool_name}' to '{available_tool}'"
+                    )
+                    return available_tool
+
+        # Try word-based matching
+        tool_words = set(re.findall(r"\w+", tool_lower))
+        best_match = None
+        best_score = 0
+
+        for available_tool in available_tools:
+            available_words = set(re.findall(r"\w+", available_tool.lower()))
+            overlap = len(tool_words.intersection(available_words))
+            if overlap > best_score:
+                best_score = overlap
+                best_match = available_tool
+
+        if best_score > 0:
+            logger.info(
+                f"🔍 PARSER: Fuzzy matched '{tool_name}' to '{best_match}' (score: {best_score})"
+            )
+            return best_match
+
+        return None
 
     def _fallback_tool_selection(self, query: str) -> str:
         """Fallback tool selection logic"""
