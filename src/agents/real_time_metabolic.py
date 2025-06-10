@@ -343,7 +343,7 @@ Think step by step about the query requirements and tool capabilities."""
             import signal
             import threading
 
-            # Use longer timeout for o1 models (gpto1, gpto1mini, etc.)
+            # Use longer timeout for reasoning models
             model_name = getattr(self.llm, "model_name", "").lower()
             timeout_seconds = 120 if model_name.startswith(("gpto", "o1")) else 30
 
@@ -540,7 +540,7 @@ Make your decision based on the ACTUAL DATA PATTERNS you see, not generic workfl
             import signal
             import threading
 
-            # Use longer timeout for o1 models (gpto1, gpto1mini, etc.)
+            # Use longer timeout for reasoning models
             model_name = getattr(self.llm, "model_name", "").lower()
             timeout_seconds = 120 if model_name.startswith(("gpto", "o1")) else 30
 
@@ -796,7 +796,7 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
             import signal
             import threading
 
-            # Use longer timeout for o1 models (gpto1, gpto1mini, etc.)
+            # Use longer timeout for reasoning models
             model_name = getattr(self.llm, "model_name", "").lower()
             timeout_seconds = 120 if model_name.startswith(("gpto", "o1")) else 30
 

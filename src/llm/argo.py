@@ -132,7 +132,7 @@ class ArgoLLM(BaseLLM):
             return timeout
 
         # o-series models need more time for reasoning
-        if self._model_name.startswith("o") or self._model_name.startswith("gpto"):
+        if self._model_name.startswith(("o", "gpto")):
             return O_SERIES_TIMEOUT
         else:
             return DEFAULT_TIMEOUT

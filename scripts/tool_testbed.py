@@ -65,6 +65,7 @@ class ToolTestbed:
         self.models = {
             "e_coli_core": "data/examples/e_coli_core.xml",
             "iML1515": "data/examples/iML1515.xml",
+            "Mycoplasma_G37": "data/examples/Mycoplasma_G37.GMM.mdl.xml",
         }
 
         # Configure detailed logging
@@ -250,6 +251,20 @@ class ToolTestbed:
                 ] = "BIOMASS_Ec_iML1515_core_75p37M"
             elif tool_name == "GeneDeletion":
                 tool_specific_params["GeneDeletion"]["genes"] = ["b0008", "b0116"]
+
+        # Adjust parameters for Mycoplasma model
+        elif "Mycoplasma" in model_path:
+            if tool_name == "ProductionEnvelope":
+                # Use generic biomass objective for ModelSEEDpy models
+                tool_specific_params["ProductionEnvelope"][
+                    "objective_rxn"
+                ] = "bio1"  # Common ModelSEEDpy biomass reaction ID
+            elif tool_name == "GeneDeletion":
+                # Use ModelSEEDpy gene IDs (will need to check what's available)
+                tool_specific_params["GeneDeletion"]["genes"] = [
+                    "83331.1.peg.1",
+                    "83331.1.peg.2",
+                ]
 
         return {**base_params, **tool_specific_params.get(tool_name, {})}
 

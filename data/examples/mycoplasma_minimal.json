@@ -1,0 +1,113 @@
+{
+    "__VERSION__": 1,
+    "id": "mycoplasma_minimal",
+    "name": "Mycoplasma Minimal Media",
+    "description": "Minimal media for Mycoplasma G37 growth including all required biomass precursors",
+    "mediacompounds": [
+        {
+            "compound_ref": "cpd00027",
+            "name": "D-Glucose",
+            "minFlux": -10,
+            "maxFlux": 5,
+            "concentration": 0.001
+        },
+        {
+            "compound_ref": "cpd00001",
+            "name": "H2O",
+            "minFlux": -1000,
+            "maxFlux": 1000,
+            "concentration": 0.001
+        },
+        {
+            "compound_ref": "cpd00009",
+            "name": "Phosphate",
+            "minFlux": -100,
+            "maxFlux": 100,
+            "concentration": 0.001
+        },
+        {
+            "compound_ref": "cpd00013",
+            "name": "NH3",
+            "minFlux": -100,
+            "maxFlux": 100,
+            "concentration": 0.001
+        },
+        {
+            "compound_ref": "cpd00048",
+            "name": "Sulfate",
+            "minFlux": -100,
+            "maxFlux": 100,
+            "concentration": 0.001
+        },
+        {
+            "compound_ref": "cpd00030",
+            "name": "Mn2+",
+            "minFlux": -100,
+            "maxFlux": 100,
+            "concentration": 0.001
+        },
+        {
+            "compound_ref": "cpd00034",
+            "name": "Zn2+",
+            "minFlux": -100,
+            "maxFlux": 100,
+            "concentration": 0.001
+        },
+        {
+            "compound_ref": "cpd00063",
+            "name": "Ca2+",
+            "minFlux": -100,
+            "maxFlux": 100,
+            "concentration": 0.001
+        },
+        {
+            "compound_ref": "cpd00067",
+            "name": "H+",
+            "minFlux": -1000,
+            "maxFlux": 1000,
+            "concentration": 0.001
+        },
+        {
+            "compound_ref": "cpd00099",
+            "name": "Cl-",
+            "minFlux": -100,
+            "maxFlux": 100,
+            "concentration": 0.001
+        },
+        {
+            "compound_ref": "cpd00149",
+            "name": "Co2+",
+            "minFlux": -100,
+            "maxFlux": 100,
+            "concentration": 0.001
+        },
+        {
+            "compound_ref": "cpd00205",
+            "name": "K+",
+            "minFlux": -100,
+            "maxFlux": 100,
+            "concentration": 0.001
+        },
+        {
+            "compound_ref": "cpd00254",
+            "name": "Mg",
+            "minFlux": -100,
+            "maxFlux": 100,
+            "concentration": 0.001
+        },
+        {
+            "compound_ref": "cpd10516",
+            "name": "Fe+3",
+            "minFlux": -100,
+            "maxFlux": 100,
+            "concentration": 0.001
+        },
+        {
+            "compound_ref": "cpd00058",
+            "name": "Cu2+",
+            "minFlux": -100,
+            "maxFlux": 100,
+            "concentration": 0.001
+        }
+    ]
+}
