@@ -206,3 +206,17 @@ TECHNICAL_ANALYSIS.md
 DYNAMIC_AI_AGENT_ROADMAP.md
 PHASE*_COMPLETION_SUMMARY.md
 data/examples/iML1515.xml
+# Test results and logs
+comprehensive_testbed_results_*/
+direct_testbed_results_*/
+test_*.py
+logs/langgraph_run_*/
+logs/realtime_run_*/
+sessions/*.json
+
+# Large files
+*.xml
+*.faa
+!data/examples/e_coli_core.xml
+!data/examples/glucose_minimal.*
+!data/examples/mycoplasma_minimal.*

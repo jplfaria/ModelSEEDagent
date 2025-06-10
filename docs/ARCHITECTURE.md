@@ -76,6 +76,7 @@ src/tools/
 │   ├── flux_variability.py # Flux Variability Analysis
 │   ├── gene_deletion.py   # Gene knockout analysis
 │   ├── essentiality.py    # Essential gene/reaction analysis
+│   ├── utils.py           # Universal model infrastructure
 │   └── ...                # 7 additional COBRA tools
 ├── modelseed/             # ModelSEED integration (4 tools)
 │   ├── annotation.py      # RAST genome annotation
@@ -87,6 +88,25 @@ src/tools/
 │   └── standalone_resolver.py # Standalone biochem resolution
 └── audit.py               # Tool execution auditing
 ```
+
+**Universal Model Infrastructure** (`src/tools/cobra/utils.py`):
+
+**BiomassDetector** - Auto-detection of biomass reactions across model types:
+- Multi-strategy detection: objective analysis, ID patterns, name patterns, product count
+- Works with both COBRApy (BIGG) and ModelSEEDpy models
+- Automatic objective setting for any model type
+
+**MediaManager** - Universal media handling system:
+- Support for JSON (ModelSEED) and TSV media formats
+- Automatic media application with exchange reaction mapping
+- Growth testing with different media compositions
+- Media format auto-detection and conversion
+
+**CompoundMapper** - Intelligent compound ID translation:
+- Bidirectional mapping between ModelSEED and BIGG compound IDs
+- Model type auto-detection (ModelSEED vs BIGG naming conventions)
+- Smart exchange reaction identification across naming systems
+- Fuzzy matching for variant compound IDs
 
 ### 3. LLM Integration (`src/llm/`)
 

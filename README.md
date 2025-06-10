@@ -24,7 +24,7 @@ modelseed-agent interactive
 
 - 🧬 **Complete Genome-to-Model Pipeline** - RAST annotation → Model building → Gapfilling
 - 📊 **Advanced COBRA Analysis** - 11 tools covering 60% of COBRApy capabilities
-- 🔄 **Universal Compatibility** - Perfect ModelSEED ↔ COBRApy integration
+- 🔄 **Universal Compatibility** - Perfect ModelSEED ↔ COBRApy integration with auto-detection infrastructure
 - 🧪 **Biochemistry Intelligence** - Universal ID resolution across 45K+ compounds and 55K+ reactions
 - 🤖 **Advanced AI Reasoning** - Multi-step chains, hypothesis testing, collaborative decisions
 - 🧠 **Pattern Learning** - Cross-model learning and intelligent recommendations
