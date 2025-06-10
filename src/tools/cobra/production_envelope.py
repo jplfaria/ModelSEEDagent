@@ -7,6 +7,15 @@ from cobra.flux_analysis import production_envelope
 from pydantic import BaseModel, Field, PrivateAttr
 
 from ..base import BaseTool, ToolRegistry, ToolResult
+from .error_handling import (
+    ModelValidationError,
+    ParameterValidationError,
+    create_error_result,
+    create_progress_logger,
+    validate_model_path,
+    validate_numerical_parameters,
+    validate_solver_availability,
+)
 from .utils import ModelUtils
 
 
@@ -60,23 +69,78 @@ class ProductionEnvelopeTool(BaseTool):
                 c_uptake_rates = input_data.get("c_uptake_rates", None)
 
                 if not model_path or not reactions:
-                    raise ValueError("Both model_path and reactions must be provided")
+                    return create_error_result(
+                        "Missing required parameters",
+                        "Both model_path and reactions must be provided",
+                        [
+                            "Provide model_path: path to SBML model file",
+                            "Provide reactions: list of reaction IDs to analyze",
+                            "Example: {'model_path': 'model.xml', 'reactions': ['EX_ac_e', 'EX_etoh_e']}",
+                        ],
+                    )
             else:
                 # For string input, we can't determine reactions, so raise an error
-                raise ValueError(
-                    "ProductionEnvelopeTool requires dictionary input with model_path and reactions keys"
+                return create_error_result(
+                    "Invalid input format",
+                    "ProductionEnvelopeTool requires dictionary input with model_path and reactions keys",
+                    [
+                        "Use dictionary format: {'model_path': 'path.xml', 'reactions': ['rxn1', 'rxn2']}",
+                        "Cannot use string-only input for this tool",
+                        "Specify which reactions to analyze in the envelope",
+                    ],
+                )
+
+            # Validate inputs
+            try:
+                model_path = validate_model_path(model_path)
+                validate_numerical_parameters(
+                    {"points": points, "tolerance": self.envelope_config.tolerance},
+                    self.tool_name,
+                )
+                solver = validate_solver_availability(self.envelope_config.solver)
+            except (ParameterValidationError, ModelValidationError) as e:
+                return create_error_result(
+                    f"Input validation failed: {str(e)}",
+                    str(e),
+                    getattr(e, "suggestions", []),
                 )
 
             # Load model
             model = self._utils.load_model(model_path)
-            model.solver = self.envelope_config.solver
+            model.solver = solver
 
             # Validate reactions exist in model
             reaction_objects = []
+            missing_reactions = []
             for rxn_id in reactions:
                 if rxn_id not in model.reactions:
-                    raise ValueError(f"Reaction {rxn_id} not found in model")
-                reaction_objects.append(model.reactions.get_by_id(rxn_id))
+                    missing_reactions.append(rxn_id)
+                else:
+                    reaction_objects.append(model.reactions.get_by_id(rxn_id))
+
+            if missing_reactions:
+                # Find similar reaction names as suggestions
+                similar_reactions = []
+                for missing in missing_reactions:
+                    for rxn in model.reactions:
+                        if (
+                            missing.lower() in rxn.id.lower()
+                            or rxn.id.lower() in missing.lower()
+                        ):
+                            similar_reactions.append(rxn.id)
+                            if len(similar_reactions) >= 5:  # Limit suggestions
+                                break
+
+                return create_error_result(
+                    f"Reactions not found in model: {missing_reactions}",
+                    f"Invalid reaction IDs: {missing_reactions}",
+                    [
+                        f"Available similar reactions: {similar_reactions[:5]}",
+                        "Check reaction ID spelling and case sensitivity",
+                        "Use model.reactions to list all available reactions",
+                        "Common exchange reactions start with 'EX_'",
+                    ],
+                )
 
             # Set up carbon source constraints if provided
             if c_source and c_uptake_rates:
@@ -91,10 +155,19 @@ class ProductionEnvelopeTool(BaseTool):
                         f"Objective reaction {objective} not found in model"
                     )
 
-            # Calculate production envelope
+            # Calculate production envelope with progress logging
+            log_progress = create_progress_logger(
+                1, f"Production envelope ({points} points)"
+            )
+            log_progress(
+                0, f"Calculating envelope for {len(reaction_objects)} reactions"
+            )
+
             envelope_data = production_envelope(
                 model=model, reactions=reaction_objects, points=points
             )
+
+            log_progress(1, "Envelope calculation complete")
 
             # Analyze the envelope
             analysis = self._analyze_envelope(envelope_data, reaction_objects, model)
@@ -114,10 +187,49 @@ class ProductionEnvelopeTool(BaseTool):
             )
 
         except Exception as e:
-            return ToolResult(
-                success=False,
-                message="Error calculating production envelope",
-                error=str(e),
+            error_msg = str(e)
+            suggestions = [
+                "Verify model file is valid and can perform FBA",
+                "Check that specified reactions exist in the model",
+                "Ensure model has proper objective function set",
+                "Try reducing number of points if memory issues occur",
+            ]
+
+            # Add specific suggestions based on error type
+            if "solver" in error_msg.lower() or "optimization" in error_msg.lower():
+                suggestions.extend(
+                    [
+                        "Install additional solvers: pip install python-glpk-cffi",
+                        "Check if model constraints allow feasible solutions",
+                    ]
+                )
+            elif "objective" in error_msg.lower():
+                suggestions.extend(
+                    [
+                        "Set model objective: model.objective = 'biomass_reaction_id'",
+                        "Verify objective reaction exists and has proper bounds",
+                    ]
+                )
+            elif "infeasible" in error_msg.lower():
+                suggestions.extend(
+                    [
+                        "Check medium constraints and exchange reaction bounds",
+                        "Ensure essential nutrients are available for uptake",
+                    ]
+                )
+
+            return create_error_result(
+                "Failed to calculate production envelope",
+                error_msg,
+                suggestions,
+                {
+                    "tool_name": self.tool_name,
+                    "reactions": reactions if "reactions" in locals() else "unknown",
+                    "points": points if "points" in locals() else "unknown",
+                    "model_path": (
+                        str(model_path) if "model_path" in locals() else "unknown"
+                    ),
+                },
             )
 
     def _setup_carbon_source_constraints(

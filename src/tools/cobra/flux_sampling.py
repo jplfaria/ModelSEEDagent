@@ -7,11 +7,21 @@ from cobra.sampling import sample
 from pydantic import BaseModel, Field, PrivateAttr
 
 from ..base import BaseTool, ToolRegistry, ToolResult
+from .error_handling import (
+    ModelValidationError,
+    ParameterValidationError,
+    create_error_result,
+    create_progress_logger,
+    validate_model_path,
+    validate_numerical_parameters,
+    validate_solver_availability,
+)
+from .precision_config import PrecisionConfig, is_significant_flux, safe_divide
 from .utils import ModelUtils
 
 
 class FluxSamplingConfig(BaseModel):
-    """Configuration for Flux Sampling"""
+    """Configuration for Flux Sampling with enhanced numerical precision"""
 
     model_config = {"protected_namespaces": ()}
     n_samples: int = 1000
@@ -20,7 +30,9 @@ class FluxSamplingConfig(BaseModel):
     processes: Optional[int] = None
     seed: Optional[int] = None
     solver: str = "glpk"
-    flux_threshold: float = 1e-6  # Threshold for determining significant fluxes
+
+    # Numerical precision settings
+    precision: PrecisionConfig = Field(default_factory=PrecisionConfig)
 
 
 @ToolRegistry.register
@@ -47,7 +59,7 @@ class FluxSamplingTool(BaseTool):
                 processes=getattr(sampling_config_dict, "processes", None),
                 seed=getattr(sampling_config_dict, "seed", None),
                 solver=getattr(sampling_config_dict, "solver", "glpk"),
-                flux_threshold=getattr(sampling_config_dict, "flux_threshold", 1e-6),
+                precision=PrecisionConfig(),
             )
         self._utils = ModelUtils()
 
@@ -72,18 +84,35 @@ class FluxSamplingTool(BaseTool):
                 thinning = self.sampling_config.thinning
                 seed = self.sampling_config.seed
 
-            if not isinstance(model_path, str):
-                raise ValueError("Model path must be a string")
+            # Validate inputs
+            try:
+                model_path = validate_model_path(model_path)
+                validate_numerical_parameters(
+                    {"n_samples": n_samples, "thinning": thinning, "seed": seed},
+                    self.tool_name,
+                )
+                solver = validate_solver_availability(self.sampling_config.solver)
+            except (ParameterValidationError, ModelValidationError) as e:
+                return create_error_result(
+                    f"Input validation failed: {str(e)}",
+                    str(e),
+                    getattr(e, "suggestions", []),
+                )
 
             # Load model
             model = self._utils.load_model(model_path)
-            model.solver = self.sampling_config.solver
+            model.solver = solver
 
             # Set random seed if provided
             if seed is not None:
                 np.random.seed(seed)
 
-            # Run flux sampling
+            # Run flux sampling with progress logging
+            log_progress = create_progress_logger(
+                1, f"Flux sampling ({n_samples} samples)"
+            )
+            log_progress(0, f"Starting {method} sampling")
+
             samples = sample(
                 model=model,
                 n=n_samples,
@@ -92,6 +121,8 @@ class FluxSamplingTool(BaseTool):
                 processes=self.sampling_config.processes,
                 seed=seed,
             )
+
+            log_progress(1, "Sampling complete")
 
             # Analyze samples
             analysis = self._analyze_samples(samples, model)
@@ -110,8 +141,49 @@ class FluxSamplingTool(BaseTool):
             )
 
         except Exception as e:
-            return ToolResult(
-                success=False, message="Error running flux sampling", error=str(e)
+            error_msg = str(e)
+            suggestions = [
+                "Verify model file is valid and can perform FBA",
+                "Try different sampling method: 'optgp' or 'achr'",
+                "Reduce sample count if memory issues occur",
+                "Check solver availability and installation",
+            ]
+
+            # Add specific suggestions based on error type
+            if "multiprocessing" in error_msg.lower():
+                suggestions.extend(
+                    [
+                        "Set processes=1 to disable multiprocessing",
+                        "Check if your system supports multiprocessing",
+                    ]
+                )
+            elif "solver" in error_msg.lower() or "optimization" in error_msg.lower():
+                suggestions.extend(
+                    [
+                        "Install additional solvers: pip install python-glpk-cffi",
+                        "Try different solver in sampling_config",
+                    ]
+                )
+            elif "memory" in error_msg.lower():
+                suggestions.extend(
+                    [
+                        "Reduce n_samples (try 100-500 for large models)",
+                        "Increase thinning parameter to reduce memory usage",
+                    ]
+                )
+
+            return create_error_result(
+                "Failed to run flux sampling analysis",
+                error_msg,
+                suggestions,
+                {
+                    "tool_name": self.tool_name,
+                    "n_samples": n_samples if "n_samples" in locals() else "unknown",
+                    "method": method if "method" in locals() else "unknown",
+                    "model_path": (
+                        str(model_path) if "model_path" in locals() else "unknown"
+                    ),
+                },
             )
 
     def _analyze_samples(
@@ -136,8 +208,8 @@ class FluxSamplingTool(BaseTool):
             "max_fluxes": samples.max().to_dict(),
         }
 
-        # Identify flux patterns
-        tolerance = self.sampling_config.flux_threshold
+        # Identify flux patterns using configurable precision
+        tolerance = self.sampling_config.precision.flux_threshold
 
         # Always active reactions (non-zero in all samples)
         always_active = []
@@ -176,10 +248,8 @@ class FluxSamplingTool(BaseTool):
                         "reaction_id": reaction_id,
                         "mean_flux": flux_values.mean(),
                         "std_dev": std_dev,
-                        "coefficient_of_variation": (
-                            std_dev / abs(flux_values.mean())
-                            if abs(flux_values.mean()) > tolerance
-                            else float("inf")
+                        "coefficient_of_variation": safe_divide(
+                            std_dev, abs(flux_values.mean()), tolerance
                         ),
                     }
                 )
@@ -203,7 +273,10 @@ class FluxSamplingTool(BaseTool):
             for i in range(len(correlation_matrix.columns)):
                 for j in range(i + 1, len(correlation_matrix.columns)):
                     corr_value = correlation_matrix.iloc[i, j]
-                    if abs(corr_value) > 0.7:  # High correlation threshold
+                    if (
+                        abs(corr_value)
+                        > self.sampling_config.precision.correlation_threshold
+                    ):
                         high_correlations.append(
                             {
                                 "reaction_1": correlation_matrix.columns[i],

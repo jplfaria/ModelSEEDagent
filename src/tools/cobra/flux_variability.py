@@ -5,11 +5,12 @@ from cobra.flux_analysis import flux_variability_analysis
 from pydantic import BaseModel, Field, PrivateAttr
 
 from ..base import BaseTool, ToolRegistry, ToolResult
+from .precision_config import PrecisionConfig, is_significant_flux
 from .utils import ModelUtils
 
 
 class FluxVariabilityConfig(BaseModel):
-    """Configuration for Flux Variability Analysis"""
+    """Configuration for Flux Variability Analysis with enhanced numerical precision"""
 
     model_config = {"protected_namespaces": ()}
     reaction_list: Optional[List[str]] = None
@@ -18,6 +19,9 @@ class FluxVariabilityConfig(BaseModel):
     solver: str = "glpk"
     processes: Optional[int] = None
     pfba_factor: Optional[float] = None
+
+    # Numerical precision settings
+    precision: PrecisionConfig = Field(default_factory=PrecisionConfig)
 
 
 @ToolRegistry.register
@@ -46,6 +50,7 @@ class FluxVariabilityTool(BaseTool):
                 solver=getattr(fva_config_dict, "solver", "glpk"),
                 processes=getattr(fva_config_dict, "processes", None),
                 pfba_factor=getattr(fva_config_dict, "pfba_factor", None),
+                precision=PrecisionConfig(),
             )
         self._utils = ModelUtils()
 
@@ -101,7 +106,8 @@ class FluxVariabilityTool(BaseTool):
                 "essential_reactions": [],  # reactions where min > 0 or max < 0
             }
 
-            tolerance = 1e-6
+            # Use configurable tolerance for flux comparisons
+            tolerance = self.fva_config.precision.flux_threshold
 
             for reaction_id, row in fva_result.iterrows():
                 min_flux = row["minimum"]

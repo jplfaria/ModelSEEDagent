@@ -5,11 +5,16 @@ from cobra.flux_analysis import double_gene_deletion, single_gene_deletion
 from pydantic import BaseModel, Field, PrivateAttr
 
 from ..base import BaseTool, ToolRegistry, ToolResult
+from .precision_config import (
+    PrecisionConfig,
+    calculate_growth_fraction,
+    is_significant_growth,
+)
 from .utils import ModelUtils
 
 
 class GeneDeletionConfig(BaseModel):
-    """Configuration for Gene Deletion Analysis"""
+    """Configuration for Gene Deletion Analysis with enhanced numerical precision"""
 
     model_config = {"protected_namespaces": ()}
     gene_list: Optional[List[str]] = None
@@ -18,6 +23,9 @@ class GeneDeletionConfig(BaseModel):
     solver: str = "glpk"
     processes: Optional[int] = None
     return_solution: bool = False
+
+    # Numerical precision settings
+    precision: PrecisionConfig = Field(default_factory=PrecisionConfig)
 
 
 @ToolRegistry.register
@@ -44,6 +52,7 @@ class GeneDeletionTool(BaseTool):
                 solver=getattr(deletion_config_dict, "solver", "glpk"),
                 processes=getattr(deletion_config_dict, "processes", None),
                 return_solution=getattr(deletion_config_dict, "return_solution", False),
+                precision=PrecisionConfig(),
             )
         self._utils = ModelUtils()
 
@@ -162,11 +171,13 @@ class GeneDeletionTool(BaseTool):
             "improved_growth": [],  # growth > wild-type
         }
 
-        tolerance = 1e-6
-        essential_threshold = 0.01 * wild_type_growth
-        severe_threshold = 0.10 * wild_type_growth
-        moderate_threshold = 0.50 * wild_type_growth
-        mild_threshold = 0.90 * wild_type_growth
+        # Use configurable precision thresholds
+        precision = self.deletion_config.precision
+        tolerance = precision.growth_threshold
+        essential_threshold = precision.essential_growth_fraction * wild_type_growth
+        severe_threshold = precision.severe_effect_fraction * wild_type_growth
+        moderate_threshold = precision.moderate_effect_fraction * wild_type_growth
+        mild_threshold = precision.mild_effect_fraction * wild_type_growth
 
         for index, row in results.iterrows():
             growth = row["growth"]
@@ -181,8 +192,8 @@ class GeneDeletionTool(BaseTool):
                 "genes": genes,
                 "growth": float(growth) if growth is not None else 0.0,
                 "growth_rate_ratio": (
-                    float(growth / wild_type_growth)
-                    if growth is not None and wild_type_growth > tolerance
+                    calculate_growth_fraction(growth, wild_type_growth, tolerance)
+                    if growth is not None
                     else 0.0
                 ),
             }

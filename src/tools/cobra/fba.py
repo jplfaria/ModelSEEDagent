@@ -9,20 +9,23 @@ from cobra.io import read_sbml_model
 from pydantic import BaseModel, Field, PrivateAttr
 
 from ..base import BaseTool, ToolRegistry, ToolResult
+from .precision_config import PrecisionConfig, is_significant_flux
 from .simulation_wrapper import run_simulation
 from .utils import ModelUtils
 
 
 # Configuration for FBA tool
 class FBAConfig(BaseModel):
-    """Configuration for FBA tool"""
+    """Configuration for FBA tool with enhanced numerical precision"""
 
     model_config = {"protected_namespaces": ()}
     default_objective: str = "biomass_reaction"
     solver: str = "glpk"
-    flux_threshold: float = 1e-6
     additional_constraints: Dict[str, float] = Field(default_factory=dict)
     simulation_method: str = "pfba"  # Options: "fba", "pfba", "geometric", "slim", etc.
+
+    # Numerical precision settings
+    precision: PrecisionConfig = Field(default_factory=PrecisionConfig)
 
 
 # --------------------------
@@ -99,7 +102,7 @@ class FBATool(BaseTool):
                     fba_config_dict, "default_objective", "biomass_reaction"
                 ),
                 solver=getattr(fba_config_dict, "solver", "glpk"),
-                flux_threshold=getattr(fba_config_dict, "flux_threshold", 1e-6),
+                precision=PrecisionConfig(),
                 additional_constraints=getattr(
                     fba_config_dict, "additional_constraints", {}
                 ),
@@ -142,7 +145,8 @@ class FBATool(BaseTool):
             model = self._utils.load_model(model_path)
 
             model.solver = self.fba_config.solver
-            model.tolerance = self.fba_config.flux_threshold
+            # Set solver tolerance (much smaller than flux significance threshold)
+            model.tolerance = self.fba_config.precision.model_tolerance
 
             # Set objective if available
             if hasattr(model, self.fba_config.default_objective):
@@ -164,10 +168,12 @@ class FBATool(BaseTool):
                     error=f"Solution status: {solution.status}",
                 )
 
+            # Use precision-aware flux filtering
+            flux_threshold = self.fba_config.precision.flux_threshold
             significant_fluxes = {
                 rxn.id: float(solution.fluxes[rxn.id])
                 for rxn in model.reactions
-                if abs(solution.fluxes[rxn.id]) > self.fba_config.flux_threshold
+                if is_significant_flux(solution.fluxes[rxn.id], flux_threshold)
             }
 
             subsystem_fluxes = {}

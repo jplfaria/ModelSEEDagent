@@ -1,0 +1,138 @@
+[
+  {
+    "timestamp": "2025-06-09T21:17:12.754562",
+    "step": "enhanced_planning",
+    "data": {
+      "iteration": 0,
+      "decision": "single_tool",
+      "tools_to_call": [
+        "analyze_metabolic_model"
+      ],
+      "completed_tools": [],
+      "total_planned_tools": 3,
+      "intent_analysis": {
+        "primary_intent": "comprehensive",
+        "secondary_intents": [],
+        "suggested_tools": [
+          "analyze_metabolic_model",
+          "run_metabolic_fba",
+          "analyze_pathway"
+        ],
+        "workflow_complexity": "complex",
+        "estimated_tools": 3,
+        "analysis_depth": "comprehensive"
+      },
+      "workflow_complexity": "complex"
+    }
+  },
+  {
+    "timestamp": "2025-06-09T21:17:26.361659",
+    "step": "enhanced_planning",
+    "data": {
+      "iteration": 0,
+      "decision": "single_tool",
+      "tools_to_call": [
+        "analyze_pathway"
+      ],
+      "completed_tools": [
+        "analyze_metabolic_model"
+      ],
+      "total_planned_tools": 3,
+      "intent_analysis": {
+        "primary_intent": "comprehensive",
+        "secondary_intents": [],
+        "suggested_tools": [
+          "analyze_metabolic_model",
+          "run_metabolic_fba",
+          "analyze_pathway"
+        ],
+        "workflow_complexity": "complex",
+        "estimated_tools": 3,
+        "analysis_depth": "comprehensive"
+      },
+      "workflow_complexity": "complex"
+    }
+  },
+  {
+    "timestamp": "2025-06-09T21:17:39.355092",
+    "step": "enhanced_planning",
+    "data": {
+      "iteration": 0,
+      "decision": "single_tool",
+      "tools_to_call": [
+        "run_metabolic_fba"
+      ],
+      "completed_tools": [
+        "analyze_metabolic_model",
+        "analyze_pathway"
+      ],
+      "total_planned_tools": 3,
+      "intent_analysis": {
+        "primary_intent": "comprehensive",
+        "secondary_intents": [],
+        "suggested_tools": [
+          "analyze_metabolic_model",
+          "run_metabolic_fba",
+          "analyze_pathway"
+        ],
+        "workflow_complexity": "complex",
+        "estimated_tools": 3,
+        "analysis_depth": "comprehensive"
+      },
+      "workflow_complexity": "complex"
+    }
+  },
+  {
+    "timestamp": "2025-06-09T21:17:53.556287",
+    "step": "enhanced_finalization",
+    "data": {
+      "total_iterations": 0,
+      "tools_used": [
+        "analyze_metabolic_model",
+        "run_metabolic_fba",
+        "analyze_pathway"
+      ],
+      "total_errors": 0,
+      "final_answer_length": 1263,
+      "execution_summary": {
+        "run_id": "20250609_211712",
+        "query": "I need a comprehensive metabolic analysis of E. col for our data examples ecoli cor emodel",
+        "total_iterations": 0,
+        "tools_executed": [
+          "analyze_metabolic_model",
+          "run_metabolic_fba",
+          "analyze_pathway"
+        ],
+        "parallel_executions": 0,
+        "errors_encountered": 0,
+        "recovery_attempts": 0,
+        "final_status": "completed",
+        "execution_time": "2025-06-09T21:17:39.355014"
+      },
+      "performance_metrics": {
+        "analyze_metabolic_model": {
+          "execution_time": 4.7127461433410645,
+          "data_size": 12148,
+          "category": "structural"
+        },
+        "analyze_pathway": {
+          "execution_time": 3.862492084503174,
+          "data_size": 2035,
+          "category": "structural"
+        },
+        "run_metabolic_fba": {
+          "execution_time": 3.7788453102111816,
+          "data_size": 2942,
+          "category": "functional"
+        }
+      },
+      "workflow_complexity": "complex",
+      "total_execution_time": 12.35408353805542,
+      "visualizations_created": [
+        "/Users/jplfaria/repos/ModelSEEDagent/logs/langgraph_run_20250609_211712/visualizations/workflow_graph.html",
+        "/Users/jplfaria/repos/ModelSEEDagent/logs/langgraph_run_20250609_211712/visualizations/workflow_graph.html",
+        "/Users/jplfaria/repos/ModelSEEDagent/logs/langgraph_run_20250609_211712/visualizations/performance_dashboard.html"
+      ]
+    }
+  }
+]

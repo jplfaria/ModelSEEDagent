@@ -10,20 +10,25 @@ from cobra.flux_analysis import (
 from pydantic import BaseModel, Field, PrivateAttr
 
 from ..base import BaseTool, ToolRegistry, ToolResult
+from .precision_config import (
+    PrecisionConfig,
+    calculate_growth_fraction,
+    is_significant_growth,
+)
 from .utils import ModelUtils
 
 
 class EssentialityConfig(BaseModel):
-    """Configuration for Essentiality Analysis"""
+    """Configuration for Essentiality Analysis with enhanced numerical precision"""
 
     model_config = {"protected_namespaces": ()}
-    growth_threshold: float = (
-        0.01  # Growth threshold for essentiality (1% of wild-type)
-    )
     include_genes: bool = True
     include_reactions: bool = True
     solver: str = "glpk"
     processes: Optional[int] = None
+
+    # Numerical precision settings
+    precision: PrecisionConfig = Field(default_factory=PrecisionConfig)
 
 
 @ToolRegistry.register
@@ -44,9 +49,7 @@ class EssentialityAnalysisTool(BaseTool):
             self._essentiality_config = EssentialityConfig(**essentiality_config_dict)
         else:
             self._essentiality_config = EssentialityConfig(
-                growth_threshold=getattr(
-                    essentiality_config_dict, "growth_threshold", 0.01
-                ),
+                precision=PrecisionConfig(),
                 include_genes=getattr(essentiality_config_dict, "include_genes", True),
                 include_reactions=getattr(
                     essentiality_config_dict, "include_reactions", True
@@ -66,8 +69,10 @@ class EssentialityAnalysisTool(BaseTool):
             # Support both dict and string inputs
             if isinstance(input_data, dict):
                 model_path = input_data.get("model_path")
+                # Use essentiality-specific threshold (fraction of wild-type growth)
                 threshold = input_data.get(
-                    "growth_threshold", self.essentiality_config.growth_threshold
+                    "essentiality_threshold",
+                    self.essentiality_config.precision.essentiality_growth_fraction,
                 )
                 include_genes = input_data.get(
                     "include_genes", self.essentiality_config.include_genes
@@ -77,7 +82,9 @@ class EssentialityAnalysisTool(BaseTool):
                 )
             else:
                 model_path = input_data
-                threshold = self.essentiality_config.growth_threshold
+                threshold = (
+                    self.essentiality_config.precision.essentiality_growth_fraction
+                )
                 include_genes = self.essentiality_config.include_genes
                 include_reactions = self.essentiality_config.include_reactions
 

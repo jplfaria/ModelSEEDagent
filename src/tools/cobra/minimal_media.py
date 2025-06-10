@@ -5,14 +5,16 @@ from pydantic import BaseModel, Field, PrivateAttr
 
 from ..base import BaseTool, ToolRegistry, ToolResult
 from .fba import SimulationResultsStore  # Import the results store
+from .precision_config import PrecisionConfig, is_significant_growth
 from .simulation_wrapper import run_simulation
 from .utils import ModelUtils
 
 
 class MinimalMediaConfig(BaseModel):
-    """Configuration for minimal media finder tool."""
+    """Configuration for minimal media finder tool with enhanced numerical precision."""
 
-    growth_threshold: float = 1e-6
+    # Numerical precision settings
+    precision: PrecisionConfig = Field(default_factory=PrecisionConfig)
 
 
 @ToolRegistry.register
@@ -27,7 +29,10 @@ class MinimalMediaTool(BaseTool):
     def __init__(self, config: Dict[str, Any]):
         super().__init__(config)
         config_dict = config.get("minimal_media_config", {})
-        self._config = MinimalMediaConfig(**config_dict)
+        if isinstance(config_dict, dict):
+            self._config = MinimalMediaConfig(**config_dict)
+        else:
+            self._config = MinimalMediaConfig(precision=PrecisionConfig())
         self._utils = ModelUtils()
 
     def _run_tool(self, input_data: Any) -> ToolResult:
@@ -42,7 +47,10 @@ class MinimalMediaTool(BaseTool):
 
             model = self._utils.load_model(model_path)
             complete_solution = run_simulation(model, method="fba")
-            if complete_solution.objective_value < self._config.growth_threshold:
+            if not is_significant_growth(
+                complete_solution.objective_value,
+                self._config.precision.growth_threshold,
+            ):
                 return ToolResult(
                     success=False,
                     message="Complete media does not support growth.",
@@ -81,7 +89,10 @@ class MinimalMediaTool(BaseTool):
                 # Test if growth is still possible without this nutrient
                 test_solution = run_simulation(model, method="fba")
 
-                if test_solution.objective_value < self._config.growth_threshold:
+                if not is_significant_growth(
+                    test_solution.objective_value,
+                    self._config.precision.growth_threshold,
+                ):
                     # Growth fails without this nutrient - it's essential
                     essential_nutrients.add(rxn.id)
                     minimal_media[rxn.id] = original_bounds[rxn.id]
@@ -121,7 +132,7 @@ class MinimalMediaTool(BaseTool):
                     ),
                     "num_essential_nutrients": len(essential_nutrients),
                     "num_non_essential_nutrients": len(non_essential_media),
-                    "growth_threshold": self._config.growth_threshold,
+                    "growth_threshold": self._config.precision.growth_threshold,
                 },
             )
         except Exception as e:
