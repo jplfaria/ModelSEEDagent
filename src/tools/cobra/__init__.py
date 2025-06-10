@@ -5,8 +5,10 @@ from .fba import FBATool
 from .flux_sampling import FluxSamplingTool
 from .flux_variability import FluxVariabilityTool
 from .gene_deletion import GeneDeletionTool
+from .media_library import MediaLibrary, get_media_library
 from .minimal_media import MinimalMediaTool
 from .missing_media import MissingMediaTool
+from .modelseedpy_integration import ModelSEEDpyEnhancement, get_modelseedpy_enhancement
 from .production_envelope import ProductionEnvelopeTool
 from .reaction_expression import ReactionExpressionTool
 from .utils import ModelUtils
@@ -25,4 +27,8 @@ __all__ = [
     "MissingMediaTool",
     "ReactionExpressionTool",
     "ModelUtils",
+    "MediaLibrary",
+    "get_media_library",
+    "ModelSEEDpyEnhancement",
+    "get_modelseedpy_enhancement",
 ]

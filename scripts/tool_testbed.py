@@ -8,7 +8,8 @@ debugging information, and error analysis.
 
 Models tested:
 - data/examples/e_coli_core.xml (core model)
-- data/examples/iML1515.xml (genome-scale model)
+- data/models/iML1515.xml (genome-scale model)
+- data/models/B_aphidicola.xml (ModelSEEDpy model)
 
 Tools tested:
 - FBATool (Flux Balance Analysis)
