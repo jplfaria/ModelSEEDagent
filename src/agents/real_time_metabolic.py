@@ -300,6 +300,11 @@ class RealTimeMetabolicAgent(BaseAgent):
             "identify_auxotrophies",
             "run_gene_deletion_analysis",
             "run_flux_sampling",
+            # AI Media Tools
+            "select_optimal_media",
+            "manipulate_media_composition",
+            "analyze_media_compatibility",
+            "compare_media_performance",
         ]
 
         build_tools = ["build_metabolic_model", "annotate_genome_rast", "gapfill_model"]
@@ -488,6 +493,11 @@ Think step by step about the query requirements and tool capabilities."""
             "identify_auxotrophies",
             "run_gene_deletion_analysis",
             "run_flux_sampling",
+            # AI Media Tools
+            "select_optimal_media",
+            "manipulate_media_composition",
+            "analyze_media_compatibility",
+            "compare_media_performance",
         ]
 
         build_tools = ["build_metabolic_model", "annotate_genome_rast", "gapfill_model"]
@@ -517,7 +527,8 @@ IMPORTANT GUIDELINES:
 - Continue using ANALYSIS TOOLS to explore different aspects of the metabolic model
 - BUILD TOOLS should only be used if you need to create a new model from genome data (rare in analysis workflows)
 - For comprehensive analysis, consider tools like: minimal media, essentiality, flux variability, auxotrophy analysis
-- Each tool provides different insights: FBA (growth), minimal media (nutritional requirements), essentiality (critical genes), etc.
+- NEW AI MEDIA TOOLS: Use select_optimal_media for intelligent media selection, manipulate_media_composition for natural language media modifications, analyze_media_compatibility for compatibility analysis, compare_media_performance for cross-media comparisons
+- Each tool provides different insights: FBA (growth), minimal media (nutritional requirements), essentiality (critical genes), AI media tools (intelligent media management), etc.
 - BUILD TOOLS require genome annotation files and are not appropriate for analyzing existing models
 
 Based on the ACTUAL DATA you've collected, analyze:
@@ -1228,6 +1239,11 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
             "analyze_pathway",
             "check_missing_media",
             "analyze_reaction_expression",
+            # AI Media Tools
+            "select_optimal_media",
+            "manipulate_media_composition",
+            "analyze_media_compatibility",
+            "compare_media_performance",
         ]:
             # Ensure model_path is always a string
             model_path = (
@@ -1279,6 +1295,18 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
         elif tool_name == "find_minimal_media":
             if "minimal_media" in data:
                 return f"Requires {len(data['minimal_media'])} nutrients"
+        elif tool_name == "select_optimal_media":
+            if "best_media" in data:
+                return f"Optimal media: {data['best_media']}"
+        elif tool_name == "manipulate_media_composition":
+            if "modified_media_name" in data:
+                return f"Modified media: {data['modified_media_name']}"
+        elif tool_name == "analyze_media_compatibility":
+            if "compatible_media" in data:
+                return f"Compatible media: {data['compatible_media']}"
+        elif tool_name == "compare_media_performance":
+            if "best_media" in data:
+                return f"Best performing media: {data['best_media']}"
         elif tool_name == "analyze_essentiality":
             if "essential_genes" in data:
                 return f"Found {len(data['essential_genes'])} essential genes"
@@ -1602,7 +1630,27 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
         if any(word in query_lower for word in ["growth", "fba", "flux"]):
             return "run_metabolic_fba"
         elif any(word in query_lower for word in ["media", "nutrition"]):
-            return "find_minimal_media"
+            # Check for AI media tool keywords for intelligent media management
+            if any(
+                word in query_lower for word in ["select", "choose", "optimal", "best"]
+            ):
+                return "select_optimal_media"
+            elif any(
+                word in query_lower
+                for word in ["modify", "change", "add", "remove", "anaerobic"]
+            ):
+                return "manipulate_media_composition"
+            elif any(
+                word in query_lower
+                for word in ["compatibility", "compatible", "mapping"]
+            ):
+                return "analyze_media_compatibility"
+            elif any(
+                word in query_lower for word in ["compare", "comparison", "performance"]
+            ):
+                return "compare_media_performance"
+            else:
+                return "find_minimal_media"  # Fallback to traditional minimal media
         elif any(word in query_lower for word in ["essential", "gene"]):
             return "analyze_essentiality"
         elif any(

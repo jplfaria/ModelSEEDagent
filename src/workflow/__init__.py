@@ -6,6 +6,9 @@ and advanced scheduling capabilities for metabolic modeling analyses.
 """
 
 from .batch_processor import BatchJob, BatchProcessor, BatchResult
+from .media_analysis_templates import MediaAnalysisWorkflowTemplates, WorkflowExecutor
+from .media_analysis_templates import WorkflowStep as MediaWorkflowStep
+from .media_analysis_templates import WorkflowTemplate as MediaWorkflowTemplate
 from .monitoring import AlertManager, NotificationChannel, WorkflowMonitor
 from .scheduler import AdvancedScheduler, ScheduledTask, SchedulingStrategy
 from .template_library import TemplateLibrary, WorkflowTemplate
@@ -32,4 +35,9 @@ __all__ = [
     "WorkflowMonitor",
     "AlertManager",
     "NotificationChannel",
+    # Media Analysis Workflow Templates
+    "MediaAnalysisWorkflowTemplates",
+    "WorkflowExecutor",
+    "MediaWorkflowStep",
+    "MediaWorkflowTemplate",
 ]

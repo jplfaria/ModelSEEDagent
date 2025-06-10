@@ -357,6 +357,29 @@ This interface provides:
             self.session_manager.display_analytics()
             return True
 
+        # AI Media Tools Commands
+        elif command in ["media", "select-media"]:
+            self._show_media_selector()
+            return True
+
+        elif command.startswith("media-select "):
+            model_arg = (
+                command.split(" ", 1)[1] if len(command.split(" ")) > 1 else None
+            )
+            self._handle_media_selection(model_arg)
+            return True
+
+        elif command.startswith("media-modify "):
+            modification = (
+                command.split(" ", 1)[1] if len(command.split(" ")) > 1 else None
+            )
+            self._handle_media_modification(modification)
+            return True
+
+        elif command in ["media-compare"]:
+            self._handle_media_comparison()
+            return True
+
         return False
 
     def _process_with_timeout(
@@ -403,6 +426,14 @@ This interface provides:
             ("open <viz>", "Open visualization in browser"),
             ("analytics, stats", "Show session analytics"),
             ("clear, cls", "Clear the terminal"),
+            # AI Media Tools Commands
+            ("media", "🧬 Show interactive media selection interface"),
+            ("media-select <model>", "🧬 AI-powered media selection for model"),
+            (
+                "media-modify <cmd>",
+                "🧬 Modify media ('make anaerobic', 'add vitamins')",
+            ),
+            ("media-compare", "🧬 Compare media performance across models"),
             ("exit, quit, q", "Exit the interactive session"),
         ]
 
@@ -710,6 +741,107 @@ You can ask natural language questions about metabolic modeling:
         ]
 
         return {"nodes": nodes, "edges": edges}
+
+    def _show_media_selector(self) -> None:
+        """Show interactive media selection interface"""
+        console.print(
+            "\n[bold blue]🧬 AI Media Tools - Interactive Selection[/bold blue]"
+        )
+
+        # Create media options table
+        media_table = Table(title="Available AI Media Commands", box=box.ROUNDED)
+        media_table.add_column("Command", style="bold cyan")
+        media_table.add_column("Description", style="white")
+        media_table.add_column("Example", style="dim")
+
+        media_commands = [
+            (
+                "media-select",
+                "AI selects optimal media for your model",
+                "media-select e_coli_core.xml",
+            ),
+            (
+                "media-modify",
+                "Modify media with natural language",
+                "media-modify make anaerobic",
+            ),
+            (
+                "media-compare",
+                "Compare performance across media types",
+                "media-compare",
+            ),
+        ]
+
+        for cmd, desc, example in media_commands:
+            media_table.add_row(cmd, desc, example)
+
+        console.print(media_table)
+
+        # Show available models
+        console.print("\n[bold]📁 Available Models:[/bold]")
+        models = ["e_coli_core.xml", "EcoliMG1655.xml", "BuchnMG37.xml"]
+        for model in models:
+            console.print(f"  • {model}")
+
+        console.print(
+            "\n[dim]💡 Tip: Type any of the commands above or ask naturally like:[/dim]"
+        )
+        console.print("[dim]    'select the best media for my E. coli model'[/dim]")
+        console.print("[dim]    'make my media anaerobic for fermentation'[/dim]")
+
+    def _handle_media_selection(self, model_arg: Optional[str]) -> None:
+        """Handle AI-powered media selection"""
+        if not model_arg:
+            console.print(
+                "[yellow]⚠️  Please specify a model: media-select <model>[/yellow]"
+            )
+            return
+
+        console.print(f"[cyan]🧠 AI selecting optimal media for {model_arg}...[/cyan]")
+
+        # Create a natural language query for the conversation engine
+        query = f"Please use the select_optimal_media tool to find the best media for model {model_arg}. Analyze the model characteristics and recommend appropriate media types."
+
+        try:
+            self.conversation_engine.process_user_input(query)
+            console.print("\n[green]✅ Media selection completed![/green]")
+        except Exception as e:
+            console.print(f"[red]❌ Media selection failed: {e}[/red]")
+
+    def _handle_media_modification(self, modification: Optional[str]) -> None:
+        """Handle AI-powered media modification"""
+        if not modification:
+            console.print(
+                "[yellow]⚠️  Please specify modification: media-modify <command>[/yellow]"
+            )
+            console.print(
+                "[dim]Examples: 'make anaerobic', 'add vitamins', 'remove amino acids'[/dim]"
+            )
+            return
+
+        console.print(f"[cyan]🧠 AI modifying media: {modification}...[/cyan]")
+
+        # Create a natural language query for the conversation engine
+        query = f"Please use the manipulate_media_composition tool to modify media with this command: '{modification}'. Use GMM as the base media and test the results."
+
+        try:
+            self.conversation_engine.process_user_input(query)
+            console.print("\n[green]✅ Media modification completed![/green]")
+        except Exception as e:
+            console.print(f"[red]❌ Media modification failed: {e}[/red]")
+
+    def _handle_media_comparison(self) -> None:
+        """Handle AI-powered media comparison"""
+        console.print("[cyan]🧠 AI comparing media performance across models...[/cyan]")
+
+        # Create a natural language query for the conversation engine
+        query = "Please use the compare_media_performance tool to compare how different models perform across various media types. Test with both E. coli and B. aphidicola models if available."
+
+        try:
+            self.conversation_engine.process_user_input(query)
+            console.print("\n[green]✅ Media comparison completed![/green]")
+        except Exception as e:
+            console.print(f"[red]❌ Media comparison failed: {e}[/red]")
 
     def _handle_exit(self) -> None:
         """Handle graceful exit"""

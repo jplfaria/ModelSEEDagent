@@ -49,6 +49,10 @@ from src.llm.argo import ArgoLLM
 from src.llm.local_llm import LocalLLM
 from src.llm.openai_llm import OpenAILLM
 from src.tools.biochem.resolver import BiochemEntityResolverTool, BiochemSearchTool
+from src.tools.cobra.advanced_media_ai import (
+    AuxotrophyPredictionTool,
+    MediaOptimizationTool,
+)
 from src.tools.cobra.analysis import ModelAnalysisTool, PathwayAnalysisTool
 from src.tools.cobra.auxotrophy import AuxotrophyTool
 from src.tools.cobra.essentiality import EssentialityAnalysisTool
@@ -56,6 +60,12 @@ from src.tools.cobra.fba import FBATool
 from src.tools.cobra.flux_sampling import FluxSamplingTool
 from src.tools.cobra.flux_variability import FluxVariabilityTool
 from src.tools.cobra.gene_deletion import GeneDeletionTool
+from src.tools.cobra.media_tools import (
+    MediaComparatorTool,
+    MediaCompatibilityTool,
+    MediaManipulatorTool,
+    MediaSelectorTool,
+)
 from src.tools.cobra.minimal_media import MinimalMediaTool
 from src.tools.cobra.missing_media import MissingMediaTool
 from src.tools.cobra.production_envelope import ProductionEnvelopeTool
@@ -176,6 +186,44 @@ def load_cli_config() -> Dict[str, Any]:
                             {
                                 "name": "find_missing_media",
                                 "description": "Find missing media components preventing growth",
+                            }
+                        ),
+                        # AI Media Tools - Intelligent media management
+                        MediaSelectorTool(
+                            {
+                                "name": "select_optimal_media",
+                                "description": "AI-powered selection of optimal media for models",
+                            }
+                        ),
+                        MediaManipulatorTool(
+                            {
+                                "name": "manipulate_media_composition",
+                                "description": "Modify media using natural language commands",
+                            }
+                        ),
+                        MediaCompatibilityTool(
+                            {
+                                "name": "analyze_media_compatibility",
+                                "description": "Analyze media-model compatibility with AI suggestions",
+                            }
+                        ),
+                        MediaComparatorTool(
+                            {
+                                "name": "compare_media_performance",
+                                "description": "Compare model performance across different media",
+                            }
+                        ),
+                        # Advanced AI Media Tools
+                        MediaOptimizationTool(
+                            {
+                                "name": "optimize_media_composition",
+                                "description": "AI-driven media optimization for specific growth targets",
+                            }
+                        ),
+                        AuxotrophyPredictionTool(
+                            {
+                                "name": "predict_auxotrophies",
+                                "description": "AI-powered auxotrophy prediction from model gaps",
                             }
                         ),
                         ReactionExpressionTool(
@@ -739,6 +787,44 @@ def setup(
                     {
                         "name": "find_missing_media",
                         "description": "Find missing media components preventing growth",
+                    }
+                ),
+                # AI Media Tools - Intelligent media management
+                MediaSelectorTool(
+                    {
+                        "name": "select_optimal_media",
+                        "description": "AI-powered selection of optimal media for models",
+                    }
+                ),
+                MediaManipulatorTool(
+                    {
+                        "name": "manipulate_media_composition",
+                        "description": "Modify media using natural language commands",
+                    }
+                ),
+                MediaCompatibilityTool(
+                    {
+                        "name": "analyze_media_compatibility",
+                        "description": "Analyze media-model compatibility with AI suggestions",
+                    }
+                ),
+                MediaComparatorTool(
+                    {
+                        "name": "compare_media_performance",
+                        "description": "Compare model performance across different media",
+                    }
+                ),
+                # Advanced AI Media Tools - Optimization and prediction
+                MediaOptimizationTool(
+                    {
+                        "name": "optimize_media_composition",
+                        "description": "AI-driven media optimization for specific growth targets",
+                    }
+                ),
+                AuxotrophyPredictionTool(
+                    {
+                        "name": "predict_auxotrophies",
+                        "description": "AI-powered auxotrophy prediction from model gaps",
                     }
                 ),
                 ReactionExpressionTool(
@@ -1521,6 +1607,26 @@ def switch(
             ),
             PathwayAnalysisTool(
                 {"name": "analyze_pathway", "description": "Analyze metabolic pathways"}
+            ),
+            # Add AI Media Tools to fallback list
+            MediaSelectorTool(
+                {
+                    "name": "select_optimal_media",
+                    "description": "AI-powered selection of optimal media for models",
+                }
+            ),
+            MediaManipulatorTool(
+                {
+                    "name": "manipulate_media_composition",
+                    "description": "Modify media using natural language commands",
+                }
+            ),
+            # Add advanced AI media tools to fallback
+            MediaOptimizationTool(
+                {
+                    "name": "optimize_media_composition",
+                    "description": "AI-driven media optimization for specific growth targets",
+                }
             ),
         ]
 
