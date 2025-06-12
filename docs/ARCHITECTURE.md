@@ -108,7 +108,7 @@ graph TB
 │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────────┐  │
 │  │  COBRApy    │ │  ModelSEED  │ │ Biochemistry│ │   AI Media      │  │
 │  │  Tools      │ │  Tools      │ │   Database  │ │   Tools         │  │
-│  │  (11 tools) │ │  (4 tools)  │ │  (2 tools)  │ │   (6 tools)     │  │
+│  │  (16 tools) │ │  (5 tools)  │ │  (2 tools)  │ │   (6 tools)     │  │
 │  └─────────────┘ └─────────────┘ └─────────────┘ └─────────────────┘  │
 └─────────────────────────────────────────────────────────────────────────┘
             │                      │                      │
@@ -190,8 +190,8 @@ graph TD
         BT[BaseTool<br/>- Common API<br/>- Validation<br/>- Error handling]
 
         subgraph "Tool Categories"
-            CT[COBRApy Tools<br/>11 tools]
-            MT[ModelSEED Tools<br/>4 tools]
+            CT[COBRApy Tools<br/>16 tools]
+            MT[ModelSEED Tools<br/>5 tools]
             BCT[Biochemistry Tools<br/>2 tools]
             AMT[AI Media Tools<br/>6 tools]
         end
@@ -266,7 +266,7 @@ graph TD
 ```
 src/tools/
 ├── base.py                 # BaseTool interface
-├── cobra/                  # COBRApy integration (11 tools)
+├── cobra/                  # COBRApy integration (16 tools)
 │   ├── fba.py             # Flux Balance Analysis
 │   ├── flux_variability.py # Flux Variability Analysis
 │   ├── gene_deletion.py   # Gene knockout analysis
@@ -274,7 +274,7 @@ src/tools/
 │   ├── media_tools.py     # AI Media Intelligence (6 tools)
 │   ├── utils.py           # Universal model infrastructure
 │   └── ...                # 5 additional COBRA tools
-├── modelseed/             # ModelSEED integration (4 tools)
+├── modelseed/             # ModelSEED integration (5 tools)
 │   ├── annotation.py      # RAST genome annotation
 │   ├── builder.py         # Model building with MSBuilder
 │   ├── gapfill.py         # Advanced gapfilling

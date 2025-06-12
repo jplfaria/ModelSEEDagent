@@ -6,41 +6,7 @@ ModelSEEDagent combines large language models with 29 specialized bioinformatics
 
 ## Installation
 
-### Prerequisites
-- Python 3.9 or higher
-- Virtual environment (recommended)
-- API access to Claude, OpenAI, or Argo Gateway
-
-### Quick Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/ModelSEED/ModelSEEDagent.git
-cd ModelSEEDagent
-
-# Create and activate virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install with all dependencies
-pip install -e .[all]
-```
-
-### API Configuration
-
-Configure your AI model access by setting one of these options:
-
-```bash
-# Option 1: Anthropic Claude (recommended)
-export ANTHROPIC_API_KEY="your_anthropic_api_key"
-
-# Option 2: OpenAI
-export OPENAI_API_KEY="your_openai_api_key"
-
-# Option 3: Argo Gateway (if available)
-export ARGO_USER="your_username"
-export ARGO_GATEWAY_URL="your_gateway_url"
-```
+See the [Installation Guide](../installation.md) for detailed setup instructions.
 
 ## Basic Usage
 
@@ -101,42 +67,20 @@ modelseed-agent debug
 
 ### Python API
 
-```python
-from src.agents.langgraph_metabolic import LangGraphMetabolicAgent
-from src.llm.anthropic import AnthropicLLM
-from src.tools.cobra.fba import FBATool
-
-# Initialize components
-llm_config = {
-    "model_name": "claude-3-sonnet-20240229",
-    "system_content": "You are an expert metabolic modeling assistant.",
-    "max_tokens": 1000,
-    "temperature": 0.1,
-}
-
-llm = AnthropicLLM(llm_config)
-tools = [FBATool({"name": "run_fba", "description": "Run FBA analysis"})]
-agent = LangGraphMetabolicAgent(llm, tools, {"name": "metabolic_agent"})
-
-# Run analysis
-result = agent.run({
-    "query": "Analyze the metabolic model structure",
-    "model_path": "path/to/model.xml"
-})
-print(result.message)
-```
+For programmatic access, see the [API Documentation](../api/overview.md) for detailed examples and usage patterns.
 
 ## Core Capabilities
 
-ModelSEEDagent provides 23 specialized tools organized into several categories:
+ModelSEEDagent provides 29 specialized tools organized into several categories:
 
-### ModelSEED Integration (4 tools)
+### ModelSEED Integration (5 tools)
 - **Genome Annotation** - RAST-based automated annotation
 - **Model Building** - Template-based metabolic model construction
 - **Gapfilling** - Pathway completion algorithms
 - **Protein Annotation** - Sequence-based functional annotation
+- **Model Compatibility** - ModelSEED ↔ COBRApy compatibility testing
 
-### COBRApy Analysis (11 tools)
+### COBRApy Analysis (16 tools)
 - **Flux Balance Analysis** - Growth rate and flux predictions
 - **Flux Variability Analysis** - Solution space exploration
 - **Gene Deletion Analysis** - Knockout effect studies
@@ -147,7 +91,9 @@ ModelSEEDagent provides 23 specialized tools organized into several categories:
 - **Model Analysis** - Comprehensive model statistics
 - **Pathway Analysis** - Metabolic pathway insights
 - **Auxotrophy Prediction** - Growth requirement analysis
-- **Media Analysis** - Media optimization and troubleshooting
+- **Minimal Media Finding** - Essential media component identification
+- **Missing Media Detection** - Media gap identification
+- **And 4 additional specialized analysis tools**
 
 ### Biochemistry Tools (2 tools)
 - **Universal ID Resolution** - Cross-database compound/reaction mapping
@@ -159,105 +105,59 @@ ModelSEEDagent provides 23 specialized tools organized into several categories:
 - **Media Compatibility** - Cross-model media validation
 - **Media Comparison** - Comprehensive media analysis
 - **Media Optimization** - AI-driven media improvement
-- **Dynamic Media Management** - Adaptive media systems
+- **Auxotrophy Prediction** - AI-powered auxotrophy prediction and validation
 
-## Advanced Features
+## Key Features
 
-### Natural Language Interface
+- **Natural Language Interface** - Ask questions in plain English about your models
+- **AI Transparency** - Complete audit trails and verification of all analysis
+- **Universal Model Compatibility** - Seamless ModelSEED ↔ COBRApy integration
+- **Biochemistry Intelligence** - 50,000+ compound/reaction database with real-time resolution
 
-ModelSEEDagent provides an intuitive natural language interface for metabolic analysis:
+## Quick Examples
 
-- **Conversational Analysis** - Ask questions in plain English about your models
-- **Session Management** - Persistent analysis sessions with history
-- **Real-time Visualizations** - Interactive dashboards and graphs
-- **Context Awareness** - Maintains conversation context across interactions
-
-### AI Transparency and Audit
-
-The platform includes comprehensive verification capabilities:
-
-- **Tool Execution Capture** - Automatic audit of all tool executions
-- **Hallucination Detection** - Advanced verification with confidence scoring
-- **Statistical Analysis** - Pattern detection across multiple runs
-- **Audit Commands** - CLI tools for reviewing analysis history
-
-### Biochemistry Intelligence
-
-Built-in biochemistry database provides universal compound and reaction resolution:
-
-- **Universal Database** - 45,000+ compounds and 55,000+ reactions
-- **Cross-Database Mapping** - ModelSEED, BiGG, KEGG, MetaCyc, ChEBI
-- **Fast Resolution** - Sub-millisecond query performance
-- **Human-Readable Outputs** - All results include biochemistry names
-
-### Universal Model Compatibility
-
-Seamless integration between ModelSEED and COBRApy ecosystems:
-
-- **Perfect Round-Trip Conversion** - Identical results between formats
-- **SBML Compatibility** - Standard model format support
-- **Growth Rate Preservation** - Maintains model predictions
-- **Structure Preservation** - Reactions, metabolites, and genes identical
-
-## Example Workflows
-
-### Complete Genome-to-Model Pipeline
-
-```bash
-# 1. Annotate genome with RAST
-modelseed-agent run-tool annotate_genome_rast --genome-file pputida.fna
-
-# 2. Build draft model
-modelseed-agent run-tool build_metabolic_model --genome-object <result>
-
-# 3. Gapfill for growth
-modelseed-agent run-tool gapfill_model --model-object <result>
-
-# 4. Analyze essential genes
-modelseed-agent run-tool analyze_essentiality --model-file <result>
-```
-
-### Interactive Natural Language Analysis
+### Interactive Analysis
 
 ```bash
 modelseed-agent interactive
 
-# Example queries:
+# Try these example queries:
 # "Load E. coli core model and find essential genes"
 # "What is cpd00027 and how does it relate to energy metabolism?"
 # "Run flux variability analysis and explain the results"
-# "Generate hypotheses about why this model has low growth"
 ```
 
-## Testing
-
-Run the test suite to verify your installation:
+### Command Line Analysis
 
 ```bash
-# Activate virtual environment
-source venv/bin/activate
+# Analyze a specific model
+modelseed-agent analyze data/examples/e_coli_core.xml --query "Find essential genes"
 
-# Run test suite
-pytest -v
-
-# Run functional tests
-python tests/run_all_functional_tests.py
+# System status and help
+modelseed-agent status
+modelseed-agent --help
 ```
 
-## Documentation
+## Verification
 
-- **[Architecture Guide](../ARCHITECTURE.md)** - System design and components
-- **[Installation Guide](../installation.md)** - Detailed setup instructions
-- **[API Documentation](../api/overview.md)** - Programmatic usage
-- **[Debug Configuration](../debug.md)** - Troubleshooting and debugging
+Test your installation:
+
+```bash
+# Check system status
+modelseed-agent status
+
+# Run a simple test
+modelseed-agent analyze --help
+```
 
 ## Next Steps
 
-After installation:
+1. **Configure API access** - Set up your AI model credentials (see [Installation Guide](../installation.md))
+2. **Try interactive mode** - Run `modelseed-agent interactive`
+3. **Explore documentation** - See [API Documentation](../api/overview.md) for programmatic usage
 
-1. **Configure API access** - Set up your AI model credentials
-2. **Try examples** - Run basic analysis commands
-3. **Interactive session** - Launch the natural language interface
-4. **Explore tools** - Review the 23 available analysis tools
+## Additional Resources
 
-For additional help, see the [Troubleshooting Guide](../troubleshooting.md).
+- **[Architecture Guide](../ARCHITECTURE.md)** - System design and components
+- **[Tool Reference](../TOOL_REFERENCE.md)** - Complete tool documentation
+- **[Troubleshooting Guide](../troubleshooting.md)** - Common issues and solutions

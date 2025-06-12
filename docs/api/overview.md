@@ -44,7 +44,6 @@ Comprehensive toolset for metabolic analysis:
 - **ModelSEED Tools** (5 tools) - Genome annotation and model building
 - **Biochemistry Tools** (2 tools) - Universal ID resolution and search
 - **AI Media Tools** (6 tools) - Intelligent media management and optimization
-- **RAST Tools** (2 tools) - Genome annotation and analysis
 
 ### LLM Integration (`src.llm`)
 
@@ -100,7 +99,35 @@ Flexible configuration system:
 
 ### Programmatic Access
 
-#### Basic Agent Usage
+#### Basic Agent Usage with Anthropic
+
+```python
+from src.agents.langgraph_metabolic import LangGraphMetabolicAgent
+from src.llm.anthropic import AnthropicLLM
+from src.tools.cobra.fba import FBATool
+
+# Configure LLM
+llm_config = {
+    "model_name": "claude-3-sonnet-20240229",
+    "system_content": "You are an expert metabolic modeling assistant.",
+    "max_tokens": 1000,
+    "temperature": 0.1,
+}
+
+# Initialize components
+llm = AnthropicLLM(llm_config)
+tools = [FBATool({"name": "run_fba", "description": "Run FBA analysis"})]
+agent = LangGraphMetabolicAgent(llm, tools, {"name": "metabolic_agent"})
+
+# Run analysis
+result = agent.run({
+    "query": "Analyze the metabolic model structure",
+    "model_path": "path/to/model.xml"
+})
+print(result.message)
+```
+
+#### Basic Agent Usage with OpenAI
 
 ```python
 from src.agents.langgraph_metabolic import LangGraphMetabolicAgent
@@ -290,11 +317,16 @@ The API is designed for extensibility:
 - **Custom LLMs** - Integrate additional language models
 - **Custom Workflows** - Create domain-specific analysis pipelines
 
+## Tool Implementation Details
+
+For detailed technical implementation information including parameters, precision configurations, and advanced usage patterns, see the comprehensive [Tool Implementation Reference](tools.md).
+
 ## Documentation Links
 
 - **[Getting Started](../user/README.md)** - Installation and basic usage
 - **[User Guide](../user/INTERACTIVE_GUIDE.md)** - Interactive interface guide
 - **[Architecture](../ARCHITECTURE.md)** - System design and components
-- **[Tool Reference](../TOOL_REFERENCE.md)** - Comprehensive tool documentation
+- **[Tool Reference](../TOOL_REFERENCE.md)** - User-friendly tool descriptions
+- **[Tool Implementation Reference](tools.md)** - Technical implementation details
 - **[Debug Configuration](../debug.md)** - Troubleshooting and debugging
 - **[Troubleshooting](../troubleshooting.md)** - Common issues and solutions

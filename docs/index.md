@@ -6,12 +6,9 @@ ModelSEEDagent is a production-ready AI-powered metabolic modeling platform that
 
 ## Quick Start
 
-```bash
-# Install ModelSEEDagent (development setup)
-git clone https://github.com/ModelSEED/ModelSEEDagent.git
-cd ModelSEEDagent
-pip install -e .[all]
+For installation instructions, see the [Installation Guide](installation.md).
 
+```bash
 # Basic metabolic model analysis
 modelseed-agent analyze data/examples/e_coli_core.xml --query "Find essential genes"
 
@@ -84,10 +81,7 @@ modelseed-agent analyze model.xml --query "Learn from analysis patterns"
 - **Auxotrophy Identification** - Growth requirement analysis
 - **Minimal Media Finding** - Essential media component identification
 - **Missing Media Detection** - Media gap identification
-- **Media Selector** - AI-powered optimal media selection
-- **Media Manipulator** - Natural language media modification
-- **Media Compatibility** - Cross-model media validation
-- **Media Comparator** - Comprehensive media performance analysis
+- **And 4 additional specialized analysis tools**
 
 ### Biochemistry Tools (2 tools)
 - **Universal ID Resolution** - Cross-database compound/reaction mapping
@@ -97,7 +91,7 @@ modelseed-agent analyze model.xml --query "Learn from analysis patterns"
 - **RAST Annotation** - Automated genome annotation via RAST
 - **Annotation Analysis** - Comprehensive annotation quality assessment
 
-### Advanced AI Media Tools (6 tools)
+### AI Media Tools (6 tools)
 - **Media Optimization** - AI-driven media composition optimization
 - **Auxotrophy Prediction** - AI-powered auxotrophy prediction and validation
 - **Media Selector** - Intelligent media recommendation based on model characteristics
@@ -148,12 +142,6 @@ Visit the [Troubleshooting Guide](troubleshooting.md) for common issues and solu
 - [Contributing Guide](development/CONTRIBUTING.md)
 - [Architecture Documentation](ARCHITECTURE.md)
 - [Debug Configuration](debug.md)
-
-## Production Deployment
-
-- [Deployment Guide](deployment.md)
-- [Configuration Reference](configuration.md)
-- [Monitoring Setup](monitoring.md)
 
 ## Project Status
 
