@@ -40,10 +40,11 @@ graph TB
     end
 
     subgraph "Tool Execution Layer"
-        T1[COBRApy Tools<br/>18 tools]
-        T2[ModelSEED Tools<br/>5 tools]
-        T3[Biochemistry Database<br/>2 tools]
+        T1[COBRApy Tools<br/>16 tools]
+        T2[ModelSEED Tools<br/>6 tools]
+        T3[Biochemistry Database<br/>3 tools]
         T4[RAST Tools<br/>2 tools]
+        T5[Audit Tools<br/>2 tools]
     end
 
     subgraph "Data & Persistence Layer"
@@ -72,6 +73,7 @@ graph TB
     T2 --> D2
     T3 --> D3
     T4 --> D4
+    T5 --> D1
 ```
 
 
@@ -143,10 +145,11 @@ graph TD
         BT[BaseTool<br/>- Common API<br/>- Validation<br/>- Error handling]
 
         subgraph "Tool Categories"
-            CT[COBRApy Tools<br/>18 tools<br/>(includes 6 AI Media)]
-            MT[ModelSEED Tools<br/>5 tools]
-            BCT[Biochemistry Tools<br/>2 tools]
+            CT[COBRApy Tools<br/>16 tools<br/>(includes 6 AI Media)]
+            MT[ModelSEED Tools<br/>6 tools]
+            BCT[Biochemistry Tools<br/>3 tools]
             RT[RAST Tools<br/>2 tools]
+            AT[Audit Tools<br/>2 tools]
         end
 
         subgraph "COBRApy Capabilities"
@@ -178,6 +181,12 @@ graph TD
             COMPAR[Media Comparison]
         end
 
+        subgraph "Audit Capabilities"
+            AUDIT[Tool Auditing]
+            AI_AUDIT[AI Audit]
+            VERIFY[Real-time Verification]
+        end
+
         subgraph "Universal Infrastructure"
             BD[BiomassDetector]
             MM[MediaManager]
@@ -189,6 +198,7 @@ graph TD
     BT --> MT
     BT --> BCT
     BT --> RT
+    BT --> AT
 
     CT --> FBA
     CT --> GKO
@@ -211,19 +221,24 @@ graph TD
     BCT --> IDR
     BCT --> DBS
 
+    AT --> AUDIT
+    AT --> AI_AUDIT
+    AT --> VERIFY
+
     CT --> BD
     CT --> MM
     CT --> CM
     MT --> BD
     MT --> MM
     MT --> CM
+    AT --> BD
 ```
 
 **Tool Categories**:
 ```
 src/tools/
 ├── base.py                 # BaseTool interface
-├── cobra/                  # COBRApy integration (18 tools total)
+├── cobra/                  # COBRApy integration (16 tools total)
 │   ├── fba.py             # Flux Balance Analysis
 │   ├── flux_variability.py # Flux Variability Analysis
 │   ├── gene_deletion.py   # Gene knockout analysis
@@ -238,17 +253,20 @@ src/tools/
 │   ├── media_tools.py     # AI Media Intelligence (4 tools)
 │   ├── advanced_media_ai.py # Advanced AI Media tools (2 tools)
 │   └── utils.py           # Universal model infrastructure
-├── modelseed/             # ModelSEED integration (5 tools)
-│   ├── annotation.py      # Genome/protein annotation
+├── modelseed/             # ModelSEED integration (6 tools)
+│   ├── annotation.py      # Genome/protein annotation (2 tools)
 │   ├── builder.py         # Model building with MSBuilder
 │   ├── gapfill.py         # Advanced gapfilling
-│   └── compatibility.py   # ModelSEED-COBRApy compatibility
-├── biochem/               # Biochemistry tools (2 tools)
-│   ├── resolver.py        # Universal ID resolution
+│   └── compatibility.py   # ModelSEED-COBRApy compatibility (2 tools)
+├── biochem/               # Biochemistry tools (3 tools)
+│   ├── resolver.py        # Universal ID resolution (2 tools)
 │   └── standalone_resolver.py # Standalone biochem resolution
 ├── rast/                  # RAST integration (2 tools)
-│   └── annotation.py      # RAST annotation services
-└── audit.py               # Tool execution auditing
+│   └── annotation.py      # RAST annotation services (2 tools)
+└── audit/                 # Audit and verification tools (2 tools)
+    ├── audit.py           # Tool execution auditing
+    ├── ai_audit.py        # AI audit tools
+    └── realtime_verification.py # Real-time verification
 ```
 
 **Universal Model Infrastructure** (`src/tools/cobra/utils.py`):

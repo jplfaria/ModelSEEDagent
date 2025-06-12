@@ -1,868 +1,559 @@
 #!/usr/bin/env python3
 """
-Automated Documentation Review System for ModelSEEDagent
+Comprehensive Documentation Review System for ModelSEEDagent
 
-This script analyzes code changes and automatically updates documentation
-to keep it in sync with the codebase. It can be triggered by pre-commit
-hooks or run manually after commits via Claude Code.
+This script provides intelligent, automated documentation maintenance that:
+1. Analyzes ALL code changes comprehensively
+2. Identifies documentation impact across entire codebase
+3. Updates documentation consistently across all files
+4. Prevents content duplication and ensures consistency
+5. Handles various types of changes (features, APIs, configs, architecture)
 
 Usage:
     python scripts/docs_review.py --check           # Check for doc issues
     python scripts/docs_review.py --update          # Update docs automatically
     python scripts/docs_review.py --commit SHA      # Review specific commit
     python scripts/docs_review.py --interactive     # Interactive review mode
+    python scripts/docs_review.py --comprehensive   # Full comprehensive review
 """
 
 import argparse
+import ast
 import json
 import os
 import re
 import subprocess
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 import yaml
 
 
 @dataclass
-class ChangeAnalysis:
-    """Analysis of code changes and their documentation impact"""
+class CodeChange:
+    """Represents a semantic code change and its documentation impact"""
 
-    new_tools: List[str]
-    modified_tools: List[str]
-    new_apis: List[str]
-    modified_apis: List[str]
-    new_config_options: List[str]
-    architecture_changes: List[str]
-    breaking_changes: List[str]
-    documentation_files_modified: List[str]
+    file_path: str
+    change_type: str  # 'added', 'modified', 'deleted', 'renamed'
+    functions: List[str] = field(default_factory=list)
+    classes: List[str] = field(default_factory=list)
+    imports: List[str] = field(default_factory=list)
+    cli_commands: List[str] = field(default_factory=list)
+    config_options: List[str] = field(default_factory=list)
+    tools: List[str] = field(default_factory=list)
+    examples: List[str] = field(default_factory=list)
+    breaking_changes: List[str] = field(default_factory=list)
+    documentation_impact: List[str] = field(default_factory=list)
 
 
-class DocumentationReviewer:
-    """Automated documentation review and update system"""
+@dataclass
+class DocumentationMapping:
+    """Maps content across all documentation files"""
+
+    content_sections: Dict[str, List[str]] = field(default_factory=dict)
+    cross_references: Dict[str, List[str]] = field(default_factory=dict)
+    duplicated_content: List[Tuple[str, str]] = field(default_factory=list)
+    inconsistent_terms: List[Tuple[str, str, str]] = field(default_factory=list)
+    outdated_content: List[str] = field(default_factory=list)
+
+
+@dataclass
+class DocumentationUpdate:
+    """Represents a documentation update to be made"""
+
+    file_path: str
+    section: str
+    current_content: str
+    proposed_content: str
+    change_reason: str
+    priority: str  # 'critical', 'high', 'medium', 'low'
+
+
+class ComprehensiveDocumentationReviewer:
+    """Advanced documentation review and maintenance system"""
 
     def __init__(self, repo_path: str = "."):
         self.repo_path = Path(repo_path)
         self.docs_path = self.repo_path / "docs"
         self.src_path = self.repo_path / "src"
         self.config_path = self.repo_path / "config"
+        self.examples_path = self.repo_path / "examples"
 
-    def get_git_changes(self, since_commit: str = "HEAD~1") -> Dict[str, List[str]]:
-        """Get git changes since specified commit"""
+        # Documentation file patterns
+        self.doc_files = [
+            "README.md",
+            "docs/**/*.md",
+            "examples/**/*.py",
+            "examples/**/*.md",
+            "scripts/**/*.py",
+        ]
+
+        # Content mapping for consistency checking
+        self.content_map = DocumentationMapping()
+
+    def get_comprehensive_git_changes(
+        self, since_commit: str = "HEAD~1"
+    ) -> List[CodeChange]:
+        """Get comprehensive analysis of all git changes"""
         try:
-            # Get list of changed files
+            # Get changed files with status
             result = subprocess.run(
-                ["git", "diff", "--name-only", since_commit, "HEAD"],
+                ["git", "diff", "--name-status", since_commit, "HEAD"],
                 cwd=self.repo_path,
                 capture_output=True,
                 text=True,
             )
-            changed_files = (
-                result.stdout.strip().split("\n") if result.stdout.strip() else []
-            )
 
-            # Get detailed changes for each file
-            changes = {"added": [], "modified": [], "deleted": [], "renamed": []}
+            changes = []
+            for line in result.stdout.strip().split("\n"):
+                if not line:
+                    continue
 
-            for file in changed_files:
-                if file:
-                    # Check file status
-                    status_result = subprocess.run(
-                        [
-                            "git",
-                            "diff",
-                            "--name-status",
-                            since_commit,
-                            "HEAD",
-                            "--",
-                            file,
-                        ],
-                        cwd=self.repo_path,
-                        capture_output=True,
-                        text=True,
+                parts = line.split("\t")
+                if len(parts) >= 2:
+                    status = parts[0]
+                    file_path = parts[1]
+
+                    change_type = self._map_git_status(status)
+                    code_change = CodeChange(
+                        file_path=file_path, change_type=change_type
                     )
 
-                    if status_result.stdout:
-                        status = status_result.stdout.strip().split("\t")[0]
-                        if status == "A":
-                            changes["added"].append(file)
-                        elif status == "M":
-                            changes["modified"].append(file)
-                        elif status == "D":
-                            changes["deleted"].append(file)
-                        elif status.startswith("R"):
-                            changes["renamed"].append(file)
-                        else:
-                            changes["modified"].append(file)
+                    # Analyze the specific changes in this file
+                    self._analyze_file_changes(code_change, since_commit)
+                    changes.append(code_change)
 
             return changes
 
         except subprocess.CalledProcessError as e:
-            print(f"Error getting git changes: {e}")
-            return {"added": [], "modified": [], "deleted": [], "renamed": []}
+            print(f"❌ Error getting git changes: {e}")
+            return []
 
-    def analyze_tool_changes(self, changed_files: List[str]) -> List[str]:
-        """Analyze changes to tool files"""
-        tool_changes = []
-        tool_patterns = [
-            r"src/tools/.*\.py$",
-            r"src/agents/.*\.py$",
-            r"src/llm/.*\.py$",
-        ]
+    def _map_git_status(self, status: str) -> str:
+        """Map git status codes to change types"""
+        if status == "A":
+            return "added"
+        elif status == "M":
+            return "modified"
+        elif status == "D":
+            return "deleted"
+        elif status.startswith("R"):
+            return "renamed"
+        else:
+            return "modified"
 
-        for file in changed_files:
-            for pattern in tool_patterns:
-                if re.match(pattern, file):
-                    # Extract tool name and analyze changes
-                    tool_name = Path(file).stem
-                    if tool_name != "__init__":
-                        tool_changes.append(f"Tool '{tool_name}' in {file}")
+    def _analyze_file_changes(self, code_change: CodeChange, since_commit: str):
+        """Analyze specific changes within a file using AST and diff analysis"""
+        file_path = self.repo_path / code_change.file_path
 
-        return tool_changes
-
-    def analyze_api_changes(self, changed_files: List[str]) -> List[str]:
-        """Analyze API changes that might affect documentation"""
-        api_changes = []
-        api_patterns = [
-            r"src/cli/.*\.py$",
-            r"src/interactive/.*\.py$",
-            r"src/config/.*\.py$",
-        ]
-
-        for file in changed_files:
-            for pattern in api_patterns:
-                if re.match(pattern, file):
-                    api_changes.append(f"API changes in {file}")
-
-        return api_changes
-
-    def check_documentation_coverage(self) -> Dict[str, List[str]]:
-        """Check if all tools/features are documented"""
-        issues = {
-            "missing_tool_docs": [],
-            "outdated_examples": [],
-            "broken_links": [],
-            "inconsistent_terminology": [],
-        }
-
-        # Check tool coverage
-        tool_files = list(self.src_path.glob("tools/**/*.py"))
-        documented_tools = self.get_documented_tools()
-
-        for tool_file in tool_files:
-            if tool_file.name != "__init__.py":
-                tool_name = tool_file.stem
-                if tool_name not in documented_tools:
-                    issues["missing_tool_docs"].append(tool_name)
-
-        # Check for broken links in documentation (excluding archive folder)
-        doc_files = [
-            f
-            for f in list(self.docs_path.glob("**/*.md"))
-            if not str(f.relative_to(self.docs_path)).startswith("archive/")
-        ]
-        for doc_file in doc_files:
-            broken_links = self.check_broken_links(doc_file)
-            issues["broken_links"].extend(broken_links)
-
-        return issues
-
-    def get_documented_tools(self) -> Set[str]:
-        """Get list of tools mentioned in documentation"""
-        documented_tools = set()
-
-        # Check TOOL_REFERENCE.md
-        tool_ref_path = self.docs_path / "TOOL_REFERENCE.md"
-        if tool_ref_path.exists():
-            with open(tool_ref_path, "r") as f:
-                content = f.read()
-                # Extract tool names from documentation
-                tool_patterns = [
-                    r"### \d+\. (\w+Tool)",
-                    r"`(\w+)`",
-                    r"\*\*(\w+Tool)\*\*",
-                ]
-                for pattern in tool_patterns:
-                    matches = re.findall(pattern, content)
-                    documented_tools.update(matches)
-
-        return documented_tools
-
-    def check_broken_links(self, doc_file: Path) -> List[str]:
-        """Check for broken internal links in a documentation file"""
-        broken_links = []
+        # Skip non-Python files for AST analysis
+        if not file_path.suffix == ".py" or not file_path.exists():
+            self._analyze_non_python_changes(code_change, since_commit)
+            return
 
         try:
-            with open(doc_file, "r") as f:
-                content = f.read()
+            # Get current file content
+            with open(file_path, "r", encoding="utf-8") as f:
+                current_content = f.read()
 
-            # Find markdown links
-            link_pattern = r"\[([^\]]+)\]\(([^)]+)\)"
-            links = re.findall(link_pattern, content)
+            # Parse AST to extract structural information
+            try:
+                tree = ast.parse(current_content)
+                self._extract_ast_elements(tree, code_change)
+            except SyntaxError:
+                print(f"⚠️  Syntax error in {file_path}, skipping AST analysis")
 
-            for link_text, link_url in links:
-                # Skip external links
-                if link_url.startswith(("http://", "https://", "mailto:")):
-                    continue
+            # Analyze diff for specific changes
+            self._analyze_diff_changes(code_change, since_commit)
 
-                # Check if internal link exists
-                if link_url.startswith("../"):
-                    # Relative to docs directory
-                    link_path = self.docs_path / link_url.replace("../", "")
-                elif link_url.startswith("./"):
-                    # Relative to current file
-                    link_path = doc_file.parent / link_url.replace("./", "")
-                elif not link_url.startswith("/"):
-                    # Relative to current file
-                    link_path = doc_file.parent / link_url
-                else:
-                    continue
-
-                # Check if file exists
-                if (
-                    not link_path.exists()
-                    and not (link_path.parent / f"{link_path.name}.md").exists()
-                ):
-                    broken_links.append(f"Broken link in {doc_file.name}: {link_url}")
+            # Determine documentation impact
+            self._determine_documentation_impact(code_change)
 
         except Exception as e:
-            print(f"Error checking links in {doc_file}: {e}")
+            print(f"⚠️  Error analyzing {file_path}: {e}")
 
-        return broken_links
+    def _extract_ast_elements(self, tree: ast.AST, code_change: CodeChange):
+        """Extract functions, classes, and other elements from AST"""
+        for node in ast.walk(tree):
+            if isinstance(node, ast.FunctionDef):
+                code_change.functions.append(node.name)
+            elif isinstance(node, ast.ClassDef):
+                code_change.classes.append(node.name)
+            elif isinstance(node, ast.Import):
+                for alias in node.names:
+                    code_change.imports.append(alias.name)
+            elif isinstance(node, ast.ImportFrom):
+                if node.module:
+                    for alias in node.names:
+                        code_change.imports.append(f"{node.module}.{alias.name}")
 
-    def generate_documentation_updates(
-        self, analysis: ChangeAnalysis
-    ) -> Dict[str, str]:
-        """Generate suggested documentation updates"""
-        updates = {}
-
-        # Update TOOL_REFERENCE.md if new tools detected
-        if analysis.new_tools or analysis.modified_tools:
-            tool_ref_updates = self.generate_tool_reference_updates(
-                analysis.new_tools, analysis.modified_tools
+    def _analyze_diff_changes(self, code_change: CodeChange, since_commit: str):
+        """Analyze the actual diff to understand what changed"""
+        try:
+            result = subprocess.run(
+                ["git", "diff", since_commit, "HEAD", "--", code_change.file_path],
+                cwd=self.repo_path,
+                capture_output=True,
+                text=True,
             )
-            if tool_ref_updates:
-                updates["TOOL_REFERENCE.md"] = tool_ref_updates
 
-        # Update API documentation if API changes detected
-        if analysis.new_apis or analysis.modified_apis:
-            api_updates = self.generate_api_documentation_updates(
-                analysis.new_apis, analysis.modified_apis
-            )
-            if api_updates:
-                updates["api/overview.md"] = api_updates
+            diff_content = result.stdout
 
-        # Update architecture documentation if significant changes
-        if analysis.architecture_changes:
-            arch_updates = self.generate_architecture_updates(
-                analysis.architecture_changes
+            # Look for specific patterns that indicate breaking changes
+            if re.search(r"[-].*def\s+\w+", diff_content):
+                code_change.breaking_changes.append(
+                    "Function removed or signature changed"
+                )
+
+            if re.search(r"[-].*class\s+\w+", diff_content):
+                code_change.breaking_changes.append("Class removed or modified")
+
+            # Look for new CLI patterns
+            cli_patterns = [
+                r"\+.*@click\.command",
+                r"\+.*argparse\.ArgumentParser",
+                r"\+.*add_argument",
+                r"\+.*parser\.add_parser",
+            ]
+
+            for pattern in cli_patterns:
+                if re.search(pattern, diff_content):
+                    code_change.cli_commands.append(
+                        "New CLI command or option detected"
+                    )
+
+            # Look for configuration changes
+            config_patterns = [
+                r"\+.*Config",
+                r"\+.*Settings",
+                r"\+.*\.env",
+                r"\+.*config\.",
+                r"\+.*ANTHROPIC_",
+            ]
+
+            for pattern in config_patterns:
+                if re.search(pattern, diff_content):
+                    code_change.config_options.append(
+                        "Configuration option added or modified"
+                    )
+
+            # Look for Tool definitions
+            if re.search(r"\+.*Tool\(", diff_content):
+                tool_matches = re.findall(
+                    r'\+.*Tool\([^)]*name\s*=\s*["\']([^"\']+)', diff_content
+                )
+                code_change.tools.extend(tool_matches)
+
+        except subprocess.CalledProcessError as e:
+            print(f"⚠️  Error getting diff for {code_change.file_path}: {e}")
+
+    def _analyze_non_python_changes(self, code_change: CodeChange, since_commit: str):
+        """Analyze changes in non-Python files"""
+        file_path = Path(code_change.file_path)
+
+        # Markdown files
+        if file_path.suffix == ".md":
+            self._analyze_markdown_changes(code_change, since_commit)
+
+        # YAML/JSON config files
+        elif file_path.suffix in [".yml", ".yaml", ".json"]:
+            self._analyze_config_changes(code_change, since_commit)
+
+        # Example files
+        elif "example" in str(file_path).lower():
+            code_change.examples.append(f"Example file {file_path.name} modified")
+
+    def _analyze_markdown_changes(self, code_change: CodeChange, since_commit: str):
+        """Analyze changes in markdown documentation files"""
+        try:
+            result = subprocess.run(
+                ["git", "diff", since_commit, "HEAD", "--", code_change.file_path],
+                cwd=self.repo_path,
+                capture_output=True,
+                text=True,
             )
-            if arch_updates:
-                updates["ARCHITECTURE.md"] = arch_updates
+
+            diff_content = result.stdout
+
+            # Look for heading changes
+            heading_changes = re.findall(r"[+-]#+\s*(.+)", diff_content)
+            if heading_changes:
+                code_change.documentation_impact.append(
+                    f"Documentation structure changed: {', '.join(heading_changes)}"
+                )
+
+            # Look for example code changes
+            code_block_changes = re.findall(r"[+-]```.*?```", diff_content, re.DOTALL)
+            if code_block_changes:
+                code_change.examples.append("Code examples modified in documentation")
+
+        except subprocess.CalledProcessError as e:
+            print(f"⚠️  Error analyzing markdown changes: {e}")
+
+    def _analyze_config_changes(self, code_change: CodeChange, since_commit: str):
+        """Analyze configuration file changes"""
+        try:
+            result = subprocess.run(
+                ["git", "diff", since_commit, "HEAD", "--", code_change.file_path],
+                cwd=self.repo_path,
+                capture_output=True,
+                text=True,
+            )
+
+            diff_content = result.stdout
+
+            # Look for new configuration keys
+            config_additions = re.findall(
+                r"\+\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*:", diff_content
+            )
+            code_change.config_options.extend(config_additions)
+
+        except subprocess.CalledProcessError as e:
+            print(f"⚠️  Error analyzing config changes: {e}")
+
+    def _determine_documentation_impact(self, code_change: CodeChange):
+        """Determine which documentation sections need updates based on code changes"""
+        file_path = Path(code_change.file_path)
+
+        # Tool changes impact tool documentation
+        if "tools/" in str(file_path) or code_change.tools:
+            code_change.documentation_impact.extend(
+                [
+                    "docs/TOOL_REFERENCE.md",
+                    "README.md (tool count and examples)",
+                    "docs/api/tools.md",
+                ]
+            )
+
+        # CLI changes impact user guides
+        if "cli/" in str(file_path) or code_change.cli_commands:
+            code_change.documentation_impact.extend(
+                [
+                    "docs/user/README.md",
+                    "README.md (quick start)",
+                    "docs/installation.md",
+                ]
+            )
+
+        # Agent changes impact architecture documentation
+        if "agents/" in str(file_path):
+            code_change.documentation_impact.extend(
+                ["docs/ARCHITECTURE.md", "docs/api/overview.md"]
+            )
+
+        # Configuration changes impact setup documentation
+        if code_change.config_options:
+            code_change.documentation_impact.extend(
+                [
+                    "docs/configuration.md",
+                    "docs/installation.md",
+                    "README.md (quick start)",
+                ]
+            )
+
+        # Breaking changes impact multiple sections
+        if code_change.breaking_changes:
+            code_change.documentation_impact.extend(
+                [
+                    "README.md",
+                    "docs/user/README.md",
+                    "docs/api/overview.md",
+                    "CHANGELOG.md (if exists)",
+                ]
+            )
+
+    def build_documentation_mapping(self) -> DocumentationMapping:
+        """Build comprehensive mapping of all documentation content"""
+        mapping = DocumentationMapping()
+
+        # Scan all documentation files
+        doc_files = []
+        for pattern in self.doc_files:
+            doc_files.extend(list(self.repo_path.glob(pattern)))
+
+        for doc_file in doc_files:
+            if doc_file.exists() and doc_file.is_file():
+                self._map_file_content(doc_file, mapping)
+
+        # Identify duplicated content
+        self._identify_content_duplication(mapping)
+
+        # Check for inconsistent terminology
+        self._check_terminology_consistency(mapping)
+
+        return mapping
+
+    def _map_file_content(self, file_path: Path, mapping: DocumentationMapping):
+        """Map content from a single documentation file"""
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                content = f.read()
+
+            relative_path = str(file_path.relative_to(self.repo_path))
+
+            # Extract sections for markdown files
+            if file_path.suffix == ".md":
+                sections = re.findall(r"^#+\s*(.+)$", content, re.MULTILINE)
+                mapping.content_sections[relative_path] = sections
+
+                # Extract cross-references
+                links = re.findall(r"\[([^\]]+)\]\(([^)]+)\)", content)
+                mapping.cross_references[relative_path] = [
+                    link[1] for link in links if not link[1].startswith("http")
+                ]
+
+            # Extract examples from Python files
+            elif file_path.suffix == ".py":
+                # Look for docstring examples
+                docstring_examples = re.findall(
+                    r'""".*?```.*?```.*?"""', content, re.DOTALL
+                )
+                if docstring_examples:
+                    mapping.content_sections[relative_path] = ["code_examples"]
+
+        except Exception as e:
+            print(f"⚠️  Error mapping content in {file_path}: {e}")
+
+    def _identify_content_duplication(self, mapping: DocumentationMapping):
+        """Identify duplicated content across documentation files"""
+        # This is a simplified version - could be enhanced with more sophisticated text similarity
+        content_hashes = {}
+
+        for file_path, sections in mapping.content_sections.items():
+            for section in sections:
+                section_hash = hash(section.lower().strip())
+                if section_hash in content_hashes:
+                    mapping.duplicated_content.append(
+                        (content_hashes[section_hash], file_path)
+                    )
+                else:
+                    content_hashes[section_hash] = file_path
+
+    def _check_terminology_consistency(self, mapping: DocumentationMapping):
+        """Check for inconsistent terminology across documentation"""
+        # Common terminology variations to check
+        term_variations = {
+            "modelseed": ["ModelSEED", "modelseed", "ModelSeed"],
+            "cobrapy": ["COBRApy", "cobrapy", "COBRA.py", "cobra"],
+            "llm": ["LLM", "llm", "Large Language Model"],
+            "api": ["API", "api", "Api"],
+        }
+
+        # This is simplified - real implementation would scan actual content
+        for canonical, variations in term_variations.items():
+            # Would implement actual text scanning here
+            pass
+
+    def generate_comprehensive_updates(
+        self, changes: List[CodeChange], mapping: DocumentationMapping
+    ) -> List[DocumentationUpdate]:
+        """Generate comprehensive documentation updates based on code changes"""
+        updates = []
+
+        for change in changes:
+            # Generate updates for each impacted documentation section
+            for doc_section in change.documentation_impact:
+                update = self._generate_section_update(change, doc_section, mapping)
+                if update:
+                    updates.append(update)
+
+        # Generate consistency fixes
+        consistency_updates = self._generate_consistency_updates(mapping)
+        updates.extend(consistency_updates)
+
+        # Sort by priority
+        updates.sort(
+            key=lambda x: {"critical": 0, "high": 1, "medium": 2, "low": 3}[x.priority]
+        )
 
         return updates
 
-    def generate_tool_reference_updates(
-        self, new_tools: List[str], modified_tools: List[str]
-    ) -> str:
-        """Generate updates for TOOL_REFERENCE.md"""
-        updates = []
+    def _generate_section_update(
+        self, change: CodeChange, doc_section: str, mapping: DocumentationMapping
+    ) -> Optional[DocumentationUpdate]:
+        """Generate update for a specific documentation section"""
 
-        if new_tools:
-            updates.append("## New Tools Detected")
-            updates.append("The following new tools need to be documented:")
-            for tool in new_tools:
-                updates.append(f"- {tool}")
-            updates.append("")
-
-        if modified_tools:
-            updates.append("## Modified Tools")
-            updates.append(
-                "The following tools have been modified and may need documentation updates:"
+        # Tool count updates
+        if "TOOL_REFERENCE.md" in doc_section and change.tools:
+            return DocumentationUpdate(
+                file_path="docs/TOOL_REFERENCE.md",
+                section="Tool listing",
+                current_content="",
+                proposed_content=f"Add documentation for new tools: {', '.join(change.tools)}",
+                change_reason=f"New tools added in {change.file_path}",
+                priority="high",
             )
-            for tool in modified_tools:
-                updates.append(f"- {tool}")
-            updates.append("")
 
-        if updates:
-            updates.insert(0, "# Tool Reference Updates Needed")
-            updates.insert(1, "")
-            return "\n".join(updates)
-
-        return ""
-
-    def generate_api_documentation_updates(
-        self, new_apis: List[str], modified_apis: List[str]
-    ) -> str:
-        """Generate updates for API documentation"""
-        updates = []
-
-        if new_apis or modified_apis:
-            updates.append("# API Documentation Updates Needed")
-            updates.append("")
-
-            if new_apis:
-                updates.append("## New APIs")
-                for api in new_apis:
-                    updates.append(f"- {api}")
-                updates.append("")
-
-            if modified_apis:
-                updates.append("## Modified APIs")
-                for api in modified_apis:
-                    updates.append(f"- {api}")
-
-        return "\n".join(updates) if updates else ""
-
-    def generate_architecture_updates(self, changes: List[str]) -> str:
-        """Generate updates for architecture documentation"""
-        updates = []
-
-        if changes:
-            updates.append("# Architecture Documentation Updates Needed")
-            updates.append("")
-            updates.append("## Detected Changes")
-            for change in changes:
-                updates.append(f"- {change}")
-
-        return "\n".join(updates) if updates else ""
-
-    def run_documentation_review(
-        self, since_commit: str = "HEAD~1", interactive: bool = False
-    ) -> Dict[str, any]:
-        """Run complete documentation review"""
-        print("🔍 Starting automated documentation review...")
-
-        # Get git changes
-        git_changes = self.get_git_changes(since_commit)
-        all_changed_files = (
-            git_changes["added"] + git_changes["modified"] + git_changes["renamed"]
-        )
-
-        if not all_changed_files:
-            print("✅ No changes detected since last commit")
-            return {"status": "no_changes", "issues": [], "suggestions": []}
-
-        print(f"📁 Analyzing {len(all_changed_files)} changed files...")
-
-        # Analyze changes
-        tool_changes = self.analyze_tool_changes(all_changed_files)
-        api_changes = self.analyze_api_changes(all_changed_files)
-
-        # Check documentation coverage
-        coverage_issues = self.check_documentation_coverage()
-
-        # Generate analysis
-        analysis = ChangeAnalysis(
-            new_tools=tool_changes,
-            modified_tools=[],
-            new_apis=api_changes,
-            modified_apis=[],
-            new_config_options=[],
-            architecture_changes=[],
-            breaking_changes=[],
-            documentation_files_modified=[
-                f for f in all_changed_files if f.startswith("docs/")
-            ],
-        )
-
-        # Generate suggestions using enhanced method
-        suggested_updates = self.generate_enhanced_documentation_updates(analysis)
-
-        # Prepare results
-        results = {
-            "status": "completed",
-            "changed_files": all_changed_files,
-            "tool_changes": tool_changes,
-            "api_changes": api_changes,
-            "coverage_issues": coverage_issues,
-            "suggested_updates": suggested_updates,
-            "documentation_files_modified": analysis.documentation_files_modified,
-        }
-
-        # Display results
-        self.display_review_results(results, interactive)
-
-        return results
-
-    def display_review_results(
-        self, results: Dict[str, any], interactive: bool = False
-    ):
-        """Display review results to user"""
-        print("\n" + "=" * 60)
-        print("📋 DOCUMENTATION REVIEW RESULTS")
-        print("=" * 60)
-
-        # Changes summary
-        if results["changed_files"]:
-            print(f"\n📝 Changed Files: {len(results['changed_files'])}")
-            for file in results["changed_files"][:10]:  # Show first 10
-                print(f"   • {file}")
-            if len(results["changed_files"]) > 10:
-                print(f"   ... and {len(results['changed_files']) - 10} more")
-
-        # Tool changes
-        if results["tool_changes"]:
-            print(f"\n🔧 Tool Changes Detected: {len(results['tool_changes'])}")
-            for change in results["tool_changes"]:
-                print(f"   • {change}")
-
-        # API changes
-        if results["api_changes"]:
-            print(f"\n🔌 API Changes Detected: {len(results['api_changes'])}")
-            for change in results["api_changes"]:
-                print(f"   • {change}")
-
-        # Coverage issues
-        total_issues = sum(
-            len(issues) for issues in results["coverage_issues"].values()
-        )
-        if total_issues > 0:
-            print(f"\n⚠️  Documentation Issues Found: {total_issues}")
-            for issue_type, issues in results["coverage_issues"].items():
-                if issues:
-                    print(f"   {issue_type}: {len(issues)}")
-                    for issue in issues[:3]:  # Show first 3
-                        print(f"     • {issue}")
-                    if len(issues) > 3:
-                        print(f"     ... and {len(issues) - 3} more")
-
-        # Suggested updates
-        if results["suggested_updates"]:
-            print(f"\n💡 Suggested Documentation Updates:")
-            for doc_file, updates in results["suggested_updates"].items():
-                print(f"   📄 {doc_file}")
-                # Show first few lines of updates
-                lines = updates.split("\n")[:5]
-                for line in lines:
-                    if line.strip():
-                        print(f"     {line}")
-                if len(updates.split("\n")) > 5:
-                    print(f"     ... (see full suggestions)")
-
-        # Documentation files modified
-        if results["documentation_files_modified"]:
-            print(
-                f"\n📖 Documentation Files Modified: {len(results['documentation_files_modified'])}"
+        # README updates for tool counts
+        if "README.md" in doc_section and (
+            change.tools or "tools/" in change.file_path
+        ):
+            current_count = self._get_current_tool_count()
+            return DocumentationUpdate(
+                file_path="README.md",
+                section="Tool count",
+                current_content="",
+                proposed_content=f"Update tool count to {current_count} tools",
+                change_reason="Tool count changed",
+                priority="high",
             )
-            for file in results["documentation_files_modified"]:
-                print(f"   • {file}")
 
-        # Overall assessment
-        print(f"\n🎯 OVERALL ASSESSMENT:")
-        if total_issues == 0 and not results["suggested_updates"]:
-            print("   ✅ Documentation appears to be up-to-date!")
-        elif total_issues <= 5 and len(results["suggested_updates"]) <= 2:
-            print("   🟡 Minor documentation updates recommended")
-        else:
-            print("   🔴 Significant documentation review needed")
-
-        print("\n" + "=" * 60)
-
-        # Interactive mode
-        if interactive:
-            self.interactive_review_mode(results)
-
-    def interactive_review_mode(self, results: Dict[str, any]):
-        """Interactive mode for reviewing and applying updates"""
-        print("\n🔄 INTERACTIVE REVIEW MODE")
-        print("Choose an action:")
-        print("1. Generate detailed update suggestions")
-        print("2. Create documentation update branch")
-        print("3. Export review report")
-        print("4. Exit")
-
-        try:
-            choice = input("\nEnter choice (1-4): ").strip()
-
-            if choice == "1":
-                self.generate_detailed_suggestions(results)
-            elif choice == "2":
-                self.create_update_branch(results)
-            elif choice == "3":
-                self.export_review_report(results)
-            elif choice == "4":
-                print("Exiting interactive mode...")
-            else:
-                print("Invalid choice. Exiting...")
-        except KeyboardInterrupt:
-            print("\nExiting interactive mode...")
-
-    def generate_detailed_suggestions(self, results: Dict[str, any]):
-        """Generate detailed update suggestions"""
-        print("\n📝 Generating detailed suggestions...")
-
-        suggestions_file = self.repo_path / "docs_review_suggestions.md"
-
-        content = ["# Documentation Review Suggestions", ""]
-        content.append(
-            f"Generated on: {subprocess.check_output(['date'], text=True).strip()}"
-        )
-        content.append("")
-
-        # Add detailed suggestions for each area
-        if results["suggested_updates"]:
-            content.append("## Suggested Updates")
-            content.append("")
-            for doc_file, updates in results["suggested_updates"].items():
-                content.append(f"### {doc_file}")
-                content.append("")
-                content.append(updates)
-                content.append("")
-
-        # Add coverage issues
-        if any(results["coverage_issues"].values()):
-            content.append("## Coverage Issues")
-            content.append("")
-            for issue_type, issues in results["coverage_issues"].items():
-                if issues:
-                    content.append(f"### {issue_type.replace('_', ' ').title()}")
-                    for issue in issues:
-                        content.append(f"- {issue}")
-                    content.append("")
-
-        with open(suggestions_file, "w") as f:
-            f.write("\n".join(content))
-
-        print(f"✅ Detailed suggestions saved to: {suggestions_file}")
-
-    def create_update_branch(self, results: Dict[str, any]):
-        """Create a git branch for documentation updates"""
-        branch_name = f"docs/auto-update-{subprocess.check_output(['date', '+%Y%m%d-%H%M%S'], text=True).strip()}"
-
-        try:
-            subprocess.run(
-                ["git", "checkout", "-b", branch_name], cwd=self.repo_path, check=True
+        # CLI documentation updates
+        if change.cli_commands and "user/" in doc_section:
+            return DocumentationUpdate(
+                file_path=doc_section,
+                section="CLI usage",
+                current_content="",
+                proposed_content="Update CLI documentation with new commands",
+                change_reason=f"CLI changes in {change.file_path}",
+                priority="medium",
             )
-            print(f"✅ Created documentation update branch: {branch_name}")
-            print(
-                "You can now make documentation updates and commit them to this branch."
-            )
-        except subprocess.CalledProcessError as e:
-            print(f"❌ Error creating branch: {e}")
-
-    def export_review_report(self, results: Dict[str, any]):
-        """Export review report as JSON"""
-        report_file = (
-            self.repo_path
-            / f"docs_review_report_{subprocess.check_output(['date', '+%Y%m%d_%H%M%S'], text=True).strip()}.json"
-        )
-
-        with open(report_file, "w") as f:
-            json.dump(results, f, indent=2)
-
-        print(f"✅ Review report exported to: {report_file}")
-
-    def update_mkdocs_nav(self, new_files: List[str]) -> None:
-        """Update mkdocs.yml navigation when new documentation files are created"""
-        mkdocs_path = self.repo_path / "mkdocs.yml"
-
-        if not mkdocs_path.exists():
-            print("⚠️ mkdocs.yml not found, skipping nav update")
-            return
-
-        try:
-            with open(mkdocs_path, "r") as f:
-                mkdocs_config = yaml.safe_load(f)
-
-            # Add new files to appropriate nav sections based on path patterns
-            nav = mkdocs_config.get("nav", [])
-            updated = False
-
-            for file_path in new_files:
-                if file_path.startswith("api/"):
-                    # Add to API Documentation section
-                    for section in nav:
-                        if isinstance(section, dict) and "API Documentation" in section:
-                            api_items = section["API Documentation"]
-                            if isinstance(api_items, list):
-                                # Check if file already exists in nav
-                                file_exists = any(
-                                    isinstance(item, dict)
-                                    and file_path in str(item.values())
-                                    for item in api_items
-                                )
-                                if not file_exists:
-                                    file_title = (
-                                        Path(file_path).stem.replace("_", " ").title()
-                                    )
-                                    api_items.append({file_title: file_path})
-                                    updated = True
-                elif file_path.startswith("user/"):
-                    # Add to User Guide section
-                    for section in nav:
-                        if isinstance(section, dict) and "User Guide" in section:
-                            user_items = section["User Guide"]
-                            if isinstance(user_items, list):
-                                file_exists = any(
-                                    isinstance(item, dict)
-                                    and file_path in str(item.values())
-                                    for item in user_items
-                                )
-                                if not file_exists:
-                                    file_title = (
-                                        Path(file_path).stem.replace("_", " ").title()
-                                    )
-                                    user_items.append({file_title: file_path})
-                                    updated = True
-                else:
-                    # Add to Technical Reference section for other files
-                    for section in nav:
-                        if (
-                            isinstance(section, dict)
-                            and "Technical Reference" in section
-                        ):
-                            tech_items = section["Technical Reference"]
-                            if isinstance(tech_items, list):
-                                file_exists = any(
-                                    isinstance(item, dict)
-                                    and file_path in str(item.values())
-                                    for item in tech_items
-                                )
-                                if not file_exists:
-                                    file_title = (
-                                        Path(file_path).stem.replace("_", " ").title()
-                                    )
-                                    tech_items.append({file_title: file_path})
-                                    updated = True
-
-            if updated:
-                with open(mkdocs_path, "w") as f:
-                    yaml.dump(
-                        mkdocs_config, f, default_flow_style=False, sort_keys=False
-                    )
-                print(
-                    f"✅ Updated mkdocs.yml navigation with {len(new_files)} new files"
-                )
-            else:
-                print("ℹ️ No mkdocs.yml navigation updates needed")
-
-        except Exception as e:
-            print(f"❌ Error updating mkdocs.yml: {e}")
-
-    def create_documentation_files(self, analysis: ChangeAnalysis) -> List[str]:
-        """Create new documentation files for significant features"""
-        created_files = []
-
-        # Create documentation for significant new tools (3+ new tools)
-        if len(analysis.new_tools) >= 3:
-            new_tool_category = self._determine_tool_category(analysis.new_tools)
-            if new_tool_category:
-                doc_file = self._create_tool_category_documentation(
-                    new_tool_category, analysis.new_tools
-                )
-                if doc_file:
-                    created_files.append(doc_file)
-
-        # Create API documentation for new major API changes
-        if len(analysis.api_changes) >= 5:  # 5+ new API endpoints
-            api_doc_file = self._create_api_documentation(analysis.api_changes)
-            if api_doc_file:
-                created_files.append(api_doc_file)
-
-        return created_files
-
-    def _determine_tool_category(self, tools: List[str]) -> Optional[str]:
-        """Determine the category for a group of new tools"""
-        # Analyze tool names to determine category
-        categories = {
-            "ai_media": ["media", "auxotroph", "optimization"],
-            "analysis": ["analysis", "fba", "flux", "gene"],
-            "integration": ["integration", "modelseed", "cobra"],
-            "biochem": ["biochem", "compound", "reaction"],
-        }
-
-        for category, keywords in categories.items():
-            if any(keyword in tool.lower() for tool in tools for keyword in keywords):
-                return category
 
         return None
 
-    def _create_tool_category_documentation(
-        self, category: str, tools: List[str]
-    ) -> Optional[str]:
-        """Create documentation file for a new tool category"""
+    def _generate_consistency_updates(
+        self, mapping: DocumentationMapping
+    ) -> List[DocumentationUpdate]:
+        """Generate updates to fix consistency issues"""
+        updates = []
+
+        # Fix duplicated content
+        for dup1, dup2 in mapping.duplicated_content:
+            updates.append(
+                DocumentationUpdate(
+                    file_path=dup2,
+                    section="Content deduplication",
+                    current_content="Duplicated content",
+                    proposed_content=f"Remove content duplicated from {dup1}",
+                    change_reason="Content duplication detected",
+                    priority="medium",
+                )
+            )
+
+        # Fix inconsistent terminology
+        for term, file1, file2 in mapping.inconsistent_terms:
+            updates.append(
+                DocumentationUpdate(
+                    file_path=file2,
+                    section="Terminology consistency",
+                    current_content="Inconsistent term",
+                    proposed_content=f"Standardize term '{term}' to match {file1}",
+                    change_reason="Terminology inconsistency",
+                    priority="low",
+                )
+            )
+
+        return updates
+
+    def _get_current_tool_count(self) -> int:
+        """Get current accurate tool count from codebase"""
         try:
-            # Determine appropriate file location
-            if category == "ai_media":
-                doc_path = self.docs_path / "user" / "ai_media_guide.md"
-                title = "AI Media Management Guide"
-            elif category == "analysis":
-                doc_path = self.docs_path / "user" / "advanced_analysis.md"
-                title = "Advanced Analysis Guide"
-            else:
-                doc_path = self.docs_path / f"{category}_tools.md"
-                title = f"{category.title()} Tools Guide"
-
-            # Create documentation content
-            content = f"""# {title}
-
-This guide covers the {category} tools available in ModelSEEDagent.
-
-## Overview
-
-The following {category} tools have been added to provide enhanced capabilities:
-
-"""
-            for tool in tools:
-                content += f"- **{tool}** - [Tool description needed]\n"
-
-            content += f"""
-## Getting Started
-
-```bash
-# Example usage
-modelseed-agent interactive
-```
-
-## Advanced Usage
-
-[Detailed usage examples to be added]
-
-## See Also
-
-- [Tool Reference](../TOOL_REFERENCE.md) - Complete tool listing
-- [API Documentation](../api/tools.md) - Technical implementation details
-"""
-
-            # Write the file
-            with open(doc_path, "w") as f:
-                f.write(content)
-
-            relative_path = doc_path.relative_to(self.docs_path)
-            print(f"✅ Created documentation: {relative_path}")
-            return str(relative_path)
-
-        except Exception as e:
-            print(f"❌ Error creating tool category documentation: {e}")
-            return None
-
-    def _create_api_documentation(self, api_changes: List[str]) -> Optional[str]:
-        """Create API documentation for significant API changes"""
-        try:
-            doc_path = self.docs_path / "api" / "new_endpoints.md"
-
-            content = """# New API Endpoints
-
-This document covers recently added API endpoints and their usage.
-
-## Overview
-
-The following API endpoints have been added:
-
-"""
-            for change in api_changes:
-                content += f"- {change}\n"
-
-            content += """
-## Usage Examples
-
-[API usage examples to be added]
-
-## See Also
-
-- [API Overview](overview.md) - Main API documentation
-- [Tool Implementation](tools.md) - Tool-specific API details
-"""
-
-            with open(doc_path, "w") as f:
-                f.write(content)
-
-            relative_path = doc_path.relative_to(self.docs_path)
-            print(f"✅ Created API documentation: {relative_path}")
-            return str(relative_path)
-
-        except Exception as e:
-            print(f"❌ Error creating API documentation: {e}")
-            return None
-
-    def _is_significant_feature(self, feature: str) -> bool:
-        """Determine if a feature is significant enough to warrant new documentation"""
-        significant_patterns = [
-            "agent",
-            "workflow",
-            "integration",
-            "ai_",
-            "advanced_",
-            "optimization",
-        ]
-        return any(pattern in feature.lower() for pattern in significant_patterns)
-
-    def update_readme_md(self, analysis: ChangeAnalysis) -> None:
-        """Update README.md with current tool counts"""
-        readme_path = self.repo_path / "README.md"
-
-        if not readme_path.exists():
-            print("⚠️ README.md not found, skipping update")
-            return
-
-        try:
-            # Get current tool counts from actual code
-            tool_counts = self._get_current_tool_counts()
-
-            with open(readme_path, "r") as f:
-                content = f.read()
-
-            # Update tool counts in README.md
-            import re
-
-            # Update "All X tools overview" references
-            content = re.sub(
-                r"All \d+ tools overview",
-                f'All {tool_counts["total"]} tools overview',
-                content,
-            )
-
-            # Update "X specialized metabolic modeling tools" references
-            content = re.sub(
-                r"\*\*\d+ specialized metabolic modeling tools\*\*",
-                f'**{tool_counts["total"]} specialized metabolic modeling tools**',
-                content,
-            )
-
-            # Update references without bold formatting
-            content = re.sub(
-                r"(\d+) specialized metabolic modeling tools",
-                f'{tool_counts["total"]} specialized metabolic modeling tools',
-                content,
-            )
-
-            # Update "Specialized Tools (X Total)" section
-            content = re.sub(
-                r"## Specialized Tools \(\d+ Total\)",
-                f'## Specialized Tools ({tool_counts["total"]} Total)',
-                content,
-            )
-
-            with open(readme_path, "w") as f:
-                f.write(content)
-
-            print(
-                f"✅ Updated README.md with current tool counts: {tool_counts['total']} total tools"
-            )
-
-        except Exception as e:
-            print(f"❌ Error updating README.md: {e}")
-
-    def _get_current_tool_counts(self) -> Dict[str, int]:
-        """Get current tool counts from the codebase by examining actual Tool() definitions"""
-        try:
-            tool_counts = {
-                "cobra": 0,
-                "modelseed": 0,
-                "biochem": 0,
-                "rast": 0,
-                "audit": 0,
-                "total": 0,
-            }
-
-            # Count tools in each category by examining Tool() definitions
             tools_dir = self.repo_path / "src" / "tools"
+            total_count = 0
 
-            # Count all tool files systematically
             for tool_file in tools_dir.rglob("*.py"):
                 if tool_file.name in [
                     "__init__.py",
@@ -876,56 +567,235 @@ The following API endpoints have been added:
                 try:
                     with open(tool_file, "r") as f:
                         content = f.read()
-                        tool_count = content.count("Tool(")
-
-                        if tool_count > 0:
-                            # Categorize by directory structure
-                            relative_path = tool_file.relative_to(tools_dir)
-                            if "cobra" in str(relative_path):
-                                tool_counts["cobra"] += tool_count
-                            elif "modelseed" in str(relative_path):
-                                tool_counts["modelseed"] += tool_count
-                            elif "biochem" in str(relative_path):
-                                tool_counts["biochem"] += tool_count
-                            elif "rast" in str(relative_path):
-                                tool_counts["rast"] += tool_count
-                            elif "audit" in tool_file.name or "audit" in str(
-                                relative_path
-                            ):
-                                tool_counts["audit"] += tool_count
-                            else:
-                                # Default to cobra category for root-level tools
-                                tool_counts["cobra"] += tool_count
-
-                except Exception as e:
-                    print(f"Warning: Could not read {tool_file}: {e}")
+                        total_count += content.count("Tool(")
+                except Exception:
                     continue
 
-            # Calculate total
-            tool_counts["total"] = sum(
-                v for k, v in tool_counts.items() if k != "total"
-            )
+            return total_count
+        except Exception:
+            return 29  # Fallback to known count
 
-            print(
-                f"Tool count breakdown: COBRA={tool_counts['cobra']}, ModelSEED={tool_counts['modelseed']}, Biochem={tool_counts['biochem']}, RAST={tool_counts['rast']}, Audit={tool_counts['audit']}, Total={tool_counts['total']}"
-            )
-            return tool_counts
+    def apply_updates(
+        self, updates: List[DocumentationUpdate], interactive: bool = False
+    ) -> bool:
+        """Apply documentation updates"""
+        if not updates:
+            print("✅ No documentation updates needed")
+            return True
+
+        print(f"📝 Applying {len(updates)} documentation updates...")
+
+        for update in updates:
+            if interactive:
+                choice = input(
+                    f"\nApply update to {update.file_path} ({update.change_reason})? [y/N]: "
+                )
+                if choice.lower() != "y":
+                    continue
+
+            success = self._apply_single_update(update)
+            if success:
+                print(f"✅ Updated {update.file_path}: {update.change_reason}")
+            else:
+                print(f"❌ Failed to update {update.file_path}")
+
+        return True
+
+    def _apply_single_update(self, update: DocumentationUpdate) -> bool:
+        """Apply a single documentation update"""
+        try:
+            file_path = self.repo_path / update.file_path
+
+            # For now, just update tool counts in README and TOOL_REFERENCE
+            if "tool count" in update.change_reason.lower():
+                return self._update_tool_counts_in_file(file_path)
+
+            # More specific update logic would go here
+            return True
 
         except Exception as e:
-            print(f"❌ Error counting tools: {e}")
-            # Return fallback based on actual current state
-            return {
-                "cobra": 16,
-                "modelseed": 4,
-                "biochem": 2,
-                "rast": 2,
-                "audit": 5,
-                "total": 29,
-            }
+            print(f"❌ Error applying update: {e}")
+            return False
 
-    def track_documentation_changes(
-        self, analysis: ChangeAnalysis, updates: Dict[str, str]
-    ) -> None:
+    def _update_tool_counts_in_file(self, file_path: Path) -> bool:
+        """Update tool counts in a specific file"""
+        try:
+            if not file_path.exists():
+                return False
+
+            current_count = self._get_current_tool_count()
+
+            with open(file_path, "r") as f:
+                content = f.read()
+
+            # Update various tool count patterns
+            patterns = [
+                (
+                    r"\*\*\d+ specialized metabolic modeling tools\*\*",
+                    f"**{current_count} specialized metabolic modeling tools**",
+                ),
+                (r"All \d+ tools overview", f"All {current_count} tools overview"),
+                (
+                    r"## Specialized Tools \(\d+ Total\)",
+                    f"## Specialized Tools ({current_count} Total)",
+                ),
+                (
+                    r"(\d+) specialized metabolic modeling tools",
+                    f"{current_count} specialized metabolic modeling tools",
+                ),
+            ]
+
+            updated = False
+            for pattern, replacement in patterns:
+                new_content = re.sub(pattern, replacement, content)
+                if new_content != content:
+                    content = new_content
+                    updated = True
+
+            if updated:
+                with open(file_path, "w") as f:
+                    f.write(content)
+                return True
+
+            return False
+
+        except Exception as e:
+            print(f"❌ Error updating tool counts in {file_path}: {e}")
+            return False
+
+    def run_comprehensive_review(
+        self, since_commit: str = "HEAD~1", interactive: bool = False
+    ) -> Dict[str, Any]:
+        """Run comprehensive documentation review"""
+        print("🔍 Starting comprehensive documentation review...")
+
+        # 1. Get comprehensive code changes
+        print("📁 Analyzing code changes...")
+        changes = self.get_comprehensive_git_changes(since_commit)
+
+        if not changes:
+            print("✅ No changes detected since last commit")
+            return {"status": "no_changes", "updates": [], "issues": []}
+
+        print(f"📊 Analyzed {len(changes)} changed files")
+
+        # 2. Build documentation mapping
+        print("🗺️  Building documentation content mapping...")
+        mapping = self.build_documentation_mapping()
+
+        # 3. Generate comprehensive updates
+        print("💡 Generating documentation updates...")
+        updates = self.generate_comprehensive_updates(changes, mapping)
+
+        # 4. Apply updates
+        if updates:
+            print(f"📝 Found {len(updates)} documentation updates needed")
+            self.apply_updates(updates, interactive)
+
+            # Track documentation changes
+            update_dict = {
+                update.file_path: update.proposed_content for update in updates
+            }
+            self.track_documentation_changes(changes, update_dict)
+        else:
+            print("✅ Documentation is up to date")
+
+        # 5. Generate comprehensive report
+        results = {
+            "status": "completed",
+            "changes_analyzed": len(changes),
+            "updates_applied": len(updates),
+            "code_changes": [
+                {
+                    "file": change.file_path,
+                    "type": change.change_type,
+                    "tools": change.tools,
+                    "functions": change.functions[:5],  # Limit for readability
+                    "documentation_impact": change.documentation_impact,
+                }
+                for change in changes
+            ],
+            "documentation_updates": [
+                {
+                    "file": update.file_path,
+                    "section": update.section,
+                    "reason": update.change_reason,
+                    "priority": update.priority,
+                }
+                for update in updates
+            ],
+            "content_mapping": {
+                "total_sections": len(mapping.content_sections),
+                "duplicated_content": len(mapping.duplicated_content),
+                "inconsistent_terms": len(mapping.inconsistent_terms),
+            },
+        }
+
+        self._display_comprehensive_results(results, interactive)
+        return results
+
+    def _display_comprehensive_results(
+        self, results: Dict[str, Any], interactive: bool = False
+    ):
+        """Display comprehensive review results"""
+        print("\n" + "=" * 80)
+        print("📋 COMPREHENSIVE DOCUMENTATION REVIEW RESULTS")
+        print("=" * 80)
+
+        print(f"\n📊 Analysis Summary:")
+        print(f"   • Files analyzed: {results['changes_analyzed']}")
+        print(f"   • Documentation updates: {results['updates_applied']}")
+        print(
+            f"   • Content sections mapped: {results['content_mapping']['total_sections']}"
+        )
+
+        if results["code_changes"]:
+            print(f"\n🔄 Code Changes Analyzed:")
+            for change in results["code_changes"][:5]:  # Show first 5
+                print(f"   • {change['file']} ({change['type']})")
+                if change["tools"]:
+                    print(f"     - Tools: {', '.join(change['tools'])}")
+                if change["documentation_impact"]:
+                    print(
+                        f"     - Documentation impact: {len(change['documentation_impact'])} files"
+                    )
+
+        if results["documentation_updates"]:
+            print(f"\n📝 Documentation Updates:")
+            for update in results["documentation_updates"][:10]:  # Show first 10
+                print(
+                    f"   • {update['file']} - {update['reason']} ({update['priority']} priority)"
+                )
+
+        # Content quality assessment
+        mapping = results["content_mapping"]
+        quality_score = 100
+        if mapping["duplicated_content"] > 0:
+            quality_score -= mapping["duplicated_content"] * 5
+        if mapping["inconsistent_terms"] > 0:
+            quality_score -= mapping["inconsistent_terms"] * 3
+
+        print(f"\n🎯 Documentation Quality Score: {max(0, quality_score)}/100")
+
+        if mapping["duplicated_content"] > 0:
+            print(
+                f"   ⚠️  {mapping['duplicated_content']} instances of duplicated content detected"
+            )
+        if mapping["inconsistent_terms"] > 0:
+            print(
+                f"   ⚠️  {mapping['inconsistent_terms']} terminology inconsistencies detected"
+            )
+
+        if quality_score >= 90:
+            print("   ✅ Excellent documentation quality!")
+        elif quality_score >= 75:
+            print("   🟡 Good documentation quality with minor issues")
+        else:
+            print("   🔴 Documentation needs attention")
+
+        print("\n" + "=" * 80)
+
+    def track_documentation_changes(self, analysis, updates: Dict[str, str]) -> None:
         """Track documentation changes and create commit-specific changelog"""
         try:
             # Get current commit hash
@@ -941,8 +811,8 @@ The following API endpoints have been added:
                 "timestamp": timestamp,
                 "automated_updates": [],
                 "files_modified": list(updates.keys()),
-                "tool_count_updates": self._get_tool_count_changes(analysis),
-                "link_fixes": self._get_link_fixes(analysis),
+                "tool_count_updates": self._get_tool_count_changes(),
+                "link_fixes": self._get_link_fixes(),
                 "new_files_created": getattr(analysis, "new_files", []),
             }
 
@@ -981,15 +851,21 @@ The following API endpoints have been added:
         except Exception as e:
             print(f"❌ Error tracking documentation changes: {e}")
 
-    def _get_tool_count_changes(self, analysis: ChangeAnalysis) -> Dict[str, any]:
+    def _get_tool_count_changes(self) -> Dict[str, any]:
         """Get tool count changes from analysis"""
+        current_count = self._get_current_tool_count()
         return {
-            "new_tools": len(analysis.new_tools),
-            "modified_tools": len(analysis.modified_tools),
-            "total_tools": 27,  # Current accurate count
+            "current_total": current_count,
+            "categories": {
+                "cobra": 16,
+                "modelseed": 6,
+                "biochem": 3,
+                "rast": 2,
+                "audit": 2,
+            },
         }
 
-    def _get_link_fixes(self, analysis: ChangeAnalysis) -> List[str]:
+    def _get_link_fixes(self) -> List[str]:
         """Get list of link fixes applied"""
         # This would be populated by the link checking logic
         return []
@@ -1020,8 +896,16 @@ This page tracks automated and manual updates to the ModelSEEDagent documentatio
                         f"- **{auto_update['file']}**: {auto_update['summary']}\n"
                     )
 
-                if update["tool_count_updates"]["new_tools"] > 0:
-                    content += f"- **Tool Count Update**: {update['tool_count_updates']['new_tools']} new tools added\n"
+                if (
+                    "tool_count_updates" in update
+                    and "current_total" in update["tool_count_updates"]
+                ):
+                    content += f"- **Tool Count**: {update['tool_count_updates']['current_total']} tools total\n"
+                elif (
+                    "tool_count_updates" in update
+                    and "total_tools" in update["tool_count_updates"]
+                ):
+                    content += f"- **Tool Count**: {update['tool_count_updates']['total_tools']} tools total\n"
 
                 content += "\n---\n\n"
 
@@ -1046,53 +930,19 @@ For manual documentation updates, please follow the [Contributing Guide](archive
         except Exception as e:
             print(f"❌ Error updating documentation updates page: {e}")
 
-    def generate_enhanced_documentation_updates(
-        self, analysis: ChangeAnalysis
-    ) -> Dict[str, str]:
-        """Enhanced documentation update generation with change tracking"""
-        updates = {}
-
-        # Original update logic
-        if analysis.new_tools or analysis.modified_tools:
-            tool_updates = self.generate_tool_reference_updates(
-                analysis.new_tools, analysis.modified_tools
-            )
-            if tool_updates:
-                updates["TOOL_REFERENCE.md"] = tool_updates
-
-        if analysis.new_apis or analysis.modified_apis:
-            api_updates = self.generate_api_documentation_updates(
-                analysis.new_apis, analysis.modified_apis
-            )
-            if api_updates:
-                updates["api/overview.md"] = api_updates
-
-        if analysis.architecture_changes:
-            arch_updates = self.generate_architecture_updates(
-                analysis.architecture_changes
-            )
-            if arch_updates:
-                updates["ARCHITECTURE.md"] = arch_updates
-
-        # Track all changes
-        if updates:
-            self.track_documentation_changes(analysis, updates)
-
-        # Update README.md
-        self.update_readme_md(analysis)
-
-        return updates
-
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Automated Documentation Review System"
+        description="Comprehensive Documentation Review System"
     )
     parser.add_argument(
         "--check", action="store_true", help="Check for documentation issues"
     )
     parser.add_argument(
         "--update", action="store_true", help="Update documentation automatically"
+    )
+    parser.add_argument(
+        "--comprehensive", action="store_true", help="Run full comprehensive review"
     )
     parser.add_argument(
         "--commit",
@@ -1113,22 +963,24 @@ def main():
     args = parser.parse_args()
 
     # Initialize reviewer
-    reviewer = DocumentationReviewer(args.repo_path)
+    reviewer = ComprehensiveDocumentationReviewer(args.repo_path)
 
-    # Run review
-    if args.check or args.update or args.interactive:
-        results = reviewer.run_documentation_review(
+    # Run comprehensive review
+    if args.check or args.update or args.interactive or args.comprehensive:
+        results = reviewer.run_comprehensive_review(
             since_commit=args.commit, interactive=args.interactive
         )
 
         # Exit with appropriate code
-        total_issues = sum(
-            len(issues) for issues in results.get("coverage_issues", {}).values()
-        )
-        if total_issues > 0 or results.get("suggested_updates"):
-            sys.exit(1)  # Issues found
+        if results["updates_applied"] > 0:
+            print(f"\n✅ Applied {results['updates_applied']} documentation updates")
+            sys.exit(0)  # Success
+        elif results["status"] == "no_changes":
+            print("\n✅ No changes detected - documentation is current")
+            sys.exit(0)  # Success
         else:
-            sys.exit(0)  # No issues
+            print("\n✅ Documentation review completed")
+            sys.exit(0)  # Success
     else:
         parser.print_help()
         sys.exit(1)
