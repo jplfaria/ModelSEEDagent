@@ -102,6 +102,16 @@ The interface understands natural language questions about metabolic modeling:
 "Evaluate experimental vs predicted data"
 ```
 
+### Media Intelligence 🧬 **NEW**
+```
+"Select the best media for my E. coli model"
+"Make my media anaerobic for fermentation"
+"Add vitamins and amino acids to the growth medium"
+"Compare growth across different media types"
+"Optimize media composition for maximum growth"
+"Predict what nutrients this organism requires"
+```
+
 ## 🎨 Interactive Features ✅ **ALL WORKING**
 
 ### Session Management
@@ -150,6 +160,14 @@ open <type>       # Open specific visualization in browser
 help              # Show help information
 clear             # Clear the terminal
 exit              # Exit the interactive session
+```
+
+### AI Media Commands 🧬 **NEW**
+```
+media             # Show AI media tools interface
+media-select <model>    # AI-powered optimal media selection
+media-modify <command>  # Natural language media modification
+media-compare     # Cross-model media performance comparison
 ```
 
 ## 📊 Session Analytics ✅ **WORKING**
@@ -212,6 +230,13 @@ Description: Analyzing E. coli growth on glucose media
 "What happens if I knockout gene XYZ?"
 ```
 
+### 8. AI Media Intelligence ✅ **NEW**
+```
+"Select optimal media for this model"
+"Make the media anaerobic and test growth"
+"Compare media performance across different conditions"
+```
+
 ## 🔍 Query Processing Intelligence ✅ **WORKING**
 
 The interface uses advanced NLP to understand your queries:
@@ -224,6 +249,7 @@ The interface uses advanced NLP to understand your queries:
 - **Network Analysis**: Topology, centrality, clustering
 - **Optimization**: Parameter tuning, constraint modification
 - **Comparison**: Multi-condition, multi-strain analysis
+- **Media Intelligence**: Media selection, modification, optimization, compatibility 🧬 **NEW**
 
 ### Confidence Scoring ✅ **WORKING**
 - **High Confidence (80-100%)**: Direct execution

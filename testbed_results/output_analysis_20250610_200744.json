@@ -1,0 +1,128 @@
+{
+  "FBA": {
+    "execution_time": 0.109894,
+    "size_bytes": 3250,
+    "size_kb": 3.173828125,
+    "element_counts": {
+      "objective_value": 1,
+      "status": 1,
+      "significant_fluxes": 48,
+      "subsystem_fluxes": 1,
+      "result_file": 1
+    },
+    "success": true,
+    "requires_summarization": false,
+    "data_keys": [
+      "objective_value",
+      "status",
+      "significant_fluxes",
+      "subsystem_fluxes",
+      "result_file"
+    ]
+  },
+  "FluxVariability": {
+    "execution_time": 30.401323,
+    "size_bytes": 18688,
+    "size_kb": 18.25,
+    "element_counts": {
+      "fva_results": 2,
+      "summary": 4,
+      "statistics": 5
+    },
+    "success": true,
+    "requires_summarization": false,
+    "data_keys": [
+      "fva_results",
+      "summary",
+      "statistics"
+    ]
+  },
+  "FluxSampling": {
+    "execution_time": 15.636627,
+    "size_bytes": 272882,
+    "size_kb": 266.486328125,
+    "element_counts": {
+      "samples": 95,
+      "analysis": 5
+    },
+    "success": true,
+    "requires_summarization": true,
+    "data_keys": [
+      "samples",
+      "analysis"
+    ]
+  },
+  "Essentiality": {
+    "execution_time": 30.378964,
+    "size_bytes": 8816,
+    "size_kb": 8.609375,
+    "element_counts": {
+      "wild_type_growth": 1,
+      "threshold": 1,
+      "essential_genes": 7,
+      "essential_reactions": 18,
+      "gene_analysis": 4,
+      "reaction_analysis": 4,
+      "summary": 3
+    },
+    "success": true,
+    "requires_summarization": false,
+    "data_keys": [
+      "wild_type_growth",
+      "threshold",
+      "essential_genes",
+      "essential_reactions",
+      "gene_analysis",
+      "reaction_analysis",
+      "summary"
+    ]
+  },
+  "MediaSelector": {
+    "execution_time": 0.13989,
+    "size_bytes": 2146,
+    "size_kb": 2.095703125,
+    "element_counts": {
+      "model_analysis": 7,
+      "media_results": 5,
+      "recommendations": 3,
+      "best_media": 1,
+      "ai_suggestion": 3
+    },
+    "success": true,
+    "requires_summarization": false,
+    "data_keys": [
+      "model_analysis",
+      "media_results",
+      "recommendations",
+      "best_media",
+      "ai_suggestion"
+    ]
+  },
+  "BiochemEntityResolver": {
+    "execution_time": 0.028475,
+    "size_bytes": 1763,
+    "size_kb": 1.7216796875,
+    "element_counts": {
+      "entity_id": 1,
+      "entity_type": 1,
+      "resolved": 1,
+      "primary_id": 1,
+      "primary_name": 1,
+      "aliases": 20,
+      "names": 10,
+      "suggestions": 0
+    },
+    "success": true,
+    "requires_summarization": false,
+    "data_keys": [
+      "entity_id",
+      "entity_type",
+      "resolved",
+      "primary_id",
+      "primary_name",
+      "aliases",
+      "names",
+      "suggestions"
+    ]
+  }
+}

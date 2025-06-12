@@ -93,6 +93,10 @@ class RealTimeMetabolicAgent(BaseAgent):
             if isinstance(config, dict)
             else True
         )
+        # 🔍 LLM Input Logging - This is what you requested!
+        self.log_llm_inputs = (
+            config.get("log_llm_inputs", False) if isinstance(config, dict) else False
+        )
         self._llm_cache = {}
 
         # Initialize Phase 8 Advanced Agentic Capabilities
@@ -372,6 +376,9 @@ Think step by step about the query requirements and tool capabilities."""
                 signal.signal(signal.SIGALRM, timeout_handler)
                 signal.alarm(timeout_seconds)
 
+            # 🔍 LOG COMPLETE LLM INPUT - This is what you requested!
+            self._log_llm_input("first_tool_selection", 1, prompt, {})
+
             # Log the start of LLM call
             start_time = time.time()
             logger.debug(
@@ -559,6 +566,11 @@ Make your decision based on the ACTUAL DATA PATTERNS you see, not generic workfl
             logger.debug(f"🔍 DECISION TIMEOUT DEBUG: Model '{model_name}' detected")
             logger.debug(f"🔍 DECISION TIMEOUT DEBUG: Using {timeout_seconds}s timeout")
             logger.debug(f"🔍 DECISION TIMEOUT DEBUG: Step {step_number} analysis")
+
+            # 🔍 LOG COMPLETE LLM INPUT - This is what you requested!
+            self._log_llm_input(
+                "decision_analysis", step_number, prompt, knowledge_base
+            )
 
             # Check if we're in the main thread for signal-based timeout
             is_main_thread = threading.current_thread() is threading.main_thread()
@@ -830,6 +842,11 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
 
                 signal.signal(signal.SIGALRM, timeout_handler)
                 signal.alarm(timeout_seconds)
+
+            # 🔍 LOG COMPLETE LLM INPUT - This is what you requested!
+            self._log_llm_input(
+                "final_conclusions", len(knowledge_base), prompt, knowledge_base
+            )
 
             # Log the start of LLM call
             start_time = time.time()
@@ -1660,6 +1677,57 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
         else:
             return "run_metabolic_fba"  # Default starting point
 
+    def _log_llm_input(
+        self, phase: str, step: int, prompt: str, knowledge_base: Dict[str, Any]
+    ):
+        """🔍 LOG COMPLETE LLM INPUT - This logs exactly what the LLM receives"""
+        if not self.log_llm_inputs:
+            return  # Skip logging if not enabled
+
+        # Create detailed LLM input log
+        llm_input_log = {
+            "timestamp": datetime.now().isoformat(),
+            "phase": phase,  # e.g., "first_tool_selection", "decision_analysis", "final_conclusions"
+            "step": step,
+            "run_id": self.run_id,
+            "llm_model": getattr(self.llm, "model_name", "unknown"),
+            "prompt_length_chars": len(prompt),
+            "prompt_length_words": len(prompt.split()),
+            "knowledge_base_size": len(knowledge_base),
+            "tool_data_summary": {
+                tool_name: {
+                    "data_type": type(data).__name__,
+                    "data_size_chars": len(str(data)),
+                    "dict_keys": list(data.keys()) if isinstance(data, dict) else None,
+                    "list_length": len(data) if isinstance(data, list) else None,
+                }
+                for tool_name, data in knowledge_base.items()
+            },
+            "complete_prompt": prompt,  # 🔥 THE ACTUAL PROMPT SENT TO LLM
+            "raw_knowledge_base": knowledge_base,  # 🔥 THE ACTUAL TOOL DATA
+        }
+
+        # Save to dedicated LLM input log file
+        llm_input_file = (
+            self.run_dir / f"llm_input_{phase}_step{step}_{int(time.time())}.json"
+        )
+        with open(llm_input_file, "w") as f:
+            json.dump(llm_input_log, f, indent=2, default=str)
+
+        # Also log summary to main logger
+        logger.info(f"🔍 LLM INPUT LOGGED: {phase} step {step}")
+        logger.info(
+            f"   📄 Prompt: {len(prompt):,} chars, {len(prompt.split()):,} words"
+        )
+        logger.info(f"   📊 Knowledge base: {len(knowledge_base)} tools")
+
+        # Log tool data sizes for analysis
+        for tool_name, data in knowledge_base.items():
+            data_size = len(str(data))
+            logger.info(f"   🔧 {tool_name}: {data_size:,} chars")
+
+        logger.info(f"   💾 Full LLM input saved: {llm_input_file}")
+
     def _log_ai_decision(self, decision_type: str, data: Dict[str, Any]):
         """Log AI decision-making for audit trail"""
         log_entry = {
@@ -1792,12 +1860,14 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
                 "📊 Delegating comprehensive analysis to LangGraphMetabolicAgent"
             )
             try:
-                # Create a new LangGraph agent with current config
-                from .langgraph_metabolic import LangGraphMetabolicAgent
-
-                langgraph = LangGraphMetabolicAgent(
-                    llm=self.llm, tools=list(self._tools_dict.values()), config={}
-                )
+                # Use cached LangGraph agent to avoid initialization spam
+                if not hasattr(self, '_langgraph_delegate'):
+                    from .langgraph_metabolic import LangGraphMetabolicAgent
+                    self._langgraph_delegate = LangGraphMetabolicAgent(
+                        llm=self.llm, tools=list(self._tools_dict.values()), config={}
+                    )
+                
+                langgraph = self._langgraph_delegate
                 result = langgraph.run({"query": query})
 
                 # Complete audit trail if enabled

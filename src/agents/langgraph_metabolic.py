@@ -32,6 +32,7 @@ from langgraph.prebuilt import ToolNode
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
+from ..config.debug_config import get_debug_config
 from ..config.prompts import load_prompt_template, load_prompts
 from ..llm.base import BaseLLM
 from ..tools.base import BaseTool, ToolResult
@@ -270,8 +271,14 @@ class LangGraphMetabolicAgent(BaseAgent):
         self.execution_log = []
         self.performance_metrics = {}
 
-        logger.info(f"LangGraphMetabolicAgent initialized with {len(tools)} tools")
-        logger.info(f"Run directory: {self.run_dir}")
+        # Only log initialization if LangGraph debug is enabled
+        debug_config = get_debug_config()
+        if debug_config.langgraph_debug:
+            logger.info(f"LangGraphMetabolicAgent initialized with {len(tools)} tools")
+            logger.info(f"Run directory: {self.run_dir}")
+        else:
+            # Use very low log level for quiet operation
+            logger.log(5, f"LangGraph agent initialized with {len(tools)} tools")
 
     def _create_workflow(self) -> StateGraph:
         """Create the LangGraph workflow with parallel execution capabilities"""

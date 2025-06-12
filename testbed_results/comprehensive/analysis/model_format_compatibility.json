@@ -1,0 +1,172 @@
+{
+  "format_summary": {
+    "BiGG_models": [
+      "e_coli_core",
+      "iML1515"
+    ],
+    "ModelSEED_models": [
+      "EcoliMG1655",
+      "B_aphidicola"
+    ],
+    "format_specific_tools": {}
+  },
+  "media_tool_compatibility": {
+    "MediaSelector": {
+      "BiGG": [
+        {
+          "model": "e_coli_core",
+          "success": true,
+          "compatibility_score": null
+        },
+        {
+          "model": "iML1515",
+          "success": true,
+          "compatibility_score": null
+        }
+      ],
+      "ModelSEED": [
+        {
+          "model": "EcoliMG1655",
+          "success": true,
+          "compatibility_score": null
+        },
+        {
+          "model": "B_aphidicola",
+          "success": true,
+          "compatibility_score": null
+        }
+      ]
+    },
+    "MediaManipulator": {
+      "BiGG": [
+        {
+          "model": "e_coli_core",
+          "success": true,
+          "compatibility_score": null
+        },
+        {
+          "model": "iML1515",
+          "success": true,
+          "compatibility_score": null
+        }
+      ],
+      "ModelSEED": [
+        {
+          "model": "EcoliMG1655",
+          "success": true,
+          "compatibility_score": null
+        },
+        {
+          "model": "B_aphidicola",
+          "success": true,
+          "compatibility_score": null
+        }
+      ]
+    },
+    "MediaCompatibility": {
+      "BiGG": [
+        {
+          "model": "e_coli_core",
+          "success": true,
+          "compatibility_score": null
+        },
+        {
+          "model": "iML1515",
+          "success": true,
+          "compatibility_score": null
+        }
+      ],
+      "ModelSEED": [
+        {
+          "model": "EcoliMG1655",
+          "success": true,
+          "compatibility_score": null
+        },
+        {
+          "model": "B_aphidicola",
+          "success": true,
+          "compatibility_score": null
+        }
+      ]
+    },
+    "MediaComparator": {
+      "BiGG": [
+        {
+          "model": "e_coli_core",
+          "success": true,
+          "compatibility_score": null
+        },
+        {
+          "model": "iML1515",
+          "success": true,
+          "compatibility_score": null
+        }
+      ],
+      "ModelSEED": [
+        {
+          "model": "EcoliMG1655",
+          "success": true,
+          "compatibility_score": null
+        },
+        {
+          "model": "B_aphidicola",
+          "success": true,
+          "compatibility_score": null
+        }
+      ]
+    },
+    "MediaOptimization": {
+      "BiGG": [
+        {
+          "model": "e_coli_core",
+          "success": true,
+          "compatibility_score": null
+        },
+        {
+          "model": "iML1515",
+          "success": true,
+          "compatibility_score": null
+        }
+      ],
+      "ModelSEED": [
+        {
+          "model": "EcoliMG1655",
+          "success": true,
+          "compatibility_score": null
+        },
+        {
+          "model": "B_aphidicola",
+          "success": true,
+          "compatibility_score": null
+        }
+      ]
+    },
+    "AuxotrophyPrediction": {
+      "BiGG": [
+        {
+          "model": "e_coli_core",
+          "success": true,
+          "compatibility_score": null
+        },
+        {
+          "model": "iML1515",
+          "success": true,
+          "compatibility_score": null
+        }
+      ],
+      "ModelSEED": [
+        {
+          "model": "EcoliMG1655",
+          "success": true,
+          "compatibility_score": null
+        },
+        {
+          "model": "B_aphidicola",
+          "success": true,
+          "compatibility_score": null
+        }
+      ]
+    }
+  },
+  "biochem_tool_effectiveness": {}
+}

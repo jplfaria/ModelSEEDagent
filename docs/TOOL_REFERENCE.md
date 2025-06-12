@@ -2,18 +2,19 @@
 
 ## Overview
 
-This document provides a comprehensive reference for all 19 metabolic modeling tools available in the ModelSEED Agent platform. This documentation details each tool's capabilities, parameters, numerical precision improvements, and practical usage examples.
+This document provides a comprehensive reference for all 23 metabolic modeling tools available in the ModelSEED Agent platform. This documentation details each tool's capabilities, parameters, numerical precision improvements, and practical usage examples.
 
 ## Table of Contents
 
 1. [Infrastructure and Framework](#infrastructure-and-framework)
-2. [Core COBRA Tools](#core-cobra-tools)
-3. [Biochemistry Tools](#biochemistry-tools)
-4. [ModelSEED Tools](#modelseed-tools)
-5. [RAST Tools](#rast-tools)
-6. [Numerical Precision Improvements](#numerical-precision-improvements)
-7. [Error Handling Enhancements](#error-handling-enhancements)
-8. [Usage Examples](#usage-examples)
+2. [AI Media Tools](#ai-media-tools)
+3. [Core COBRA Tools](#core-cobra-tools)
+4. [Biochemistry Tools](#biochemistry-tools)
+5. [ModelSEED Tools](#modelseed-tools)
+6. [RAST Tools](#rast-tools)
+7. [Numerical Precision Improvements](#numerical-precision-improvements)
+8. [Error Handling Enhancements](#error-handling-enhancements)
+9. [Usage Examples](#usage-examples)
 
 ---
 
@@ -47,6 +48,260 @@ The ModelSEED Agent implements a unified numerical precision framework that ensu
 - `calculate_growth_fraction()`: Safe growth ratio calculation
 
 ### Error Handling Framework
+
+---
+
+## AI Media Tools
+
+The AI Media Tools represent a revolutionary advancement in metabolic modeling, providing intelligent, AI-powered media management and optimization capabilities. These 6 specialized tools enable natural language interaction, automated media selection, and advanced optimization for metabolic models.
+
+### 1. MediaSelectorTool (`select_optimal_media`)
+
+**Purpose**: AI-powered optimal media selection based on model characteristics
+
+**Key Features**:
+- Intelligent model analysis for media compatibility
+- Growth rate prediction across multiple media types
+- AI-driven recommendations based on organism characteristics
+- Support for custom growth targets
+
+**Parameters**:
+- `model_path` (str): Path to the metabolic model file
+- `target_growth` (float, default=0.1): Minimum target growth rate
+- `exclude_media` (list, optional): Media types to exclude from selection
+
+**Output**:
+```json
+{
+  "best_media": "AuxoMedia",
+  "growth_rate": 0.454,
+  "analysis": {
+    "tested_media": ["GMM", "AuxoMedia", "PyruvateMinimalMedia"],
+    "growth_rates": {"GMM": 0.032, "AuxoMedia": 0.454, "PyruvateMinimalMedia": 0.0},
+    "recommendations": ["Use AuxoMedia for optimal growth"]
+  }
+}
+```
+
+**Usage Example**:
+```bash
+modelseed-agent analyze model.xml --query "select optimal media for this E. coli model"
+```
+
+### 2. MediaManipulatorTool (`manipulate_media_composition`)
+
+**Purpose**: Natural language media modification with AI interpretation
+
+**Key Features**:
+- Natural language command processing ("make anaerobic", "add vitamins")
+- Intelligent compound addition/removal based on biological context
+- Growth testing after modification
+- Chemical feasibility validation
+
+**Parameters**:
+- `base_media` (str): Starting media composition
+- `ai_command` (str): Natural language modification command
+- `model_path` (str, optional): Model for growth testing
+- `test_growth` (bool, default=True): Test growth after modification
+
+**Natural Language Commands**:
+- "make anaerobic" → Remove oxygen, add alternative electron acceptors
+- "add vitamins" → Add vitamin B complex
+- "add amino acids" → Add all 20 standard amino acids
+- "remove carbon sources" → Remove all carbon-containing compounds
+- "make minimal" → Reduce to essential compounds only
+
+**Output**:
+```json
+{
+  "modified_media_name": "GMM_anaerobic",
+  "modifications_made": ["Removed oxygen", "Added nitrate as electron acceptor"],
+  "growth_rate_before": 0.45,
+  "growth_rate_after": 0.42,
+  "success": true
+}
+```
+
+### 3. MediaCompatibilityTool (`analyze_media_compatibility`)
+
+**Purpose**: Intelligent analysis of media-model compatibility with AI suggestions
+
+**Key Features**:
+- Transport capability analysis
+- Missing compound identification
+- AI-powered improvement suggestions
+- Cross-media compatibility scoring
+
+**Parameters**:
+- `model_path` (str): Path to the metabolic model
+- `media_names` (list): List of media to analyze
+- `detailed_analysis` (bool, default=True): Include detailed breakdown
+
+**Output**:
+```json
+{
+  "compatibility_results": {
+    "GMM": {
+      "compatibility_score": 0.85,
+      "missing_transporters": ["glucose_transporter"],
+      "incompatible_compounds": [],
+      "suggestions": ["Add glucose transport capability"]
+    }
+  }
+}
+```
+
+### 4. MediaComparatorTool (`compare_media_performance`)
+
+**Purpose**: Cross-model media performance comparison with AI insights
+
+**Key Features**:
+- Multi-model, multi-media growth comparison
+- Performance ranking and insights
+- Visualization-ready data export
+- Statistical significance testing
+
+**Parameters**:
+- `model_path` (str): Primary model path
+- `media_list` (list): Media types to compare
+- `include_visualizations` (bool, default=False): Generate visualization files
+
+**Output**:
+```json
+{
+  "performance_matrix": {
+    "GMM": {"growth_rate": 0.032, "rank": 2},
+    "AuxoMedia": {"growth_rate": 0.454, "rank": 1}
+  },
+  "insights": ["Best performance: AuxoMedia (0.454 h⁻¹)"],
+  "best_media": "AuxoMedia"
+}
+```
+
+### 5. MediaOptimizationTool (`optimize_media_composition`)
+
+**Purpose**: AI-driven media optimization for specific growth targets
+
+**Key Features**:
+- Iterative and greedy optimization strategies
+- Target growth rate achievement
+- Compound importance scoring
+- Cost-effectiveness analysis
+
+**Parameters**:
+- `model_path` (str): Path to the metabolic model
+- `target_growth_rate` (float): Desired growth rate to achieve
+- `base_media` (str, default="GMM"): Starting media composition
+- `max_compounds` (int, default=50): Maximum compounds in optimized media
+- `strategy` (str, default="iterative"): Optimization strategy
+
+**Optimization Strategies**:
+- **Iterative**: Step-by-step compound addition based on growth impact
+- **Greedy**: Add compounds with highest predicted impact first
+
+**Output**:
+```json
+{
+  "optimized_media": {"glc__D_e": -10.0, "nh4_e": -10.0, "pi_e": -10.0},
+  "final_growth": 0.52,
+  "optimization_steps": 8,
+  "compound_importance": {"glc__D_e": 0.45, "nh4_e": 0.23},
+  "ai_insights": {
+    "summary": "✅ Successfully optimized media to achieve target growth",
+    "efficiency_analysis": {"growth_per_compound": 0.017}
+  }
+}
+```
+
+### 6. AuxotrophyPredictionTool (`predict_auxotrophies`)
+
+**Purpose**: AI-powered auxotrophy prediction from model gaps and pathway analysis
+
+**Key Features**:
+- Metabolic gap analysis
+- Essential compound prediction
+- Pathway-based auxotrophy inference
+- Custom media design recommendations
+
+**Parameters**:
+- `model_path` (str): Path to the metabolic model
+- `test_media` (str, default="AuxoMedia"): Media for auxotrophy testing
+- `compound_categories` (list): Categories to test (amino_acids, vitamins, nucleotides)
+- `growth_threshold` (float, default=0.01): Minimum growth for non-auxotrophic
+
+**Output**:
+```json
+{
+  "predicted_auxotrophies": [
+    {
+      "compound": "his__L_e",
+      "category": "amino_acids",
+      "growth_without": 0.001,
+      "severity": "High"
+    }
+  ],
+  "essential_compounds": ["his__L_e", "trp__L_e"],
+  "ai_predictions": {
+    "summary": "🔍 Detected 2 potential auxotrophies requiring supplementation",
+    "supplement_recommendations": ["Consider amino acid supplementation"]
+  }
+}
+```
+
+### AI Media Workflow Templates
+
+The AI Media Tools are integrated into 5 comprehensive workflow templates:
+
+#### 1. Optimal Media Discovery Workflow
+**Purpose**: Find the best media for any metabolic model
+**Tools Used**: `analyze_metabolic_model` → `select_optimal_media` → `compare_media_performance` → `run_metabolic_fba` → `analyze_media_compatibility`
+**Duration**: 5-10 minutes
+**Difficulty**: Beginner
+
+#### 2. Media Optimization for Production Workflow
+**Purpose**: Optimize media for specific growth or production targets
+**Tools Used**: `run_metabolic_fba` → `optimize_media_composition` → `run_flux_variability_analysis` → `compare_media_performance`
+**Duration**: 10-20 minutes
+**Difficulty**: Intermediate
+
+#### 3. Auxotrophy Analysis and Media Design Workflow
+**Purpose**: Comprehensive auxotrophy analysis with custom media design
+**Tools Used**: `analyze_metabolic_model` → `predict_auxotrophies` → `identify_auxotrophies` → `find_minimal_media` → `manipulate_media_composition`
+**Duration**: 15-25 minutes
+**Difficulty**: Advanced
+
+#### 4. Cross-Model Media Comparison Workflow
+**Purpose**: Compare media performance across different species/strains
+**Tools Used**: `select_optimal_media` (multiple models) → `compare_media_performance` → `analyze_media_compatibility` → `analyze_pathway`
+**Duration**: 20-30 minutes
+**Difficulty**: Advanced
+
+#### 5. Media Troubleshooting Workflow
+**Purpose**: Diagnose and fix media-related growth issues
+**Tools Used**: `run_metabolic_fba` → `analyze_media_compatibility` → `find_missing_media` → `manipulate_media_composition` → `select_optimal_media`
+**Duration**: 10-15 minutes
+**Difficulty**: Intermediate
+
+### Interactive CLI Commands
+
+The AI Media Tools are accessible through intuitive CLI commands:
+
+```bash
+# Show media selector interface
+media
+
+# AI-powered media selection
+media-select e_coli_core.xml
+
+# Natural language media modification
+media-modify make anaerobic
+media-modify add vitamins and amino acids
+
+# Cross-model performance comparison
+media-compare
+```
+
+---
 
 **Enhanced Error System** (`src/tools/cobra/error_handling.py`):
 - Model path validation with intelligent file suggestions

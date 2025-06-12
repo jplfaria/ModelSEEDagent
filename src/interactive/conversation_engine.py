@@ -198,7 +198,18 @@ class DynamicAIConversationEngine:
                         )
 
                 # Create the real AI agent
-                config = {"max_iterations": 6}
+                # Check for LLM input logging via environment variable
+                import os
+                log_llm_inputs = os.getenv("MODELSEED_LOG_LLM_INPUTS", "false").lower() in ("true", "1", "yes")
+                
+                config = {
+                    "max_iterations": 6,
+                    "log_llm_inputs": log_llm_inputs,  # 🔍 Enable via env var
+                }
+                
+                if log_llm_inputs:
+                    console.print("🔍 LLM input logging enabled via MODELSEED_LOG_LLM_INPUTS", style="yellow")
+                
                 self.ai_agent = create_real_time_agent(llm, tools, config)
 
                 # DEBUG: Log what agent we actually created

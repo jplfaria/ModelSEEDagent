@@ -26,6 +26,9 @@ from .utils import BiomassDetector, CompoundMapper, ModelUtils
 # Set up logging
 logger = logging.getLogger(__name__)
 
+# Class-level flag to track if cobrakbase availability has been logged
+_cobrakbase_check_logged = False
+
 
 class ModelSEEDpyEnhancement:
     """Enhanced ModelSEEDpy model handling with cobrakbase integration"""
@@ -39,10 +42,18 @@ class ModelSEEDpyEnhancement:
         # Try to import cobrakbase
         self.cobrakbase_available = self._check_cobrakbase()
 
-        if self.cobrakbase_available:
-            logger.info("cobrakbase integration enabled")
-        else:
-            logger.warning("cobrakbase not available - using fallback methods")
+        # Only log cobrakbase status once globally to avoid spam
+        global _cobrakbase_check_logged
+        if not _cobrakbase_check_logged:
+            if self.cobrakbase_available:
+                logger.info("cobrakbase integration enabled")
+            else:
+                # Use a very low log level to minimize noise - only show in detailed debugging
+                logger.log(
+                    5,
+                    "cobrakbase not available - using standard COBRApy methods (fallback)",
+                )
+            _cobrakbase_check_logged = True
 
     def _check_cobrakbase(self) -> bool:
         """Check if cobrakbase is available and import key modules"""
@@ -56,7 +67,10 @@ class ModelSEEDpyEnhancement:
 
             return True
         except ImportError as e:
-            logger.debug(f"cobrakbase import failed: {e}")
+            # Only log the import error details once globally to avoid spam
+            global _cobrakbase_check_logged
+            if not _cobrakbase_check_logged:
+                logger.log(5, f"cobrakbase import failed: {e}")
             return False
 
     def detect_modelseedpy_model(self, model: cobra.Model) -> bool:

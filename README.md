@@ -2,7 +2,7 @@
 
 **Advanced AI-Powered Metabolic Modeling Platform**
 
-ModelSEEDagent is a production-ready AI-powered metabolic modeling platform that combines the power of large language models with **17 specialized bioinformatics tools** and **advanced AI reasoning capabilities**. Built on LangGraph for intelligent workflow orchestration, it provides the most comprehensive metabolic modeling AI assistant available.
+ModelSEEDagent is a production-ready AI-powered metabolic modeling platform that combines the power of large language models with **23 specialized bioinformatics tools** and **advanced AI reasoning capabilities**. Built on LangGraph for intelligent workflow orchestration, it provides the most comprehensive metabolic modeling AI assistant available.
 
 ## 🚀 Quick Start
 
@@ -30,6 +30,7 @@ modelseed-agent interactive
 - 🧠 **Pattern Learning** - Cross-model learning and intelligent recommendations
 - 🕵️ **AI Transparency** - Advanced hallucination detection and audit system
 - 💬 **Natural Language Interface** - Conversational AI for complex metabolic analysis
+- 🧬 **AI Media Intelligence** - 6 specialized tools for intelligent media management and optimization
 
 ## 🧠 Phase 8: Advanced AI Reasoning
 
@@ -56,7 +57,42 @@ Cross-model learning that improves recommendations over time:
 modelseed-agent phase8 patterns
 ```
 
-## 🛠️ Specialized Tools (17 Total)
+## 🧬 AI Media Intelligence
+
+Revolutionary AI-powered media management for metabolic modeling:
+
+### 🎯 Smart Media Selection
+AI analyzes model characteristics and automatically selects optimal media:
+```bash
+modelseed-agent analyze model.xml --query "select optimal media for this E. coli model"
+```
+
+### 🗣️ Natural Language Media Modification
+Modify media using simple English commands:
+```bash
+# Interactive CLI
+media-modify make anaerobic
+media-modify add vitamins and amino acids
+media-modify remove all carbon sources except glucose
+```
+
+### 🔬 Automated Workflow Templates
+5 pre-built workflow templates combining media selection with analysis:
+- **Optimal Media Discovery** - Find the best media for any model
+- **Production Optimization** - Optimize media for specific metabolites
+- **Auxotrophy Analysis** - Predict and design media for auxotrophs
+- **Cross-Model Comparison** - Compare media performance across species
+- **Troubleshooting** - Diagnose and fix media-related growth issues
+
+## 🛠️ Specialized Tools (23 Total)
+
+### 🧬 AI Media Tools (6 tools)
+- **Media Selection** (`select_optimal_media`) - AI-powered optimal media selection for models
+- **Media Manipulation** (`manipulate_media_composition`) - Natural language media modification ("make anaerobic", "add vitamins")
+- **Media Compatibility** (`analyze_media_compatibility`) - Intelligent media-model compatibility analysis
+- **Media Comparison** (`compare_media_performance`) - Cross-model media performance comparison
+- **Media Optimization** (`optimize_media_composition`) - AI-driven media optimization for growth targets
+- **Auxotrophy Prediction** (`predict_auxotrophies`) - AI prediction of auxotrophies from model gaps
 
 ### ModelSEED Integration (4 tools)
 - **Genome Annotation** (`annotate_genome_rast`) - BV-BRC RAST service integration

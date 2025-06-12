@@ -37,13 +37,23 @@ from rich.table import Table
 from rich.text import Text
 from rich.tree import Tree
 
-# Add src to path
-sys.path.insert(0, str(Path(__file__).parent.parent))
+# Add project root to Python path for imports
+project_root = str(Path(__file__).parent.parent.parent)
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
+# Import warnings suppression for module reload issues
+import warnings
+
+warnings.filterwarnings(
+    "ignore", message=".*found in sys.modules.*", category=RuntimeWarning
+)
 
 from src.agents import create_real_time_agent
 from src.agents.langgraph_metabolic import LangGraphMetabolicAgent
 from src.agents.tool_integration import EnhancedToolIntegration
 from src.cli.audit_viewer import audit_app as ai_audit_app
+from src.config.debug_config import configure_logging, print_debug_status
 from src.interactive.streaming_interface import RealTimeStreamingInterface
 from src.llm.argo import ArgoLLM
 from src.llm.local_llm import LocalLLM
@@ -100,10 +110,8 @@ def load_cli_config() -> Dict[str, Any]:
             with open(CLI_CONFIG_FILE, "r") as f:
                 config = json.load(f)
 
-            # Don't auto-recreate tools and agent during config loading to avoid creating agents unnecessarily
-            # This prevents import-time agent creation that was causing repeated initialization issues
-            # Agent creation should be done explicitly when needed, not during config loading
-            if False:  # config.get("llm_config") and config.get("llm_backend"):
+            # Auto-recreate tools and agent if configuration is available
+            if config.get("llm_config") and config.get("llm_backend"):
                 try:
                     # Recreate LLM
                     llm_config = config["llm_config"]
@@ -272,16 +280,11 @@ def load_cli_config() -> Dict[str, Any]:
                         ),
                     ]
 
-                    # Recreate agent
-                    agent_config = {
-                        "name": "modelseed_langgraph_agent",
-                        "description": "Enhanced ModelSEED agent with LangGraph workflows",
-                    }
-                    agent = LangGraphMetabolicAgent(llm, tools, agent_config)
-
-                    # Update runtime objects
+                    # Store configuration for lazy agent creation
+                    # Don't create agent immediately to avoid initialization spam
                     config["tools"] = tools
-                    config["agent"] = agent
+                    config["agent"] = None  # Will be created on demand
+                    config["agent_factory"] = lambda: get_or_create_cached_agent(llm, tools)
 
                 except Exception as e:
                     # If recreation fails, just log warning and continue with basic config
@@ -323,6 +326,29 @@ def save_cli_config(config: Dict[str, Any]) -> None:
 
 # Global state for configuration (now persistent)
 config_state = load_cli_config()
+
+# Initialize debug configuration early
+configure_logging()
+
+# Agent caching to prevent excessive recreations
+_agent_cache = {}
+
+
+def get_or_create_cached_agent(llm, tools):
+    """Get cached agent or create new one if needed"""
+    # Create cache key based on LLM type and tool count
+    llm_key = f"{type(llm).__name__}_{getattr(llm, 'model_name', 'unknown')}"
+    cache_key = f"{llm_key}_{len(tools)}"
+    
+    if cache_key not in _agent_cache:
+        from src.agents.langgraph_metabolic import LangGraphMetabolicAgent
+        agent_config = {
+            "name": "modelseed_langgraph_agent",
+            "description": "Enhanced ModelSEED agent with LangGraph workflows",
+        }
+        _agent_cache[cache_key] = LangGraphMetabolicAgent(llm, tools, agent_config)
+    
+    return _agent_cache[cache_key]
 
 # ASCII Art Banner
 BANNER = """
@@ -471,6 +497,9 @@ def main(
             "modelseed-agent status", "📊 Show system status and metrics"
         )
         commands_table.add_row(
+            "modelseed-agent debug", "🔍 Show debug configuration and control logging"
+        )
+        commands_table.add_row(
             "modelseed-agent audit list", "🔍 Review tool execution history"
         )
         commands_table.add_row(
@@ -517,20 +546,37 @@ def setup(
 
     # Get defaults from environment or use fallbacks
     default_backend = os.getenv("DEFAULT_LLM_BACKEND", "argo")
-    default_model = os.getenv("DEFAULT_MODEL_NAME", "gpt4o")  # Changed default to gpt4o
+    default_model = os.getenv(
+        "DEFAULT_MODEL_NAME", "gpto1"
+    )  # Default to gpto1 reasoning model
 
     # Use provided backend or fall back to default/prompt
     if not llm_backend:
         if interactive:
-            llm_backend = questionary.select(
+            # Create simple string choices for questionary
+            choice_map = {
+                "🧬 Argo Gateway (Recommended)": "argo",
+                "🤖 OpenAI API": "openai",
+                "💻 Local LLM": "local",
+            }
+
+            # Map backend values to display text for default
+            backend_display_map = {
+                "argo": "🧬 Argo Gateway (Recommended)",
+                "openai": "🤖 OpenAI API",
+                "local": "💻 Local LLM",
+            }
+
+            selected_display = questionary.select(
                 "Choose LLM backend:",
-                choices=[
-                    questionary.Choice("argo", "🧬 Argo Gateway (Recommended)"),
-                    questionary.Choice("openai", "🤖 OpenAI API"),
-                    questionary.Choice("local", "💻 Local LLM"),
-                ],
-                default=default_backend,
+                choices=list(choice_map.keys()),
+                default=backend_display_map.get(
+                    default_backend, "🧬 Argo Gateway (Recommended)"
+                ),
             ).ask()
+
+            # Map display text back to backend value
+            llm_backend = choice_map.get(selected_display, "argo")
         else:
             llm_backend = default_backend
 
@@ -557,10 +603,10 @@ def setup(
             if llm_backend == "argo":
                 # Argo Gateway configuration with ACTUAL available models
                 argo_models = {
-                    # Dev Environment Models
-                    "gpt4o": "GPT-4o (Latest, Recommended)",
+                    # Dev Environment Models - prefer gpto1 as default
+                    "gpto1": "GPT-o1 (Reasoning, Recommended)",
+                    "gpt4o": "GPT-4o (Latest)",
                     "gpt4olatest": "GPT-4o Latest",
-                    "gpto1": "GPT-o1 (Reasoning)",
                     "gpto1mini": "GPT-o1 Mini",
                     "gpto1preview": "GPT-o1 Preview",
                     "gpto3mini": "GPT-o3 Mini",
@@ -579,17 +625,25 @@ def setup(
 
                     # Use provided model or prompt for selection
                     if not model_name:
-                        model_name = questionary.select(
+                        # Create simple string choices and mapping (same fix as backend selection)
+                        model_display_map = {v: k for k, v in argo_models.items()}
+
+                        # Set default - prefer gpto1 if available, otherwise use provided default
+                        if default_model in argo_models:
+                            default_display = argo_models[default_model]
+                        else:
+                            default_display = (
+                                "GPT-o1 (Reasoning, Recommended)"  # Default to gpto1
+                            )
+
+                        selected_display = questionary.select(
                             "Choose Argo model:",
-                            choices=[
-                                questionary.Choice(k, v) for k, v in argo_models.items()
-                            ],
-                            default=(
-                                default_model
-                                if default_model in argo_models
-                                else "gpt4o"
-                            ),
+                            choices=list(argo_models.values()),
+                            default=default_display,
                         ).ask()
+
+                        # Map display text back to model name
+                        model_name = model_display_map.get(selected_display, "gpto1")
 
                     # Show helpful info about o-series models
                     if model_name.startswith("gpto"):
@@ -607,7 +661,9 @@ def setup(
                         )
                 else:
                     user = os.getenv("ARGO_USER", "default_user")
-                    model_name = model_name or default_model
+                    model_name = (
+                        model_name or "gpto1"
+                    )  # Default to gpto1 in non-interactive mode
 
                 # Build configuration with proper handling for o-series models
                 llm_config = {
@@ -911,7 +967,7 @@ def setup(
 
 
 def run_streaming_analysis(
-    query: str, model_file: Path, analysis_input: Dict[str, Any]
+    query: str, model_file: Path, analysis_input: Dict[str, Any], log_llm_inputs: bool = False
 ):
     """Run analysis with real-time streaming interface"""
     console.print("\n[bold cyan]🚀 Starting Real-Time AI Analysis[/bold cyan]")
@@ -941,8 +997,12 @@ def run_streaming_analysis(
             print_error("No tools configured. Run 'modelseed-agent setup' first.")
             return None
 
-        # Create dynamic agent
-        dynamic_agent = create_real_time_agent(llm, tools, {"max_iterations": 6})
+        # Create dynamic agent with optional LLM input logging
+        agent_config = {
+            "max_iterations": 6,
+            "log_llm_inputs": log_llm_inputs,  # Pass the CLI flag to agent
+        }
+        dynamic_agent = create_real_time_agent(llm, tools, agent_config)
 
         # Create streaming interface
         streaming = RealTimeStreamingInterface()
@@ -1037,6 +1097,11 @@ def analyze(
         "--stream",
         help="Use real-time streaming AI agent with live reasoning display",
     ),
+    log_llm_inputs: bool = typer.Option(
+        False,
+        "--log-llm-inputs",
+        help="🔍 Log complete LLM inputs (prompts + tool data) for analysis",
+    ),
 ):
     """
     🧬 Analyze a metabolic model with intelligent workflows
@@ -1088,7 +1153,7 @@ def analyze(
 
     # Choose between streaming and regular analysis
     if stream:
-        result = run_streaming_analysis(query, model_file, analysis_input)
+        result = run_streaming_analysis(query, model_file, analysis_input, log_llm_inputs)
     else:
         result = run_regular_analysis(analysis_input, max_iterations)
 
@@ -1285,6 +1350,42 @@ def interactive():
     except Exception as e:
         console.print(f"[red]❌ Error starting interactive session: {e}[/red]")
         raise typer.Exit(1)
+
+
+@app.command()
+def debug():
+    """
+    🔍 Show debug configuration and logging control
+    
+    Display current debug settings and environment variables that control
+    different levels of logging verbosity for different components.
+    
+    Environment Variables:
+    - MODELSEED_DEBUG_LEVEL: overall debug level (quiet, normal, verbose, trace)
+    - MODELSEED_DEBUG_COBRAKBASE: enable cobrakbase debug messages (true/false)
+    - MODELSEED_DEBUG_LANGGRAPH: enable LangGraph initialization debug (true/false)
+    - MODELSEED_DEBUG_HTTP: enable HTTP/SSL debug messages (true/false)
+    - MODELSEED_DEBUG_TOOLS: enable tool execution debug (true/false)
+    - MODELSEED_DEBUG_LLM: enable LLM interaction debug (true/false)
+    - MODELSEED_LOG_LLM_INPUTS: enable complete LLM input logging (true/false)
+    """
+    print_banner()
+    console.print("[bold blue]🔍 Debug Configuration Status[/bold blue]\n")
+    
+    # Print debug status using the dedicated function
+    print_debug_status()
+    
+    console.print("\n[bold green]💡 Tips for Debug Control:[/bold green]")
+    console.print("   • Set MODELSEED_DEBUG_LEVEL=quiet to minimize all debug output")
+    console.print("   • Set MODELSEED_DEBUG_LEVEL=trace to enable all debug messages")
+    console.print("   • Use component-specific flags to control individual debug areas")
+    console.print("   • Set MODELSEED_LOG_LLM_INPUTS=true for detailed LLM analysis")
+    
+    console.print("\n[bold yellow]📝 Example Usage:[/bold yellow]")
+    console.print("   export MODELSEED_DEBUG_LEVEL=verbose")
+    console.print("   export MODELSEED_DEBUG_COBRAKBASE=true")
+    console.print("   export MODELSEED_DEBUG_LANGGRAPH=false")
+    console.print("   modelseed-agent interactive")
 
 
 @app.command()

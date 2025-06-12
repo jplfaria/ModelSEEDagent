@@ -1,0 +1,325 @@
+{
+  "model_comparison": {},
+  "tool_consistency": {
+    "ReactionExpression": {
+      "tested_on_models": [
+        "e_coli_core",
+        "iML1515",
+        "EcoliMG1655",
+        "B_aphidicola"
+      ],
+      "success_by_model": {
+        "e_coli_core": true,
+        "iML1515": true,
+        "EcoliMG1655": true,
+        "B_aphidicola": true
+      },
+      "overall_success_rate": 1.0,
+      "consistency_score": true
+    },
+    "FBA": {
+      "tested_on_models": [
+        "e_coli_core",
+        "iML1515",
+        "EcoliMG1655",
+        "B_aphidicola"
+      ],
+      "success_by_model": {
+        "e_coli_core": true,
+        "iML1515": true,
+        "EcoliMG1655": true,
+        "B_aphidicola": true
+      },
+      "overall_success_rate": 1.0,
+      "consistency_score": true
+    },
+    "FluxVariability": {
+      "tested_on_models": [
+        "e_coli_core",
+        "iML1515",
+        "EcoliMG1655",
+        "B_aphidicola"
+      ],
+      "success_by_model": {
+        "e_coli_core": true,
+        "iML1515": true,
+        "EcoliMG1655": true,
+        "B_aphidicola": true
+      },
+      "overall_success_rate": 1.0,
+      "consistency_score": true
+    },
+    "MediaCompatibility": {
+      "tested_on_models": [
+        "e_coli_core",
+        "iML1515",
+        "EcoliMG1655",
+        "B_aphidicola"
+      ],
+      "success_by_model": {
+        "e_coli_core": true,
+        "iML1515": true,
+        "EcoliMG1655": true,
+        "B_aphidicola": true
+      },
+      "overall_success_rate": 1.0,
+      "consistency_score": true
+    },
+    "ModelAnalysis": {
+      "tested_on_models": [
+        "e_coli_core",
+        "iML1515",
+        "EcoliMG1655",
+        "B_aphidicola"
+      ],
+      "success_by_model": {
+        "e_coli_core": true,
+        "iML1515": true,
+        "EcoliMG1655": true,
+        "B_aphidicola": true
+      },
+      "overall_success_rate": 1.0,
+      "consistency_score": true
+    },
+    "MinimalMedia": {
+      "tested_on_models": [
+        "e_coli_core",
+        "iML1515",
+        "EcoliMG1655",
+        "B_aphidicola"
+      ],
+      "success_by_model": {
+        "e_coli_core": true,
+        "iML1515": true,
+        "EcoliMG1655": true,
+        "B_aphidicola": true
+      },
+      "overall_success_rate": 1.0,
+      "consistency_score": true
+    },
+    "MediaSelector": {
+      "tested_on_models": [
+        "e_coli_core",
+        "iML1515",
+        "EcoliMG1655",
+        "B_aphidicola"
+      ],
+      "success_by_model": {
+        "e_coli_core": true,
+        "iML1515": true,
+        "EcoliMG1655": true,
+        "B_aphidicola": true
+      },
+      "overall_success_rate": 1.0,
+      "consistency_score": true
+    },
+    "BiochemSearch": {
+      "tested_on_models": [
+        "e_coli_core",
+        "iML1515",
+        "EcoliMG1655",
+        "B_aphidicola"
+      ],
+      "success_by_model": {
+        "e_coli_core": true,
+        "iML1515": true,
+        "EcoliMG1655": true,
+        "B_aphidicola": true
+      },
+      "overall_success_rate": 1.0,
+      "consistency_score": true
+    },
+    "MediaOptimization": {
+      "tested_on_models": [
+        "e_coli_core",
+        "iML1515",
+        "EcoliMG1655",
+        "B_aphidicola"
+      ],
+      "success_by_model": {
+        "e_coli_core": true,
+        "iML1515": true,
+        "EcoliMG1655": true,
+        "B_aphidicola": true
+      },
+      "overall_success_rate": 1.0,
+      "consistency_score": true
+    },
+    "Auxotrophy": {
+      "tested_on_models": [
+        "e_coli_core",
+        "iML1515",
+        "EcoliMG1655",
+        "B_aphidicola"
+      ],
+      "success_by_model": {
+        "e_coli_core": true,
+        "iML1515": true,
+        "EcoliMG1655": true,
+        "B_aphidicola": true
+      },
+      "overall_success_rate": 1.0,
+      "consistency_score": true
+    },
+    "BiochemEntityResolver": {
+      "tested_on_models": [
+        "e_coli_core",
+        "iML1515",
+        "EcoliMG1655",
+        "B_aphidicola"
+      ],
+      "success_by_model": {
+        "e_coli_core": true,
+        "iML1515": true,
+        "EcoliMG1655": true,
+        "B_aphidicola": true
+      },
+      "overall_success_rate": 1.0,
+      "consistency_score": true
+    },
+    "MissingMedia": {
+      "tested_on_models": [
+        "e_coli_core",
+        "iML1515",
+        "EcoliMG1655",
+        "B_aphidicola"
+      ],
+      "success_by_model": {
+        "e_coli_core": true,
+        "iML1515": true,
+        "EcoliMG1655": true,
+        "B_aphidicola": true
+      },
+      "overall_success_rate": 1.0,
+      "consistency_score": true
+    },
+    "ProductionEnvelope": {
+      "tested_on_models": [
+        "e_coli_core",
+        "iML1515",
+        "EcoliMG1655",
+        "B_aphidicola"
+      ],
+      "success_by_model": {
+        "e_coli_core": true,
+        "iML1515": true,
+        "EcoliMG1655": true,
+        "B_aphidicola": true
+      },
+      "overall_success_rate": 1.0,
+      "consistency_score": true
+    },
+    "MediaManipulator": {
+      "tested_on_models": [
+        "e_coli_core",
+        "iML1515",
+        "EcoliMG1655",
+        "B_aphidicola"
+      ],
+      "success_by_model": {
+        "e_coli_core": true,
+        "iML1515": true,
+        "EcoliMG1655": true,
+        "B_aphidicola": true
+      },
+      "overall_success_rate": 1.0,
+      "consistency_score": true
+    },
+    "AuxotrophyPrediction": {
+      "tested_on_models": [
+        "e_coli_core",
+        "iML1515",
+        "EcoliMG1655",
+        "B_aphidicola"
+      ],
+      "success_by_model": {
+        "e_coli_core": true,
+        "iML1515": true,
+        "EcoliMG1655": true,
+        "B_aphidicola": true
+      },
+      "overall_success_rate": 1.0,
+      "consistency_score": true
+    },
+    "Essentiality": {
+      "tested_on_models": [
+        "e_coli_core",
+        "iML1515",
+        "EcoliMG1655",
+        "B_aphidicola"
+      ],
+      "success_by_model": {
+        "e_coli_core": true,
+        "iML1515": true,
+        "EcoliMG1655": true,
+        "B_aphidicola": true
+      },
+      "overall_success_rate": 1.0,
+      "consistency_score": true
+    },
+    "FluxSampling": {
+      "tested_on_models": [
+        "e_coli_core",
+        "iML1515",
+        "EcoliMG1655",
+        "B_aphidicola"
+      ],
+      "success_by_model": {
+        "e_coli_core": true,
+        "iML1515": true,
+        "EcoliMG1655": true,
+        "B_aphidicola": true
+      },
+      "overall_success_rate": 1.0,
+      "consistency_score": true
+    },
+    "GeneDeletion": {
+      "tested_on_models": [
+        "e_coli_core",
+        "iML1515",
+        "EcoliMG1655",
+        "B_aphidicola"
+      ],
+      "success_by_model": {
+        "e_coli_core": true,
+        "iML1515": true,
+        "EcoliMG1655": true,
+        "B_aphidicola": true
+      },
+      "overall_success_rate": 1.0,
+      "consistency_score": true
+    },
+    "MediaComparator": {
+      "tested_on_models": [
+        "e_coli_core",
+        "iML1515",
+        "EcoliMG1655",
+        "B_aphidicola"
+      ],
+      "success_by_model": {
+        "e_coli_core": true,
+        "iML1515": true,
+        "EcoliMG1655": true,
+        "B_aphidicola": true
+      },
+      "overall_success_rate": 1.0,
+      "consistency_score": true
+    }
+  },
+  "format_specific_performance": {
+    "BiGG": {
+      "models": [
+        "e_coli_core",
+        "iML1515"
+      ],
+      "success_rates": {}
+    },
+    "ModelSEED": {
+      "models": [
+        "EcoliMG1655",
+        "B_aphidicola"
+      ],
+      "success_rates": {}
+    }
+  }
+}
