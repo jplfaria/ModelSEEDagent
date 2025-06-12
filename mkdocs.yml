@@ -57,25 +57,30 @@ markdown_extensions:
   - pymdownx.keys
   - pymdownx.mark
   - pymdownx.tilde
-  - pymdownx.emoji:
-      emoji_index: !!python/name:pymdownx.emoji.twemoji
-      emoji_generator: !!python/name:pymdownx.emoji.to_svg
+  # - pymdownx.emoji:
+  #     emoji_index: !!python/name:material.extensions.emoji.twemoji
+  #     emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 nav:
   - Home: index.md
-  
+
   - User Guide:
     - Getting Started: user/README.md
     - User Guide: user/INTERACTIVE_GUIDE.md
-  
+
   - Technical Reference:
     - Architecture: ARCHITECTURE.md
     - Tool Reference: TOOL_REFERENCE.md
     - Debug Configuration: debug.md
     - Troubleshooting: troubleshooting.md
-  
+
   - API Documentation:
     - Overview: api/overview.md
-  
+    - Tool Implementation: api/tools.md
+
   - Operations:
     - Installation: installation.md
+    - Configuration: configuration.md
+    - Deployment: deployment.md
+    - Monitoring: monitoring.md
+    - Documentation Updates: documentation-updates.md
