@@ -1,0 +1,222 @@
+{
+  "audit_id": "8c056e09-4efe-494b-8820-0811e90078e4",
+  "session_id": null,
+  "tool_name": "analyze_pathway",
+  "timestamp": "2025-06-11T19:33:02.282331",
+  "input": {
+    "model_path": "/Users/jplfaria/repos/ModelSEEDagent/data/examples/e_coli_core.xml",
+    "pathway": "glycolysis"
+  },
+  "output": {
+    "structured": {
+      "success": true,
+      "message": "Pathway analysis completed for: glycolysis",
+      "data": {
+        "summary": {
+          "reaction_count": 9,
+          "gene_coverage": 15,
+          "metabolite_count": 17,
+          "reversible_reactions": 7
+        },
+        "reactions": [
+          {
+            "id": "PFK",
+            "name": "Phosphofructokinase",
+            "reaction": "atp_c + f6p_c --> adp_c + fdp_c + h_c",
+            "genes": [
+              "b3916",
+              "b1723"
+            ],
+            "metabolites": [
+              "atp_c",
+              "f6p_c",
+              "adp_c",
+              "fdp_c",
+              "h_c"
+            ],
+            "bounds": [
+              0.0,
+              1000.0
+            ]
+          },
+          {
+            "id": "PGI",
+            "name": "Glucose-6-phosphate isomerase",
+            "reaction": "g6p_c <=> f6p_c",
+            "genes": [
+              "b4025"
+            ],
+            "metabolites": [
+              "g6p_c",
+              "f6p_c"
+            ],
+            "bounds": [
+              -1000.0,
+              1000.0
+            ]
+          },
+          {
+            "id": "PGK",
+            "name": "Phosphoglycerate kinase",
+            "reaction": "3pg_c + atp_c <=> 13dpg_c + adp_c",
+            "genes": [
+              "b2926"
+            ],
+            "metabolites": [
+              "3pg_c",
+              "atp_c",
+              "13dpg_c",
+              "adp_c"
+            ],
+            "bounds": [
+              -1000.0,
+              1000.0
+            ]
+          },
+          {
+            "id": "PGM",
+            "name": "Phosphoglycerate mutase",
+            "reaction": "2pg_c <=> 3pg_c",
+            "genes": [
+              "b0755",
+              "b3612",
+              "b4395"
+            ],
+            "metabolites": [
+              "2pg_c",
+              "3pg_c"
+            ],
+            "bounds": [
+              -1000.0,
+              1000.0
+            ]
+          },
+          {
+            "id": "PYK",
+            "name": "Pyruvate kinase",
+            "reaction": "adp_c + h_c + pep_c --> atp_c + pyr_c",
+            "genes": [
+              "b1854",
+              "b1676"
+            ],
+            "metabolites": [
+              "adp_c",
+              "h_c",
+              "pep_c",
+              "atp_c",
+              "pyr_c"
+            ],
+            "bounds": [
+              0.0,
+              1000.0
+            ]
+          },
+          {
+            "id": "ENO",
+            "name": "Enolase",
+            "reaction": "2pg_c <=> h2o_c + pep_c",
+            "genes": [
+              "b2779"
+            ],
+            "metabolites": [
+              "2pg_c",
+              "h2o_c",
+              "pep_c"
+            ],
+            "bounds": [
+              -1000.0,
+              1000.0
+            ]
+          },
+          {
+            "id": "TPI",
+            "name": "Triose-phosphate isomerase",
+            "reaction": "dhap_c <=> g3p_c",
+            "genes": [
+              "b3919"
+            ],
+            "metabolites": [
+              "dhap_c",
+              "g3p_c"
+            ],
+            "bounds": [
+              -1000.0,
+              1000.0
+            ]
+          },
+          {
+            "id": "FBA",
+            "name": "Fructose-bisphosphate aldolase",
+            "reaction": "fdp_c <=> dhap_c + g3p_c",
+            "genes": [
+              "b1773",
+              "b2097",
+              "b2925"
+            ],
+            "metabolites": [
+              "fdp_c",
+              "dhap_c",
+              "g3p_c"
+            ],
+            "bounds": [
+              -1000.0,
+              1000.0
+            ]
+          },
+          {
+            "id": "GAPD",
+            "name": "Glyceraldehyde-3-phosphate dehydrogenase",
+            "reaction": "g3p_c + nad_c + pi_c <=> 13dpg_c + h_c + nadh_c",
+            "genes": [
+              "b1779"
+            ],
+            "metabolites": [
+              "g3p_c",
+              "nad_c",
+              "pi_c",
+              "13dpg_c",
+              "h_c",
+              "nadh_c"
+            ],
+            "bounds": [
+              -1000.0,
+              1000.0
+            ]
+          }
+        ],
+        "connectivity": {
+          "input_metabolites": [
+            "nad_c",
+            "2pg_c",
+            "pi_c",
+            "g6p_c"
+          ],
+          "output_metabolites": [
+            "h2o_c",
+            "pyr_c",
+            "nadh_c",
+            "13dpg_c"
+          ]
+        }
+      },
+      "metadata": {},
+      "error": null
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 1.9367802143096924,
+    "success": true,
+    "error": null,
+    "timestamp_end": "2025-06-11T19:33:02.282421"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

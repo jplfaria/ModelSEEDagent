@@ -2,7 +2,7 @@
 
 **AI-Powered Metabolic Modeling Platform**
 
-ModelSEEDagent combines large language models with 29 specialized bioinformatics tools to provide intelligent metabolic modeling assistance. The platform integrates ModelSEED and COBRApy capabilities with natural language interfaces for comprehensive analysis workflows.
+ModelSEEDagent combines large language models with 27 specialized bioinformatics tools to provide intelligent metabolic modeling assistance. The platform integrates ModelSEED and COBRApy capabilities with natural language interfaces for comprehensive analysis workflows.
 
 ## Installation
 
@@ -71,7 +71,7 @@ For programmatic access, see the [API Documentation](../api/overview.md) for det
 
 ## Core Capabilities
 
-ModelSEEDagent provides 29 specialized tools organized into several categories:
+ModelSEEDagent provides 27 specialized tools organized into several categories:
 
 ### ModelSEED Integration (5 tools)
 - **Genome Annotation** - RAST-based automated annotation
@@ -80,7 +80,7 @@ ModelSEEDagent provides 29 specialized tools organized into several categories:
 - **Protein Annotation** - Sequence-based functional annotation
 - **Model Compatibility** - ModelSEED ↔ COBRApy compatibility testing
 
-### COBRApy Analysis (16 tools)
+### COBRApy Analysis (12 tools)
 - **Flux Balance Analysis** - Growth rate and flux predictions
 - **Flux Variability Analysis** - Solution space exploration
 - **Gene Deletion Analysis** - Knockout effect studies
@@ -93,7 +93,7 @@ ModelSEEDagent provides 29 specialized tools organized into several categories:
 - **Auxotrophy Prediction** - Growth requirement analysis
 - **Minimal Media Finding** - Essential media component identification
 - **Missing Media Detection** - Media gap identification
-- **And 4 additional specialized analysis tools**
+- **Reaction Expression** - Gene expression integration
 
 ### Biochemistry Tools (2 tools)
 - **Universal ID Resolution** - Cross-database compound/reaction mapping

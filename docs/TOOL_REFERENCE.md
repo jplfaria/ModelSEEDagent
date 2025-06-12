@@ -2,12 +2,12 @@
 
 ## Overview
 
-ModelSEEDagent provides **29 specialized metabolic modeling tools** organized into six main categories. Each tool is designed for specific analysis tasks and integrates seamlessly with the AI reasoning system.
+ModelSEEDagent provides **29 specialized metabolic modeling tools** organized into five main categories. Each tool is designed for specific analysis tasks and integrates seamlessly with the AI reasoning system.
 
 ## Tool Categories
 
 1. [AI Media Tools (6 tools)](#ai-media-tools) - Intelligent media management and optimization
-2. [COBRApy Tools (16 tools)](#cobra-tools) - Comprehensive metabolic modeling analysis
+2. [COBRApy Tools (12 tools)](#cobrapy-tools) - Comprehensive metabolic modeling analysis
 3. [ModelSEED Tools (5 tools)](#modelseed-tools) - Genome annotation and model building
 4. [Biochemistry Tools (2 tools)](#biochemistry-tools) - Universal compound and reaction resolution
 5. [RAST Tools (2 tools)](#rast-tools) - Genome annotation and analysis
@@ -116,8 +116,6 @@ Core metabolic modeling analysis capabilities:
 **Usage**: `"analyze reaction expression levels"`
 **What it does**: Calculates how active each reaction is under given conditions
 
-### 13-16. Additional COBRApy Tools
-Four additional specialized analysis tools for advanced metabolic modeling tasks.
 
 ---
 
@@ -205,4 +203,4 @@ For detailed technical implementation information including parameters, precisio
 
 ## Summary
 
-ModelSEEDagent's 29 tools provide comprehensive metabolic modeling capabilities through an intuitive AI interface. Each tool is designed to work seamlessly with the AI reasoning system, allowing for complex multi-step analyses through simple natural language commands.
+ModelSEEDagent's 27 tools provide comprehensive metabolic modeling capabilities through an intuitive AI interface. Each tool is designed to work seamlessly with the AI reasoning system, allowing for complex multi-step analyses through simple natural language commands.

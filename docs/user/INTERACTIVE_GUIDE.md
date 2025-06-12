@@ -41,7 +41,7 @@ python -m src.interactive.interactive_cli
 - Python 3.9 or higher
 - Virtual environment activated
 - Dependencies installed: `pip install -e .[all]`
-- API access configured (Claude, OpenAI, or Argo Gateway)
+- API access configured (OpenAI or Argo Gateway)
 
 ## Natural Language Interface
 

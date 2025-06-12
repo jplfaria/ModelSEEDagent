@@ -10,10 +10,9 @@ Create a `.env` file in the project root:
 
 ```bash
 # Core LLM Configuration
-ANTHROPIC_API_KEY=your_anthropic_key_here
 OPENAI_API_KEY=your_openai_key_here
 
-# Argo Gateway Configuration
+# Argo Gateway Configuration (Recommended)
 ARGO_GATEWAY_URL=https://your-argo-gateway.com
 ARGO_API_KEY=your_argo_key_here
 
@@ -86,19 +85,7 @@ performance:
 
 ## LLM Provider Configuration
 
-### Anthropic (Claude)
-
-```bash
-# Required
-ANTHROPIC_API_KEY=your_key_here
-
-# Optional
-ANTHROPIC_MODEL=claude-3-sonnet-20240229
-ANTHROPIC_MAX_TOKENS=4000
-ANTHROPIC_TEMPERATURE=0.1
-```
-
-### OpenAI
+### OpenAI (Experimental)
 
 ```bash
 # Required
@@ -362,10 +349,10 @@ if not is_valid:
 
 ```bash
 # Use environment variables, not config files
-export ANTHROPIC_API_KEY="sk-..."
+export OPENAI_API_KEY="sk-..."
 
 # Use key management services
-ANTHROPIC_API_KEY=$(aws secretsmanager get-secret-value --secret-id anthropic-key --query SecretString --output text)
+OPENAI_API_KEY=$(aws secretsmanager get-secret-value --secret-id openai-key --query SecretString --output text)
 
 # Rotate keys regularly
 # Monitor key usage
@@ -399,7 +386,7 @@ CONNECTION_TIMEOUT=10
 modelseed-agent test-llm-connection
 
 # Check environment variables
-env | grep -E "(ANTHROPIC|OPENAI|ARGO)"
+env | grep -E "(OPENAI|ARGO)"
 ```
 
 #### Path Issues
@@ -425,4 +412,4 @@ modelseed-agent show-config --sources
 - **[User Guide](user/README.md)**: Learn how to use ModelSEEDagent
 - **[API Documentation](api/overview.md)**: Explore programmatic usage
 - **[Troubleshooting](troubleshooting.md)**: Solve common issues
-- **[Development](development/DEVELOPMENT_ROADMAP.md)**: Contribute to the project
+- **[Development](archive/development/DEVELOPMENT_ROADMAP.md)**: Contribute to the project

@@ -40,7 +40,7 @@ The agent system provides AI-powered workflow orchestration:
 
 Comprehensive toolset for metabolic analysis:
 
-- **COBRApy Tools** (16 tools) - Complete COBRApy ecosystem integration
+- **COBRApy Tools** (12 tools) - Complete COBRApy ecosystem integration
 - **ModelSEED Tools** (5 tools) - Genome annotation and model building
 - **Biochemistry Tools** (2 tools) - Universal ID resolution and search
 - **AI Media Tools** (6 tools) - Intelligent media management and optimization
@@ -50,10 +50,9 @@ Comprehensive toolset for metabolic analysis:
 Multi-LLM backend support:
 
 - **Factory Pattern** - Unified LLM interface
-- **Anthropic Claude** - Integration with Claude models
-- **OpenAI** - GPT-4 and other OpenAI models
-- **Argo Gateway** - Enterprise-grade model access
-- **Local LLM** - Support for local language models
+- **Argo Gateway** - Enterprise-grade model access (Production Ready)
+- **OpenAI** - GPT-4 and other OpenAI models (Experimental)
+- **Local LLM** - Support for local Llama models
 
 ### CLI Interface (`src.cli`)
 
@@ -76,7 +75,7 @@ Flexible configuration system:
 
 ### Production Ready
 
-- **29 Total Tools** - Complete metabolic modeling toolkit
+- **27 Total Tools** - Complete metabolic modeling toolkit
 - **Multi-LLM Support** - Choose your preferred language model
 - **Professional CLI** - Rich, interactive command-line interface
 - **Comprehensive Audit** - Full execution tracking and verification
@@ -84,7 +83,7 @@ Flexible configuration system:
 ### Scientific Accuracy
 
 - **Universal Compatibility** - Perfect ModelSEED ↔ COBRApy integration
-- **Biochemistry Database** - 50K+ entity mappings with real-time resolution
+- **Biochemistry Database** - 500K+ entity mappings with real-time resolution
 - **Precision Configuration** - Adjustable tolerance levels for numerical methods
 - **Advanced Verification** - Hallucination detection and result validation
 
@@ -99,23 +98,23 @@ Flexible configuration system:
 
 ### Programmatic Access
 
-#### Basic Agent Usage with Anthropic
+#### Basic Agent Usage with Argo Gateway (Recommended)
 
 ```python
 from src.agents.langgraph_metabolic import LangGraphMetabolicAgent
-from src.llm.anthropic import AnthropicLLM
+from src.llm.argo import ArgoLLM
 from src.tools.cobra.fba import FBATool
 
 # Configure LLM
 llm_config = {
-    "model_name": "claude-3-sonnet-20240229",
+    "model_name": "gpt4o",
     "system_content": "You are an expert metabolic modeling assistant.",
     "max_tokens": 1000,
     "temperature": 0.1,
 }
 
 # Initialize components
-llm = AnthropicLLM(llm_config)
+llm = ArgoLLM(llm_config)
 tools = [FBATool({"name": "run_fba", "description": "Run FBA analysis"})]
 agent = LangGraphMetabolicAgent(llm, tools, {"name": "metabolic_agent"})
 
@@ -127,7 +126,7 @@ result = agent.run({
 print(result.message)
 ```
 
-#### Basic Agent Usage with OpenAI
+#### Basic Agent Usage with OpenAI (Experimental)
 
 ```python
 from src.agents.langgraph_metabolic import LangGraphMetabolicAgent
@@ -188,7 +187,7 @@ modelseed-agent interactive
 modelseed-agent analyze path/to/model.xml --query "Find essential genes"
 
 # Configure system
-modelseed-agent setup --backend anthropic
+modelseed-agent setup --backend argo
 
 # View system status
 modelseed-agent status

@@ -2,7 +2,7 @@
 
 **Advanced AI-Powered Metabolic Modeling Platform**
 
-ModelSEEDagent is a production-ready AI-powered metabolic modeling platform that combines large language models with **29 specialized bioinformatics tools** and **advanced AI reasoning capabilities**. Built on LangGraph for intelligent workflow orchestration, it provides comprehensive metabolic modeling AI assistance for research and analysis.
+ModelSEEDagent is a production-ready AI-powered metabolic modeling platform that combines large language models with **27 specialized bioinformatics tools** and **advanced AI reasoning capabilities**. Built on LangGraph for intelligent workflow orchestration, it provides comprehensive metabolic modeling AI assistance for research and analysis.
 
 ## Quick Start
 
@@ -15,16 +15,16 @@ modelseed-agent analyze data/examples/e_coli_core.xml --query "Find essential ge
 # Interactive natural language interface
 modelseed-agent interactive
 
-# Configure LLM backend
-modelseed-agent setup
+# Configure LLM backend (Argo Gateway recommended)
+modelseed-agent setup --backend argo
 ```
 
 ## Core Capabilities
 
 - **Complete Genome-to-Model Pipeline** - RAST annotation → Model building → Gapfilling
-- **Advanced COBRA Analysis** - 16 tools covering comprehensive COBRApy capabilities
+- **Advanced COBRA Analysis** - 12 tools covering comprehensive COBRApy capabilities
 - **Universal Model Compatibility** - Seamless ModelSEED ↔ COBRApy integration
-- **Biochemistry Intelligence** - Universal ID resolution across 45K+ compounds and 55K+ reactions
+- **Biochemistry Intelligence** - Universal ID resolution across 45K+ compounds and 56K+ reactions
 - **Advanced AI Reasoning** - Multi-step analysis chains, hypothesis testing, collaborative decisions
 - **Pattern Learning** - Cross-model learning and intelligent recommendations
 - **AI Transparency** - Comprehensive hallucination detection and audit system
@@ -59,7 +59,7 @@ AI learns from analysis patterns across different models:
 modelseed-agent analyze model.xml --query "Learn from analysis patterns"
 ```
 
-## Complete Tool Suite (29 Tools)
+## Complete Tool Suite (27 Tools)
 
 ### ModelSEED Tools (5 tools)
 - **Genome Annotation** - RAST-based automated annotation
@@ -68,7 +68,7 @@ modelseed-agent analyze model.xml --query "Learn from analysis patterns"
 - **Protein Annotation** - Sequence-based functional annotation
 - **Model Compatibility** - ModelSEED ↔ COBRApy compatibility testing
 
-### COBRApy Tools (16 tools)
+### COBRApy Tools (12 tools)
 - **FBA & pFBA** - Flux balance analysis with parsimonious variants
 - **Flux Variability Analysis** - Solution space exploration
 - **Gene Deletion Analysis** - In-silico knockout studies
@@ -81,15 +81,14 @@ modelseed-agent analyze model.xml --query "Learn from analysis patterns"
 - **Auxotrophy Identification** - Growth requirement analysis
 - **Minimal Media Finding** - Essential media component identification
 - **Missing Media Detection** - Media gap identification
-- **And 4 additional specialized analysis tools**
 
 ### Biochemistry Tools (2 tools)
 - **Universal ID Resolution** - Cross-database compound/reaction mapping
 - **Biochemistry Search** - Intelligent metabolite discovery
 
 ### RAST Tools (2 tools)
-- **RAST Annotation** - Automated genome annotation via RAST
-- **Annotation Analysis** - Comprehensive annotation quality assessment
+- **RAST Genome Annotation** - Automated genome annotation via RAST service
+- **Annotation Quality Assessment** - Comprehensive annotation analysis and validation
 
 ### AI Media Tools (6 tools)
 - **Media Optimization** - AI-driven media composition optimization
@@ -139,13 +138,13 @@ Visit the [Troubleshooting Guide](troubleshooting.md) for common issues and solu
 
 ## Development & Contributing
 
-- [Contributing Guide](development/CONTRIBUTING.md)
+- [Development Roadmap](archive/development/DEVELOPMENT_ROADMAP.md)
 - [Architecture Documentation](ARCHITECTURE.md)
 - [Debug Configuration](debug.md)
 
 ## Project Status
 
-ModelSEEDagent is **production-ready** and actively maintained. See [Project Status](PROJECT_STATUS.md) for detailed information.
+ModelSEEDagent is **production-ready** and actively maintained. For detailed project information, see the [Architecture Guide](ARCHITECTURE.md).
 
 ## Support
 

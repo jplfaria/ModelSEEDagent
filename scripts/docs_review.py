@@ -791,22 +791,22 @@ The following API endpoints have been added:
         ]
         return any(pattern in feature.lower() for pattern in significant_patterns)
 
-    def update_docs_md(self, analysis: ChangeAnalysis) -> None:
-        """Update DOCS.md with current documentation structure and tool counts"""
-        docs_md_path = self.repo_path / "DOCS.md"
+    def update_readme_md(self, analysis: ChangeAnalysis) -> None:
+        """Update README.md with current tool counts"""
+        readme_path = self.repo_path / "README.md"
 
-        if not docs_md_path.exists():
-            print("⚠️ DOCS.md not found, skipping update")
+        if not readme_path.exists():
+            print("⚠️ README.md not found, skipping update")
             return
 
         try:
             # Get current tool counts from actual code
             tool_counts = self._get_current_tool_counts()
 
-            with open(docs_md_path, "r") as f:
+            with open(readme_path, "r") as f:
                 content = f.read()
 
-            # Update tool counts in DOCS.md
+            # Update tool counts in README.md
             import re
 
             # Update "All X tools overview" references
@@ -816,125 +816,111 @@ The following API endpoints have been added:
                 content,
             )
 
-            # Update any specific tool count references
+            # Update "X specialized metabolic modeling tools" references
             content = re.sub(
-                r"(\d+) specialized bioinformatics tools",
-                f'{tool_counts["total"]} specialized bioinformatics tools',
+                r"\*\*\d+ specialized metabolic modeling tools\*\*",
+                f'**{tool_counts["total"]} specialized metabolic modeling tools**',
                 content,
             )
 
-            # Update "27 specialized metabolic modeling tools" references
+            # Update references without bold formatting
             content = re.sub(
                 r"(\d+) specialized metabolic modeling tools",
                 f'{tool_counts["total"]} specialized metabolic modeling tools',
                 content,
             )
 
-            # Add update timestamp
-            current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            if "<!-- Last Updated:" not in content:
-                content += f"\n\n<!-- Last Updated: {current_time} -->"
-            else:
-                content = re.sub(
-                    r"<!-- Last Updated: .* -->",
-                    f"<!-- Last Updated: {current_time} -->",
-                    content,
-                )
+            # Update "Specialized Tools (X Total)" section
+            content = re.sub(
+                r"## Specialized Tools \(\d+ Total\)",
+                f'## Specialized Tools ({tool_counts["total"]} Total)',
+                content,
+            )
 
-            with open(docs_md_path, "w") as f:
+            with open(readme_path, "w") as f:
                 f.write(content)
 
             print(
-                f"✅ Updated DOCS.md with current tool counts: {tool_counts['total']} total tools"
+                f"✅ Updated README.md with current tool counts: {tool_counts['total']} total tools"
             )
 
         except Exception as e:
-            print(f"❌ Error updating DOCS.md: {e}")
+            print(f"❌ Error updating README.md: {e}")
 
     def _get_current_tool_counts(self) -> Dict[str, int]:
-        """Get current tool counts from the codebase"""
+        """Get current tool counts from the codebase by examining actual Tool() definitions"""
         try:
-            # Import the actual tool counting logic
-            sys.path.append(str(self.repo_path / "src"))
-
             tool_counts = {
-                "cobrapy": 0,
+                "cobra": 0,
                 "modelseed": 0,
                 "biochem": 0,
-                "ai_media": 0,
                 "rast": 0,
+                "audit": 0,
                 "total": 0,
             }
 
-            # Count tools in each category
+            # Count tools in each category by examining Tool() definitions
             tools_dir = self.repo_path / "src" / "tools"
 
-            # COBRApy tools (excluding AI Media tools which are counted separately)
-            cobra_dir = tools_dir / "cobra"
-            if cobra_dir.exists():
-                # Count Python files that contain tool functions/classes (excluding media_tools.py)
-                for file in cobra_dir.glob("*.py"):
-                    if file.name not in [
-                        "__init__.py",
-                        "utils.py",
-                        "media_tools.py",
-                        "error_handling.py",
-                        "precision_config.py",
-                    ]:
-                        with open(file, "r") as f:
-                            content = f.read()
-                            # Count Tool definitions more accurately
-                            tool_counts["cobrapy"] += (
-                                content.count("Tool(")
-                                + content.count("class ")
-                                - content.count("class Base")
-                            )
+            # Count all tool files systematically
+            for tool_file in tools_dir.rglob("*.py"):
+                if tool_file.name in [
+                    "__init__.py",
+                    "utils.py",
+                    "error_handling.py",
+                    "precision_config.py",
+                    "base.py",
+                ]:
+                    continue
 
-            # ModelSEED tools
-            modelseed_dir = tools_dir / "modelseed"
-            if modelseed_dir.exists():
-                for file in modelseed_dir.glob("*.py"):
-                    if file.name != "__init__.py":
-                        with open(file, "r") as f:
-                            content = f.read()
-                            tool_counts["modelseed"] += content.count("Tool(")
+                try:
+                    with open(tool_file, "r") as f:
+                        content = f.read()
+                        tool_count = content.count("Tool(")
 
-            # Biochem tools
-            biochem_dir = tools_dir / "biochem"
-            if biochem_dir.exists():
-                tool_counts["biochem"] = 2  # Known count
+                        if tool_count > 0:
+                            # Categorize by directory structure
+                            relative_path = tool_file.relative_to(tools_dir)
+                            if "cobra" in str(relative_path):
+                                tool_counts["cobra"] += tool_count
+                            elif "modelseed" in str(relative_path):
+                                tool_counts["modelseed"] += tool_count
+                            elif "biochem" in str(relative_path):
+                                tool_counts["biochem"] += tool_count
+                            elif "rast" in str(relative_path):
+                                tool_counts["rast"] += tool_count
+                            elif "audit" in tool_file.name or "audit" in str(
+                                relative_path
+                            ):
+                                tool_counts["audit"] += tool_count
+                            else:
+                                # Default to cobra category for root-level tools
+                                tool_counts["cobra"] += tool_count
 
-            # AI Media tools
-            # Count from media_tools.py specifically
-            media_tools_file = cobra_dir / "media_tools.py"
-            if media_tools_file.exists():
-                with open(media_tools_file, "r") as f:
-                    content = f.read()
-                    # Count Tool definitions in media_tools.py
-                    tool_counts["ai_media"] = content.count("Tool(")
-
-            # RAST tools
-            rast_dir = tools_dir / "rast"
-            if rast_dir.exists():
-                tool_counts["rast"] = 2  # Known count
+                except Exception as e:
+                    print(f"Warning: Could not read {tool_file}: {e}")
+                    continue
 
             # Calculate total
             tool_counts["total"] = sum(
                 v for k, v in tool_counts.items() if k != "total"
             )
 
+            print(
+                f"Tool count breakdown: COBRA={tool_counts['cobra']}, ModelSEED={tool_counts['modelseed']}, Biochem={tool_counts['biochem']}, RAST={tool_counts['rast']}, Audit={tool_counts['audit']}, Total={tool_counts['total']}"
+            )
             return tool_counts
 
         except Exception as e:
             print(f"❌ Error counting tools: {e}")
-            # Return known accurate counts as fallback
+            # Return fallback based on actual current state
             return {
-                "cobrapy": 18,  # Updated accurate count
-                "modelseed": 5,
+                "cobra": 16,
+                "modelseed": 4,
                 "biochem": 2,
-                "ai_media": 6,  # Part of cobrapy but tracked separately
                 "rast": 2,
-                "total": 27,  # 18 + 5 + 2 + 2 = 27 (ai_media is subset of cobrapy)
+                "audit": 5,
+                "total": 29,
             }
 
     def track_documentation_changes(
@@ -1092,8 +1078,8 @@ For manual documentation updates, please follow the [Contributing Guide](archive
         if updates:
             self.track_documentation_changes(analysis, updates)
 
-        # Update DOCS.md
-        self.update_docs_md(analysis)
+        # Update README.md
+        self.update_readme_md(analysis)
 
         return updates
 

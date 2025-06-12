@@ -135,7 +135,9 @@ class FBATool(BaseTool):
                 model_path = input_data.get("model_path")
                 output_dir = input_data.get("output_dir", None)
                 media_name = input_data.get("media", None)
-                logger.info(f"🔍 FBA TOOL DEBUG: model_path = {repr(model_path)}, media = {repr(media_name)}")
+                logger.info(
+                    f"🔍 FBA TOOL DEBUG: model_path = {repr(model_path)}, media = {repr(media_name)}"
+                )
             else:
                 logger.info(f"🔍 FBA TOOL DEBUG: Processing as string/other")
                 model_path = input_data
@@ -145,14 +147,17 @@ class FBATool(BaseTool):
 
             self.validate_input(model_path)
             model = self._utils.load_model(model_path)
-            
+
             # Apply media if specified
             if media_name:
                 logger.info(f"🔍 FBA TOOL DEBUG: Applying media: {media_name}")
                 from .modelseedpy_integration import get_modelseedpy_enhancement
+
                 enhancement = get_modelseedpy_enhancement()
                 model = enhancement.apply_media_with_cobrakbase(model, media_name)
-                logger.info(f"🔍 FBA TOOL DEBUG: Media {media_name} applied successfully")
+                logger.info(
+                    f"🔍 FBA TOOL DEBUG: Media {media_name} applied successfully"
+                )
 
             model.solver = self.fba_config.solver
             # Set solver tolerance (much smaller than flux significance threshold)

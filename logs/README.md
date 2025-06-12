@@ -15,9 +15,10 @@ This directory contains execution logs and audit trails for ModelSEEDagent runs.
 
 ## Retention Policy
 
-- **Current**: Keep last 5 successful runs of each agent type
-- **Archive**: Compress and archive older runs weekly
+- **Current**: Keep last 10 LangGraph runs and last 5 RealTime runs
+- **Archive**: Automatically compress and archive older runs
 - **Cleanup**: Remove archives older than 30 days
+- **Automation**: Use `scripts/cleanup_logs.py` for automated maintenance
 
 ## Log Types
 
@@ -38,14 +39,23 @@ This directory contains execution logs and audit trails for ModelSEEDagent runs.
 
 ## Maintenance
 
-To clean up logs manually:
+### Automated Cleanup (Recommended)
 ```bash
-# Archive old logs
-tar -czf logs/archive/old_logs_$(date +%Y%m%d).tar.gz logs/current/langgraph_run_* logs/current/realtime_run_*
+# Run automated cleanup script
+python scripts/cleanup_logs.py
+
+# Preview what would be cleaned (dry run)
+python scripts/cleanup_logs.py --dry-run
+```
+
+### Manual Cleanup (Legacy)
+```bash
+# Archive old logs manually
+tar -czf logs/archive/old_logs_$(date +%Y%m%d).tar.gz logs/langgraph_run_* logs/realtime_run_*
 
 # Keep only recent logs (adjust number as needed)
-ls -1t logs/current/langgraph_run_* | tail -n +6 | xargs rm -rf
-ls -1t logs/current/realtime_run_* | tail -n +6 | xargs rm -rf
+ls -1t logs/langgraph_run_* | tail -n +11 | xargs rm -rf
+ls -1t logs/realtime_run_* | tail -n +6 | xargs rm -rf
 ```
 
 ## Monitoring

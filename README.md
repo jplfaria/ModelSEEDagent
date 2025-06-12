@@ -1,190 +1,167 @@
-# ModelSEEDagent 🧬
+# ModelSEEDagent
 
-**Advanced AI-Powered Metabolic Modeling Platform**
+**AI-Powered Metabolic Modeling Platform**
 
-ModelSEEDagent is a production-ready AI-powered metabolic modeling platform that combines the power of large language models with **23 specialized bioinformatics tools** and **advanced AI reasoning capabilities**. Built on LangGraph for intelligent workflow orchestration, it provides the most comprehensive metabolic modeling AI assistant available.
+ModelSEEDagent is a production-ready AI platform that combines large language models with **29 specialized metabolic modeling tools**. Built on LangGraph for intelligent workflow orchestration, it provides comprehensive AI-driven analysis capabilities for metabolic modeling and systems biology research.
 
-## 🚀 Quick Start
+## 📚 **Documentation**
+
+**🌐 [Complete Documentation Site](https://jplfaria.github.io/ModelSEEDagent/)**
+
+The full documentation is available as a beautiful, searchable site with:
+- **Getting Started Guide** - Installation and basic usage
+- **User Guide** - Interactive interface and tutorials
+- **Technical Reference** - Architecture and tool details
+- **API Documentation** - Programmatic usage and implementation
+- **Operations Guide** - Configuration, deployment, and monitoring
+
+## Quick Start
 
 ```bash
 # Install with all dependencies
-pip install .[all]
+pip install -e .
 
 # Basic analysis
-modelseed-agent analyze data/models/e_coli_core.xml --query "Find essential genes"
-
-# Advanced AI reasoning (Phase 8 features)
-modelseed-agent phase8
+modelseed-agent analyze data/examples/e_coli_core.xml --query "Find essential genes"
 
 # Interactive natural language interface
 modelseed-agent interactive
+
+# Configure API access (Argo Gateway recommended)
+modelseed-agent setup --backend argo
 ```
 
-## 🎯 Core Capabilities
+## Core Capabilities
 
-- 🧬 **Complete Genome-to-Model Pipeline** - RAST annotation → Model building → Gapfilling
-- 📊 **Advanced COBRA Analysis** - 11 tools covering 60% of COBRApy capabilities
-- 🔄 **Universal Compatibility** - Perfect ModelSEED ↔ COBRApy integration with auto-detection infrastructure
-- 🧪 **Biochemistry Intelligence** - Universal ID resolution across 45K+ compounds and 55K+ reactions
-- 🤖 **Advanced AI Reasoning** - Multi-step chains, hypothesis testing, collaborative decisions
-- 🧠 **Pattern Learning** - Cross-model learning and intelligent recommendations
-- 🕵️ **AI Transparency** - Advanced hallucination detection and audit system
-- 💬 **Natural Language Interface** - Conversational AI for complex metabolic analysis
-- 🧬 **AI Media Intelligence** - 6 specialized tools for intelligent media management and optimization
+- **Complete Genome-to-Model Pipeline** - RAST annotation → Model building → Gapfilling
+- **Advanced COBRA Analysis** - 12 tools covering comprehensive COBRApy capabilities
+- **Universal Compatibility** - Perfect ModelSEED ↔ COBRApy integration
+- **Biochemistry Intelligence** - Universal ID resolution across 45K+ compounds and 56K+ reactions
+- **Advanced AI Reasoning** - Multi-step chains, hypothesis testing, collaborative decisions
+- **Pattern Learning** - Cross-model learning and intelligent recommendations
+- **AI Transparency** - Advanced hallucination detection and audit system
+- **Natural Language Interface** - Conversational AI for complex metabolic analysis
+- **AI Media Intelligence** - 6 specialized tools for intelligent media management and optimization
 
-## 🧠 Phase 8: Advanced AI Reasoning
+## Advanced AI Features
 
-ModelSEEDagent includes cutting-edge AI capabilities that rival human expert analysis:
+ModelSEEDagent includes sophisticated AI capabilities for metabolic analysis:
 
-### 🔗 Multi-Step Reasoning Chains
-AI plans and executes complex 5-10 step analysis sequences, adapting in real-time:
-```bash
-modelseed-agent phase8 chains
-```
+### Multi-Step Reasoning
+AI plans and executes complex 5-10 step analysis sequences, adapting in real-time based on intermediate results.
 
-### 🔬 Hypothesis-Driven Analysis
-Scientific hypothesis generation and systematic testing:
-```bash
-modelseed-agent phase8 hypothesis
-```
+### Hypothesis-Driven Analysis
+Scientific hypothesis generation and systematic testing with appropriate tool selection and evidence evaluation.
 
-### 🤝 Collaborative Reasoning
-AI recognizes uncertainty and requests human expertise when needed
+### Collaborative Reasoning
+AI recognizes uncertainty and requests human expertise when needed.
 
-### 📚 Pattern Learning & Memory
-Cross-model learning that improves recommendations over time:
-```bash
-modelseed-agent phase8 patterns
-```
+### Pattern Learning & Memory
+Cross-model learning that improves recommendations over time.
 
-## 🧬 AI Media Intelligence
+## AI Media Intelligence
 
-Revolutionary AI-powered media management for metabolic modeling:
+Advanced AI-powered media management for metabolic modeling:
 
-### 🎯 Smart Media Selection
+### Smart Media Selection
 AI analyzes model characteristics and automatically selects optimal media:
 ```bash
 modelseed-agent analyze model.xml --query "select optimal media for this E. coli model"
 ```
 
-### 🗣️ Natural Language Media Modification
-Modify media using simple English commands:
-```bash
-# Interactive CLI
-media-modify make anaerobic
-media-modify add vitamins and amino acids
-media-modify remove all carbon sources except glucose
-```
+### Natural Language Media Modification
+Modify media using simple English commands in the interactive interface:
+- "make anaerobic"
+- "add vitamins and amino acids"
+- "remove all carbon sources except glucose"
 
-### 🔬 Automated Workflow Templates
-5 pre-built workflow templates combining media selection with analysis:
+### Automated Workflow Templates
+Pre-built workflow templates combining media selection with analysis:
 - **Optimal Media Discovery** - Find the best media for any model
 - **Production Optimization** - Optimize media for specific metabolites
 - **Auxotrophy Analysis** - Predict and design media for auxotrophs
 - **Cross-Model Comparison** - Compare media performance across species
 - **Troubleshooting** - Diagnose and fix media-related growth issues
 
-## 🛠️ Specialized Tools (23 Total)
+## Specialized Tools (29 Total)
 
-### 🧬 AI Media Tools (6 tools)
-- **Media Selection** (`select_optimal_media`) - AI-powered optimal media selection for models
-- **Media Manipulation** (`manipulate_media_composition`) - Natural language media modification ("make anaerobic", "add vitamins")
-- **Media Compatibility** (`analyze_media_compatibility`) - Intelligent media-model compatibility analysis
-- **Media Comparison** (`compare_media_performance`) - Cross-model media performance comparison
-- **Media Optimization** (`optimize_media_composition`) - AI-driven media optimization for growth targets
-- **Auxotrophy Prediction** (`predict_auxotrophies`) - AI prediction of auxotrophies from model gaps
+### AI Media Tools (6 tools)
+- **Media Selection** - AI-powered optimal media selection for models
+- **Media Manipulation** - Natural language media modification
+- **Media Compatibility** - Intelligent media-model compatibility analysis
+- **Media Comparison** - Cross-model media performance comparison
+- **Media Optimization** - AI-driven media optimization for growth targets
+- **Auxotrophy Prediction** - AI prediction of auxotrophies from model gaps
 
 ### ModelSEED Integration (4 tools)
-- **Genome Annotation** (`annotate_genome_rast`) - BV-BRC RAST service integration
-- **Model Building** (`build_metabolic_model`) - MSBuilder with template selection
-- **Gapfilling** (`gapfill_model`) - Advanced MSGapfill algorithms
-- **Protein Annotation** (`annotate_proteins_rast`) - Individual protein sequence annotation
+- **Genome Annotation** - BV-BRC RAST service integration
+- **Model Building** - MSBuilder with template selection
+- **Gapfilling** - Advanced MSGapfill algorithms
+- **Protein Annotation** - Individual protein sequence annotation
 
 ### Advanced COBRA Analysis (11 tools)
-- **Basic Analysis**: FBA, minimal media, auxotrophy analysis
-- **Advanced Analysis**: Flux variability, gene deletion, essentiality analysis
-- **Statistical Methods**: Flux sampling, production envelope analysis
-- **Specialized Tools**: Reaction expression, missing media analysis
+- **Basic Analysis** - FBA, minimal media, auxotrophy analysis
+- **Advanced Analysis** - Flux variability, gene deletion, essentiality analysis
+- **Statistical Methods** - Flux sampling, production envelope analysis
+- **Specialized Tools** - Reaction expression, missing media analysis
 
 ### Biochemistry Database (2 tools)
-- **Universal ID Resolution** (`resolve_biochem_entity`) - ModelSEED ↔ BiGG ↔ KEGG mapping
-- **Biochemistry Search** (`search_biochem`) - Compound/reaction discovery by name
+- **Universal ID Resolution** - ModelSEED ↔ BiGG ↔ KEGG mapping
+- **Biochemistry Search** - Compound/reaction discovery by name
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 ModelSEEDagent/
-├── 📚 docs/                          # Professional documentation
-│   ├── PROJECT_STATUS.md            # Current project status
-│   ├── ARCHITECTURE.md              # Technical architecture
-│   ├── user/                        # User guides and tutorials
-│   │   ├── README.md                # Complete user documentation
-│   │   ├── INTERACTIVE_GUIDE.md     # Interactive interface guide
-│   │   └── PHASE8_USER_GUIDE.md     # Advanced AI reasoning guide
-│   ├── development/                 # Development documentation
-│   └── archive/                     # Archived development artifacts
-├── 🧪 tests/                        # Organized test suite
-│   ├── unit/                        # Unit tests
-│   ├── integration/                 # Integration tests
-│   ├── phase_tests/                 # Phase-specific tests
-│   ├── system/                      # System tests
-│   └── validation/                  # Validation scripts
-├── 🎯 examples/                     # Usage examples
-│   ├── basic/                       # Simple usage examples
-│   ├── advanced/                    # Complex workflows
-│   ├── demos/                       # Demo scripts and results
-│   └── scripts/                     # Utility scripts
-├── 📖 notebooks/                    # Interactive tutorials
-│   ├── comprehensive_working_tutorial.ipynb # Complete showcase
-│   ├── argo.ipynb                   # Argo Gateway testing
-│   └── local_llm.ipynb              # Local LLM integration
-├── 🎮 src/                          # Main source code
-│   ├── agents/                      # AI agents and reasoning
-│   │   ├── reasoning_chains.py      # Multi-step reasoning
-│   │   ├── hypothesis_system.py     # Hypothesis testing
-│   │   ├── collaborative_reasoning.py # AI-human collaboration
-│   │   └── pattern_memory.py        # Cross-model learning
-│   ├── tools/                       # 17 specialized tools
-│   │   ├── cobra/                   # 11 COBRApy tools
-│   │   ├── modelseed/               # 4 ModelSEED tools
-│   │   ├── biochem/                 # 2 biochemistry tools
-│   │   └── audit.py                 # Execution audit system
-│   ├── interactive/                 # User interfaces
-│   │   └── phase8_interface.py      # Advanced AI interfaces
-│   ├── cli/                         # Command-line interfaces
-│   └── llm/                         # Multi-LLM backend support
-├── ⚙️ config/                       # Configuration and prompts
-├── 📊 data/                         # Models, biochem database, examples
-│   ├── biochem.db                   # 45K+ compounds, 55K+ reactions
-│   └── examples/                    # Test models and datasets
-└── 📝 logs/                         # Session logs and audit trails
+├── docs/                          # Documentation
+│   ├── ARCHITECTURE.md            # Technical architecture
+│   ├── user/                      # User guides
+│   │   ├── README.md              # Getting started guide
+│   │   └── INTERACTIVE_GUIDE.md   # User guide
+│   ├── api/                       # API documentation
+│   ├── debug.md                   # Debug configuration
+│   └── troubleshooting.md         # Troubleshooting guide
+├── tests/                         # Test suite
+│   ├── unit/                      # Unit tests
+│   ├── integration/               # Integration tests
+│   ├── system/                    # System tests
+│   └── validation/                # Validation scripts
+├── examples/                      # Usage examples
+│   ├── basic/                     # Simple usage examples
+│   ├── advanced/                  # Complex workflows
+│   └── scripts/                   # Utility scripts
+├── notebooks/                     # Interactive tutorials
+├── src/                           # Main source code
+│   ├── agents/                    # AI agents and reasoning
+│   ├── tools/                     # 23 specialized tools
+│   │   ├── cobra/                 # 11 COBRApy tools
+│   │   ├── modelseed/             # 4 ModelSEED tools
+│   │   │   ├── biochem/             # 2 biochemistry tools
+│   │   └── ai_media/           # 6 AI media tools
+│   ├── interactive/            # User interfaces
+│   ├── cli/                    # Command-line interfaces
+│   └── llm/                    # Multi-LLM backend support
+├── config/                     # Configuration and prompts
+├── data/                       # Models, biochem database, examples
+│   ├── biochem.db              # 45K+ compounds, 55K+ reactions
+│   └── examples/               # Test models and datasets
+└── logs/                       # Session logs and audit trails
 ```
 
-## 🧪 Production Status
+## Documentation
 
-**✅ Production Ready** - All development phases complete with comprehensive testing
+**🌐 [Complete Documentation Site](https://jplfaria.github.io/ModelSEEDagent/)** - Full documentation with search and navigation
 
-| Component | Status | Coverage |
-|-----------|--------|----------|
-| **Tool Suite** | ✅ 17/17 tools operational | 100% |
-| **Test Coverage** | ✅ All tests passing | 100% |
-| **Advanced AI** | ✅ Phase 8 complete | Sophisticated reasoning |
-| **Performance** | ✅ 6600x+ cache speedup | Optimized |
-| **Compatibility** | ✅ Perfect ModelSEED-COBRApy integration | 100% |
-| **Audit System** | ✅ Hallucination detection active | A+ reliability |
-| **Biochemistry DB** | ✅ 45K+ compounds, 55K+ reactions | Universal coverage |
+**Quick Links:**
+- **[Getting Started](https://jplfaria.github.io/ModelSEEDagent/user/README/)** - Installation and basic usage
+- **[User Guide](https://jplfaria.github.io/ModelSEEDagent/user/INTERACTIVE_GUIDE/)** - Interactive interface guide
+- **[Tool Reference](https://jplfaria.github.io/ModelSEEDagent/TOOL_REFERENCE/)** - All 29 tools overview
+- **[API Documentation](https://jplfaria.github.io/ModelSEEDagent/api/overview/)** - Programmatic usage
+- **[Configuration](https://jplfaria.github.io/ModelSEEDagent/configuration/)** - Setup and configuration options
 
-## 📚 Documentation
+## AI Transparency Features
 
-- **[Project Status](docs/PROJECT_STATUS.md)** - Current capabilities and completion status
-- **[Technical Architecture](docs/ARCHITECTURE.md)** - System design and component overview
-- **[User Guide](docs/user/README.md)** - Complete installation, usage, and examples
-- **[Phase 8 Advanced AI Guide](docs/user/PHASE8_USER_GUIDE.md)** - Advanced reasoning capabilities
-- **[Interactive Tutorial](notebooks/comprehensive_working_tutorial.ipynb)** - Hands-on showcase
-
-## 🕵️ AI Transparency Features
-
-ModelSEEDagent includes advanced **hallucination detection** and audit capabilities:
+ModelSEEDagent includes advanced hallucination detection and audit capabilities:
 
 ```bash
 # View recent tool executions with audit data
@@ -198,24 +175,19 @@ modelseed-agent audit session <session_id>
 ```
 
 **Verification Capabilities:**
-- 🔍 **Tool Claims Verification** - Compare AI statements vs actual results
-- 📁 **File Output Validation** - Verify claimed files exist and have correct format
-- 💻 **Console Cross-Reference** - Cross-check console output vs structured data
-- 📊 **Statistical Analysis** - Pattern detection across multiple runs with confidence scoring
+- **Tool Claims Verification** - Compare AI statements vs actual results
+- **File Output Validation** - Verify claimed files exist and have correct format
+- **Console Cross-Reference** - Cross-check console output vs structured data
+- **Statistical Analysis** - Pattern detection across multiple runs with confidence scoring
 
-## 🌟 Example Workflows
+## Example Workflows
 
 **Advanced AI-Guided Analysis:**
 ```bash
-# Multi-step reasoning chain
-modelseed-agent phase8 chains
+# Interactive analysis
+modelseed-agent interactive
 # Input: "Comprehensive E. coli analysis"
 # AI plans: FBA → Nutrition → Essentiality → Synthesis
-
-# Hypothesis-driven investigation
-modelseed-agent phase8 hypothesis
-# Input: "Model grows slower than expected"
-# AI generates testable hypotheses and systematically evaluates them
 ```
 
 **Complete Genome-to-Model Pipeline:**
@@ -244,15 +216,15 @@ modelseed-agent interactive
 # "Generate hypotheses about why this model has low growth"
 ```
 
-## 🚀 Performance Highlights
+## Performance Highlights
 
-- **6,600x+ speedup** through intelligent caching
-- **5x parallel execution** for independent operations
-- **Sub-second response** for cached operations
-- **Real-time verification** of AI reasoning accuracy
-- **Memory-efficient** pattern storage and learning
+- **Intelligent caching** - Significant speedup for repeated operations
+- **Parallel execution** - Multi-threaded tool execution for independent operations
+- **Sub-second response** - Fast response for cached operations
+- **Real-time verification** - AI reasoning accuracy checking
+- **Memory-efficient** - Optimized pattern storage and learning
 
-## 🎯 Ready for Professional Use
+## Professional Use
 
 ModelSEEDagent is production-ready for:
 - **Research Projects** - Sophisticated AI-guided metabolic analysis
@@ -260,14 +232,10 @@ ModelSEEDagent is production-ready for:
 - **Educational Use** - Interactive learning with guided workflows
 - **Production Deployment** - Scalable analysis pipelines
 
-## 🤝 Contributing
+## Contributing
 
-See [Development Documentation](docs/development/) for contribution guidelines.
+See the documentation for contribution guidelines and development setup.
 
-## 📄 License
+## License
 
 MIT License - see LICENSE file for details.
-
----
-
-**Welcome to the future of AI-powered metabolic modeling! 🎉**

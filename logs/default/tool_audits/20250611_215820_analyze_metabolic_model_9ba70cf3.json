@@ -1,0 +1,844 @@
+{
+  "audit_id": "9ba70cf3-6e95-408a-aab0-9a915dd9cc4c",
+  "session_id": null,
+  "tool_name": "analyze_metabolic_model",
+  "timestamp": "2025-06-11T21:58:20.233354",
+  "input": {
+    "raw_input": "/Users/jplfaria/repos/ModelSEEDagent/data/examples/e_coli_core.xml",
+    "type": "str"
+  },
+  "output": {
+    "structured": {
+      "success": true,
+      "message": "Model analysis completed successfully",
+      "data": {
+        "model_statistics": {
+          "num_reactions": 95,
+          "num_metabolites": 72,
+          "num_genes": 137,
+          "num_subsystems": 0
+        },
+        "network_properties": {
+          "connectivity_summary": {
+            "total_connections": 360,
+            "avg_connections_per_metabolite": 5.0,
+            "max_connections": 35,
+            "min_connections": 2
+          },
+          "highly_connected_metabolites": [
+            {
+              "id": "h_c",
+              "name": "H+",
+              "num_reactions": 35,
+              "num_producing": 31,
+              "num_consuming": 4
+            },
+            {
+              "id": "h2o_c",
+              "name": "H2O H2O",
+              "num_reactions": 18,
+              "num_producing": 5,
+              "num_consuming": 13
+            },
+            {
+              "id": "h_e",
+              "name": "H+",
+              "num_reactions": 17,
+              "num_producing": 2,
+              "num_consuming": 15
+            },
+            {
+              "id": "atp_c",
+              "name": "ATP C10H12N5O13P3",
+              "num_reactions": 13,
+              "num_producing": 2,
+              "num_consuming": 11
+            },
+            {
+              "id": "nad_c",
+              "name": "Nicotinamide adenine dinucleotide",
+              "num_reactions": 12,
+              "num_producing": 2,
+              "num_consuming": 10
+            },
+            {
+              "id": "nadh_c",
+              "name": "Nicotinamide adenine dinucleotide - reduced",
+              "num_reactions": 12,
+              "num_producing": 10,
+              "num_consuming": 2
+            },
+            {
+              "id": "pi_c",
+              "name": "Phosphate",
+              "num_reactions": 12,
+              "num_producing": 9,
+              "num_consuming": 3
+            },
+            {
+              "id": "adp_c",
+              "name": "ADP C10H12N5O10P2",
+              "num_reactions": 12,
+              "num_producing": 10,
+              "num_consuming": 2
+            },
+            {
+              "id": "pyr_c",
+              "name": "Pyruvate",
+              "num_reactions": 11,
+              "num_producing": 7,
+              "num_consuming": 4
+            }
+          ],
+          "isolated_metabolites": [],
+          "choke_points": [
+            {
+              "id": "glx_c",
+              "name": "Glyoxylate",
+              "single_producer": true,
+              "single_consumer": true
+            },
+            {
+              "id": "icit_c",
+              "name": "Isocitrate",
+              "single_producer": true,
+              "single_consumer": false
+            },
+            {
+              "id": "lac__D_c",
+              "name": "D-Lactate",
+              "single_producer": true,
+              "single_consumer": true
+            },
+            {
+              "id": "nh4_c",
+              "name": "Ammonium",
+              "single_producer": false,
+              "single_consumer": true
+            },
+            {
+              "id": "o2_c",
+              "name": "O2 O2",
+              "single_producer": true,
+              "single_consumer": true
+            },
+            {
+              "id": "3pg_c",
+              "name": "3-Phospho-D-glycerate",
+              "single_producer": true,
+              "single_consumer": false
+            },
+            {
+              "id": "6pgc_c",
+              "name": "6-Phospho-D-gluconate",
+              "single_producer": true,
+              "single_consumer": true
+            },
+            {
+              "id": "6pgl_c",
+              "name": "6-phospho-D-glucono-1,5-lactone",
+              "single_producer": true,
+              "single_consumer": true
+            },
+            {
+              "id": "ac_c",
+              "name": "Acetate",
+              "single_producer": true,
+              "single_consumer": true
+            },
+            {
+              "id": "ru5p__D_c",
+              "name": "D-Ribulose 5-phosphate",
+              "single_producer": false,
+              "single_consumer": true
+            },
+            {
+              "id": "acald_c",
+              "name": "Acetaldehyde",
+              "single_producer": false,
+              "single_consumer": true
+            },
+            {
+              "id": "s7p_c",
+              "name": "Sedoheptulose 7-phosphate",
+              "single_producer": true,
+              "single_consumer": true
+            },
+            {
+              "id": "succ_e",
+              "name": "Succinate",
+              "single_producer": true,
+              "single_consumer": false
+            },
+            {
+              "id": "acon_C_c",
+              "name": "Cis-Aconitate",
+              "single_producer": true,
+              "single_consumer": true
+            },
+            {
+              "id": "xu5p__D_c",
+              "name": "D-Xylulose 5-phosphate",
+              "single_producer": true,
+              "single_consumer": false
+            },
+            {
+              "id": "amp_c",
+              "name": "AMP C10H12N5O7P",
+              "single_producer": true,
+              "single_consumer": true
+            },
+            {
+              "id": "cit_c",
+              "name": "Citrate",
+              "single_producer": true,
+              "single_consumer": true
+            },
+            {
+              "id": "co2_c",
+              "name": "CO2 CO2",
+              "single_producer": false,
+              "single_consumer": true
+            },
+            {
+              "id": "dhap_c",
+              "name": "Dihydroxyacetone phosphate",
+              "single_producer": true,
+              "single_consumer": true
+            },
+            {
+              "id": "e4p_c",
+              "name": "D-Erythrose 4-phosphate",
+              "single_producer": true,
+              "single_consumer": false
+            },
+            {
+              "id": "etoh_c",
+              "name": "Ethanol",
+              "single_producer": true,
+              "single_consumer": true
+            },
+            {
+              "id": "fdp_c",
+              "name": "D-Fructose 1,6-bisphosphate",
+              "single_producer": true,
+              "single_consumer": false
+            },
+            {
+              "id": "g6p_c",
+              "name": "D-Glucose 6-phosphate",
+              "single_producer": true,
+              "single_consumer": false
+            }
+          ]
+        },
+        "subsystem_analysis": {
+          "subsystem_statistics": {
+            "Unknown": {
+              "reaction_count": 95,
+              "gene_associated": 69,
+              "spontaneous": 26,
+              "reversible": 46
+            }
+          },
+          "orphan_reactions": [
+            {
+              "id": "PFK",
+              "name": "Phosphofructokinase",
+              "reversible": false
+            },
+            {
+              "id": "PFL",
+              "name": "Pyruvate formate lyase",
+              "reversible": false
+            },
+            {
+              "id": "PGI",
+              "name": "Glucose-6-phosphate isomerase",
+              "reversible": true
+            },
+            {
+              "id": "PGK",
+              "name": "Phosphoglycerate kinase",
+              "reversible": true
+            },
+            {
+              "id": "PGL",
+              "name": "6-phosphogluconolactonase",
+              "reversible": false
+            },
+            {
+              "id": "ACALD",
+              "name": "Acetaldehyde dehydrogenase (acetylating)",
+              "reversible": true
+            },
+            {
+              "id": "AKGt2r",
+              "name": "2 oxoglutarate reversible transport via symport",
+              "reversible": true
+            },
+            {
+              "id": "PGM",
+              "name": "Phosphoglycerate mutase",
+              "reversible": true
+            },
+            {
+              "id": "PIt2r",
+              "name": "Phosphate reversible transport via symport",
+              "reversible": true
+            },
+            {
+              "id": "ALCD2x",
+              "name": "Alcohol dehydrogenase (ethanol)",
+              "reversible": true
+            },
+            {
+              "id": "ACALDt",
+              "name": "Acetaldehyde reversible transport",
+              "reversible": true
+            },
+            {
+              "id": "ACKr",
+              "name": "Acetate kinase",
+              "reversible": true
+            },
+            {
+              "id": "PPC",
+              "name": "Phosphoenolpyruvate carboxylase",
+              "reversible": false
+            },
+            {
+              "id": "ACONTa",
+              "name": "Aconitase (half-reaction A, Citrate hydro-lyase)",
+              "reversible": true
+            },
+            {
+              "id": "ACONTb",
+              "name": "Aconitase (half-reaction B, Isocitrate hydro-lyase)",
+              "reversible": true
+            },
+            {
+              "id": "ATPM",
+              "name": "ATP maintenance requirement",
+              "reversible": false
+            },
+            {
+              "id": "PPCK",
+              "name": "Phosphoenolpyruvate carboxykinase",
+              "reversible": false
+            },
+            {
+              "id": "ACt2r",
+              "name": "Acetate reversible transport via proton symport",
+              "reversible": true
+            },
+            {
+              "id": "PPS",
+              "name": "Phosphoenolpyruvate synthase",
+              "reversible": false
+            },
+            {
+              "id": "ADK1",
+              "name": "Adenylate kinase",
+              "reversible": true
+            },
+            {
+              "id": "AKGDH",
+              "name": "2-Oxogluterate dehydrogenase",
+              "reversible": false
+            },
+            {
+              "id": "ATPS4r",
+              "name": "ATP synthase (four protons for one ATP)",
+              "reversible": true
+            },
+            {
+              "id": "PTAr",
+              "name": "Phosphotransacetylase",
+              "reversible": true
+            },
+            {
+              "id": "PYK",
+              "name": "Pyruvate kinase",
+              "reversible": false
+            },
+            {
+              "id": "BIOMASS_Ecoli_core_w_GAM",
+              "name": "Biomass Objective Function with GAM",
+              "reversible": false
+            },
+            {
+              "id": "PYRt2",
+              "name": "Pyruvate transport in via proton symport",
+              "reversible": true
+            },
+            {
+              "id": "CO2t",
+              "name": "CO2 transporter via diffusion",
+              "reversible": true
+            },
+            {
+              "id": "RPE",
+              "name": "Ribulose 5-phosphate 3-epimerase",
+              "reversible": true
+            },
+            {
+              "id": "CS",
+              "name": "Citrate synthase",
+              "reversible": false
+            },
+            {
+              "id": "RPI",
+              "name": "Ribose-5-phosphate isomerase",
+              "reversible": true
+            },
+            {
+              "id": "SUCCt2_2",
+              "name": "Succinate transport via proton symport (2 H)",
+              "reversible": false
+            },
+            {
+              "id": "CYTBD",
+              "name": "Cytochrome oxidase bd (ubiquinol-8: 2 protons)",
+              "reversible": false
+            },
+            {
+              "id": "D_LACt2",
+              "name": "D lactate transport via proton symport",
+              "reversible": true
+            },
+            {
+              "id": "ENO",
+              "name": "Enolase",
+              "reversible": true
+            },
+            {
+              "id": "SUCCt3",
+              "name": "Succinate transport out via proton antiport",
+              "reversible": false
+            },
+            {
+              "id": "ETOHt2r",
+              "name": "Ethanol reversible transport via proton symport",
+              "reversible": true
+            },
+            {
+              "id": "SUCDi",
+              "name": "Succinate dehydrogenase (irreversible)",
+              "reversible": false
+            },
+            {
+              "id": "SUCOAS",
+              "name": "Succinyl-CoA synthetase (ADP-forming)",
+              "reversible": true
+            },
+            {
+              "id": "TALA",
+              "name": "Transaldolase",
+              "reversible": true
+            },
+            {
+              "id": "THD2",
+              "name": "NAD(P) transhydrogenase",
+              "reversible": false
+            },
+            {
+              "id": "TKT1",
+              "name": "Transketolase",
+              "reversible": true
+            },
+            {
+              "id": "TKT2",
+              "name": "Transketolase",
+              "reversible": true
+            },
+            {
+              "id": "TPI",
+              "name": "Triose-phosphate isomerase",
+              "reversible": true
+            },
+            {
+              "id": "EX_ac_e",
+              "name": "Acetate exchange",
+              "reversible": false
+            },
+            {
+              "id": "EX_acald_e",
+              "name": "Acetaldehyde exchange",
+              "reversible": false
+            },
+            {
+              "id": "EX_akg_e",
+              "name": "2-Oxoglutarate exchange",
+              "reversible": false
+            },
+            {
+              "id": "EX_co2_e",
+              "name": "CO2 exchange",
+              "reversible": true
+            },
+            {
+              "id": "EX_etoh_e",
+              "name": "Ethanol exchange",
+              "reversible": false
+            },
+            {
+              "id": "EX_for_e",
+              "name": "Formate exchange",
+              "reversible": false
+            },
+            {
+              "id": "EX_fru_e",
+              "name": "D-Fructose exchange",
+              "reversible": false
+            },
+            {
+              "id": "EX_fum_e",
+              "name": "Fumarate exchange",
+              "reversible": false
+            },
+            {
+              "id": "EX_glc__D_e",
+              "name": "D-Glucose exchange",
+              "reversible": true
+            },
+            {
+              "id": "EX_gln__L_e",
+              "name": "L-Glutamine exchange",
+              "reversible": false
+            },
+            {
+              "id": "EX_glu__L_e",
+              "name": "L-Glutamate exchange",
+              "reversible": false
+            },
+            {
+              "id": "EX_h_e",
+              "name": "H+ exchange",
+              "reversible": true
+            },
+            {
+              "id": "EX_h2o_e",
+              "name": "H2O exchange",
+              "reversible": true
+            },
+            {
+              "id": "EX_lac__D_e",
+              "name": "D-lactate exchange",
+              "reversible": false
+            },
+            {
+              "id": "EX_mal__L_e",
+              "name": "L-Malate exchange",
+              "reversible": false
+            },
+            {
+              "id": "EX_nh4_e",
+              "name": "Ammonia exchange",
+              "reversible": true
+            },
+            {
+              "id": "EX_o2_e",
+              "name": "O2 exchange",
+              "reversible": true
+            },
+            {
+              "id": "EX_pi_e",
+              "name": "Phosphate exchange",
+              "reversible": true
+            },
+            {
+              "id": "EX_pyr_e",
+              "name": "Pyruvate exchange",
+              "reversible": false
+            },
+            {
+              "id": "EX_succ_e",
+              "name": "Succinate exchange",
+              "reversible": false
+            },
+            {
+              "id": "FBA",
+              "name": "Fructose-bisphosphate aldolase",
+              "reversible": true
+            },
+            {
+              "id": "FBP",
+              "name": "Fructose-bisphosphatase",
+              "reversible": false
+            },
+            {
+              "id": "FORt2",
+              "name": "Formate transport in via proton symport",
+              "reversible": false
+            },
+            {
+              "id": "FORt",
+              "name": "Formate transport via diffusion",
+              "reversible": false
+            },
+            {
+              "id": "FRD7",
+              "name": "Fumarate reductase",
+              "reversible": false
+            },
+            {
+              "id": "FRUpts2",
+              "name": "Fructose transport via PEP:Pyr PTS (f6p generating)",
+              "reversible": false
+            },
+            {
+              "id": "FUM",
+              "name": "Fumarase",
+              "reversible": true
+            },
+            {
+              "id": "FUMt2_2",
+              "name": "Fumarate transport via proton symport (2 H)",
+              "reversible": false
+            },
+            {
+              "id": "G6PDH2r",
+              "name": "Glucose 6-phosphate dehydrogenase",
+              "reversible": true
+            },
+            {
+              "id": "GAPD",
+              "name": "Glyceraldehyde-3-phosphate dehydrogenase",
+              "reversible": true
+            },
+            {
+              "id": "GLCpts",
+              "name": "D-glucose transport via PEP:Pyr PTS",
+              "reversible": false
+            },
+            {
+              "id": "GLNS",
+              "name": "Glutamine synthetase",
+              "reversible": false
+            },
+            {
+              "id": "GLNabc",
+              "name": "L-glutamine transport via ABC system",
+              "reversible": false
+            },
+            {
+              "id": "GLUDy",
+              "name": "Glutamate dehydrogenase (NADP)",
+              "reversible": true
+            },
+            {
+              "id": "GLUN",
+              "name": "Glutaminase",
+              "reversible": false
+            },
+            {
+              "id": "GLUSy",
+              "name": "Glutamate synthase (NADPH)",
+              "reversible": false
+            },
+            {
+              "id": "GLUt2r",
+              "name": "L glutamate transport via proton symport  reversible",
+              "reversible": true
+            },
+            {
+              "id": "GND",
+              "name": "Phosphogluconate dehydrogenase",
+              "reversible": false
+            },
+            {
+              "id": "H2Ot",
+              "name": "H2O transport via diffusion",
+              "reversible": true
+            },
+            {
+              "id": "ICDHyr",
+              "name": "Isocitrate dehydrogenase (NADP)",
+              "reversible": true
+            },
+            {
+              "id": "ICL",
+              "name": "Isocitrate lyase",
+              "reversible": false
+            },
+            {
+              "id": "LDH_D",
+              "name": "D-lactate dehydrogenase",
+              "reversible": true
+            },
+            {
+              "id": "MALS",
+              "name": "Malate synthase",
+              "reversible": false
+            },
+            {
+              "id": "MALt2_2",
+              "name": "Malate transport via proton symport (2 H)",
+              "reversible": false
+            },
+            {
+              "id": "MDH",
+              "name": "Malate dehydrogenase",
+              "reversible": true
+            },
+            {
+              "id": "ME1",
+              "name": "Malic enzyme (NAD)",
+              "reversible": false
+            },
+            {
+              "id": "ME2",
+              "name": "Malic enzyme (NADP)",
+              "reversible": false
+            },
+            {
+              "id": "NADH16",
+              "name": "NADH dehydrogenase (ubiquinone-8 & 3 protons)",
+              "reversible": false
+            },
+            {
+              "id": "NADTRHD",
+              "name": "NAD transhydrogenase",
+              "reversible": false
+            },
+            {
+              "id": "NH4t",
+              "name": "Ammonia reversible transport",
+              "reversible": true
+            },
+            {
+              "id": "O2t",
+              "name": "O2 transport  diffusion",
+              "reversible": true
+            },
+            {
+              "id": "PDH",
+              "name": "Pyruvate dehydrogenase",
+              "reversible": false
+            }
+          ],
+          "num_subsystems": 1,
+          "largest_subsystems": [
+            [
+              "Unknown",
+              95
+            ]
+          ]
+        },
+        "potential_issues": {
+          "dead_end_metabolites": [],
+          "disconnected_reactions": [],
+          "missing_genes": [
+            "ATPM",
+            "ACt2r",
+            "BIOMASS_Ecoli_core_w_GAM",
+            "PYRt2",
+            "SUCCt3",
+            "ETOHt2r"
+          ],
+          "boundary_issues": [
+            {
+              "metabolite": "glc__D_e",
+              "name": "D-Glucose"
+            },
+            {
+              "metabolite": "gln__L_e",
+              "name": "L-Glutamine"
+            },
+            {
+              "metabolite": "h_e",
+              "name": "H+"
+            },
+            {
+              "metabolite": "for_e",
+              "name": "Formate"
+            },
+            {
+              "metabolite": "o2_e",
+              "name": "O2 O2"
+            },
+            {
+              "metabolite": "ac_e",
+              "name": "Acetate"
+            },
+            {
+              "metabolite": "succ_e",
+              "name": "Succinate"
+            },
+            {
+              "metabolite": "glu__L_e",
+              "name": "L-Glutamate"
+            },
+            {
+              "metabolite": "nh4_e",
+              "name": "Ammonium"
+            },
+            {
+              "metabolite": "fru_e",
+              "name": "D-Fructose"
+            },
+            {
+              "metabolite": "lac__D_e",
+              "name": "D-Lactate"
+            },
+            {
+              "metabolite": "pyr_e",
+              "name": "Pyruvate"
+            },
+            {
+              "metabolite": "fum_e",
+              "name": "Fumarate"
+            },
+            {
+              "metabolite": "pi_e",
+              "name": "Phosphate"
+            },
+            {
+              "metabolite": "akg_e",
+              "name": "2-Oxoglutarate"
+            },
+            {
+              "metabolite": "h2o_e",
+              "name": "H2O H2O"
+            },
+            {
+              "metabolite": "acald_e",
+              "name": "Acetaldehyde"
+            },
+            {
+              "metabolite": "mal__L_e",
+              "name": "L-Malate"
+            },
+            {
+              "metabolite": "co2_e",
+              "name": "CO2 CO2"
+            },
+            {
+              "metabolite": "etoh_e",
+              "name": "Ethanol"
+            }
+          ]
+        }
+      },
+      "metadata": {},
+      "error": null
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 2.75109601020813,
+    "success": true,
+    "error": null,
+    "timestamp_end": "2025-06-11T21:58:20.233468"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

@@ -106,7 +106,6 @@ Create a `.env` file in the project root:
 
 ```bash
 # LLM Configuration
-ANTHROPIC_API_KEY=your_anthropic_key_here
 OPENAI_API_KEY=your_openai_key_here
 
 # Argo Gateway (if using)
@@ -129,17 +128,12 @@ MODELSEED_LOG_DIR=/path/to/logs
 
 ### API Keys Setup
 
-#### Anthropic (Claude)
-1. Visit [Anthropic Console](https://console.anthropic.com/)
-2. Create an API key
-3. Add to `.env`: `ANTHROPIC_API_KEY=your_key_here`
-
-#### OpenAI
+#### OpenAI (Experimental)
 1. Visit [OpenAI Platform](https://platform.openai.com/api-keys)
 2. Create an API key
 3. Add to `.env`: `OPENAI_API_KEY=your_key_here`
 
-#### Argo Gateway (Optional)
+#### Argo Gateway (Recommended)
 1. Contact your Argo administrator for access
 2. Add credentials to `.env`
 
@@ -197,7 +191,6 @@ modelseed-agent phase8
 
 ### AI/LLM Dependencies
 
-- **anthropic**: Claude API client
 - **openai**: OpenAI API client
 - **langgraph**: Workflow orchestration
 - **langchain**: LLM framework components

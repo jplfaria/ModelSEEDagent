@@ -7,7 +7,7 @@ readme = "README.md"
 license = "MIT"
 homepage = "https://github.com/jplfaria/ModelSEEDagent"
 repository = "https://github.com/jplfaria/ModelSEEDagent"
-documentation = "https://github.com/jplfaria/ModelSEEDagent/blob/main/README.md"
+documentation = "https://jplfaria.github.io/ModelSEEDagent/"
 keywords = ["metabolic-modeling", "AI", "LangGraph", "bioinformatics", "systems-biology"]
 classifiers = [
     "Development Status :: 4 - Beta",

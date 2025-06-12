@@ -20,6 +20,7 @@ import cobra
 import pandas as pd
 from pydantic import BaseModel
 
+from ...config.debug_config import get_debug_config
 from .media_library import MediaLibrary
 from .utils import BiomassDetector, CompoundMapper, ModelUtils
 
@@ -45,14 +46,21 @@ class ModelSEEDpyEnhancement:
         # Only log cobrakbase status once globally to avoid spam
         global _cobrakbase_check_logged
         if not _cobrakbase_check_logged:
+            debug_config = get_debug_config()
             if self.cobrakbase_available:
                 logger.info("cobrakbase integration enabled")
             else:
-                # Use a very low log level to minimize noise - only show in detailed debugging
-                logger.log(
-                    5,
-                    "cobrakbase not available - using standard COBRApy methods (fallback)",
-                )
+                # Use debug configuration to control cobrakbase messages
+                if debug_config.cobrakbase_debug:
+                    logger.info(
+                        "cobrakbase not available - using standard COBRApy methods (fallback)"
+                    )
+                else:
+                    # Use very low log level when cobrakbase debug is disabled
+                    logger.log(
+                        5,
+                        "cobrakbase not available - using standard COBRApy methods (fallback)",
+                    )
             _cobrakbase_check_logged = True
 
     def _check_cobrakbase(self) -> bool:
@@ -70,7 +78,11 @@ class ModelSEEDpyEnhancement:
             # Only log the import error details once globally to avoid spam
             global _cobrakbase_check_logged
             if not _cobrakbase_check_logged:
-                logger.log(5, f"cobrakbase import failed: {e}")
+                debug_config = get_debug_config()
+                if debug_config.cobrakbase_debug:
+                    logger.debug(f"cobrakbase import failed: {e}")
+                else:
+                    logger.log(5, f"cobrakbase import failed: {e}")
             return False
 
     def detect_modelseedpy_model(self, model: cobra.Model) -> bool:
