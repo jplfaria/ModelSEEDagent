@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document provides a comprehensive reference for all metabolic modeling tools available in the ModelSEEDagent platform. This documentation details each tool's capabilities, parameters, numerical precision improvements, and practical usage examples.
+This document provides a comprehensive reference for all **29 metabolic modeling tools** available in the ModelSEEDagent platform. This documentation details each tool's capabilities, parameters, numerical precision improvements, and practical usage examples.
 
 ## Table of Contents
 
@@ -53,7 +53,7 @@ The ModelSEED Agent implements a unified numerical precision framework that ensu
 
 ## AI Media Tools
 
-The AI Media Tools provide intelligent, AI-powered media management and optimization capabilities. These 6 specialized tools enable natural language interaction, automated media selection, and advanced optimization for metabolic models.
+The AI Media Tools provide intelligent, AI-powered media management and optimization capabilities. These 6 specialized tools are split into two categories: **Basic AI Media Tools** (4 tools in `media_tools.py`) for everyday media operations, and **Advanced AI Media Tools** (2 tools in `advanced_media_ai.py`) for sophisticated optimization and prediction. Together they enable natural language interaction, automated media selection, and advanced optimization for metabolic models.
 
 ### 1. MediaSelectorTool (`select_optimal_media`)
 
@@ -689,6 +689,17 @@ result = fba_tool.run({
 
 **Purpose**: Performs automated gap-filling for incomplete metabolic networks.
 
+### 21. ProteinAnnotationTool - Protein Function Annotation
+**Tool Name**: `annotate_proteins_rast`
+
+**Purpose**: Performs protein-based functional annotation for metabolic model construction.
+
+**Key Features**:
+- Protein sequence analysis
+- Functional domain identification
+- Enzyme commission number assignment
+- Metabolic pathway mapping
+
 ---
 
 ## RAST Tools
@@ -697,6 +708,17 @@ result = fba_tool.run({
 **Tool Name**: `annotate_with_rast`
 
 **Purpose**: Integrates RAST genome annotation with metabolic modeling.
+
+### 20. AnnotationAnalysisTool - Annotation Quality Assessment
+**Tool Name**: `analyze_rast_annotations`
+
+**Purpose**: Comprehensive analysis of RAST genome annotation quality and completeness.
+
+**Key Features**:
+- Annotation coverage statistics
+- Functional category analysis  
+- Quality metrics assessment
+- Comparison with reference annotations
 
 ---
 
@@ -907,6 +929,6 @@ print(f"Trade-off analysis: {result.data['analysis']['trade_offs']}")
 
 ## Conclusion
 
-The ModelSEED Agent provides a comprehensive suite of 19 metabolic modeling tools with sophisticated numerical precision handling, robust error management, and extensive analytical capabilities. The unified precision framework ensures consistent and reliable results across all analyses, while the enhanced error handling system provides users with actionable guidance for resolving issues.
+The ModelSEED Agent provides a comprehensive suite of 29 metabolic modeling tools with sophisticated numerical precision handling, robust error management, and extensive analytical capabilities. The unified precision framework ensures consistent and reliable results across all analyses, while the enhanced error handling system provides users with actionable guidance for resolving issues.
 
 The numerical precision improvements represent a significant advancement in metabolic modeling reliability, transforming solver artifacts into biologically meaningful results and ensuring consistent analysis standards across all tools.

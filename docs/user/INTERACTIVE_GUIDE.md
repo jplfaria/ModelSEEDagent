@@ -12,8 +12,7 @@ ModelSEEDagent provides a conversational AI interface for metabolic modeling tha
 # Primary method: Interactive session
 modelseed-agent interactive
 
-# Alternative methods
-python run_cli.py interactive
+# Alternative methods (if needed)
 python -m src.interactive.interactive_cli
 ```
 
@@ -26,7 +25,7 @@ python -m src.interactive.interactive_cli
 
 2. **Configure API access** (if not already done)
    ```bash
-   modelseed-agent setup --backend anthropic
+   modelseed-agent setup
    ```
 
 3. **Launch the interface**
@@ -41,7 +40,7 @@ python -m src.interactive.interactive_cli
 
 - Python 3.9 or higher
 - Virtual environment activated
-- Dependencies installed: `pip install -e .`
+- Dependencies installed: `pip install -e .[all]`
 - API access configured (Claude, OpenAI, or Argo Gateway)
 
 ## Natural Language Interface
@@ -151,7 +150,7 @@ The interface tracks comprehensive analytics for each session:
 
 ### Performance Metrics
 - **Total Interactions** - Number of queries processed
-- **Success Rate** - Percentage of successful analyses  
+- **Success Rate** - Percentage of successful analyses
 - **Average Execution Time** - Mean processing time per query
 - **Tool Usage** - Statistics on which tools are used most
 
@@ -218,7 +217,7 @@ The interface uses advanced natural language processing to understand your queri
 
 ### Query Classification
 - **Structural Analysis** - Model components, validation, statistics
-- **Growth Analysis** - Biomass, growth rates, conditions  
+- **Growth Analysis** - Biomass, growth rates, conditions
 - **Pathway Analysis** - Specific pathways, connectivity, bottlenecks
 - **Flux Analysis** - FBA, FVA, optimization, essential genes
 - **Network Analysis** - Topology, centrality, clustering
@@ -228,7 +227,7 @@ The interface uses advanced natural language processing to understand your queri
 
 ### Confidence Scoring
 - **High Confidence (80-100%)** - Direct execution
-- **Medium Confidence (50-79%)** - Clarifying questions  
+- **Medium Confidence (50-79%)** - Clarifying questions
 - **Low Confidence (<50%)** - Guided assistance
 
 ### Context Awareness

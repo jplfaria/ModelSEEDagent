@@ -104,7 +104,7 @@ spec:
         image: modelseed/modelseed-agent:latest
         ports:
         - containerPort: 8000
-        
+
         # Liveness probe
         livenessProbe:
           httpGet:
@@ -114,7 +114,7 @@ spec:
           periodSeconds: 10
           timeoutSeconds: 5
           failureThreshold: 3
-        
+
         # Readiness probe
         readinessProbe:
           httpGet:
@@ -124,7 +124,7 @@ spec:
           periodSeconds: 5
           timeoutSeconds: 3
           failureThreshold: 3
-        
+
         # Startup probe
         startupProbe:
           httpGet:
@@ -185,7 +185,7 @@ from contextlib import contextmanager
 class PerformanceMonitor:
     def __init__(self):
         self.metrics = {}
-    
+
     @contextmanager
     def measure(self, operation_name):
         """Context manager for measuring operation duration"""
@@ -195,16 +195,16 @@ class PerformanceMonitor:
         finally:
             duration = time.time() - start_time
             self.record_duration(operation_name, duration)
-    
+
     def record_duration(self, operation, duration):
         """Record operation duration"""
         if operation not in self.metrics:
             self.metrics[operation] = []
         self.metrics[operation].append(duration)
-        
+
         # Update Prometheus metrics
         REQUEST_DURATION.observe(duration)
-        
+
     def timed(self, operation_name):
         """Decorator for timing function calls"""
         def decorator(func):
@@ -238,25 +238,25 @@ LOG_FILE="/var/log/modelseed/resources.log"
 
 while true; do
     timestamp=$(date -Iseconds)
-    
+
     # CPU usage
     cpu_usage=$(top -bn1 | grep "Cpu(s)" | awk '{print $2}' | cut -d'%' -f1)
-    
+
     # Memory usage
     memory_info=$(free -m | grep "Mem:")
     memory_used=$(echo $memory_info | awk '{print $3}')
     memory_total=$(echo $memory_info | awk '{print $2}')
     memory_percent=$((memory_used * 100 / memory_total))
-    
+
     # Disk usage
     disk_usage=$(df -h / | tail -1 | awk '{print $5}' | cut -d'%' -f1)
-    
+
     # Process count
     process_count=$(pgrep -f modelseed-agent | wc -l)
-    
+
     # Log metrics
     echo "$timestamp,CPU:$cpu_usage,Memory:$memory_percent,Disk:$disk_usage,Processes:$process_count" >> $LOG_FILE
-    
+
     sleep 60
 done
 ```
@@ -276,7 +276,7 @@ class ToolAuditor:
     def __init__(self, audit_dir="logs/tool_audits"):
         self.audit_dir = Path(audit_dir)
         self.audit_dir.mkdir(exist_ok=True)
-        
+
     def log_execution(self, tool_name, inputs, outputs, duration, success=True, error=None):
         """Log tool execution details"""
         audit_data = {
@@ -290,24 +290,24 @@ class ToolAuditor:
             'memory_usage': self._get_memory_usage(),
             'cpu_usage': self._get_cpu_usage()
         }
-        
+
         # Save audit log
         audit_file = self.audit_dir / f"{time.strftime('%Y%m%d_%H%M%S')}_{tool_name}_{id(audit_data)}.json"
         with open(audit_file, 'w') as f:
             json.dump(audit_data, f, indent=2)
-        
+
         # Update metrics
         TOOL_EXECUTIONS.labels(tool_name=tool_name).inc()
         TOOL_DURATION.labels(tool_name=tool_name).observe(duration)
-        
+
         if not success:
             TOOL_ERRORS.labels(tool_name=tool_name).inc()
-    
+
     def _sanitize_inputs(self, inputs):
         """Remove sensitive data from inputs"""
         # Implementation to sanitize inputs
         return inputs
-    
+
     def _sanitize_outputs(self, outputs):
         """Remove sensitive data from outputs"""
         # Implementation to sanitize outputs
@@ -321,7 +321,7 @@ class ToolAuditor:
 class WorkflowMonitor:
     def __init__(self):
         self.workflows = {}
-    
+
     def start_workflow(self, workflow_id, workflow_type):
         """Start monitoring a workflow"""
         self.workflows[workflow_id] = {
@@ -330,9 +330,9 @@ class WorkflowMonitor:
             'steps': [],
             'status': 'running'
         }
-        
+
         ACTIVE_ANALYSES.inc()
-    
+
     def log_step(self, workflow_id, step_name, duration, success=True):
         """Log a workflow step"""
         if workflow_id in self.workflows:
@@ -342,7 +342,7 @@ class WorkflowMonitor:
                 'success': success,
                 'timestamp': time.time()
             })
-    
+
     def end_workflow(self, workflow_id, success=True):
         """End workflow monitoring"""
         if workflow_id in self.workflows:
@@ -350,10 +350,10 @@ class WorkflowMonitor:
             workflow['end_time'] = time.time()
             workflow['total_duration'] = workflow['end_time'] - workflow['start_time']
             workflow['status'] = 'completed' if success else 'failed'
-            
+
             # Archive workflow data
             self._archive_workflow(workflow_id, workflow)
-            
+
             ACTIVE_ANALYSES.dec()
 ```
 
@@ -381,28 +381,28 @@ class StructuredFormatter(logging.Formatter):
             'thread': record.thread,
             'process': record.process
         }
-        
+
         # Add exception info if present
         if record.exc_info:
             log_entry['exception'] = self.formatException(record.exc_info)
-        
+
         # Add custom fields
         if hasattr(record, 'tool_name'):
             log_entry['tool_name'] = record.tool_name
         if hasattr(record, 'workflow_id'):
             log_entry['workflow_id'] = record.workflow_id
-        
+
         return json.dumps(log_entry)
 
 # Configure structured logging
 def setup_logging():
     logger = logging.getLogger('modelseed')
     logger.setLevel(logging.INFO)
-    
+
     handler = logging.StreamHandler(sys.stdout)
     handler.setFormatter(StructuredFormatter())
     logger.addHandler(handler)
-    
+
     return logger
 ```
 
@@ -446,7 +446,7 @@ def setup_logging():
 groups:
 - name: modelseed
   rules:
-  
+
   # High error rate
   - alert: HighErrorRate
     expr: rate(modelseed_tool_errors_total[5m]) > 0.1
@@ -456,7 +456,7 @@ groups:
     annotations:
       summary: "High error rate detected"
       description: "Error rate is {{ $value }} errors per second"
-  
+
   # High memory usage
   - alert: HighMemoryUsage
     expr: modelseed_memory_usage_bytes / (1024*1024*1024) > 8
@@ -466,7 +466,7 @@ groups:
     annotations:
       summary: "High memory usage"
       description: "Memory usage is {{ $value }}GB"
-  
+
   # LLM API failures
   - alert: LLMAPIFailures
     expr: rate(modelseed_llm_errors_total[5m]) > 0.05
@@ -476,7 +476,7 @@ groups:
     annotations:
       summary: "LLM API failures detected"
       description: "LLM failure rate: {{ $value }} per second"
-  
+
   # Service down
   - alert: ServiceDown
     expr: up{job="modelseed-agent"} == 0
@@ -513,7 +513,7 @@ receivers:
       Alert: {{ .Annotations.summary }}
       Description: {{ .Annotations.description }}
       {{ end }}
-  
+
   slack_configs:
   - api_url: 'https://hooks.slack.com/services/...'
     channel: '#alerts'
@@ -601,7 +601,7 @@ def get_metrics_data():
 
 app.layout = html.Div([
     html.H1('ModelSEEDagent Monitoring Dashboard'),
-    
+
     dcc.Graph(
         id='request-rate',
         figure={
@@ -620,7 +620,7 @@ app.layout = html.Div([
             )
         }
     ),
-    
+
     dcc.Graph(
         id='tool-performance',
         figure={
@@ -656,7 +656,7 @@ from datetime import datetime
 class SecurityAuditor:
     def __init__(self):
         self.audit_logger = logging.getLogger('modelseed.security')
-        
+
     def log_access(self, user_id, resource, action, success=True):
         """Log access attempts"""
         self.audit_logger.info(
@@ -670,7 +670,7 @@ class SecurityAuditor:
                 'ip_address': self._get_client_ip()
             }
         )
-    
+
     def log_api_key_usage(self, api_key_id, provider, success=True):
         """Log API key usage"""
         self.audit_logger.info(
@@ -682,7 +682,7 @@ class SecurityAuditor:
                 'timestamp': datetime.utcnow().isoformat()
             }
         )
-    
+
     def log_sensitive_operation(self, operation, user_id, details=None):
         """Log sensitive operations"""
         self.audit_logger.warning(
@@ -731,12 +731,12 @@ fi
 class CostMonitor:
     def __init__(self):
         self.usage_tracker = {}
-        
+
     def track_llm_usage(self, provider, model, input_tokens, output_tokens, cost=None):
         """Track LLM API usage and costs"""
         date = datetime.now().date()
         key = f"{provider}_{model}_{date}"
-        
+
         if key not in self.usage_tracker:
             self.usage_tracker[key] = {
                 'input_tokens': 0,
@@ -744,19 +744,19 @@ class CostMonitor:
                 'requests': 0,
                 'cost': 0.0
             }
-        
+
         self.usage_tracker[key]['input_tokens'] += input_tokens
         self.usage_tracker[key]['output_tokens'] += output_tokens
         self.usage_tracker[key]['requests'] += 1
-        
+
         if cost:
             self.usage_tracker[key]['cost'] += cost
-        
+
         # Alert if cost threshold exceeded
         daily_cost = self.usage_tracker[key]['cost']
         if daily_cost > 100:  # $100 daily limit
             self._send_cost_alert(provider, model, daily_cost)
-    
+
     def _send_cost_alert(self, provider, model, cost):
         """Send cost alert"""
         logging.warning(

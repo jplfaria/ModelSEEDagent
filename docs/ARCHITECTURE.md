@@ -24,50 +24,50 @@ graph TB
         UI3[Python API]
         UI4[Web Interface<br/>(Future)]
     end
-    
+
     subgraph "Agent Orchestration Layer"
         AG1[LangGraph Workflows]
         AG2[Metabolic Agent]
         AG3[Reasoning Chains]
         AG4[Collaborative Decision Making]
     end
-    
+
     subgraph "LLM Abstraction Layer"
         LLM1[Argo Gateway<br/>13 models]
         LLM2[OpenAI API]
         LLM3[Local LLMs<br/>Llama 3.x]
         LLM4[Model Factory & Config]
     end
-    
+
     subgraph "Tool Execution Layer"
-        T1[COBRApy Tools<br/>11 tools]
-        T2[ModelSEED Tools<br/>4 tools]
+        T1[COBRApy Tools<br/>16 tools]
+        T2[ModelSEED Tools<br/>5 tools]
         T3[Biochemistry Database<br/>2 tools]
         T4[AI Media Tools<br/>6 tools]
     end
-    
+
     subgraph "Data & Persistence Layer"
         D1[Biochemistry Database<br/>SQLite]
         D2[Session State]
         D3[Audit Trails]
         D4[Model Cache & Results]
     end
-    
+
     UI1 --> AG1
     UI2 --> AG2
     UI3 --> AG3
     UI4 --> AG4
-    
+
     AG1 --> LLM1
     AG2 --> LLM2
     AG3 --> LLM3
     AG4 --> LLM4
-    
+
     LLM1 --> T1
     LLM2 --> T2
     LLM3 --> T3
     LLM4 --> T4
-    
+
     T1 --> D1
     T2 --> D2
     T3 --> D3
@@ -129,33 +129,33 @@ flowchart TD
     A[User Request] --> B[Query Processor]
     B --> B1[Parse Intent]
     B1 --> B2[Route to Agent]
-    
+
     B2 --> C[Agent Orchestrator]
     C --> C1[Select Strategy]
     C1 --> C2[Plan Workflow]
-    
+
     C2 --> D[LLM Backend]
     D --> D1[Process Context]
     D1 --> D2[Generate Plan]
-    
+
     D2 --> E[Tool Executor]
     E --> E1[Validate Inputs]
     E1 --> E2[Execute Tools]
     E2 --> E3[Audit Results]
-    
+
     E3 --> F[Result Processor]
     F --> F1[Format Output]
     F1 --> F2[Update State]
     F2 --> F3[Generate Response]
-    
+
     F3 --> G[User Response]
-    
+
     classDef userClass fill:#e1f5fe
     classDef processClass fill:#f3e5f5
     classDef llmClass fill:#e8f5e8
     classDef toolClass fill:#fff3e0
     classDef resultClass fill:#fce4ec
-    
+
     class A,G userClass
     class B,B1,B2 processClass
     class C,C1,C2 processClass
@@ -188,14 +188,14 @@ flowchart TD
 graph TD
     subgraph "Tool Hierarchy"
         BT[BaseTool<br/>- Common API<br/>- Validation<br/>- Error handling]
-        
+
         subgraph "Tool Categories"
             CT[COBRApy Tools<br/>11 tools]
-            MT[ModelSEED Tools<br/>4 tools] 
+            MT[ModelSEED Tools<br/>4 tools]
             BCT[Biochemistry Tools<br/>2 tools]
             AMT[AI Media Tools<br/>6 tools]
         end
-        
+
         subgraph "COBRApy Capabilities"
             FBA[FBA Analysis]
             GKO[Gene Knockout]
@@ -203,57 +203,57 @@ graph TD
             FS[Flux Sampling]
             FVA[Flux Variability]
         end
-        
+
         subgraph "ModelSEED Capabilities"
             ANN[Annotation]
             BUILD[Model Building]
             GAP[Gapfilling]
             RAST[RAST API]
         end
-        
+
         subgraph "Biochemistry Capabilities"
             IDR[ID Resolution]
             DBS[DB Search]
         end
-        
+
         subgraph "AI Media Capabilities"
             SEL[Media Selection]
             MAN[Media Manipulation]
             COMP[Media Compatibility]
             OPT[Media Optimization]
         end
-        
+
         subgraph "Universal Infrastructure"
             BD[BiomassDetector]
-            MM[MediaManager] 
+            MM[MediaManager]
             CM[CompoundMapper]
         end
     end
-    
+
     BT --> CT
     BT --> MT
     BT --> BCT
     BT --> AMT
-    
+
     CT --> FBA
     CT --> GKO
     CT --> ESS
     CT --> FS
     CT --> FVA
-    
+
     MT --> ANN
     MT --> BUILD
     MT --> GAP
     MT --> RAST
-    
+
     BCT --> IDR
     BCT --> DBS
-    
+
     AMT --> SEL
     AMT --> MAN
     AMT --> COMP
     AMT --> OPT
-    
+
     CT --> BD
     CT --> MM
     CT --> CM
@@ -364,35 +364,35 @@ flowchart TD
     UQ[User Query] --> QA[Query Analysis]
     QA --> CB[Context Building]
     CB --> RSS[Reasoning Strategy Selection]
-    
+
     RSS --> MSC[Multi-Step Chains]
     RSS --> HT[Hypothesis Testing]
     RSS --> CD[Collaborative Decision]
-    
+
     MSC --> TSE[Tool Selection & Execution]
     HT --> TSE
     CD --> TSE
-    
+
     TSE --> RSL[Result Synthesis & Learning]
     RSL --> UR[User Response]
-    
+
     subgraph "Advanced AI Reasoning"
         MSC --> MSC1[Plan 5-10 step sequences]
         MSC1 --> MSC2[Dynamic adaptation]
-        
+
         HT --> HT1[Generate hypotheses]
         HT1 --> HT2[Systematic testing]
-        
-        CD --> CD1[Recognize uncertainty] 
+
+        CD --> CD1[Recognize uncertainty]
         CD1 --> CD2[Request human guidance]
     end
-    
+
     classDef userClass fill:#e1f5fe
     classDef analysisClass fill:#f3e5f5
     classDef reasoningClass fill:#e8f5e8
     classDef executionClass fill:#fff3e0
     classDef resultClass fill:#fce4ec
-    
+
     class UQ,UR userClass
     class QA,CB,RSS analysisClass
     class MSC,HT,CD,MSC1,MSC2,HT1,HT2,CD1,CD2 reasoningClass

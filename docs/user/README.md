@@ -2,7 +2,7 @@
 
 **AI-Powered Metabolic Modeling Platform**
 
-ModelSEEDagent combines large language models with 23 specialized bioinformatics tools to provide intelligent metabolic modeling assistance. The platform integrates ModelSEED and COBRApy capabilities with natural language interfaces for comprehensive analysis workflows.
+ModelSEEDagent combines large language models with 29 specialized bioinformatics tools to provide intelligent metabolic modeling assistance. The platform integrates ModelSEED and COBRApy capabilities with natural language interfaces for comprehensive analysis workflows.
 
 ## Installation
 
@@ -23,7 +23,7 @@ python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install with all dependencies
-pip install -e .
+pip install -e .[all]
 ```
 
 ### API Configuration
@@ -52,8 +52,8 @@ Launch the natural language interface for conversational analysis:
 # Start interactive session
 modelseed-agent interactive
 
-# Or using the direct script
-python run_cli.py interactive
+# Or check available examples
+ls examples/basic/
 ```
 
 **Example queries:**
@@ -68,10 +68,10 @@ Use the CLI for direct analysis commands:
 
 ```bash
 # Configure the system
-modelseed-agent setup --backend anthropic
+modelseed-agent setup
 
 # Analyze a metabolic model
-modelseed-agent analyze model.xml --query "Analyze structure"
+modelseed-agent analyze data/examples/e_coli_core.xml --query "Analyze structure"
 
 # Check system status
 modelseed-agent status
@@ -133,7 +133,7 @@ ModelSEEDagent provides 23 specialized tools organized into several categories:
 ### ModelSEED Integration (4 tools)
 - **Genome Annotation** - RAST-based automated annotation
 - **Model Building** - Template-based metabolic model construction
-- **Gapfilling** - Pathway completion algorithms  
+- **Gapfilling** - Pathway completion algorithms
 - **Protein Annotation** - Sequence-based functional annotation
 
 ### COBRApy Analysis (11 tools)
@@ -177,7 +177,7 @@ ModelSEEDagent provides an intuitive natural language interface for metabolic an
 The platform includes comprehensive verification capabilities:
 
 - **Tool Execution Capture** - Automatic audit of all tool executions
-- **Hallucination Detection** - Advanced verification with confidence scoring  
+- **Hallucination Detection** - Advanced verification with confidence scoring
 - **Statistical Analysis** - Pattern detection across multiple runs
 - **Audit Commands** - CLI tools for reviewing analysis history
 
@@ -207,7 +207,7 @@ Seamless integration between ModelSEED and COBRApy ecosystems:
 # 1. Annotate genome with RAST
 modelseed-agent run-tool annotate_genome_rast --genome-file pputida.fna
 
-# 2. Build draft model  
+# 2. Build draft model
 modelseed-agent run-tool build_metabolic_model --genome-object <result>
 
 # 3. Gapfill for growth

@@ -117,7 +117,7 @@ When `MODELSEED_DEBUG_TOOLS=true`:
 - Execution timing and performance metrics
 - Input validation and output processing details
 
-### LLM Interaction Messages  
+### LLM Interaction Messages
 When `MODELSEED_DEBUG_LLM=true`:
 - Model selection and configuration
 - Request timing and response processing

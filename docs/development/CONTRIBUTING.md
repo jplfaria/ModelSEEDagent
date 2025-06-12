@@ -158,22 +158,22 @@ Use Google-style docstrings:
 ```python
 def analyze_model(model_path: str, analysis_type: str = "comprehensive") -> Dict[str, Any]:
     """Analyze a metabolic model using AI-powered workflows.
-    
+
     Args:
         model_path: Path to the model file (SBML, JSON, or MAT format)
         analysis_type: Type of analysis to perform ("basic", "comprehensive", "custom")
-    
+
     Returns:
         Dictionary containing analysis results with keys:
         - "model_info": Basic model information
         - "analysis_results": Detailed analysis output
         - "recommendations": AI-generated recommendations
-    
+
     Raises:
         FileNotFoundError: If model file doesn't exist
         ValueError: If analysis_type is not supported
         ModelAnalysisError: If analysis fails
-    
+
     Example:
         >>> results = analyze_model("data/models/e_coli.xml", "comprehensive")
         >>> print(f"Model has {results['model_info']['reactions']} reactions")
@@ -189,7 +189,7 @@ from typing import Dict, List, Optional, Union, Any
 from pathlib import Path
 
 def process_results(
-    results: List[Dict[str, Any]], 
+    results: List[Dict[str, Any]],
     output_path: Optional[Path] = None
 ) -> Dict[str, Union[str, int, float]]:
     """Process analysis results."""
@@ -222,7 +222,7 @@ def analyze_model(model_path: str) -> Dict[str, Any]:
         raise ModelAnalysisError(f"Model file not found: {model_path}")
     except Exception as e:
         raise ModelAnalysisError(f"Failed to load model: {e}") from e
-    
+
     return perform_analysis(model)
 ```
 
@@ -251,31 +251,31 @@ from src.llm.factory import LLMFactory
 
 class TestMetabolicAgent:
     """Test cases for MetabolicAgent class."""
-    
+
     @pytest.fixture
     def agent(self):
         """Create a test agent instance."""
         llm = LLMFactory.create_llm("mock")
         return MetabolicAgent(llm)
-    
+
     def test_agent_initialization(self, agent):
         """Test that agent initializes correctly."""
         assert agent is not None
         assert len(agent.tools) > 0
-    
+
     def test_analyze_model_with_valid_input(self, agent, sample_model):
         """Test model analysis with valid input."""
         result = agent.analyze(sample_model)
-        
+
         assert "analysis_results" in result
         assert "recommendations" in result
         assert result["success"] is True
-    
+
     def test_analyze_model_with_invalid_input(self, agent):
         """Test model analysis with invalid input."""
         with pytest.raises(ModelAnalysisError):
             agent.analyze("nonexistent_model.xml")
-    
+
     @pytest.mark.slow
     def test_comprehensive_analysis(self, agent, complex_model):
         """Test comprehensive analysis with complex model."""
@@ -347,32 +347,32 @@ from .base import CobrapyTool
 
 class NewAnalysisTool(CobrapyTool):
     """New analysis tool for metabolic models."""
-    
+
     name = "new_analysis"
     description = "Performs new type of analysis on metabolic models"
-    
+
     def execute(self, model_path: str, **kwargs) -> Dict[str, Any]:
         """Execute the new analysis.
-        
+
         Args:
             model_path: Path to the model file
             **kwargs: Additional parameters
-            
+
         Returns:
             Analysis results dictionary
         """
         model = self.load_model(model_path)
-        
+
         # Implement your analysis logic here
         results = self._perform_analysis(model, **kwargs)
-        
+
         return {
             "tool_name": self.name,
             "model_id": model.id,
             "results": results,
             "success": True
         }
-    
+
     def _perform_analysis(self, model, **kwargs):
         """Implement the core analysis logic."""
         # Your implementation here
@@ -402,7 +402,7 @@ class TestNewAnalysisTool:
     def test_tool_execution(self, sample_model):
         tool = NewAnalysisTool()
         result = tool.execute(sample_model)
-        
+
         assert result["success"] is True
         assert "results" in result
 ```
@@ -420,11 +420,11 @@ from .base import BaseAgent
 
 class NewAgent(BaseAgent):
     """New specialized agent for specific workflows."""
-    
+
     def __init__(self, llm, tools: List[Any], config: Dict[str, Any] = None):
         super().__init__(llm, tools, config)
         self.specialized_config = config.get("specialized", {})
-    
+
     def analyze(self, query: str, **kwargs) -> Dict[str, Any]:
         """Perform specialized analysis."""
         # Implement specialized logic
@@ -452,20 +452,20 @@ Use mkdocstrings for automatic API documentation:
 ```python
 def analyze_model(model_path: str) -> Dict[str, Any]:
     """Analyze a metabolic model.
-    
+
     This function performs comprehensive analysis of a metabolic model
     using AI-powered workflows.
-    
+
     Args:
         model_path: Path to the model file
-        
+
     Returns:
         Analysis results dictionary
-        
+
     Example:
         ```python
         from modelseed_agent import analyze_model
-        
+
         results = analyze_model("data/models/e_coli.xml")
         print(results["summary"])
         ```

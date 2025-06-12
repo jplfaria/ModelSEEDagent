@@ -569,7 +569,7 @@ logger = logging.getLogger(__name__)
 
 def debug_analysis(model, step):
     logger.debug(f"Analysis step {step}: {len(model.reactions)} reactions")
-    
+
 # Use with breakpoints
 import pdb; pdb.set_trace()
 ```

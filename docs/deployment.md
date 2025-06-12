@@ -147,7 +147,7 @@ upstream modelseed_backend {
 server {
     listen 80;
     server_name modelseed.example.com;
-    
+
     location / {
         proxy_pass http://modelseed_backend;
         proxy_set_header Host $host;
@@ -155,7 +155,7 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_timeout 300s;
     }
-    
+
     location /health {
         proxy_pass http://modelseed_backend/health;
         access_log off;
@@ -189,13 +189,13 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-  
+
   redis:
     image: redis:alpine
     volumes:
       - redis_data:/data
     restart: unless-stopped
-  
+
   nginx:
     image: nginx:alpine
     ports:
@@ -327,7 +327,7 @@ handlers:
     level: INFO
     formatter: standard
     stream: ext://sys.stdout
-  
+
   file:
     class: logging.handlers.RotatingFileHandler
     level: DEBUG
@@ -389,12 +389,12 @@ journalctl -u modelseed-agent -f
 server {
     listen 443 ssl http2;
     server_name modelseed.example.com;
-    
+
     ssl_certificate /etc/ssl/certs/modelseed.crt;
     ssl_certificate_key /etc/ssl/private/modelseed.key;
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers HIGH:!aNULL:!MD5;
-    
+
     location / {
         proxy_pass http://modelseed_backend;
         proxy_set_header X-Forwarded-Proto https;
@@ -415,12 +415,12 @@ def require_auth(f):
         token = request.headers.get('Authorization')
         if not token:
             return {'error': 'No token provided'}, 401
-        
+
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
         except jwt.InvalidTokenError:
             return {'error': 'Invalid token'}, 401
-        
+
         return f(*args, **kwargs)
     return decorated_function
 ```

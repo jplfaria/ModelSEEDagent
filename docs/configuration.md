@@ -308,7 +308,7 @@ class CustomSettings(Settings):
     def __init__(self):
         super().__init__()
         self.custom_parameter = "value"
-        
+
     def validate_custom(self):
         # Custom validation logic
         pass

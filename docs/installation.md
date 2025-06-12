@@ -9,8 +9,8 @@ ModelSEEDagent is a sophisticated AI-powered metabolic modeling platform that co
 git clone https://github.com/ModelSEED/ModelSEEDagent.git
 cd ModelSEEDagent
 
-# Install in development mode
-pip install -e .
+# Install in development mode with all optional dependencies
+pip install -e .[all]
 
 # Verify installation
 modelseed-agent --help
@@ -62,11 +62,11 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 git clone https://github.com/ModelSEED/ModelSEEDagent.git
 cd ModelSEEDagent
 
-# Install in development mode
-pip install -e .
+# Install in development mode with all dependencies
+pip install -e .[all]
 
-# Install additional development dependencies
-pip install -r requirements-dev.txt
+# Install additional development dependencies (if needed)
+# pip install -r requirements-dev.txt
 ```
 
 ### Method 2: Production Installation
@@ -95,7 +95,7 @@ conda install -c bioconda cobra
 conda install -c conda-forge requests python-dotenv rich
 
 # Install ModelSEEDagent
-pip install -e .
+pip install -e .[all]
 ```
 
 ## Configuration

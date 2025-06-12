@@ -10,16 +10,16 @@ graph TB
     Factory --> LLM[LLM Layer]
     Factory --> Tools[Tool Layer]
     Factory --> Agents[Agent Layer]
-    
+
     LLM --> Argo[Argo Gateway]
     LLM --> OpenAI[OpenAI]
     LLM --> Local[Local LLM]
-    
+
     Tools --> COBRA[COBRApy Tools]
     Tools --> ModelSEED[ModelSEED Tools]
     Tools --> Biochem[Biochemistry Tools]
     Tools --> RAST[RAST Tools]
-    
+
     Agents --> Metabolic[Metabolic Agent]
     Agents --> LangGraph[LangGraph Agent]
     Agents --> RealTime[Real-time Agent]
@@ -40,10 +40,11 @@ The agent system provides AI-powered workflow orchestration:
 
 Comprehensive toolset for metabolic analysis:
 
-- **COBRApy Tools** (11 tools) - Complete COBRApy ecosystem integration
-- **ModelSEED Tools** (4 tools) - Genome annotation and model building
+- **COBRApy Tools** (16 tools) - Complete COBRApy ecosystem integration
+- **ModelSEED Tools** (5 tools) - Genome annotation and model building
 - **Biochemistry Tools** (2 tools) - Universal ID resolution and search
 - **AI Media Tools** (6 tools) - Intelligent media management and optimization
+- **RAST Tools** (2 tools) - Genome annotation and analysis
 
 ### LLM Integration (`src.llm`)
 
@@ -76,7 +77,7 @@ Flexible configuration system:
 
 ### Production Ready
 
-- **23 Total Tools** - Complete metabolic modeling toolkit
+- **29 Total Tools** - Complete metabolic modeling toolkit
 - **Multi-LLM Support** - Choose your preferred language model
 - **Professional CLI** - Rich, interactive command-line interface
 - **Comprehensive Audit** - Full execution tracking and verification
@@ -191,15 +192,15 @@ async def comprehensive_analysis():
         "system_content": "Expert metabolic modeling assistant",
         "temperature": 0.1
     })
-    
+
     tools = [
         FBATool(),
         EssentialityTool(),
         FluxVariabilityTool()
     ]
-    
+
     agent = LangGraphMetabolicAgent(llm, tools, {"name": "comprehensive_agent"})
-    
+
     # Sequential analysis
     analyses = [
         "Load and validate the E. coli core model",
@@ -208,7 +209,7 @@ async def comprehensive_analysis():
         "Perform flux variability analysis for central metabolism",
         "Summarize findings and generate recommendations"
     ]
-    
+
     results = []
     for query in analyses:
         result = await agent.run({
@@ -217,7 +218,7 @@ async def comprehensive_analysis():
         })
         results.append(result)
         print(f"Completed: {query}")
-    
+
     return results
 
 # Run the analysis
@@ -232,25 +233,25 @@ from pydantic import BaseModel
 
 class CustomAnalysisTool(BaseTool):
     """Custom tool for specialized analysis"""
-    
+
     class Input(BaseModel):
         model_file: str
         analysis_type: str
         parameters: dict = {}
-    
+
     class Output(BaseModel):
         results: dict
         summary: str
-        
+
     def _execute(self, inputs: Input) -> Output:
         # Your custom analysis logic here
         results = self.custom_analysis(inputs.model_file, inputs.analysis_type)
-        
+
         return self.Output(
             results=results,
             summary=f"Custom analysis completed for {inputs.model_file}"
         )
-    
+
     def custom_analysis(self, model_file: str, analysis_type: str) -> dict:
         # Implement your analysis
         return {"custom_metric": 42}
@@ -285,7 +286,7 @@ except LLMError as e:
 The API is designed for extensibility:
 
 - **Custom Tools** - Add new analysis capabilities
-- **Custom Agents** - Implement specialized workflows  
+- **Custom Agents** - Implement specialized workflows
 - **Custom LLMs** - Integrate additional language models
 - **Custom Workflows** - Create domain-specific analysis pipelines
 
