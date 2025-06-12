@@ -1,134 +1,120 @@
-# ModelSEEDagent
+# Getting Started
 
-🧬 **Advanced AI-Powered Metabolic Modeling Platform**
+**AI-Powered Metabolic Modeling Platform**
 
-ModelSEEDagent is a production-ready AI-powered metabolic modeling platform that combines the power of large language models with **17 specialized bioinformatics tools**. Built on LangGraph for intelligent workflow orchestration, it provides the most comprehensive metabolic modeling AI assistant available with complete genome-to-model pipelines, advanced COBRA analysis, universal biochemistry intelligence, and AI transparency features.
+ModelSEEDagent combines large language models with 23 specialized bioinformatics tools to provide intelligent metabolic modeling assistance. The platform integrates ModelSEED and COBRApy capabilities with natural language interfaces for comprehensive analysis workflows.
 
-## 🚀 Quick Start
+## Installation
 
 ### Prerequisites
-- Python 3.9+
+- Python 3.9 or higher
 - Virtual environment (recommended)
-- Access to Argo Gateway or OpenAI API
+- API access to Claude, OpenAI, or Argo Gateway
 
-### Installation
+### Quick Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/jplfaria/ModelSEEDagent.git
+git clone https://github.com/ModelSEED/ModelSEEDagent.git
 cd ModelSEEDagent
 
 # Create and activate virtual environment
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-# Install dependencies
-pip install .[all]
-
-# Install in development mode
+# Install with all dependencies
 pip install -e .
 ```
 
-### Environment Setup
+### API Configuration
+
+Configure your AI model access by setting one of these options:
 
 ```bash
-# For Argo Gateway (recommended) - New default model: gpt4o
-export ARGO_USER="your_anl_username"
-export DEFAULT_MODEL_NAME="gpt4o"
-export DEFAULT_LLM_BACKEND="argo"
+# Option 1: Anthropic Claude (recommended)
+export ANTHROPIC_API_KEY="your_anthropic_api_key"
 
-# For OpenAI (alternative)
-export OPENAI_API_KEY="your_openai_key"
-export DEFAULT_LLM_BACKEND="openai"
+# Option 2: OpenAI
+export OPENAI_API_KEY="your_openai_api_key"
+
+# Option 3: Argo Gateway (if available)
+export ARGO_USER="your_username"
+export ARGO_GATEWAY_URL="your_gateway_url"
 ```
 
-## 🎯 Usage
+## Basic Usage
 
-### Interactive Analysis Interface ✅ **PRODUCTION READY**
+### Interactive Interface
 
-Launch the natural language interactive interface:
-
-```bash
-# Method 1: Using entry point script (RECOMMENDED)
-python run_cli.py interactive
-
-# Method 2: Direct module execution
-python -m src.interactive.interactive_cli
-```
-
-**Example interactions:**
-- *"Load and analyze the E. coli model"*
-- *"What is the growth rate on glucose minimal media?"*
-- *"Run flux balance analysis and show results"*
-- *"Create a network visualization of central carbon metabolism"*
-
-**Features Working:**
-- ✅ Beautiful session management with persistent history
-- ✅ Natural language query processing
-- ✅ Real-time visualization generation
-- ✅ Automatic browser opening for visualizations
-- ✅ Session analytics and progress tracking
-
-### Command Line Interface ✅ **FULLY FUNCTIONAL**
-
-Complete CLI with all features working:
+Launch the natural language interface for conversational analysis:
 
 ```bash
-# Setup agent configuration with improved model selection (WORKING)
-modelseed-agent setup --backend argo --model gpt4o
-modelseed-agent setup --interactive  # Interactive setup with model selection
-
-# Quick backend switching (NEW!)
-modelseed-agent switch argo           # Quick switch to Argo with default gpt4o
-modelseed-agent switch argo --model gpto1  # Switch to Argo with GPT-o1 reasoning model
-modelseed-agent switch openai        # Switch to OpenAI
-modelseed-agent switch local         # Switch to local LLM
-
-# Check system status (WORKING)
-modelseed-agent status
-
-# Analyze metabolic models (WORKING)
-modelseed-agent analyze model.xml --query "Analyze structure"
-
-# Launch interactive session (WORKING)
+# Start interactive session
 modelseed-agent interactive
 
-# View execution logs (WORKING)
-modelseed-agent logs --last 5
+# Or using the direct script
+python run_cli.py interactive
+```
 
-# Get help for any command (WORKING)
+**Example queries:**
+- "Load and analyze the E. coli model"
+- "What is the growth rate on glucose minimal media?"
+- "Run flux balance analysis and show results"
+- "Find essential genes in this model"
+
+### Command Line Interface
+
+Use the CLI for direct analysis commands:
+
+```bash
+# Configure the system
+modelseed-agent setup --backend anthropic
+
+# Analyze a metabolic model
+modelseed-agent analyze model.xml --query "Analyze structure"
+
+# Check system status
+modelseed-agent status
+
+# View help
 modelseed-agent --help
 ```
 
-**✅ All CLI Features Working:**
-- **Enhanced Setup**: Interactive model selection with o-series model awareness
-- **Quick Backend Switching**: Easy switching between Argo, OpenAI, and local
-- **Smart o-series Handling**: Automatic parameter optimization for GPT-o1/o3 models
-- **Environment Variable Support**: DEFAULT_LLM_BACKEND and DEFAULT_MODEL_NAME
-- Configuration setup with persistence
-- Model analysis with intelligent workflows
-- Interactive session launching
-- Comprehensive logging and history
-- Beautiful help formatting
-- Performance monitoring
+### Basic Commands
 
-### Python API ✅ **FULLY FUNCTIONAL**
+```bash
+# Model analysis
+modelseed-agent analyze path/to/model.xml
+
+# Interactive session
+modelseed-agent interactive
+
+# System configuration
+modelseed-agent setup
+
+# View execution logs
+modelseed-agent logs
+
+# Debug configuration
+modelseed-agent debug
+```
+
+### Python API
 
 ```python
 from src.agents.langgraph_metabolic import LangGraphMetabolicAgent
-from src.llm.argo import ArgoLLM
+from src.llm.anthropic import AnthropicLLM
 from src.tools.cobra.fba import FBATool
 
 # Initialize components
 llm_config = {
-    "model_name": "gpt4o",  # New default - optimized for metabolic modeling
-    "user": "your_user",
+    "model_name": "claude-3-sonnet-20240229",
     "system_content": "You are an expert metabolic modeling assistant.",
     "max_tokens": 1000,
     "temperature": 0.1,
 }
 
-llm = ArgoLLM(llm_config)
+llm = AnthropicLLM(llm_config)
 tools = [FBATool({"name": "run_fba", "description": "Run FBA analysis"})]
 agent = LangGraphMetabolicAgent(llm, tools, {"name": "metabolic_agent"})
 
@@ -140,204 +126,138 @@ result = agent.run({
 print(result.message)
 ```
 
-## 📁 Repository Structure
+## Core Capabilities
 
-```
-ModelSEEDagent/
-├── 📚 docs/                          # Documentation
-│   ├── INTERACTIVE_GUIDE.md         # Complete user guide
-│   └── DEVELOPMENT_ROADMAP.md       # Development progress
-├── 🎯 examples/                      # Usage examples
-├── 🧪 tests/                         # Test suite (47/47 passing - 100%)
-│   ├── integration/                  # End-to-end tests
-│   ├── fixtures/                     # Test data
-│   ├── test_agents.py               # Agent tests
-│   ├── test_llm.py                  # LLM tests
-│   └── test_tools.py                # Tool tests
-├── 🎮 src/                           # Main source code
-│   ├── agents/                       # AI agents
-│   │   ├── base.py                  # Base agent class
-│   │   ├── metabolic.py             # Metabolic modeling agent
-│   │   └── langgraph_metabolic.py   # LangGraph workflow agent
-│   ├── cli/                         # Command line interfaces
-│   │   ├── main.py                  # Professional CLI ✅ WORKING
-│   │   └── standalone.py            # Standalone CLI ✅ WORKING
-│   ├── interactive/                 # Interactive interface ✅ WORKING
-│   │   ├── interactive_cli.py       # Main interactive CLI
-│   │   ├── conversation_engine.py   # Natural language processing
-│   │   ├── session_manager.py       # Session management
-│   │   └── live_visualizer.py       # Real-time visualizations
-│   ├── llm/                         # Large language models
-│   │   ├── argo.py                  # Argo Gateway client
-│   │   ├── openai_llm.py           # OpenAI client
-│   │   └── base.py                  # LLM base class
-│   ├── tools/                       # Specialized tools
-│   │   ├── cobra/                   # COBRApy integration
-│   │   └── base.py                  # Tool base classes
-│   └── config/                      # Configuration management
-├── 🛠️ run_cli.py                    # Entry point script ✅ WORKING
-└── 🔧 pyproject.toml               # Dependencies and build config
-```
+ModelSEEDagent provides 23 specialized tools organized into several categories:
 
-## 🧬 Features
+### ModelSEED Integration (4 tools)
+- **Genome Annotation** - RAST-based automated annotation
+- **Model Building** - Template-based metabolic model construction
+- **Gapfilling** - Pathway completion algorithms  
+- **Protein Annotation** - Sequence-based functional annotation
 
-### ✅ **All Features Working in Production**
+### COBRApy Analysis (11 tools)
+- **Flux Balance Analysis** - Growth rate and flux predictions
+- **Flux Variability Analysis** - Solution space exploration
+- **Gene Deletion Analysis** - Knockout effect studies
+- **Essentiality Analysis** - Essential gene identification
+- **Flux Sampling** - Unbiased solution space sampling
+- **Production Envelope** - Phenotype phase plane analysis
+- **Reaction Expression** - Gene expression integration
+- **Model Analysis** - Comprehensive model statistics
+- **Pathway Analysis** - Metabolic pathway insights
+- **Auxotrophy Prediction** - Growth requirement analysis
+- **Media Analysis** - Media optimization and troubleshooting
 
-#### 🛠️ **Comprehensive Tool Suite (17 Specialized Tools)**
+### Biochemistry Tools (2 tools)
+- **Universal ID Resolution** - Cross-database compound/reaction mapping
+- **Biochemistry Search** - Intelligent metabolite discovery
 
-**ModelSEED Integration (4 tools):**
-- **Genome Annotation** (`annotate_genome_rast`) - BV-BRC RAST service integration ✅
-- **Model Building** (`build_metabolic_model`) - MSBuilder with template selection ✅
-- **Gapfilling** (`gapfill_model`) - Advanced MSGapfill algorithms ✅
-- **Protein Annotation** (`annotate_proteins_rast`) - Individual protein sequence annotation ✅
+### AI Media Tools (6 tools)
+- **Media Selection** - Intelligent media recommendation
+- **Media Manipulation** - Dynamic media modification
+- **Media Compatibility** - Cross-model media validation
+- **Media Comparison** - Comprehensive media analysis
+- **Media Optimization** - AI-driven media improvement
+- **Dynamic Media Management** - Adaptive media systems
 
-**Advanced COBRA Analysis (11 tools):**
-- **Basic Analysis**: FBA, minimal media, auxotrophy analysis ✅
-- **Advanced Analysis**: Flux variability, gene deletion, essentiality analysis ✅
-- **Statistical Methods**: Flux sampling, production envelope analysis ✅
-- **Specialized Tools**: Reaction expression, missing media analysis ✅
+## Advanced Features
 
-**Biochemistry Database (2 tools):**
-- **Universal ID Resolution** (`resolve_biochem_entity`) - ModelSEED ↔ BiGG ↔ KEGG mapping ✅
-- **Biochemistry Search** (`search_biochem`) - Compound/reaction discovery by name ✅
+### Natural Language Interface
 
-#### 🕵️ **AI Transparency & Audit System**
-- **Tool Execution Capture**: Automatic audit of all tool executions ✅
-- **Hallucination Detection**: Advanced verification with confidence scoring ✅
-- **Statistical Analysis**: Pattern detection across multiple runs ✅
-- **CLI Audit Commands**: `audit list`, `audit show`, `audit verify` ✅
-- **A+ Reliability Grading**: Confidence scoring from A+ to D grade ✅
+ModelSEEDagent provides an intuitive natural language interface for metabolic analysis:
 
-#### 🧪 **Biochemistry Intelligence**
-- **Universal Database**: 45,168 compounds + 55,929 reactions ✅
-- **Cross-Database Mapping**: ModelSEED ↔ BiGG ↔ KEGG ↔ MetaCyc ↔ ChEBI ✅
-- **Real-time Resolution**: <0.001s average query performance ✅
-- **Human-Readable Outputs**: All tool results enhanced with biochemistry names ✅
+- **Conversational Analysis** - Ask questions in plain English about your models
+- **Session Management** - Persistent analysis sessions with history
+- **Real-time Visualizations** - Interactive dashboards and graphs
+- **Context Awareness** - Maintains conversation context across interactions
 
-#### 🤖 **Interactive Analysis Interface**
-- **Natural Language Interface**: Ask questions in plain English ✅
-- **Session Management**: Persistent analysis sessions with analytics ✅
-- **Real-time Visualizations**: Interactive dashboards and graphs ✅
-- **Context-Aware Conversations**: Maintains conversation history ✅
-- **Progress Tracking**: Live monitoring of analysis workflows ✅
-- **Auto-Browser Integration**: Visualizations open automatically ✅
+### AI Transparency and Audit
 
-#### 🛠️ **Complete CLI Operations**
-- **Agent Setup**: Full configuration with persistence ✅
-- **Tool Execution**: All 17 tools available via CLI ✅
-- **Model Analysis**: Intelligent workflow execution ✅
-- **Audit Management**: Complete audit trail access ✅
-- **System Status**: Comprehensive system monitoring ✅
-- **Help System**: Beautiful command documentation ✅
+The platform includes comprehensive verification capabilities:
 
-#### 🔄 **Universal Compatibility**
-- **Perfect ModelSEED-COBRApy Integration**: 100% round-trip fidelity ✅
-- **SBML Compatibility**: Seamless model conversion ✅
-- **Growth Rate Preservation**: Identical results (1e-6 tolerance) ✅
-- **Structure Preservation**: Reactions/metabolites/genes identical ✅
+- **Tool Execution Capture** - Automatic audit of all tool executions
+- **Hallucination Detection** - Advanced verification with confidence scoring  
+- **Statistical Analysis** - Pattern detection across multiple runs
+- **Audit Commands** - CLI tools for reviewing analysis history
 
-#### 🧪 **Robust Testing Infrastructure**
-- **100% Test Pass Rate**: All tests passing ✅
-- **Comprehensive Coverage**: All 17 tools tested ✅
-- **Integration Testing**: End-to-end workflow validation ✅
-- **Async Support**: Full async/await functionality ✅
-- **Package Installation**: Editable installation working ✅
+### Biochemistry Intelligence
 
-## 🧪 Testing
+Built-in biochemistry database provides universal compound and reaction resolution:
 
-### Run Tests
+- **Universal Database** - 45,000+ compounds and 55,000+ reactions
+- **Cross-Database Mapping** - ModelSEED, BiGG, KEGG, MetaCyc, ChEBI
+- **Fast Resolution** - Sub-millisecond query performance
+- **Human-Readable Outputs** - All results include biochemistry names
+
+### Universal Model Compatibility
+
+Seamless integration between ModelSEED and COBRApy ecosystems:
+
+- **Perfect Round-Trip Conversion** - Identical results between formats
+- **SBML Compatibility** - Standard model format support
+- **Growth Rate Preservation** - Maintains model predictions
+- **Structure Preservation** - Reactions, metabolites, and genes identical
+
+## Example Workflows
+
+### Complete Genome-to-Model Pipeline
+
 ```bash
-# Activate virtual environment first
+# 1. Annotate genome with RAST
+modelseed-agent run-tool annotate_genome_rast --genome-file pputida.fna
+
+# 2. Build draft model  
+modelseed-agent run-tool build_metabolic_model --genome-object <result>
+
+# 3. Gapfill for growth
+modelseed-agent run-tool gapfill_model --model-object <result>
+
+# 4. Analyze essential genes
+modelseed-agent run-tool analyze_essentiality --model-file <result>
+```
+
+### Interactive Natural Language Analysis
+
+```bash
+modelseed-agent interactive
+
+# Example queries:
+# "Load E. coli core model and find essential genes"
+# "What is cpd00027 and how does it relate to energy metabolism?"
+# "Run flux variability analysis and explain the results"
+# "Generate hypotheses about why this model has low growth"
+```
+
+## Testing
+
+Run the test suite to verify your installation:
+
+```bash
+# Activate virtual environment
 source venv/bin/activate
 
-# Run complete test suite (100% passing)
+# Run test suite
 pytest -v
 
-# Current status: 47/47 tests passing
-# All async, integration, and unit tests working
+# Run functional tests
+python tests/run_all_functional_tests.py
 ```
 
-### Test Categories - All Passing ✅
-- **LLM Tests**: Argo, OpenAI, Local clients ✅
-- **Tool Tests**: COBRA integration, analysis tools ✅
-- **Agent Tests**: All core functionality ✅
-- **Integration Tests**: End-to-end workflows ✅
-- **Async Tests**: All async functionality ✅
-- **CLI Tests**: Command-line interface tests ✅
+## Documentation
 
-## 📚 Documentation
+- **[Architecture Guide](../ARCHITECTURE.md)** - System design and components
+- **[Installation Guide](../installation.md)** - Detailed setup instructions
+- **[API Documentation](../api/overview.md)** - Programmatic usage
+- **[Debug Configuration](../debug.md)** - Troubleshooting and debugging
 
-- **[Interactive Guide](docs/INTERACTIVE_GUIDE.md)** - Complete user guide for interactive interface
-- **[Development Roadmap](DEVELOPMENT_ROADMAP.md)** - Implementation progress and plans
+## Next Steps
 
-## 🔧 Current System Status
+After installation:
 
-### ✅ **Production Ready - All Features Working**
-- **Interactive Interface**: Fully functional with beautiful UI ✅
-- **CLI Interface**: Complete with all commands working ✅
-- **Session Management**: Persistent with analytics ✅
-- **Visualization Engine**: Auto-opening with real-time updates ✅
-- **Natural Language Processing**: Query interpretation working ✅
-- **Configuration System**: Persistent and auto-recreating ✅
-- **Test Suite**: 100% passing with full coverage ✅
-- **Import System**: All relative import issues resolved ✅
+1. **Configure API access** - Set up your AI model credentials
+2. **Try examples** - Run basic analysis commands
+3. **Interactive session** - Launch the natural language interface
+4. **Explore tools** - Review the 23 available analysis tools
 
-### 📋 **Recommended Entry Points**
-All methods work - choose based on your preference:
-
-**For Interactive Analysis:**
-```bash
-python run_cli.py interactive
-```
-
-**For Command Line Usage:**
-```bash
-modelseed-agent setup
-modelseed-agent analyze model.xml
-modelseed-agent status
-```
-
-**For Python API:**
-```python
-from src.agents.langgraph_metabolic import LangGraphMetabolicAgent
-# Full API access available
-```
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes with tests
-4. Ensure all tests pass: `pytest -v`
-5. Test interactive interface: `python run_cli.py interactive`
-6. Test CLI commands: `modelseed-agent status`
-7. Commit your changes (`git commit -m 'Add amazing feature'`)
-8. Push to the branch (`git push origin feature/amazing-feature`)
-9. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **ModelSEED** - Metabolic model reconstruction platform
-- **COBRApy** - Constraint-based metabolic modeling
-- **LangGraph** - Workflow orchestration framework
-- **LangChain** - LLM application framework
-- **Argo Gateway** - LLM access infrastructure
-
-## 📞 Support
-
-- **Issues**: [GitHub Issues](https://github.com/jplfaria/ModelSEEDagent/issues)
-- **Documentation**: [docs/](docs/)
-
----
-
-🧬 **Current Status: Production Ready - All Features Working!** 🤖
-
-**✅ All Entry Points Working**: CLI, Interactive, and Python API
-
-**✅ 100% Test Coverage**: 47/47 tests passing
-
-**✅ Complete Documentation**: All examples verified working
+For additional help, see the [Troubleshooting Guide](../troubleshooting.md).

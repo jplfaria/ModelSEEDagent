@@ -79,7 +79,7 @@ class SomeAnalysisTool(BaseTool):
 # From real_time_metabolic.py lines 1222-1285
 def _prepare_tool_input(self, tool_name: str, query: str) -> Dict[str, Any]:
     """Prepare appropriate input for each tool"""
-    
+
     # Most tools need a model path
     if tool_name in ["run_metabolic_fba", "find_minimal_media", ...]:
         model_path = str(self.default_model_path)
@@ -92,19 +92,19 @@ def _prepare_tool_input(self, tool_name: str, query: str) -> Dict[str, Any]:
 # From real_time_metabolic.py lines 674-769
 async def _execute_tool_with_audit(self, tool_name: str, query: str) -> ToolResult:
     """Execute tool with complete audit trail for hallucination detection."""
-    
+
     tool = self._tools_dict[tool_name]
     tool_input = self._prepare_tool_input(tool_name, query)
-    
+
     # Execute tool
     start_time = time.time()
     result = tool._run_tool(tool_input)
     execution_time = time.time() - start_time
-    
+
     if result.success:
         # Store successful result - FULL DATA PRESERVED
         self.knowledge_base[tool_name] = result.data
-        
+
         # Create audit record
         audit_record = {
             "end_time": datetime.now().isoformat(),
@@ -189,7 +189,7 @@ def _create_execution_summary(self, tool_name: str, data: Any) -> str:
         if "best_media" in data:
             return f"Optimal media: {data['best_media']}"
     # ... additional tool-specific status messages
-    
+
     return "Analysis completed successfully"
 ```
 
@@ -216,7 +216,7 @@ def _summarize_results(self, state: Dict[str, Any]) -> str:
 if len(input_json) > 500:
     input_json = input_json[:500] + "\n... (truncated)"
 
-# Structured output truncation for display  
+# Structured output truncation for display
 if len(structured_json) > 1000:
     structured_json = structured_json[:1000] + "\n... (truncated)"
 
@@ -263,7 +263,7 @@ if 'fluxes' in result_data or 'significant_fluxes' in result_data:
 
 **Comprehensive Search Results**:
 - ✅ **All agent files examined**: No tool output summarization found
-- ✅ **All tool files examined**: No output reduction logic found  
+- ✅ **All tool files examined**: No output reduction logic found
 - ✅ **All interactive files examined**: No processing limitations found
 - ✅ **All CLI files examined**: Only display truncation found
 - ✅ **Base classes examined**: No summarization in tool execution pipeline
@@ -306,7 +306,7 @@ Based on testbed results (`testbed_results/output_analysis_20250610_200744.json`
 # From flux_sampling.py lines 189-399
 def _analyze_samples(self, samples: pd.DataFrame, model: cobra.Model) -> Dict[str, Any]:
     """Analyze flux samples to extract statistical insights"""
-    
+
     analysis = {
         "statistics": {},           # Mean, std, median for all reactions
         "flux_patterns": {},        # Always active, variable, rarely active
@@ -314,11 +314,11 @@ def _analyze_samples(self, samples: pd.DataFrame, model: cobra.Model) -> Dict[st
         "subsystem_analysis": {},   # Subsystem-level statistics
         "distribution_analysis": {}, # Sample distribution analysis
     }
-    
+
     # Statistics for ALL reactions
     analysis["statistics"] = {
         "mean_fluxes": samples.mean().to_dict(),     # Full dictionary
-        "std_fluxes": samples.std().to_dict(),       # Full dictionary  
+        "std_fluxes": samples.std().to_dict(),       # Full dictionary
         "median_fluxes": samples.median().to_dict(), # Full dictionary
         "min_fluxes": samples.min().to_dict(),       # Full dictionary
         "max_fluxes": samples.max().to_dict(),       # Full dictionary
@@ -333,7 +333,7 @@ def _analyze_samples(self, samples: pd.DataFrame, model: cobra.Model) -> Dict[st
 
 ### 1. Implement Intelligent Tool Summarization
 
-**Priority**: High  
+**Priority**: High
 **Rationale**: Large statistical outputs need intelligent extraction
 
 ```python
@@ -345,13 +345,13 @@ def _summarize_tool_results(self, tool_name: str, data: Dict[str, Any]) -> Dict[
     elif tool_name == "run_flux_variability_analysis":
         return self._summarize_fva_results(data)
     # ... tool-specific summarization
-    
+
     return data  # Pass through if no summarization needed
 ```
 
 ### 2. Configurable Summarization Thresholds
 
-**Priority**: Medium  
+**Priority**: Medium
 **Rationale**: Allow fine-tuning based on LLM capabilities
 
 ```python
@@ -364,7 +364,7 @@ class SummarizationConfig(BaseModel):
 
 ### 3. Multi-Level Output Processing
 
-**Priority**: Medium  
+**Priority**: Medium
 **Rationale**: Provide both summary and detailed access
 
 ```python
@@ -385,7 +385,7 @@ def _process_tool_output(self, tool_name: str, result: ToolResult) -> Dict[str, 
 - Provide statistical overview instead of complete dictionaries
 - Highlight key biological insights
 
-#### Network Analysis Summarization  
+#### Network Analysis Summarization
 - Focus on critical pathways and bottlenecks
 - Summarize connectivity patterns
 - Preserve essential reaction lists
@@ -400,8 +400,8 @@ def _process_tool_output(self, tool_name: str, result: ToolResult) -> Dict[str, 
 
 The ModelSEED agent framework demonstrates a robust architecture with direct tool-to-LLM data flow, ensuring complete information preservation. However, the lack of intelligent summarization for large outputs (particularly statistical analysis tools) presents an opportunity for significant enhancement.
 
-**Current State**: Complete data preservation with minimal status summarization  
-**Opportunity**: Implement intelligent tool-specific summarization for large outputs  
+**Current State**: Complete data preservation with minimal status summarization
+**Opportunity**: Implement intelligent tool-specific summarization for large outputs
 **Architecture Readiness**: Framework is well-positioned for summarization enhancements without major structural changes
 
 The investigation confirms that implementing intelligent summarization would be a **new enhancement** rather than replacing existing logic, making it a safe and valuable addition to the framework's capabilities.

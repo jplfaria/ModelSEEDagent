@@ -1,8 +1,8 @@
-# ModelSEED Agent - Comprehensive Tool Reference Documentation
+# Tool Reference Documentation
 
 ## Overview
 
-This document provides a comprehensive reference for all 23 metabolic modeling tools available in the ModelSEED Agent platform. This documentation details each tool's capabilities, parameters, numerical precision improvements, and practical usage examples.
+This document provides a comprehensive reference for all metabolic modeling tools available in the ModelSEEDagent platform. This documentation details each tool's capabilities, parameters, numerical precision improvements, and practical usage examples.
 
 ## Table of Contents
 
@@ -53,7 +53,7 @@ The ModelSEED Agent implements a unified numerical precision framework that ensu
 
 ## AI Media Tools
 
-The AI Media Tools represent a revolutionary advancement in metabolic modeling, providing intelligent, AI-powered media management and optimization capabilities. These 6 specialized tools enable natural language interaction, automated media selection, and advanced optimization for metabolic models.
+The AI Media Tools provide intelligent, AI-powered media management and optimization capabilities. These 6 specialized tools enable natural language interaction, automated media selection, and advanced optimization for metabolic models.
 
 ### 1. MediaSelectorTool (`select_optimal_media`)
 
