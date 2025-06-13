@@ -53,6 +53,13 @@ repos:
         always_run: true
         pass_filenames: false
         stages: [pre-commit]
+      - id: no-emojis-in-docs
+        name: No Emojis in Documentation
+        entry: python -c "import re,sys,glob; files=[f for f in glob.glob('docs/**/*.md',recursive=True) if '/archive/' not in f]; content=''.join(open(f).read() for f in files); emojis=re.findall(r'[🔧🎯✅🟡🟢🔴⚠️📝📊🚀🛡️📋💡🔍⏳]',content); sys.exit(1 if emojis else 0)"
+        language: system
+        files: "docs/.*\\.md$"
+        exclude: "docs/archive/.*"
+        stages: [pre-commit]
 
 # Configuration for specific tools
 default_language_version:

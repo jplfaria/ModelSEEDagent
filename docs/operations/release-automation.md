@@ -16,7 +16,7 @@ The release automation system consists of three integrated GitHub Actions workfl
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   🚀 Create     │    │   📋 Create     │    │   🔍 Validate   │
+│   Create        │    │   Create        │    │   Validate      │
 │   Release       │    │   Release PR    │    │   Release       │
 │                 │    │                 │    │                 │
 │ • Version Bump  │    │ • PR Creation   │    │ • Code Quality  │
@@ -41,14 +41,14 @@ The release automation system consists of three integrated GitHub Actions workfl
 
 ## Workflows
 
-### 1. 🚀 Create Release Workflow
+### 1. Create Release Workflow
 
 **File**: `.github/workflows/release.yml`
 
 **Purpose**: Main intelligent release automation with complete pipeline management.
 
 **Triggers**:
-- **Manual**: GitHub Actions → "🚀 Create Release" → Run workflow
+- **Manual**: GitHub Actions → "Create Release" → Run workflow
 - **Scheduled** (optional): Uncomment cron schedule for automated releases
 - **Push-based** (optional): Uncomment push triggers for continuous releases
 
@@ -76,14 +76,14 @@ dry_run:
   default: false
 ```
 
-### 2. 📋 Create Release PR Workflow
+### 2. Create Release PR Workflow
 
 **File**: `.github/workflows/create-release-pr.yml`
 
 **Purpose**: Automated dev→main PR creation for release preparation.
 
 **Triggers**:
-- **Manual**: GitHub Actions → "📋 Create Release PR" → Run workflow
+- **Manual**: GitHub Actions → "Create Release PR" → Run workflow
 - **Scheduled** (optional): Configure for regular release cycles
 
 **Features**:
@@ -101,7 +101,7 @@ dry_run:
 5. Creates PR with structured template
 6. Triggers validation workflows
 
-### 3. 🔍 Validate Release Workflow
+### 3. Validate Release Workflow
 
 **File**: `.github/workflows/validate-release.yml`
 
@@ -184,25 +184,25 @@ The system generates intelligent, categorized changelogs automatically:
 ### Changelog Categories
 
 ```markdown
-## 🎉 What's Changed
+## What's Changed
 
-### 💥 Breaking Changes
+### Breaking Changes
 - BREAKING CHANGE: API endpoint restructure
 - feat!: Remove deprecated legacy tools
 
-### ✨ New Features
+### New Features
 - feat: Add intelligent media optimization
 - feat: Implement real-time model analysis
 
-### 🐛 Bug Fixes
+### Bug Fixes
 - fix: Resolve memory leak in FBA calculations
 - fix: Handle malformed SBML files gracefully
 
-### 📚 Documentation
+### Documentation
 - docs: Add comprehensive API examples
 - docs: Update installation requirements
 
-### 🔧 Other Changes
+### Other Changes
 - chore: Update dependency versions
 - refactor: Improve error handling
 ```
@@ -222,7 +222,7 @@ The system automatically:
 
 **Step 1**: Navigate to GitHub Actions
 ```
-Repository → Actions → "🚀 Create Release" → "Run workflow"
+Repository → Actions → "Create Release" → "Run workflow"
 ```
 
 **Step 2**: Configure Release
@@ -251,7 +251,7 @@ pip install modelseed-agent==1.3.0
 
 **Step 1**: Create Release PR
 ```
-Actions → "📋 Create Release PR" → "Run workflow"
+Actions → "Create Release PR" → "Run workflow"
 ```
 
 **Step 2**: Review Generated PR
@@ -364,11 +364,11 @@ Modify changelog generation in the release workflow:
 ```yaml
 # Changelog sections
 sections:
-  - breaking: "💥 Breaking Changes"
-  - features: "✨ New Features"
-  - fixes: "🐛 Bug Fixes"
-  - docs: "📚 Documentation"
-  - other: "🔧 Other Changes"
+  - breaking: "Breaking Changes"
+  - features: "New Features"
+  - fixes: "Bug Fixes"
+  - docs: "Documentation"
+  - other: "Other Changes"
 ```
 
 ## Integration with Development Workflow
@@ -457,7 +457,7 @@ Release Analytics:
 Each release generates a comprehensive summary:
 
 ```markdown
-## 🎉 Release Summary
+## Release Summary
 
 - **Version**: 1.2.3 → 1.3.0
 - **Bump Type**: minor
@@ -465,13 +465,13 @@ Each release generates a comprehensive summary:
 - **Features**: 3
 - **Bug Fixes**: 2
 - **Total Commits**: 12
-- **Validation**: ✅ All checks passed
-- **PyPI**: ✅ Published successfully
+- **Validation**: All checks passed
+- **PyPI**: Published successfully
 
-### 📝 Generated Changelog
+### Generated Changelog
 [Complete categorized changelog with links]
 
-### 🔍 Quality Metrics
+### Quality Metrics
 - Test Coverage: 94%
 - Security Score: A+
 - Build Time: 2m 34s
@@ -488,8 +488,8 @@ Each release generates a comprehensive summary:
 git log --oneline -10
 
 # Verify conventional commit format
-# ✅ Good: "feat: add new feature"
-# ❌ Bad: "adding new feature"
+# Good: "feat: add new feature"
+# Bad: "adding new feature"
 
 # Fix: Use conventional commits consistently
 ```
@@ -567,7 +567,7 @@ git push origin main --tags
 
 # Manual GitHub release
 gh release create v1.3.0 \
-  --title "🚀 Release v1.3.0" \
+  --title "Release v1.3.0" \
   --notes-file CHANGELOG.md \
   --latest
 ```
@@ -646,13 +646,13 @@ Migration guide: ...
 
 ```yaml
 Pre-Release Checklist:
-  ✅ All tests passing
-  ✅ Security scan clean
-  ✅ Documentation updated
-  ✅ Breaking changes documented
-  ✅ Migration guides provided
-  ✅ Performance impact assessed
-  ✅ Backwards compatibility verified
+  - All tests passing
+  - Security scan clean
+  - Documentation updated
+  - Breaking changes documented
+  - Migration guides provided
+  - Performance impact assessed
+  - Backwards compatibility verified
 ```
 
 ## Advanced Configuration
@@ -662,18 +662,18 @@ Pre-Release Checklist:
 Create custom release note templates in `.github/RELEASE_NOTES_TEMPLATE.md`:
 
 ```markdown
-## 🎉 ModelSEEDagent v{{version}}
+## ModelSEEDagent v{{version}}
 
-### 🌟 Highlights
+### Highlights
 {{highlights}}
 
-### 🔄 Changes
+### Changes
 {{changelog}}
 
-### 🚀 Upgrade Instructions
+### Upgrade Instructions
 {{upgrade_instructions}}
 
-### 📊 Metrics
+### Metrics
 - **New Tools**: {{tool_count}}
 - **Performance**: {{performance_improvements}}
 - **Compatibility**: {{compatibility_info}}
@@ -688,7 +688,7 @@ Add Slack notifications to release workflow:
   if: success()
   run: |
     curl -X POST -H 'Content-type: application/json' \
-      --data '{"text":"🚀 Released ModelSEEDagent v${{ needs.analyze-changes.outputs.new_version }}"}' \
+      --data '{"text":"Released ModelSEEDagent v${{ needs.analyze-changes.outputs.new_version }}"}' \
       ${{ secrets.SLACK_WEBHOOK }}
 ```
 

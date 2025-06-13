@@ -479,15 +479,15 @@ UPDATE_PATTERNS = {
 ```bash
 # .git/hooks/pre-commit (automatically installed)
 #!/bin/sh
-echo "🔍 Running documentation review..."
+echo "Running documentation review..."
 python scripts/docs_review.py --auto-update
 
 if [ $? -ne 0 ]; then
-    echo "❌ Documentation review failed"
+    echo "Documentation review failed"
     exit 1
 fi
 
-echo "✅ Documentation updated successfully"
+echo "Documentation updated successfully"
 ```
 
 ### CI/CD Integration

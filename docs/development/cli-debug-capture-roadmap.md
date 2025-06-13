@@ -25,7 +25,7 @@ Currently, valuable debug information is displayed in the CLI console but not ca
 
 ## Implementation Phases
 
-### Phase 1: Foundation (Safe) ⏳ IN PROGRESS
+### Phase 1: Foundation (Safe) - IN PROGRESS
 
 **Objective**: Create basic capture infrastructure without affecting existing functionality.
 
@@ -106,7 +106,7 @@ config = {
 
 ---
 
-### Phase 2: Integration (Moderate) 🔄 PLANNED
+### Phase 2: Integration (Moderate) - PLANNED
 
 **Objective**: Integrate capture system with existing logging infrastructure.
 
@@ -173,7 +173,7 @@ def _log_llm_input_and_console(self, phase: str, step: int, prompt: str,
 
 ---
 
-### Phase 3: Enhancement (Higher) 🚀 PLANNED
+### Phase 3: Enhancement (Higher) - PLANNED
 
 **Objective**: Add advanced features for comprehensive debug capture.
 
@@ -290,7 +290,7 @@ CLI_DEBUG_CAPTURE_CONFIG = {
 
 ## Progress Tracking
 
-### Phase 1 Status: ✅ COMPLETED
+### Phase 1 Status: COMPLETED
 - [x] Foundation planning complete
 - [x] ConsoleOutputCapture class implemented
 - [x] Configuration system added
@@ -298,17 +298,17 @@ CLI_DEBUG_CAPTURE_CONFIG = {
 - [x] Testing and validation complete
 
 **Implementation Details:**
-- ✅ Created `src/utils/console_output_capture.py` with full functionality
-- ✅ Integrated into `RealTimeMetabolicAgent` class
-- ✅ Added configuration options for all capture types
-- ✅ Implemented capture at key decision points:
+- Created `src/utils/console_output_capture.py` with full functionality
+- Integrated into `RealTimeMetabolicAgent` class
+- Added configuration options for all capture types
+- Implemented capture at key decision points:
   - LLM input logging (enhanced existing `_log_llm_input` method)
   - Tool selection reasoning (`_ai_analyze_query_for_first_tool`)
   - Decision analysis reasoning (`_ai_analyze_results_and_decide_next_step`)
   - Final conclusions reasoning (`_ai_generate_final_conclusions`)
   - Formatted result capture (final AgentResult)
-- ✅ All tests passing with no impact on existing functionality
-- ✅ Safe rollback checkpoint created: `checkpoint-before-logging-changes`
+- All tests passing with no impact on existing functionality
+- Safe rollback checkpoint created: `checkpoint-before-logging-changes`
 
 **Usage Example:**
 ```python
@@ -326,13 +326,13 @@ config = {
 # - formatted_results.json (final formatted outputs)
 ```
 
-### Phase 2 Status: 🔄 PLANNED
+### Phase 2 Status: PLANNED
 - [ ] Enhanced session structure designed
 - [ ] Cross-agent correlation implemented
 - [ ] Real-time capture integration
 - [ ] Advanced testing complete
 
-### Phase 3 Status: 🚀 PLANNED
+### Phase 3 Status: PLANNED
 - [ ] Streaming capture implemented
 - [ ] Debug replay functionality
 - [ ] Advanced correlation features
