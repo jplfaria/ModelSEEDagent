@@ -25,6 +25,11 @@ MODELSEED_DEBUG_TOOLS=true
 MODELSEED_DEBUG_LLM=false
 MODELSEED_LOG_LLM_INPUTS=false
 
+# Console Output Capture (Phase 1 CLI Debug Capture)
+MODELSEED_CAPTURE_CONSOLE_DEBUG=false      # Capture console debug output
+MODELSEED_CAPTURE_AI_REASONING_FLOW=false  # Capture AI reasoning steps
+MODELSEED_CAPTURE_FORMATTED_RESULTS=false  # Capture final formatted results
+
 # Directory Configuration
 MODELSEED_DATA_DIR=/path/to/data
 MODELSEED_LOG_DIR=/path/to/logs
