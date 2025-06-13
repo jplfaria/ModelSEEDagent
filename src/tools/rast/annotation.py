@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
-from ...tools.base import BaseTool, ToolRegistry, ToolResult
+from ..base import BaseTool, ToolRegistry, ToolResult
 
 
 class RastAnnotationConfig(BaseModel):
@@ -43,7 +43,7 @@ class RastAnnotationTool(BaseTool):
             **config.get("annotation_config", {})
         )
 
-    def _run(self, input_data: Dict[str, Any]) -> ToolResult:
+    def _run_tool(self, input_data: Dict[str, Any]) -> ToolResult:
         """
         Run RAST annotation on input sequence data.
 
@@ -110,7 +110,7 @@ class AnnotationAnalysisTool(BaseTool):
             **config.get("annotation_config", {})
         )
 
-    def _run(self, input_data: Dict[str, Any]) -> ToolResult:
+    def _run_tool(self, input_data: Dict[str, Any]) -> ToolResult:
         """
         Analyze RAST annotation results.
 

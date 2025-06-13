@@ -43,6 +43,17 @@ repos:
           - '--extend-ignore=E203,W503,F401,E501,E722,E731,F811,E402,F541'
           - '--exclude=venv,logs,sessions,test_sessions,test_visualizations,*.egg-info,build,dist'
 
+  # Documentation review
+  - repo: local
+    hooks:
+      - id: docs-review
+        name: Documentation Review
+        entry: python scripts/docs_review.py --check
+        language: system
+        always_run: true
+        pass_filenames: false
+        stages: [pre-commit]
+
 # Configuration for specific tools
 default_language_version:
   python: python3.11

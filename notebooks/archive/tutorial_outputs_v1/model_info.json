@@ -1,0 +1,11 @@
+{
+  "model_id": "e_coli_core",
+  "reactions": 95,
+  "metabolites": 72,
+  "genes": 137,
+  "compartments": [
+    "e",
+    "c"
+  ],
+  "objective": "Maximize\n1.0*BIOMASS_Ecoli_core_w_GAM - 1.0*BIOMASS_Ecoli_core_w_GAM_reverse_712e5"
+}

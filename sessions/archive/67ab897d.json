@@ -1,0 +1,68 @@
+{
+  "id": "67ab897d",
+  "name": "Analysis_20250608_1901",
+  "created_at": "2025-06-08T19:01:55.087126",
+  "last_active": "2025-06-08T19:06:07.953451",
+  "status": "active",
+  "description": "Interactive metabolic modeling analysis",
+  "model_files": [],
+  "interactions": [
+    {
+      "id": "ai_0",
+      "timestamp": "2025-06-08T19:06:07.953422",
+      "type": "query",
+      "input_data": "I need a comprehensive metabolic analysis of E. coli core model in the data/examples folder",
+      "output_data": " These analyses show that the E. coli core model supports a growth rate of ~0.87 h\u207b\u00b9 on glucose minimal medium. Central glycolytic and TCA reactions (and their associated genes) are essential, while only a small subset of reactions exhibits flexibility at maximal biomass flux. No auxotrophies are detected. This comprehensive metabolic snapshot confirms robust carbon and energy metabolism within the core network.",
+      "metadata": {
+        "ai_agent_used": true,
+        "tools_executed": [
+          "run_metabolic_fba",
+          "find_minimal_media",
+          "analyze_essentiality",
+          "run_flux_variability_analysis",
+          "identify_auxotrophies",
+          "run_flux_sampling"
+        ],
+        "ai_reasoning_steps": 0,
+        "audit_file": null,
+        "dynamic_decision_making": true,
+        "success": true
+      },
+      "execution_time": 244.25074410438538,
+      "success": true,
+      "error_message": null
+    }
+  ],
+  "context": {
+    "last_interaction": {
+      "id": "ai_0",
+      "timestamp": "2025-06-08T19:06:07.953422",
+      "type": "query",
+      "input_data": "I need a comprehensive metabolic analysis of E. coli core model in the data/examples folder",
+      "output_data": " These analyses show that the E. coli core model supports a growth rate of ~0.87 h\u207b\u00b9 on glucose minimal medium. Central glycolytic and TCA reactions (and their associated genes) are essential, while only a small subset of reactions exhibits flexibility at maximal biomass flux. No auxotrophies are detected. This comprehensive metabolic snapshot confirms robust carbon and energy metabolism within the core network.",
+      "metadata": {
+        "ai_agent_used": true,
+        "tools_executed": [
+          "run_metabolic_fba",
+          "find_minimal_media",
+          "analyze_essentiality",
+          "run_flux_variability_analysis",
+          "identify_auxotrophies",
+          "run_flux_sampling"
+        ],
+        "ai_reasoning_steps": 0,
+        "audit_file": null,
+        "dynamic_decision_making": true,
+        "success": true
+      },
+      "execution_time": 244.25074410438538,
+      "success": true,
+      "error_message": null
+    },
+    "last_query": "I need a comprehensive metabolic analysis of E. coli core model in the data/examples folder"
+  },
+  "metadata": {},
+  "total_queries": 1,
+  "total_execution_time": 244.25074410438538,
+  "success_rate": 1.0
+}

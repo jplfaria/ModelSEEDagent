@@ -1,0 +1,83 @@
+{
+  "split_metadata": {
+    "original_file": "testbed_results/20250610_005251_tool_testbed_results.json",
+    "split_timestamp": "2025-06-10T00:53:03.080044",
+    "original_timestamp": "2025-06-10T00:52:51.497559",
+    "models_processed": [
+      "e_coli_core",
+      "iML1515",
+      "Mycoplasma_G37"
+    ],
+    "tools_processed": [
+      "FBA",
+      "ModelAnalysis",
+      "PathwayAnalysis",
+      "FluxVariability",
+      "GeneDeletion",
+      "Essentiality",
+      "FluxSampling",
+      "ProductionEnvelope",
+      "Auxotrophy",
+      "MinimalMedia",
+      "MissingMedia",
+      "ReactionExpression"
+    ],
+    "total_files_created": 36
+  },
+  "file_structure": {
+    "e_coli_core": {
+      "directory": "testbed_results/individual/e_coli_core/",
+      "files": [
+        "FBA_results.json",
+        "ModelAnalysis_results.json",
+        "PathwayAnalysis_results.json",
+        "FluxVariability_results.json",
+        "GeneDeletion_results.json",
+        "Essentiality_results.json",
+        "FluxSampling_results.json",
+        "ProductionEnvelope_results.json",
+        "Auxotrophy_results.json",
+        "MinimalMedia_results.json",
+        "MissingMedia_results.json",
+        "ReactionExpression_results.json"
+      ],
+      "file_count": 12
+    },
+    "iML1515": {
+      "directory": "testbed_results/individual/iML1515/",
+      "files": [
+        "FBA_results.json",
+        "ModelAnalysis_results.json",
+        "PathwayAnalysis_results.json",
+        "FluxVariability_results.json",
+        "GeneDeletion_results.json",
+        "Essentiality_results.json",
+        "FluxSampling_results.json",
+        "ProductionEnvelope_results.json",
+        "Auxotrophy_results.json",
+        "MinimalMedia_results.json",
+        "MissingMedia_results.json",
+        "ReactionExpression_results.json"
+      ],
+      "file_count": 12
+    },
+    "Mycoplasma_G37": {
+      "directory": "testbed_results/individual/Mycoplasma_G37/",
+      "files": [
+        "FBA_results.json",
+        "ModelAnalysis_results.json",
+        "PathwayAnalysis_results.json",
+        "FluxVariability_results.json",
+        "GeneDeletion_results.json",
+        "Essentiality_results.json",
+        "FluxSampling_results.json",
+        "ProductionEnvelope_results.json",
+        "Auxotrophy_results.json",
+        "MinimalMedia_results.json",
+        "MissingMedia_results.json",
+        "ReactionExpression_results.json"
+      ],
+      "file_count": 12
+    }
+  }
+}

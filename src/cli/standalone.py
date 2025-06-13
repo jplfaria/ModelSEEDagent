@@ -224,6 +224,7 @@ def load_agent_components():
         from llm.argo import ArgoLLM
         from tools.cobra.analysis import ModelAnalysisTool, PathwayAnalysisTool
         from tools.cobra.fba import FBATool
+        from tools.modelseed import ModelBuildTool, GapFillTool, RastAnnotationTool
 
         return {
             "LangGraphMetabolicAgent": LangGraphMetabolicAgent,
@@ -231,6 +232,9 @@ def load_agent_components():
             "FBATool": FBATool,
             "ModelAnalysisTool": ModelAnalysisTool,
             "PathwayAnalysisTool": PathwayAnalysisTool,
+            "ModelBuildTool": ModelBuildTool,
+            "GapFillTool": GapFillTool,
+            "RastAnnotationTool": RastAnnotationTool,
         }
     except ImportError as e:
         print_error(f"Could not load agent components: {e}")

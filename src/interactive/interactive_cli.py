@@ -6,6 +6,8 @@ real-time visualization, and intelligent session management.
 """
 
 import asyncio
+import logging
+import os
 import signal
 import sys
 from datetime import datetime
@@ -23,7 +25,20 @@ from rich.prompt import Confirm
 from rich.table import Table
 from rich.text import Text
 
-from .conversation_engine import ConversationEngine, ConversationResponse
+# Configure logging
+logger = logging.getLogger(__name__)
+
+# Debug flag from environment variable
+DEBUG_MODE = os.getenv("MODELSEED_DEBUG", "false").lower() == "true"
+
+if DEBUG_MODE:
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    )
+
+from ..cli.argo_health import display_argo_health
+from .conversation_engine import ConversationResponse, DynamicAIConversationEngine
 from .live_visualizer import LiveVisualizer
 from .query_processor import QueryAnalysis, QueryProcessor
 from .session_manager import (
@@ -61,7 +76,7 @@ class InteractiveCLI:
         self.visualizer = LiveVisualizer()
 
         self.current_session: Optional[AnalysisSession] = None
-        self.conversation_engine: Optional[ConversationEngine] = None
+        self.conversation_engine: Optional[DynamicAIConversationEngine] = None
 
         # CLI state
         self.running = False
@@ -83,8 +98,18 @@ class InteractiveCLI:
         """Start the main interactive session"""
         self.running = True
 
+        # Log debug mode once at session start
+        if DEBUG_MODE:
+            logger.info("🔍 DEBUG MODE ENABLED")
+
         # Print banner
         self._print_banner()
+
+        # Argo Gateway health check and configuration display
+        try:
+            display_argo_health()
+        except Exception as e:
+            console.print(f"⚠️ [yellow]Argo health check failed: {e}[/yellow]")
 
         # Session selection or creation
         session = self._select_or_create_session()
@@ -95,7 +120,7 @@ class InteractiveCLI:
         self.current_session = session
 
         # Initialize conversation engine
-        self.conversation_engine = ConversationEngine(session, self.query_processor)
+        self.conversation_engine = DynamicAIConversationEngine(session)
 
         # Start conversation
         response = self.conversation_engine.start_conversation()
@@ -199,9 +224,55 @@ This interface provides:
                 if self._handle_special_commands(user_input):
                     continue
 
-                # Process with conversation engine
-                with console.status("🤔 Processing your request...", spinner="dots"):
-                    response = self.conversation_engine.process_user_input(user_input)
+                # Process with conversation engine (avoid Rich status that interferes with agent output)
+                console.print(
+                    "🧠 [cyan]AI analyzing your query and executing tools...[/cyan]"
+                )
+
+                # Debug mode indicator
+                if DEBUG_MODE:
+                    console.print("[yellow]🔍 DEBUG MODE: Processing query[/yellow]")
+                    logger.debug(f"🔍 Processing user input: '{user_input[:50]}...'")
+                    logger.debug(
+                        f"🔍 Conversation engine type: {type(self.conversation_engine).__name__}"
+                    )
+                    logger.debug(f"🔍 Session: {self.current_session.id}")
+
+                # Add timeout protection for the entire interaction
+                import time
+
+                start_time = time.time()
+                timeout_seconds = 300  # 5 minutes total timeout
+
+                try:
+                    # Use asyncio to add timeout to the synchronous call
+                    response = self._process_with_timeout(user_input, timeout_seconds)
+
+                    processing_time = time.time() - start_time
+                    if DEBUG_MODE:
+                        logger.debug(
+                            f"🔍 Processing completed in {processing_time:.2f}s"
+                        )
+                        logger.debug(f"🔍 Response type: {response.response_type}")
+                        logger.debug(
+                            f"🔍 Response success: {response.metadata.get('ai_agent_result', 'unknown')}"
+                        )
+
+                except TimeoutError:
+                    console.print(
+                        f"[red]⏰ Request timed out after {timeout_seconds}s[/red]"
+                    )
+                    console.print(
+                        "[yellow]This may indicate a complex analysis or system issue.[/yellow]"
+                    )
+                    continue
+                except Exception as e:
+                    if DEBUG_MODE:
+                        logger.error(f"🔍 Processing failed with error: {e}")
+                        import traceback
+
+                        logger.debug(f"🔍 Full traceback: {traceback.format_exc()}")
+                    raise
 
                 # Display response
                 self._display_response(response)
@@ -230,7 +301,8 @@ This interface provides:
                 if len(self.current_session.name) > 15
                 else self.current_session.name
             )
-            prompt_text = f"[bold blue]{session_name}[/bold blue] [cyan]❯[/cyan] "
+            # Use plain text for questionary (no Rich markup)
+            prompt_text = f"{session_name} ❯ "
 
             user_input = questionary.text(
                 "", qmark=prompt_text, style=custom_style
@@ -285,7 +357,59 @@ This interface provides:
             self.session_manager.display_analytics()
             return True
 
+        # AI Media Tools Commands
+        elif command in ["media", "select-media"]:
+            self._show_media_selector()
+            return True
+
+        elif command.startswith("media-select "):
+            model_arg = (
+                command.split(" ", 1)[1] if len(command.split(" ")) > 1 else None
+            )
+            self._handle_media_selection(model_arg)
+            return True
+
+        elif command.startswith("media-modify "):
+            modification = (
+                command.split(" ", 1)[1] if len(command.split(" ")) > 1 else None
+            )
+            self._handle_media_modification(modification)
+            return True
+
+        elif command in ["media-compare"]:
+            self._handle_media_comparison()
+            return True
+
         return False
+
+    def _process_with_timeout(
+        self, user_input: str, timeout_seconds: int
+    ) -> ConversationResponse:
+        """Process user input with timeout protection"""
+        import signal
+        import threading
+
+        # Use signal-based timeout if in main thread, otherwise use simple timeout
+        if threading.current_thread() is threading.main_thread():
+
+            def timeout_handler(signum, frame):
+                raise TimeoutError(f"Processing timed out after {timeout_seconds}s")
+
+            old_handler = signal.signal(signal.SIGALRM, timeout_handler)
+            signal.alarm(timeout_seconds)
+
+            try:
+                response = self.conversation_engine.process_user_input(user_input)
+                signal.alarm(0)  # Cancel timeout
+                return response
+            except TimeoutError:
+                signal.alarm(0)  # Cancel timeout
+                raise
+            finally:
+                signal.signal(signal.SIGALRM, old_handler)  # Restore old handler
+        else:
+            # Fallback for non-main threads
+            return self.conversation_engine.process_user_input(user_input)
 
     def _show_help(self) -> None:
         """Display help information"""
@@ -302,8 +426,24 @@ This interface provides:
             ("open <viz>", "Open visualization in browser"),
             ("analytics, stats", "Show session analytics"),
             ("clear, cls", "Clear the terminal"),
+            # AI Media Tools Commands
+            ("media", "🧬 Show interactive media selection interface"),
+            ("media-select <model>", "🧬 AI-powered media selection for model"),
+            (
+                "media-modify <cmd>",
+                "🧬 Modify media ('make anaerobic', 'add vitamins')",
+            ),
+            ("media-compare", "🧬 Compare media performance across models"),
             ("exit, quit, q", "Exit the interactive session"),
         ]
+
+        # Add debug mode indicator
+        if DEBUG_MODE:
+            commands.append(("DEBUG MODE", "🔍 Detailed logging enabled"))
+        else:
+            commands.append(
+                ("Debug Mode", "Set MODELSEED_DEBUG=true for detailed logs")
+            )
 
         for cmd, desc in commands:
             help_table.add_row(cmd, desc)
@@ -601,6 +741,107 @@ You can ask natural language questions about metabolic modeling:
         ]
 
         return {"nodes": nodes, "edges": edges}
+
+    def _show_media_selector(self) -> None:
+        """Show interactive media selection interface"""
+        console.print(
+            "\n[bold blue]🧬 AI Media Tools - Interactive Selection[/bold blue]"
+        )
+
+        # Create media options table
+        media_table = Table(title="Available AI Media Commands", box=box.ROUNDED)
+        media_table.add_column("Command", style="bold cyan")
+        media_table.add_column("Description", style="white")
+        media_table.add_column("Example", style="dim")
+
+        media_commands = [
+            (
+                "media-select",
+                "AI selects optimal media for your model",
+                "media-select e_coli_core.xml",
+            ),
+            (
+                "media-modify",
+                "Modify media with natural language",
+                "media-modify make anaerobic",
+            ),
+            (
+                "media-compare",
+                "Compare performance across media types",
+                "media-compare",
+            ),
+        ]
+
+        for cmd, desc, example in media_commands:
+            media_table.add_row(cmd, desc, example)
+
+        console.print(media_table)
+
+        # Show available models
+        console.print("\n[bold]📁 Available Models:[/bold]")
+        models = ["e_coli_core.xml", "EcoliMG1655.xml", "BuchnMG37.xml"]
+        for model in models:
+            console.print(f"  • {model}")
+
+        console.print(
+            "\n[dim]💡 Tip: Type any of the commands above or ask naturally like:[/dim]"
+        )
+        console.print("[dim]    'select the best media for my E. coli model'[/dim]")
+        console.print("[dim]    'make my media anaerobic for fermentation'[/dim]")
+
+    def _handle_media_selection(self, model_arg: Optional[str]) -> None:
+        """Handle AI-powered media selection"""
+        if not model_arg:
+            console.print(
+                "[yellow]⚠️  Please specify a model: media-select <model>[/yellow]"
+            )
+            return
+
+        console.print(f"[cyan]🧠 AI selecting optimal media for {model_arg}...[/cyan]")
+
+        # Create a natural language query for the conversation engine
+        query = f"Please use the select_optimal_media tool to find the best media for model {model_arg}. Analyze the model characteristics and recommend appropriate media types."
+
+        try:
+            self.conversation_engine.process_user_input(query)
+            console.print("\n[green]✅ Media selection completed![/green]")
+        except Exception as e:
+            console.print(f"[red]❌ Media selection failed: {e}[/red]")
+
+    def _handle_media_modification(self, modification: Optional[str]) -> None:
+        """Handle AI-powered media modification"""
+        if not modification:
+            console.print(
+                "[yellow]⚠️  Please specify modification: media-modify <command>[/yellow]"
+            )
+            console.print(
+                "[dim]Examples: 'make anaerobic', 'add vitamins', 'remove amino acids'[/dim]"
+            )
+            return
+
+        console.print(f"[cyan]🧠 AI modifying media: {modification}...[/cyan]")
+
+        # Create a natural language query for the conversation engine
+        query = f"Please use the manipulate_media_composition tool to modify media with this command: '{modification}'. Use GMM as the base media and test the results."
+
+        try:
+            self.conversation_engine.process_user_input(query)
+            console.print("\n[green]✅ Media modification completed![/green]")
+        except Exception as e:
+            console.print(f"[red]❌ Media modification failed: {e}[/red]")
+
+    def _handle_media_comparison(self) -> None:
+        """Handle AI-powered media comparison"""
+        console.print("[cyan]🧠 AI comparing media performance across models...[/cyan]")
+
+        # Create a natural language query for the conversation engine
+        query = "Please use the compare_media_performance tool to compare how different models perform across various media types. Test with both E. coli and B. aphidicola models if available."
+
+        try:
+            self.conversation_engine.process_user_input(query)
+            console.print("\n[green]✅ Media comparison completed![/green]")
+        except Exception as e:
+            console.print(f"[red]❌ Media comparison failed: {e}[/red]")
 
     def _handle_exit(self) -> None:
         """Handle graceful exit"""

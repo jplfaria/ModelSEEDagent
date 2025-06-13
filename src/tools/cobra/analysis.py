@@ -54,7 +54,7 @@ class ModelAnalysisTool(BaseTool):
     def analysis_config(self) -> ModelAnalysisConfig:
         return self._analysis_config
 
-    def _run(self, model_path: str) -> ToolResult:
+    def _run_tool(self, model_path: str) -> ToolResult:
         try:
             # Load model
             model = self._utils.load_model(model_path)
@@ -282,24 +282,114 @@ class PathwayAnalysisTool(BaseTool):
         super().__init__(config)
         self._utils = ModelUtils()
 
-    def _run(self, input_data: Dict[str, Any]) -> ToolResult:
+    def _run_tool(self, input_data: Any) -> ToolResult:
         try:
-            model_path = input_data.get("model_path")
-            pathway = input_data.get("pathway")
-            if not model_path or not pathway:
-                raise ValueError("Both model_path and pathway must be provided")
+            # Support both dict and string inputs (for consistency with other tools)
+            if isinstance(input_data, dict):
+                model_path = input_data.get("model_path")
+                pathway = input_data.get("pathway")
+                if not model_path or not pathway:
+                    raise ValueError("Both model_path and pathway must be provided")
+            else:
+                # For string input, we can't determine pathway, so raise an error
+                raise ValueError(
+                    "PathwayAnalysisTool requires dictionary input with model_path and pathway keys"
+                )
 
             model = self._utils.load_model(model_path)
-            pathway_reactions = [
-                rxn
-                for rxn in model.reactions
-                if rxn.subsystem and pathway.lower() in rxn.subsystem.lower()
-            ]
+
+            # Handle models with empty subsystems by using alternative grouping methods
+            pathway_reactions = []
+
+            # Try subsystem-based search first
+            if any(rxn.subsystem for rxn in model.reactions):
+                pathway_reactions = [
+                    rxn
+                    for rxn in model.reactions
+                    if rxn.subsystem and pathway.lower() in rxn.subsystem.lower()
+                ]
+            else:
+                # Fallback: Use reaction ID patterns for pathway analysis
+                pathway_mapping = {
+                    "glycolysis": [
+                        "PGI",
+                        "PFK",
+                        "FBA",
+                        "TPI",
+                        "GAPD",
+                        "PGK",
+                        "PGM",
+                        "ENO",
+                        "PYK",
+                    ],
+                    "tca": [
+                        "CS",
+                        "ACONTa",
+                        "ACONTb",
+                        "ICDHyr",
+                        "AKGDH",
+                        "SUCOAS",
+                        "SUCDi",
+                        "FUM",
+                        "MDH",
+                    ],
+                    "pentose": [
+                        "G6PDH2r",
+                        "PGL",
+                        "GND",
+                        "RPI",
+                        "RPE",
+                        "TKT1",
+                        "TALA",
+                        "TKT2",
+                    ],
+                    "transport": ["EX_", "t", "abc", "upt"],
+                    "exchange": ["EX_"],
+                    "central": ["PGI", "PFK", "FBA", "CS", "ACONTa", "G6PDH2r"],
+                    "energy": ["ATPS4r", "NADH", "CYTBD", "ATP"],
+                }
+
+                # Get reaction patterns for the requested pathway
+                patterns = []
+                for pathway_key, reaction_patterns in pathway_mapping.items():
+                    if pathway_key in pathway.lower():
+                        patterns = reaction_patterns
+                        break
+
+                # If no specific patterns found, search in reaction IDs and names
+                if not patterns:
+                    pathway_reactions = [
+                        rxn
+                        for rxn in model.reactions
+                        if (
+                            pathway.lower() in rxn.id.lower()
+                            or (rxn.name and pathway.lower() in rxn.name.lower())
+                        )
+                    ]
+                else:
+                    # Search for reactions matching the patterns
+                    pathway_reactions = []
+                    for rxn in model.reactions:
+                        for pattern in patterns:
+                            if pattern.upper() in rxn.id.upper():
+                                pathway_reactions.append(rxn)
+                                break
 
             if not pathway_reactions:
+                # Provide helpful error message with suggestions
+                available_subsystems = set(
+                    rxn.subsystem for rxn in model.reactions if rxn.subsystem
+                )
+                if available_subsystems:
+                    suggestions = list(available_subsystems)[:5]
+                    suggestion_text = f"Available subsystems: {', '.join(suggestions)}"
+                else:
+                    # For models without subsystems, suggest reaction ID patterns
+                    suggestion_text = "Try: 'glycolysis', 'tca', 'pentose', 'transport', 'exchange', or 'central'"
+
                 return ToolResult(
                     success=False,
-                    message=f"No reactions found for pathway: {pathway}",
+                    message=f"No reactions found for pathway: {pathway}. {suggestion_text}",
                     error="Pathway not found",
                 )
 

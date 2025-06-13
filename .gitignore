@@ -1,83 +1,14 @@
-# Virtual Environment
-venv/
-.env
-.venv
-env/
-ENV/
+# ========================
+# ModelSEEDagent .gitignore
+# ========================
 
-# Python
+# ============
+# Python Core
+# ============
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
-.Python
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# Logs and databases
-logs/
-*.log
-*.sqlite
-*.db
-
-# Jupyter Notebook
-.ipynb_checkpoints
-notebooks/agent_test.log
-
-# IDE specific files
-.idea/
-.vscode/
-*.swp
-*.swo
-.project
-.pydevproject
-.settings/
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# Project specific
-config/config.yaml
-*.pyc
-build/
-dist/
-*.spec
-
-# Local model files
-/Users/jplfaria/.llama/
-
-# Test cache
-.pytest_cache/
-.coverage
-htmlcov/
-
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
-
-# C extensions
-*.so
-
-# Distribution / packaging
 .Python
 build/
 develop-eggs/
@@ -91,117 +22,53 @@ parts/
 sdist/
 var/
 wheels/
-pip-wheel-metadata/
-share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
 MANIFEST
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
+# ===================
+# Virtual Environments
+# ===================
+venv/
+.venv/
+env/
+ENV/
+.env
+venv*/
+env*/
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
+# =============
+# Testing & QA
+# =============
+.pytest_cache/
+.coverage
+.coverage.*
 htmlcov/
 .tox/
 .nox/
-.coverage
-.coverage.*
 .cache
 nosetests.xml
 coverage.xml
 *.cover
 *.py,cover
 .hypothesis/
-.pytest_cache/
 
-# Translations
-*.mo
-*.pot
+# ================
+# Development IDEs
+# ================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
 
-# Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
-
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-target/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# IPython
-profile_default/
-ipython_config.py
-
-# pyenv
-.python-version
-
-# pipenv
-#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
-#   However, in case of collaboration, if having platform-specific dependencies or dependencies
-#   having no cross-platform support, pipenv may install dependencies that don't work, or not
-#   install all needed dependencies.
-#Pipfile.lock
-
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow
-__pypackages__/
-
-# Celery stuff
-celerybeat-schedule
-celerybeat.pid
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
-
-# Custom additions for ModelSEEDagent
-
-# Development artifacts
+# ===============
+# Operating System
+# ===============
 .DS_Store
 .DS_Store?
 ._*
@@ -210,55 +77,146 @@ dmypy.json
 ehthumbs.db
 Thumbs.db
 
-# IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
+# ===================
+# Jupyter & Notebooks
+# ===================
+.ipynb_checkpoints
+profile_default/
+ipython_config.py
 
-# Log archives (keep recent logs in version control)
-logs/archive/
-logs/old/
+# ====================
+# Generated Analysis Files
+# ====================
+# Analysis result directories (prevent clutter)
+analysis_results_*/
+temp_analysis/
+analysis_temp/
 
-# Archived analysis results
-data/archived/
-data/analysis_results_*/
-
-# Session data (temporary)
+# Session data (development artifacts)
+SESSION_CONTEXT.md
 sessions/temp/
 sessions/*.temp
 
-# Test artifacts in organized locations
-tests/artifacts/temp/
-tests/artifacts/output/
+# Demo output files (generated during runs)
+*_demo_report.json
+*_audit.json
+*_results.json
 
-# Configuration backups
-config/*.backup
-config/*.bak
+# ====================
+# Logs & Temporary Files
+# ====================
+logs/run_*/
+logs/temp_*/
+*.log
+*.tmp
+*.backup
+*.bak
 
-# CLI configuration (contains user-specific settings)
+# =================
+# Database Files
+# =================
+*.sqlite
+*.db
+db.sqlite3
+db.sqlite3-journal
+
+# =====================
+# Configuration & Secrets
+# =====================
+config/config.yaml
 ~/.modelseed-agent-cli.json
+.env*
+local_settings.py
 
-# Visualization outputs (generated files)
-visualizations/temp/
-*.png
-*.svg
-*.html
-!docs/**/*.png
-!docs/**/*.svg
-
-# Model files (large, typically downloaded)
+# =================
+# Model & Data Files
+# =================
+# Large model files (typically downloaded)
 data/models/large/
 data/models/temp/
 *.xml.gz
 *.sbml.gz
 
-# Temporary analysis files
-analysis_temp/
-temp_analysis/
-*.tmp
+# Large biochemistry source files
+data/biochem_sources/*.txt
 
-# Virtual environment variations
-venv*/
-.env*
+# Archived data
+data/archived/
+
+# ==================
+# Visualization Files
+# ==================
+visualizations/temp/
+*.png
+*.svg
+*.html
+# Keep documentation images
+!docs/**/*.png
+!docs/**/*.svg
+!README_images/
+
+# =================
+# Test Artifacts
+# =================
+tests/artifacts/temp/
+tests/artifacts/output/
+
+# ==================
+# Build & Distribution
+# ==================
+*.manifest
+*.spec
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ===============
+# Documentation Build
+# ===============
+docs/_build/
+/site
+
+# =============
+# Other Tools
+# =============
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.spyderproject
+.spyproject
+.ropeproject
+.scrapy
+instance/
+.webassets-cache
+target/
+
+# ===============
+# Local Model Files
+# ===============
+/Users/*/Downloads/*.gguf
+/Users/*/.llama/
+
+# ===============
+# Archive Patterns
+# ===============
+# Prevent re-accumulation of moved files
+CLAUDE.md
+SESSION_CONTEXT.md
+TECHNICAL_ANALYSIS.md
+DYNAMIC_AI_AGENT_ROADMAP.md
+PHASE*_COMPLETION_SUMMARY.md
+data/examples/iML1515.xml
+# Test results and logs
+comprehensive_testbed_results_*/
+direct_testbed_results_*/
+test_*.py
+logs/langgraph_run_*/
+logs/realtime_run_*/
+sessions/*.json
+
+# Large files
+*.xml
+*.faa
+!data/examples/e_coli_core.xml
+!data/examples/glucose_minimal.*
+!data/examples/mycoplasma_minimal.*

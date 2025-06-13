@@ -1,0 +1,94 @@
+{
+  "summary": {
+    "total_tests_with_validation": 76,
+    "tests_with_bio_scores": 16,
+    "avg_bio_score": 1.0,
+    "validation_categories": {},
+    "bio_score_std": 0.0,
+    "bio_score_range": [
+      1.0,
+      1.0
+    ]
+  },
+  "by_model": {
+    "e_coli_core": {
+      "avg_bio_score": 1.0,
+      "bio_score_count": 4,
+      "score_range": [
+        1.0,
+        1.0
+      ]
+    },
+    "iML1515": {
+      "avg_bio_score": 1.0,
+      "bio_score_count": 4,
+      "score_range": [
+        1.0,
+        1.0
+      ]
+    },
+    "EcoliMG1655": {
+      "avg_bio_score": 1.0,
+      "bio_score_count": 4,
+      "score_range": [
+        1.0,
+        1.0
+      ]
+    },
+    "B_aphidicola": {
+      "avg_bio_score": 1.0,
+      "bio_score_count": 4,
+      "score_range": [
+        1.0,
+        1.0
+      ]
+    }
+  },
+  "by_tool": {
+    "FBA": {
+      "avg_score": 1.0,
+      "score_count": 4,
+      "score_range": [
+        1.0,
+        1.0
+      ]
+    },
+    "Essentiality": {
+      "avg_score": 1.0,
+      "score_count": 4,
+      "score_range": [
+        1.0,
+        1.0
+      ]
+    },
+    "BiochemEntityResolver": {
+      "avg_score": 1.0,
+      "score_count": 4,
+      "score_range": [
+        1.0,
+        1.0
+      ]
+    },
+    "BiochemSearch": {
+      "avg_score": 1.0,
+      "score_count": 4,
+      "score_range": [
+        1.0,
+        1.0
+      ]
+    }
+  },
+  "insights_frequency": {
+    "Essential gene percentage 20.0% is typical": 4,
+    "Successfully resolved biochemistry entity": 4,
+    "Found name: D-(+)-Glucose": 4,
+    "Found 20 cross-database aliases": 4,
+    "Search found 10 matches": 4,
+    "Growth rate 0.8739 h\u207b\u00b9 is biologically realistic": 1,
+    "Carbon balance reasonable: 2.28 CO2/glucose": 1,
+    "Growth rate 0.8770 h\u207b\u00b9 is biologically realistic": 1,
+    "Carbon balance reasonable: 2.40 CO2/glucose": 1,
+    "Growth rate 0.5544 h\u207b\u00b9 is biologically realistic": 1
+  },
+  "warnings_frequency": {}
+}

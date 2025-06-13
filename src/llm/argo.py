@@ -50,8 +50,14 @@ class ArgoLLM(BaseLLM):
 
         # Extract Argo-specific configuration using private attributes
         self._model_name = self.config.llm_name
-        self._user = config.get("user") or os.getenv("ARGO_USER") or os.getlogin()
+        self._user = (
+            config.get("user")
+            or os.getenv("ARGO_USER")
+            or os.getenv("USER")
+            or os.getlogin()
+        )
         self._api_key = config.get("api_key") or os.getenv("ARGO_API_KEY")
+        # API key is optional for users on ANL network
         self._env = config.get("env") or self._determine_environment()
         self._retries = config.get("retries", 5)
         self._debug = config.get("debug", False) or os.getenv(
@@ -83,10 +89,11 @@ class ArgoLLM(BaseLLM):
         # Initialize HTTP client
         self._client = httpx.Client(timeout=self._timeout, follow_redirects=True)
 
-        # Set up headers
+        # Set up headers - API key is optional for ANL network users
         self._headers = {"Content-Type": "application/json"}
         if self._api_key:
             self._headers["x-api-key"] = self._api_key
+        # Note: API key not required when connected to ANL network
 
         # Configure logging
         if self._debug:
@@ -125,7 +132,7 @@ class ArgoLLM(BaseLLM):
             return timeout
 
         # o-series models need more time for reasoning
-        if self._model_name.startswith("o") or self._model_name.startswith("gpto"):
+        if self._model_name.startswith(("o", "gpto")):
             return O_SERIES_TIMEOUT
         else:
             return DEFAULT_TIMEOUT
@@ -167,56 +174,47 @@ class ArgoLLM(BaseLLM):
     def _build_payload(self, prompt: str, system: str) -> Dict[str, Any]:
         """Build request payload based on model type"""
         if self._model_name.startswith("o") or self._model_name.startswith("gpto"):
-            # Reasoning models use different format
+            # O-series models use prompt array format
+            # For better results, combine system context with user prompt instead of separate array elements
+            if system:
+                # Combine system context with user prompt for better o-series behavior
+                combined_prompt = f"{system}\n\n{prompt}"
+                prompt_array = [combined_prompt]
+            else:
+                prompt_array = [prompt]
+
             payload = {
                 "user": self._user,
                 "model": self._model_name,
-                "prompt": [prompt],
+                "prompt": prompt_array,
             }
-            # Add system message if provided (o3 supports it, o1 ignores it)
-            if system:
-                payload["system"] = system
 
-            # Handle max_completion_tokens more carefully for o-series models
-            # Some queries work better without token limits
-            if self.config.max_tokens:
-                # Only add if explicitly configured and non-zero
-                if isinstance(self.config.max_tokens, str):
-                    try:
-                        token_limit = int(self.config.max_tokens)
-                        if token_limit > 0:
-                            payload["max_completion_tokens"] = token_limit
-                    except ValueError:
-                        # Invalid token limit, skip it
-                        logger.debug(
-                            f"Invalid max_tokens value: {self.config.max_tokens}"
-                        )
-                        pass
-                elif (
-                    isinstance(self.config.max_tokens, int)
-                    and self.config.max_tokens > 0
-                ):
-                    payload["max_completion_tokens"] = self.config.max_tokens
+            # O-series models don't support temperature or max_completion_tokens parameters
+            # Per Argo developer recommendation: removing max_completion_tokens completely
+            # resolves all issues with o-series models
+            # Don't add temperature or token limits for reasoning models
 
         else:
-            # Standard GPT-style models
+            # Standard GPT-style models use messages format
+            messages = []
+            if system:
+                messages.append({"role": "system", "content": system})
+            messages.append({"role": "user", "content": prompt})
+
             payload = {
                 "user": self._user,
                 "model": self._model_name,
-                "messages": [
-                    {"role": "system", "content": system},
-                    {"role": "user", "content": prompt},
-                ],
+                "messages": messages,
             }
 
-            # Only add temperature for non-o-series models
+            # Add temperature and max_tokens for standard models
             if (
                 hasattr(self.config, "temperature")
                 and self.config.temperature is not None
             ):
                 payload["temperature"] = self.config.temperature
 
-            if self.config.max_tokens:
+            if hasattr(self.config, "max_tokens") and self.config.max_tokens:
                 payload["max_tokens"] = self.config.max_tokens
 
         return payload
@@ -236,18 +234,23 @@ class ArgoLLM(BaseLLM):
         # Build payload
         payload = self._build_payload(prompt, system_message)
 
-        # Override parameters if provided
+        # Override parameters if provided (but not for o-series models)
         if max_tokens is not None:
-            if self._model_name.startswith("o"):
-                payload["max_completion_tokens"] = max_tokens
-            else:
+            if not (
+                self._model_name.startswith("o") or self._model_name.startswith("gpto")
+            ):
+                # Only set max_tokens for standard models, not o-series
                 payload["max_tokens"] = max_tokens
+            # Per Argo developer: completely skip max_completion_tokens for o-series models
 
-        if temperature is not None and not self._model_name.startswith("o"):
-            payload["temperature"] = temperature
-
-        if stop and not self._model_name.startswith("o"):
-            payload["stop"] = stop
+        # O-series models don't support temperature or stop parameters
+        if not (
+            self._model_name.startswith("o") or self._model_name.startswith("gpto")
+        ):
+            if temperature is not None:
+                payload["temperature"] = temperature
+            if stop:
+                payload["stop"] = stop
 
         # For test mode, use the old requests interface for compatibility
         if self._is_test:
@@ -335,21 +338,8 @@ class ArgoLLM(BaseLLM):
                     reason = f"HTTP {response.status_code}"
 
                 elif response.status_code >= 400:
-                    # Client error - try removing max_completion_tokens for o-series models
-                    if (
-                        not max_tokens_removed
-                        and self._model_name.startswith("gpto")
-                        and "max_completion_tokens" in payload
-                        and response.status_code in [400, 422]
-                    ):
-                        logger.warning(
-                            f"4xx error ({response.status_code}), removing max_completion_tokens parameter"
-                        )
-                        payload.pop("max_completion_tokens", None)
-                        max_tokens_removed = True
-                        continue  # Retry immediately
-
-                    # Other client errors
+                    # Client error - o-series models no longer need max_completion_tokens removal
+                    # since we don't add it in the first place per Argo developer recommendation
                     reason = f"HTTP {response.status_code}"
 
                 else:
@@ -391,16 +381,8 @@ class ArgoLLM(BaseLLM):
                             logger.info(f"Endpoint switched → {self._url}")
                             continue
 
-                        # Strategy 2: Remove max_completion_tokens for o-series models
-                        if (
-                            not max_tokens_removed
-                            and self._model_name.startswith("gpto")
-                            and "max_completion_tokens" in payload
-                        ):
-                            logger.info("Removing max_completion_tokens parameter")
-                            payload.pop("max_completion_tokens", None)
-                            max_tokens_removed = True
-                            continue
+                        # Strategy 2: No longer needed for o-series models since we don't add
+                        # max_completion_tokens parameter per Argo developer recommendation
 
             except httpx.TimeoutException:
                 reason = "timeout"

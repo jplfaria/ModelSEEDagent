@@ -4,6 +4,15 @@ import cobra
 from pydantic import BaseModel, Field
 
 from ..base import BaseTool, ToolRegistry, ToolResult
+from .error_handling import (
+    ModelValidationError,
+    ParameterValidationError,
+    create_error_result,
+    create_progress_logger,
+    safe_optimize,
+    validate_model_path,
+    validate_numerical_parameters,
+)
 from .fba import SimulationResultsStore  # Import the results store
 from .simulation_wrapper import run_simulation
 from .utils import ModelUtils
@@ -42,7 +51,7 @@ class MissingMediaTool(BaseTool):
         self._config = MissingMediaConfig(**config_dict)
         self._utils = ModelUtils()
 
-    def _run(self, input_data: Any) -> ToolResult:
+    def _run_tool(self, input_data: Any) -> ToolResult:
         try:
             if isinstance(input_data, dict):
                 model_path = input_data.get("model_path")
@@ -51,8 +60,26 @@ class MissingMediaTool(BaseTool):
                 model_path = input_data
                 output_dir = None
 
+            # Validate inputs
+            try:
+                model_path = validate_model_path(model_path)
+                validate_numerical_parameters(
+                    {
+                        "growth_threshold": self._config.growth_threshold,
+                        "supplementation_amount": self._config.supplementation_amount,
+                    },
+                    self.tool_name,
+                )
+            except (ParameterValidationError, ModelValidationError) as e:
+                return create_error_result(
+                    f"Input validation failed: {str(e)}",
+                    str(e),
+                    getattr(e, "suggestions", []),
+                )
+
             model = self._utils.load_model(model_path)
-            solution = run_simulation(model, method="fba")
+            # Use safe optimization with better error handling
+            solution = safe_optimize(model, "Initial FBA for missing media check")
 
             # Optionally export simulation results
             result_file = None
@@ -72,12 +99,20 @@ class MissingMediaTool(BaseTool):
                 or solution.objective_value < self._config.growth_threshold
             ):
                 missing = []
-                for met in self._config.essential_metabolites:
+                log_progress = create_progress_logger(
+                    len(self._config.essential_metabolites),
+                    "Testing essential metabolites",
+                )
+
+                for i, met in enumerate(self._config.essential_metabolites):
+                    log_progress(i, f"Testing {met}")
                     try:
                         rxn = model.reactions.get_by_id(met)
                         original_bounds = rxn.bounds
                         rxn.lower_bound = -self._config.supplementation_amount
-                        test_solution = run_simulation(model, method="fba")
+                        test_solution = safe_optimize(
+                            model, f"Testing {met} supplementation"
+                        )
                         rxn.bounds = original_bounds
                         if (
                             test_solution.objective_value
@@ -85,7 +120,10 @@ class MissingMediaTool(BaseTool):
                         ):
                             missing.append(met)
                     except Exception:
+                        # Log specific metabolite test failure but continue
                         continue
+
+                log_progress(len(self._config.essential_metabolites), "Complete")
                 return ToolResult(
                     success=True,
                     message="Missing media components identified.",
@@ -105,8 +143,19 @@ class MissingMediaTool(BaseTool):
                     },
                 )
         except Exception as e:
-            return ToolResult(
-                success=False,
-                message="Error checking missing media components.",
-                error=str(e),
+            return create_error_result(
+                "Failed to analyze missing media components",
+                str(e),
+                [
+                    "Verify model file is valid SBML format",
+                    "Check that model has proper exchange reactions (EX_*)",
+                    "Ensure model can perform basic FBA before analysis",
+                    "Try with different essential metabolite list if needed",
+                ],
+                {
+                    "tool_name": self.tool_name,
+                    "model_path": (
+                        str(model_path) if "model_path" in locals() else "unknown"
+                    ),
+                },
             )

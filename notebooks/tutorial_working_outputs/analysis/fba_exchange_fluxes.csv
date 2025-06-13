@@ -1,0 +1,8 @@
+reaction_id,flux,direction
+EX_co2_e,22.809833310205,secretion
+EX_glc__D_e,-10.0,uptake
+EX_h_e,17.530865429786694,secretion
+EX_h2o_e,29.175827135565793,secretion
+EX_nh4_e,-4.765319193197457,uptake
+EX_o2_e,-21.799492655998797,uptake
+EX_pi_e,-3.214895047684764,uptake

@@ -1,0 +1,88 @@
+site_name: ModelSEEDagent Documentation
+site_description: AI-Powered Metabolic Modeling Platform
+site_author: ModelSEED Team
+repo_url: https://github.com/ModelSEED/ModelSEEDagent
+repo_name: ModelSEED/ModelSEEDagent
+
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mtml-chtml.js
+
+extra_css:
+  - https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css
+
+theme:
+  name: material
+  palette:
+    # Palette toggle for light mode
+    - scheme: default
+      primary: blue
+      accent: light blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: blue
+      accent: light blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+
+plugins:
+  - search
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details
+  - attr_list
+  - md_in_html
+  - tables
+  - footnotes
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+  # - pymdownx.emoji:
+  #     emoji_index: !!python/name:material.extensions.emoji.twemoji
+  #     emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+nav:
+  - Home: index.md
+
+  - User Guide:
+    - Getting Started: user/README.md
+    - User Guide: user/INTERACTIVE_GUIDE.md
+
+  - Technical Reference:
+    - Architecture: ARCHITECTURE.md
+    - Tool Reference: TOOL_REFERENCE.md
+    - Debug Configuration: debug.md
+    - Troubleshooting: troubleshooting.md
+
+  - API Documentation:
+    - Overview: api/overview.md
+    - Tool Implementation: api/tools.md
+
+  - Operations:
+    - Installation: installation.md
+    - Configuration: configuration.md
+    - Deployment: deployment.md
+    - Monitoring: monitoring.md
+    - Documentation Updates: documentation-updates.md

@@ -1,4 +1,12 @@
+from .annotation import ProteinAnnotationTool, RastAnnotationTool
 from .builder import ModelBuildTool
+from .compatibility import ModelCompatibilityTool
 from .gapfill import GapFillTool
 
-__all__ = ["ModelBuildTool", "GapFillTool"]
+__all__ = [
+    "ModelBuildTool",
+    "GapFillTool",
+    "RastAnnotationTool",
+    "ProteinAnnotationTool",
+    "ModelCompatibilityTool",
+]

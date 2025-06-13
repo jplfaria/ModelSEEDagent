@@ -1,0 +1,7 @@
+{
+  "total_genes_tested": 20,
+  "essential_genes": 0,
+  "growth_affecting_genes": 6,
+  "non_essential_genes": 14,
+  "baseline_growth": 0.8739215069684303
+}

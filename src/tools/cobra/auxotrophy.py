@@ -33,7 +33,7 @@ class AuxotrophyTool(BaseTool):
         self._config = AuxotrophyConfig(**config_dict)
         self._utils = ModelUtils()
 
-    def _run(self, input_data: Any) -> ToolResult:
+    def _run_tool(self, input_data: Any) -> ToolResult:
         try:
             if isinstance(input_data, dict):
                 model_path = input_data.get("model_path")

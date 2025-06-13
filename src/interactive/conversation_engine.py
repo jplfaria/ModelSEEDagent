@@ -1,28 +1,37 @@
 """
-Conversation Engine for Interactive Analysis
+Dynamic AI Conversation Engine for Interactive Analysis
 
-Manages natural dialogue flow, maintains conversation context,
-and provides intelligent responses for metabolic modeling queries.
+Replaces the old templated system with real AI-powered conversation
+using the RealTimeMetabolicAgent for genuine dynamic decision-making.
 """
 
+import asyncio
 import json
+import logging
 import time
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
+from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
 from rich import box
 from rich.console import Console
 from rich.live import Live
 from rich.panel import Panel
+from rich.progress import BarColumn, Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 from rich.text import Text
 
+from ..agents import create_real_time_agent
+from ..llm.factory import LLMFactory
+from ..tools import ToolRegistry
 from .query_processor import QueryAnalysis, QueryProcessor, QueryType
 from .session_manager import AnalysisSession, Interaction, InteractionType
+from .streaming_interface import RealTimeStreamingInterface
 
 console = Console()
+logger = logging.getLogger(__name__)
 
 
 class ConversationState(Enum):
@@ -30,10 +39,9 @@ class ConversationState(Enum):
 
     GREETING = "greeting"
     ACTIVE = "active"
-    CLARIFYING = "clarifying"
+    AI_THINKING = "ai_thinking"
     PROCESSING = "processing"
-    PRESENTING_RESULTS = "presenting_results"
-    SUGGESTING_FOLLOWUP = "suggesting_followup"
+    STREAMING_RESULTS = "streaming_results"
     WAITING_INPUT = "waiting_input"
     ERROR_RECOVERY = "error_recovery"
     GOODBYE = "goodbye"
@@ -43,12 +51,11 @@ class ResponseType(Enum):
     """Types of assistant responses"""
 
     GREETING = "greeting"
-    ACKNOWLEDGMENT = "acknowledgment"
-    CLARIFICATION = "clarification"
-    ANALYSIS_RESULT = "analysis_result"
-    SUGGESTION = "suggestion"
+    AI_ANALYSIS = "ai_analysis"
+    STREAMING_THOUGHT = "streaming_thought"
+    TOOL_EXECUTION = "tool_execution"
+    FINAL_SYNTHESIS = "final_synthesis"
     ERROR_MESSAGE = "error_message"
-    HELP_RESPONSE = "help_response"
     GOODBYE = "goodbye"
 
 
@@ -58,15 +65,11 @@ class ConversationContext:
 
     current_model: Optional[str] = None
     active_analysis: Optional[str] = None
-    last_query_type: Optional[QueryType] = None
-    user_preferences: Dict[str, Any] = field(default_factory=dict)
+    ai_agent: Optional[Any] = None
     conversation_history: List[Dict[str, Any]] = field(default_factory=list)
-    pending_clarifications: List[str] = field(default_factory=list)
-    suggested_follow_ups: List[str] = field(default_factory=list)
 
     # User profiling
-    expertise_level: str = "intermediate"  # beginner, intermediate, expert
-    preferred_detail_level: str = "moderate"  # brief, moderate, detailed
+    expertise_level: str = "intermediate"
     interaction_count: int = 0
     successful_queries: int = 0
 
@@ -78,416 +81,777 @@ class ConversationResponse:
     content: str
     response_type: ResponseType
     suggested_actions: List[str] = field(default_factory=list)
-    clarification_needed: bool = False
     requires_input: bool = True
     metadata: Dict[str, Any] = field(default_factory=dict)
     processing_time: float = 0.0
+    ai_reasoning_steps: int = 0
+    clarification_needed: bool = False
 
 
-class ConversationEngine:
-    """Manages natural conversation flow for interactive analysis"""
+class DynamicAIConversationEngine:
+    """Real AI-powered conversation engine using RealTimeMetabolicAgent"""
 
-    def __init__(self, session: AnalysisSession, query_processor: QueryProcessor):
+    def __init__(self, session: AnalysisSession):
         self.session = session
-        self.query_processor = query_processor
         self.context = ConversationContext()
         self.state = ConversationState.GREETING
-        self.response_templates = self._initialize_response_templates()
-        self.conversation_hooks: Dict[str, Callable] = {}
+        self.ai_agent = None
+        self.streaming_interface = RealTimeStreamingInterface()
+        self._initialize_ai_agent()
 
-    def _initialize_response_templates(self) -> Dict[str, Dict[str, List[str]]]:
-        """Initialize response templates for different scenarios"""
-        return {
-            "greetings": {
-                "first_time": [
-                    "👋 Welcome to ModelSEEDagent! I'm here to help you analyze metabolic models.",
-                    "🧬 Hello! I'm your metabolic modeling assistant. What would you like to explore today?",
-                    "🚀 Welcome! I can help you analyze metabolic networks, run flux analyses, and much more.",
-                ],
-                "returning": [
-                    "🎉 Welcome back! Ready for more metabolic modeling analysis?",
-                    "👋 Great to see you again! How can I help with your models today?",
-                    "🔬 Hello again! What metabolic analysis shall we dive into?",
-                ],
-            },
-            "acknowledgments": {
-                "understanding": [
-                    "I understand you want to {action}. Let me analyze that...",
-                    "Got it! You're interested in {action}. Processing...",
-                    "Perfect! I'll help you {action}. One moment...",
-                ],
-                "clarification": [
-                    "I need a bit more information to help you better.",
-                    "Let me ask a few questions to make sure I understand correctly.",
-                    "To provide the best analysis, could you clarify a few things?",
-                ],
-            },
-            "suggestions": {
-                "follow_up": [
-                    "Based on these results, you might want to {suggestion}.",
-                    "Great results! Consider {suggestion} as a next step.",
-                    "This analysis opens up possibilities for {suggestion}.",
-                ],
-                "alternative": [
-                    "If you're interested, we could also {alternative}.",
-                    "Another approach would be to {alternative}.",
-                    "You might find it useful to {alternative}.",
-                ],
-            },
-            "errors": {
-                "understanding": [
-                    "I'm not quite sure what you mean. Could you rephrase that?",
-                    "I didn't fully understand. Could you be more specific?",
-                    "Let me make sure I understand - are you asking about {guess}?",
-                ],
-                "technical": [
-                    "I encountered an issue while processing. Let me try a different approach.",
-                    "There was a technical problem. I'll attempt an alternative method.",
-                    "Something went wrong, but I have some suggestions to try instead.",
-                ],
-            },
-            "help": {
-                "general": [
-                    "I can help you with metabolic model analysis, pathway exploration, flux calculations, and more!",
-                    "I'm equipped to analyze model structure, growth conditions, optimization, and visualizations.",
-                    "Ask me about FBA, pathway analysis, model comparison, or any metabolic modeling question!",
-                ],
-                "specific": [
-                    "For {topic}, you can ask me to {examples}.",
-                    "Try questions like: {examples}",
-                    "Here are some things you can explore: {examples}",
-                ],
-            },
-        }
+    def _load_cli_config(self) -> Dict[str, Any]:
+        """Load CLI configuration from persistent storage"""
+        cli_config_file = Path.home() / ".modelseed-agent-cli.json"
+
+        if cli_config_file.exists():
+            try:
+                with open(cli_config_file, "r") as f:
+                    config = json.load(f)
+                    console.print(
+                        f"📁 Loaded CLI config: {config.get('llm_backend', 'unknown')} backend with {config.get('llm_config', {}).get('model_name', 'unknown')} model",
+                        style="dim",
+                    )
+                    return config
+            except Exception as e:
+                console.print(f"⚠️ Could not load CLI config: {e}", style="yellow")
+
+        console.print(
+            "⚠️ No CLI config found. Run 'modelseed-agent setup' first.", style="yellow"
+        )
+        return {}
+
+    def _initialize_ai_agent(self):
+        """Initialize the real AI agent using saved CLI configuration"""
+        try:
+            # Load saved CLI configuration
+            cli_config = self._load_cli_config()
+
+            # Use saved configuration if available, otherwise fallback to defaults
+            if cli_config.get("llm_backend") and cli_config.get("llm_config"):
+                llm_backend = cli_config["llm_backend"]
+                llm_config = cli_config["llm_config"].copy()
+
+                console.print(
+                    f"🔧 Using saved config: {llm_backend} backend with {llm_config.get('model_name', 'unknown')} model",
+                    style="green",
+                )
+
+                # Ensure system content is set for interactive mode
+                if "system_content" not in llm_config:
+                    llm_config["system_content"] = (
+                        "You are an expert metabolic modeling AI agent that makes real-time decisions based on data analysis."
+                    )
+
+            else:
+                # Fallback to default configuration
+                console.print(
+                    "⚠️ No saved configuration found, using defaults", style="yellow"
+                )
+                llm_backend = "argo"
+                llm_config = {
+                    "model_name": "gpt-4o-mini",
+                    "system_content": "You are an expert metabolic modeling AI agent that makes real-time decisions based on data analysis.",
+                    "temperature": 0.7,
+                    "max_tokens": 4000,
+                }
+
+            try:
+                llm = LLMFactory.create(llm_backend, llm_config)
+                console.print(
+                    f"🔗 Connected to {llm_backend.title()} LLM with model: {llm_config.get('model_name', 'unknown')}",
+                    style="green",
+                )
+            except Exception as e:
+                console.print(
+                    f"❌ Failed to connect to {llm_backend}: {e}", style="red"
+                )
+                # Try fallback to argo with default config
+                try:
+                    fallback_config = {
+                        "model_name": "gpt-4o-mini",
+                        "system_content": "You are an expert metabolic modeling AI agent that makes real-time decisions based on data analysis.",
+                        "temperature": 0.7,
+                        "max_tokens": 4000,
+                    }
+                    llm = LLMFactory.create("argo", fallback_config)
+                    console.print(
+                        "🔗 Connected to Argo Gateway LLM (fallback)", style="yellow"
+                    )
+                except Exception:
+                    console.print(
+                        "⚠️ No LLM available - using fallback mode", style="yellow"
+                    )
+                    llm = None
+
+            if llm:
+                # Get available tools
+                tool_names = ToolRegistry.list_tools()
+                tools = []
+                for tool_name in tool_names:
+                    try:
+                        tool = ToolRegistry.create_tool(tool_name, {})
+                        tools.append(tool)
+                        console.print(f"✅ Loaded tool: {tool_name}", style="dim")
+                    except Exception as e:
+                        console.print(
+                            f"⚠️ Could not load tool {tool_name}: {e}", style="yellow"
+                        )
+
+                # Create the real AI agent
+                # Check for LLM input logging via environment variable
+                import os
+
+                log_llm_inputs = os.getenv(
+                    "MODELSEED_LOG_LLM_INPUTS", "false"
+                ).lower() in ("true", "1", "yes")
+
+                config = {
+                    "max_iterations": 6,
+                    "log_llm_inputs": log_llm_inputs,  # 🔍 Enable via env var
+                }
+
+                if log_llm_inputs:
+                    console.print(
+                        "🔍 LLM input logging enabled via MODELSEED_LOG_LLM_INPUTS",
+                        style="yellow",
+                    )
+
+                self.ai_agent = create_real_time_agent(llm, tools, config)
+
+                # DEBUG: Log what agent we actually created
+                console.print(
+                    f"🔍 DEBUG: Created agent type: {type(self.ai_agent).__name__}",
+                    style="dim",
+                )
+                console.print(
+                    f"🔍 DEBUG: Agent has _prepare_tool_input: {hasattr(self.ai_agent, '_prepare_tool_input')}",
+                    style="dim",
+                )
+                self.context.ai_agent = self.ai_agent
+
+                console.print(
+                    f"🧠 Dynamic AI Agent initialized with {len(tools)} tools",
+                    style="green",
+                )
+            else:
+                console.print("⚠️ Running in demo mode without AI", style="yellow")
+
+        except Exception as e:
+            console.print(f"⚠️ AI initialization failed: {e}", style="red")
+            self.ai_agent = None
 
     def start_conversation(self) -> ConversationResponse:
-        """Start a new conversation"""
+        """Start a new conversation with dynamic AI greeting"""
         self.state = ConversationState.GREETING
 
         # Determine if this is a first-time or returning user
         is_first_time = len(self.session.interactions) == 0
-        template_key = "first_time" if is_first_time else "returning"
 
-        greeting = self._select_template("greetings", template_key)
-
-        # Add contextual information
-        context_info = []
-        if self.session.model_files:
-            context_info.append(
-                f"I see you have {len(self.session.model_files)} model(s) loaded."
+        if is_first_time:
+            greeting = "👋 Welcome to ModelSEEDagent! I'm your AI-powered metabolic modeling assistant."
+        else:
+            greeting = (
+                "🎉 Welcome back! Ready for more dynamic AI-driven metabolic analysis?"
             )
 
-        if not is_first_time:
-            recent_activities = [
-                i.input_data[:40] + "..." if len(i.input_data) > 40 else i.input_data
-                for i in self.session.get_recent_interactions(2)
-            ]
-            if recent_activities:
-                context_info.append(
-                    f"Your recent activities: {', '.join(recent_activities)}"
-                )
+        greeting += "\n\n🧠 **Dynamic AI Features:**"
+        greeting += "\n  • Real-time AI decision-making based on your data"
+        greeting += "\n  • Adaptive tool selection that responds to results"
+        greeting += "\n  • Complete reasoning transparency with audit trails"
+        greeting += "\n  • Multi-step analysis with intelligent workflow adaptation"
 
-        full_greeting = greeting
-        if context_info:
-            full_greeting += "\n\n" + " ".join(context_info)
+        if self.ai_agent:
+            greeting += (
+                "\n\n✨ **AI Status:** Fully operational with real-time reasoning"
+            )
+            greeting += f"\n📊 **Available Tools:** {len(self.ai_agent._tools_dict)} specialized metabolic modeling tools"
+        else:
+            greeting += "\n\n⚠️ **AI Status:** Demo mode (LLM not available)"
 
-        full_greeting += "\n\n💡 You can ask me to analyze models, explore pathways, calculate fluxes, or get help with any metabolic modeling question!"
+        greeting += '\n\n💡 Try asking: "I need a comprehensive metabolic analysis of E. coli" and watch the AI think through the problem step by step!'
 
         self.state = ConversationState.WAITING_INPUT
 
         return ConversationResponse(
-            content=full_greeting,
+            content=greeting,
             response_type=ResponseType.GREETING,
             suggested_actions=[
-                "Upload and analyze a metabolic model",
-                "Explore pathway analysis capabilities",
-                "Learn about flux balance analysis",
-                "Get help with modeling questions",
+                "I need a comprehensive metabolic characterization of the E. coli core model",
+                "Analyze growth capabilities and nutritional requirements systematically",
+                "Help me understand metabolic flexibility and essential components",
+                "Show me how AI selects tools based on discovered data patterns",
             ],
             requires_input=True,
         )
 
     def process_user_input(self, user_input: str) -> ConversationResponse:
-        """Process user input and generate appropriate response"""
+        """Process user input using real AI agent"""
         start_time = time.time()
 
         # Update conversation context
         self.context.interaction_count += 1
 
-        # Analyze the query
-        query_analysis = self.query_processor.analyze_query(
-            user_input, context=self._get_query_context()
-        )
+        if not self.ai_agent:
+            return self._handle_no_ai_fallback(user_input)
 
-        # Update context with query analysis
-        self.context.last_query_type = query_analysis.query_type
+        # Use real AI agent for processing - disable streaming for now to fix display issues
+        return self._process_with_simple_ai(user_input, start_time)
 
-        # Determine conversation flow based on query analysis
-        response = self._generate_response(user_input, query_analysis)
-
-        # Update processing time
-        response.processing_time = time.time() - start_time
-
-        # Log interaction
-        self._log_interaction(user_input, response, query_analysis)
-
-        return response
-
-    def _generate_response(
-        self, user_input: str, analysis: QueryAnalysis
+    def _process_with_real_ai(
+        self, user_input: str, start_time: float
     ) -> ConversationResponse:
-        """Generate appropriate response based on query analysis"""
+        """Process query using the real AI agent with streaming display"""
+        self.state = ConversationState.AI_THINKING
 
-        # Handle help requests
-        if analysis.query_type == QueryType.HELP_REQUEST:
-            return self._generate_help_response(analysis)
+        # Show AI thinking indicator
+        with console.status("🧠 AI analyzing your query...", spinner="dots"):
+            try:
+                # Run the dynamic AI agent
+                result = self.ai_agent.run({"query": user_input})
 
-        # Handle low confidence queries
-        if analysis.confidence < 0.5:
-            return self._generate_clarification_response(user_input, analysis)
+                processing_time = time.time() - start_time
 
-        # Handle queries needing clarification
-        if analysis.clarification_questions:
-            return self._generate_clarification_response(user_input, analysis)
+                if result.success:
+                    # Create rich response showing AI reasoning
+                    content = self._format_ai_response(result, user_input)
 
-        # Handle normal analysis queries
-        return self._generate_analysis_response(user_input, analysis)
+                    # Extract suggested follow-ups
+                    suggested_actions = self._extract_follow_up_suggestions(result)
 
-    def _generate_help_response(self, analysis: QueryAnalysis) -> ConversationResponse:
-        """Generate helpful response for help requests"""
-        self.state = ConversationState.PRESENTING_RESULTS
+                    self.context.successful_queries += 1
+                    self.state = ConversationState.WAITING_INPUT
 
-        help_content = self._select_template("help", "general")
+                    # Log successful interaction
+                    self._log_ai_interaction(user_input, result, processing_time, True)
 
-        # Add specific examples based on detected entities
-        examples = []
-        if analysis.model_references:
-            examples.extend(
-                [
-                    "analyze the structure of your model",
-                    "calculate growth rates and yields",
-                    "explore metabolic pathways",
-                ]
-            )
-        elif analysis.pathway_references:
-            examples.extend(
-                [
-                    "analyze glycolysis pathway fluxes",
-                    "compare pathway activities",
-                    "visualize pathway networks",
-                ]
-            )
-        else:
-            examples.extend(
-                [
-                    "load and analyze SBML models",
-                    "run flux balance analysis",
-                    "explore growth conditions",
-                    "visualize metabolic networks",
-                ]
-            )
+                    return ConversationResponse(
+                        content=content,
+                        response_type=ResponseType.AI_ANALYSIS,
+                        suggested_actions=suggested_actions,
+                        requires_input=True,
+                        metadata={
+                            "ai_agent_result": True,
+                            "tools_executed": result.metadata.get("tools_executed", []),
+                            "ai_reasoning_steps": result.metadata.get(
+                                "ai_reasoning_steps", 0
+                            ),
+                            "audit_file": result.metadata.get("audit_file"),
+                            "quantitative_findings": result.metadata.get(
+                                "quantitative_findings", {}
+                            ),
+                        },
+                        processing_time=processing_time,
+                        ai_reasoning_steps=result.metadata.get("ai_reasoning_steps", 0),
+                    )
 
-        help_content += f"\n\n🔧 **What you can try:**\n"
-        for i, example in enumerate(examples[:4], 1):
-            help_content += f"  {i}. {example.capitalize()}\n"
+                else:
+                    # Handle AI agent failure
+                    return self._handle_ai_error(user_input, result, processing_time)
 
-        if analysis.follow_up_suggestions:
-            help_content += f"\n💡 **Suggestions:**\n"
-            for suggestion in analysis.follow_up_suggestions:
-                help_content += f"  • {suggestion}\n"
+            except Exception as e:
+                # Handle unexpected errors
+                return self._handle_unexpected_error(
+                    user_input, str(e), time.time() - start_time
+                )
 
-        self.state = ConversationState.WAITING_INPUT
-
-        return ConversationResponse(
-            content=help_content,
-            response_type=ResponseType.HELP_RESPONSE,
-            suggested_actions=examples[:3],
-            requires_input=True,
-        )
-
-    def _generate_clarification_response(
-        self, user_input: str, analysis: QueryAnalysis
+    def _process_with_streaming_ai(
+        self, user_input: str, start_time: float
     ) -> ConversationResponse:
-        """Generate response requesting clarification"""
-        self.state = ConversationState.CLARIFYING
+        """Process query using the real AI agent with real-time streaming display"""
+        self.state = ConversationState.AI_THINKING
 
-        clarification_content = self._select_template(
-            "acknowledgments", "clarification"
-        )
-
-        # Add specific clarification questions
-        if analysis.clarification_questions:
-            clarification_content += (
-                "\n\n❓ **Questions to help me assist you better:**\n"
-            )
-            for i, question in enumerate(analysis.clarification_questions, 1):
-                clarification_content += f"  {i}. {question}\n"
-
-        # Add alternative phrasings if available
-        if analysis.alternative_phrasings:
-            clarification_content += f"\n🔄 **Did you mean:**\n"
-            for alt in analysis.alternative_phrasings:
-                clarification_content += f"  • {alt}\n"
-
-        # Store pending clarifications
-        self.context.pending_clarifications = analysis.clarification_questions
-
-        suggested_actions = (
-            analysis.clarification_questions + analysis.alternative_phrasings
-        )
-
-        return ConversationResponse(
-            content=clarification_content,
-            response_type=ResponseType.CLARIFICATION,
-            suggested_actions=suggested_actions[:5],
-            clarification_needed=True,
-            requires_input=True,
-            metadata={"original_query": user_input, "analysis": analysis.to_dict()},
-        )
-
-    def _generate_analysis_response(
-        self, user_input: str, analysis: QueryAnalysis
-    ) -> ConversationResponse:
-        """Generate response for analysis queries"""
-        self.state = ConversationState.PROCESSING
-
-        # Acknowledge the query
-        action_description = self._describe_analysis_action(analysis)
-        acknowledgment = self._select_template(
-            "acknowledgments", "understanding"
-        ).format(action=action_description)
-
-        # Simulate analysis processing
-        processing_content = f"{acknowledgment}\n\n🔬 **Analysis Plan:**\n"
-
-        # Show suggested tools
-        if analysis.suggested_tools:
-            processing_content += (
-                f"  • Using tools: {', '.join(analysis.suggested_tools)}\n"
-            )
-
-        # Show complexity and expected time
-        complexity_time = {
-            "simple": "a few seconds",
-            "moderate": "10-30 seconds",
-            "complex": "30-60 seconds",
-            "expert": "1-2 minutes",
-        }
-        expected_time = complexity_time.get(analysis.complexity.value, "a moment")
-        processing_content += f"  • Complexity: {analysis.complexity.value.title()} (estimated {expected_time})\n"
-
-        # Show expected outputs
-        if analysis.expected_outputs:
-            processing_content += (
-                f"  • Expected results: {', '.join(analysis.expected_outputs)}\n"
-            )
-
-        # Mock analysis results (in real implementation, this would call actual tools)
-        mock_results = self._generate_mock_results(analysis)
-
-        processing_content += f"\n✅ **Analysis Complete!**\n\n{mock_results}"
-
-        # Add follow-up suggestions
-        if analysis.follow_up_suggestions:
-            processing_content += f"\n\n💡 **What's next?**\n"
-            for i, suggestion in enumerate(analysis.follow_up_suggestions, 1):
-                processing_content += f"  {i}. {suggestion}\n"
-
-        self.state = ConversationState.SUGGESTING_FOLLOWUP
-        self.context.successful_queries += 1
-        self.context.suggested_follow_ups = analysis.follow_up_suggestions
-
-        return ConversationResponse(
-            content=processing_content,
-            response_type=ResponseType.ANALYSIS_RESULT,
-            suggested_actions=analysis.follow_up_suggestions,
-            requires_input=True,
-            metadata={"analysis": analysis.to_dict(), "mock_results": True},
-        )
-
-    def _describe_analysis_action(self, analysis: QueryAnalysis) -> str:
-        """Describe what analysis action will be performed"""
-        action_descriptions = {
-            QueryType.STRUCTURAL_ANALYSIS: "analyze the model structure and components",
-            QueryType.GROWTH_ANALYSIS: "calculate growth rates and biomass production",
-            QueryType.PATHWAY_ANALYSIS: "examine metabolic pathway fluxes and activities",
-            QueryType.FLUX_ANALYSIS: "perform flux balance analysis and optimization",
-            QueryType.OPTIMIZATION: "optimize the metabolic model for your objectives",
-            QueryType.COMPARISON: "compare different models or conditions",
-            QueryType.VISUALIZATION: "create visualizations and plots",
-            QueryType.MODEL_MODIFICATION: "modify the metabolic model as requested",
-            QueryType.GENERAL_QUESTION: "provide information about your question",
-        }
-
-        return action_descriptions.get(analysis.query_type, "process your request")
-
-    def _generate_mock_results(self, analysis: QueryAnalysis) -> str:
-        """Generate mock analysis results for demonstration"""
-        mock_results = {
-            QueryType.STRUCTURAL_ANALYSIS: "📊 **Model Structure:**\n  • 95 reactions, 72 metabolites, 137 genes\n  • 15 pathways identified\n  • Network connectivity: 85% connected",
-            QueryType.GROWTH_ANALYSIS: "📈 **Growth Analysis:**\n  • Predicted growth rate: 0.873 h⁻¹\n  • Biomass yield: 0.394 g/g glucose\n  • ATP yield: 32.1 mol/mol glucose",
-            QueryType.PATHWAY_ANALYSIS: "🛣️ **Pathway Analysis:**\n  • Glycolysis flux: 8.2 mmol/gDW/h\n  • TCA cycle flux: 6.1 mmol/gDW/h\n  • Active pathways: 12 of 15 analyzed",
-            QueryType.FLUX_ANALYSIS: "⚡ **Flux Analysis:**\n  • Optimal objective value: 0.873\n  • 45 active reactions\n  • Flux variability: 23% average range",
-            QueryType.OPTIMIZATION: "🎯 **Optimization Results:**\n  • Target improved by 15.3%\n  • 3 gene modifications suggested\n  • New predicted yield: 0.452 g/g",
-            QueryType.COMPARISON: "🔄 **Comparison Results:**\n  • Growth rate difference: +12.5%\n  • 23 reactions show significant changes\n  • Metabolic efficiency improved",
-            QueryType.VISUALIZATION: "🎨 **Visualization Created:**\n  • Network diagram generated\n  • Flux heatmap created\n  • Interactive plot available",
-            QueryType.MODEL_MODIFICATION: "🔧 **Model Modified:**\n  • 2 reactions added/removed\n  • Gene associations updated\n  • Model validation passed",
-        }
-
-        return mock_results.get(
-            analysis.query_type,
-            "📋 **Analysis completed successfully!**\nResults are ready for your review.",
-        )
-
-    def _select_template(self, category: str, subcategory: str, **kwargs) -> str:
-        """Select and format a response template"""
-        templates = self.response_templates.get(category, {}).get(
-            subcategory, ["Response not available."]
-        )
-
-        # Simple selection (could be improved with ML/preference learning)
-        template = templates[self.context.interaction_count % len(templates)]
-
-        # Format with any provided kwargs
         try:
-            return template.format(**kwargs)
-        except KeyError:
-            return template
+            # Start streaming interface
+            self.streaming_interface.start_streaming(user_input)
 
-    def _get_query_context(self) -> Dict[str, Any]:
-        """Get context for query processing"""
-        return {
-            "current_model": self.context.current_model,
-            "last_query_type": (
-                self.context.last_query_type.value
-                if self.context.last_query_type
-                else None
-            ),
-            "interaction_count": self.context.interaction_count,
-            "expertise_level": self.context.expertise_level,
-            "recent_interactions": [
-                i.input_data for i in self.session.get_recent_interactions(3)
+            # Show initial AI thinking
+            self.streaming_interface.show_ai_analysis(
+                "Analyzing your query and planning the analysis approach..."
+            )
+
+            # Run the dynamic AI agent with streaming callbacks
+            if hasattr(self.ai_agent, "run"):
+                # Handle async run method
+                import asyncio
+
+                try:
+                    # Check if run method is async
+                    import inspect
+
+                    if inspect.iscoroutinefunction(self.ai_agent.run):
+                        result = asyncio.run(self.ai_agent.run({"query": user_input}))
+                    else:
+                        result = self.ai_agent.run({"query": user_input})
+                except Exception as e:
+                    # Fallback if asyncio.run fails
+                    logger.error(f"Error running agent: {e}")
+                    from ..agents.base import AgentResult
+
+                    result = AgentResult(
+                        success=False,
+                        message=f"Agent execution failed: {str(e)}",
+                        error=str(e),
+                    )
+            else:
+                # Fallback for agents without run method
+                result = self.ai_agent.process({"query": user_input})
+
+            processing_time = time.time() - start_time
+
+            if result.success:
+                # Show completion
+                self.streaming_interface.show_workflow_complete(
+                    result.message, result.metadata
+                )
+
+                # Stop streaming after a brief pause
+                time.sleep(1)
+                self.streaming_interface.stop_streaming()
+
+                # Create rich response showing AI reasoning
+                content = self._format_ai_response(result, user_input)
+
+                # Extract suggested follow-ups
+                suggested_actions = self._extract_follow_up_suggestions(result)
+
+                self.context.successful_queries += 1
+                self.state = ConversationState.WAITING_INPUT
+
+                # Log successful interaction
+                self._log_ai_interaction(user_input, result, processing_time, True)
+
+                return ConversationResponse(
+                    content=content,
+                    response_type=ResponseType.AI_ANALYSIS,
+                    suggested_actions=suggested_actions,
+                    requires_input=True,
+                    metadata={
+                        "ai_agent_result": True,
+                        "tools_executed": result.metadata.get("tools_executed", []),
+                        "ai_reasoning_steps": result.metadata.get(
+                            "ai_reasoning_steps", 0
+                        ),
+                        "audit_file": result.metadata.get("audit_file"),
+                        "quantitative_findings": result.metadata.get(
+                            "quantitative_findings", {}
+                        ),
+                        "streaming_used": True,
+                    },
+                    processing_time=processing_time,
+                    ai_reasoning_steps=result.metadata.get("ai_reasoning_steps", 0),
+                )
+
+            else:
+                # Show error and stop streaming
+                self.streaming_interface.show_error(result.error)
+                time.sleep(1)
+                self.streaming_interface.stop_streaming()
+
+                # Handle AI agent failure
+                return self._handle_ai_error(user_input, result, processing_time)
+
+        except Exception as e:
+            # Handle unexpected errors
+            self.streaming_interface.show_error(
+                str(e), "Unexpected error during AI processing"
+            )
+            time.sleep(1)
+            self.streaming_interface.stop_streaming()
+            return self._handle_unexpected_error(
+                user_input, str(e), time.time() - start_time
+            )
+
+    def _run_agent_sync(self, user_input: str):
+        """
+        Synchronous wrapper for the async agent.run() method.
+        Fallback to direct sync execution when in event loop context.
+        """
+        import asyncio
+
+        try:
+            # Try to use asyncio.run first
+            return asyncio.run(self.ai_agent.run({"query": user_input}))
+        except RuntimeError as e:
+            if "asyncio.run() cannot be called from a running event loop" in str(e):
+                # We're in an event loop, so we need to call the agent differently
+                # Let's try to call the agent's sync methods directly if possible
+                logger.warning(
+                    "Running in event loop context, using direct agent execution"
+                )
+
+                # Instead of trying complex async handling, let's use a simpler approach
+                # Call the agent's standard analysis workflow directly
+                try:
+                    # Use the synchronous version if available, or fall back to a simple result
+                    return self._run_agent_directly_sync(user_input)
+                except Exception as direct_error:
+                    logger.error(f"Direct agent execution failed: {direct_error}")
+                    from ..agents.base import AgentResult
+
+                    return AgentResult(
+                        success=False,
+                        message=f"Agent execution failed in event loop context: {str(direct_error)}",
+                        error=str(direct_error),
+                        data={},
+                    )
+            else:
+                # Different RuntimeError, re-raise
+                raise
+        except Exception as e:
+            logger.error(f"Error in agent execution: {e}")
+            from ..agents.base import AgentResult
+
+            return AgentResult(
+                success=False,
+                message=f"Agent execution failed: {str(e)}",
+                error=str(e),
+                data={},
+            )
+
+    def _run_agent_directly_sync(self, user_input: str):
+        """
+        Run a simplified version of the agent workflow synchronously.
+        This bypasses the async complexity when in event loop context.
+        """
+        from ..agents.base import AgentResult
+
+        try:
+            # This is a simplified approach - just run the essential analysis tools directly
+            logger.info("Running simplified synchronous agent workflow")
+
+            # Use the agent's tool selection but skip the async workflow
+            if hasattr(self.ai_agent, "_ai_analyze_query_for_first_tool"):
+                first_tool, reasoning = self.ai_agent._ai_analyze_query_for_first_tool(
+                    user_input
+                )
+                logger.info(f"Selected tool: {first_tool}")
+
+                if (
+                    first_tool
+                    and hasattr(self.ai_agent, "_tools_dict")
+                    and first_tool in self.ai_agent._tools_dict
+                ):
+                    # Prepare and execute the tool
+                    tool_input = self.ai_agent._prepare_tool_input(
+                        first_tool, user_input
+                    )
+                    tool = self.ai_agent._tools_dict[first_tool]
+                    result = tool._run_tool(tool_input)
+
+                    if result.success:
+                        # Create a simplified success result
+                        summary = f"Analysis completed using {first_tool}. Key findings: {str(result.data)[:200]}..."
+
+                        return AgentResult(
+                            success=True,
+                            message=summary,
+                            data={
+                                "tool_executed": first_tool,
+                                "tool_result": result.data,
+                                "ai_reasoning": reasoning,
+                                "simplified_execution": True,
+                            },
+                            metadata={
+                                "tools_executed": [first_tool],
+                                "ai_reasoning_steps": 1,
+                                "execution_mode": "simplified_sync",
+                            },
+                        )
+                    else:
+                        return AgentResult(
+                            success=False,
+                            message=f"Tool execution failed: {result.error}",
+                            error=result.error,
+                            data={},
+                        )
+                else:
+                    return AgentResult(
+                        success=False,
+                        message="Could not select appropriate tool for analysis",
+                        error="Tool selection failed",
+                        data={},
+                    )
+            else:
+                return AgentResult(
+                    success=False,
+                    message="Agent does not support simplified execution",
+                    error="Missing required agent methods",
+                    data={},
+                )
+
+        except Exception as e:
+            logger.error(f"Simplified agent execution failed: {e}")
+            return AgentResult(
+                success=False,
+                message=f"Simplified agent execution failed: {str(e)}",
+                error=str(e),
+                data={},
+            )
+
+    def _process_with_simple_ai(
+        self, user_input: str, start_time: float
+    ) -> ConversationResponse:
+        """Process query using the real AI agent with simple display (no streaming)"""
+        self.state = ConversationState.AI_THINKING
+
+        try:
+            # Message already shown by CLI, no need to duplicate it
+
+            # Simple approach: just run the agent directly with asyncio.run if needed
+            import asyncio
+            import inspect
+
+            if hasattr(self.ai_agent, "run"):
+                if inspect.iscoroutinefunction(self.ai_agent.run):
+                    try:
+                        # Try to get the current loop to see if we're in one
+                        asyncio.get_running_loop()
+                        # We're in a loop, so we need to handle this differently
+                        # Use our synchronous wrapper
+                        result = self._run_agent_sync(user_input)
+                    except RuntimeError:
+                        # No event loop running, safe to use asyncio.run
+                        result = asyncio.run(self.ai_agent.run({"query": user_input}))
+                else:
+                    result = self.ai_agent.run({"query": user_input})
+            else:
+                # Fallback for agents without run method
+                result = self.ai_agent.process({"query": user_input})
+
+            processing_time = time.time() - start_time
+
+            if result.success:
+                # Create rich response showing AI reasoning
+                content = self._format_ai_response(result, user_input)
+
+                # Extract suggested follow-ups
+                suggested_actions = self._extract_follow_up_suggestions(result)
+
+                self.context.successful_queries += 1
+                self.state = ConversationState.WAITING_INPUT
+
+                # Log successful interaction
+                self._log_ai_interaction(user_input, result, processing_time, True)
+
+                return ConversationResponse(
+                    content=content,
+                    response_type=ResponseType.AI_ANALYSIS,
+                    suggested_actions=suggested_actions,
+                    requires_input=True,
+                    metadata={
+                        "ai_agent_result": True,
+                        "tools_executed": result.metadata.get("tools_executed", []),
+                        "ai_reasoning_steps": result.metadata.get(
+                            "ai_reasoning_steps", 0
+                        ),
+                        "audit_file": result.metadata.get("audit_file"),
+                        "quantitative_findings": result.metadata.get(
+                            "quantitative_findings", {}
+                        ),
+                        "simple_display_used": True,
+                    },
+                    processing_time=processing_time,
+                    ai_reasoning_steps=result.metadata.get("ai_reasoning_steps", 0),
+                )
+
+            else:
+                # Handle AI agent failure
+                return self._handle_ai_error(user_input, result, processing_time)
+
+        except Exception as e:
+            # Handle unexpected errors
+            return self._handle_unexpected_error(
+                user_input, str(e), time.time() - start_time
+            )
+
+    def _format_ai_response(self, result, user_input: str) -> str:
+        """Format the AI agent response with rich formatting"""
+        content = f"🧠 **AI Dynamic Analysis Complete**\n\n"
+
+        # Show the AI's response
+        content += f"**AI Response:**\n{result.message}\n\n"
+
+        # Show tools that were executed
+        tools_executed = result.metadata.get("tools_executed", [])
+        if tools_executed:
+            content += f"🔧 **Tools Executed ({len(tools_executed)}):**\n"
+            for i, tool in enumerate(tools_executed, 1):
+                content += f"  {i}. {tool}\n"
+            content += "\n"
+
+        # Show AI reasoning steps
+        reasoning_steps = result.metadata.get("ai_reasoning_steps", 0)
+        if reasoning_steps > 0:
+            content += (
+                f"🧠 **AI Reasoning Steps:** {reasoning_steps} decision points\n\n"
+            )
+
+        # Show quantitative findings if available
+        findings = result.metadata.get("quantitative_findings", {})
+        if findings:
+            content += f"📊 **Key Quantitative Discoveries:**\n"
+            for key, value in findings.items():
+                content += f"  • {key.replace('_', ' ').title()}: {value}\n"
+            content += "\n"
+
+        # Show audit trail information
+        audit_file = result.metadata.get("audit_file")
+        if audit_file:
+            content += f"🔍 **Complete Audit Trail:** {audit_file}\n"
+            content += "  → Every AI decision and tool execution fully logged for verification\n\n"
+
+        # Show AI confidence if available
+        ai_confidence = result.metadata.get("ai_confidence")
+        if ai_confidence:
+            content += f"🎯 **AI Confidence:** {ai_confidence}\n\n"
+
+        content += "✨ **Dynamic AI Features Demonstrated:**\n"
+        content += "  • Real-time tool selection based on discovered data patterns\n"
+        content += "  • Adaptive workflow that responds to actual results\n"
+        content += "  • Complete reasoning transparency with audit trail\n"
+        content += "  • Genuine AI decision-making (no templates!)\n"
+
+        return content
+
+    def _extract_follow_up_suggestions(self, result) -> List[str]:
+        """Extract intelligent follow-up suggestions from AI analysis"""
+        suggestions = []
+
+        tools_executed = result.metadata.get("tools_executed", [])
+
+        # Suggest complementary analyses based on what was done
+        if "run_metabolic_fba" in tools_executed:
+            suggestions.append(
+                "Analyze flux variability to understand metabolic flexibility"
+            )
+
+        if "find_minimal_media" in tools_executed:
+            suggestions.append(
+                "Investigate auxotrophies to understand biosynthetic capabilities"
+            )
+
+        if "analyze_essentiality" in tools_executed:
+            suggestions.append("Explore gene deletion effects on specific pathways")
+
+        # Add general suggestions
+        suggestions.extend(
+            [
+                "Ask for detailed explanation of any specific result",
+                "Request deeper analysis of a particular metabolic aspect",
+                "Compare with different growth conditions or models",
+            ]
+        )
+
+        return suggestions[:4]  # Limit to 4 suggestions
+
+    def _handle_ai_error(
+        self, user_input: str, result, processing_time: float
+    ) -> ConversationResponse:
+        """Handle AI agent errors gracefully"""
+        self.state = ConversationState.ERROR_RECOVERY
+
+        content = f"🤖 **AI Analysis Encountered Issues**\n\n"
+        content += f"**Error:** {result.error}\n\n"
+        content += "**What happened:**\n"
+        content += "The AI agent attempted to process your query but encountered technical difficulties.\n\n"
+        content += "**Suggestions:**\n"
+        content += "  • Try rephrasing your question more specifically\n"
+        content += "  • Ask about a particular aspect of metabolic analysis\n"
+        content += "  • Check if required data files are available\n\n"
+        content += "**Example queries that work well:**\n"
+        content += '  • "Analyze the growth rate of E. coli core model"\n'
+        content += '  • "Find the minimal media requirements"\n'
+        content += '  • "Identify essential genes in the model"\n'
+
+        # Log failed interaction
+        self._log_ai_interaction(user_input, result, processing_time, False)
+
+        return ConversationResponse(
+            content=content,
+            response_type=ResponseType.ERROR_MESSAGE,
+            suggested_actions=[
+                "Analyze the growth rate of E. coli core model",
+                "Find the minimal media requirements",
+                "Identify essential genes in the model",
+                "Help me understand FBA analysis",
             ],
-        }
+            requires_input=True,
+            metadata={"error": result.error, "ai_agent_failed": True},
+            processing_time=processing_time,
+        )
 
-    def _log_interaction(
-        self, user_input: str, response: ConversationResponse, analysis: QueryAnalysis
-    ) -> None:
-        """Log the interaction to the session"""
+    def _handle_unexpected_error(
+        self, user_input: str, error: str, processing_time: float
+    ) -> ConversationResponse:
+        """Handle unexpected errors"""
+        content = f"💥 **Unexpected Error**\n\n"
+        content += f"An unexpected error occurred: {error}\n\n"
+        content += "The AI agent system encountered an unexpected issue. Please try again or contact support."
+
+        return ConversationResponse(
+            content=content,
+            response_type=ResponseType.ERROR_MESSAGE,
+            suggested_actions=["Try a simpler query", "Contact support"],
+            requires_input=True,
+            metadata={"unexpected_error": error},
+            processing_time=processing_time,
+        )
+
+    def _handle_no_ai_fallback(self, user_input: str) -> ConversationResponse:
+        """Handle queries when AI agent is not available"""
+        content = f"🤖 **Demo Mode Response**\n\n"
+        content += f"**Your Query:** {user_input}\n\n"
+        content += "**Demo Mode Active:** The AI agent is not available (LLM not configured).\n\n"
+        content += "**What would happen with the real AI:**\n"
+        content += "  1. AI would analyze your query to understand intent\n"
+        content += "  2. AI would select the best first tool to start analysis\n"
+        content += (
+            "  3. AI would examine tool results and choose next tools dynamically\n"
+        )
+        content += (
+            "  4. AI would synthesize findings into comprehensive conclusions\n\n"
+        )
+        content += "**To enable real AI:**\n"
+        content += "  • Configure Argo Gateway or OpenAI API credentials\n"
+        content += "  • Restart the interactive interface\n"
+        content += "  • Experience true dynamic AI decision-making\n"
+
+        return ConversationResponse(
+            content=content,
+            response_type=ResponseType.AI_ANALYSIS,
+            suggested_actions=[
+                "Configure AI credentials to enable dynamic agent",
+                "Learn more about the AI agent capabilities",
+                "Try the test script: python test_dynamic_ai_agent.py",
+            ],
+            requires_input=True,
+            metadata={"demo_mode": True},
+        )
+
+    def _log_ai_interaction(
+        self, user_input: str, result, processing_time: float, success: bool
+    ):
+        """Log AI agent interaction to session"""
         interaction = Interaction(
-            id=f"conv_{len(self.session.interactions)}",
+            id=f"ai_{len(self.session.interactions)}",
             timestamp=datetime.now(),
             type=InteractionType.QUERY,
             input_data=user_input,
-            output_data=response.content,
+            output_data=result.message if success else f"Error: {result.error}",
             metadata={
-                "query_analysis": analysis.to_dict(),
-                "response_type": response.response_type.value,
-                "conversation_state": self.state.value,
-                "suggested_actions": response.suggested_actions,
+                "ai_agent_used": True,
+                "tools_executed": (
+                    result.metadata.get("tools_executed", []) if success else []
+                ),
+                "ai_reasoning_steps": (
+                    result.metadata.get("ai_reasoning_steps", 0) if success else 0
+                ),
+                "audit_file": result.metadata.get("audit_file") if success else None,
+                "dynamic_decision_making": True,
+                "success": success,
             },
-            execution_time=response.processing_time,
-            success=response.response_type != ResponseType.ERROR_MESSAGE,
+            execution_time=processing_time,
+            success=success,
         )
 
         self.session.add_interaction(interaction)
@@ -501,25 +865,10 @@ class ConversationEngine:
             "successful_queries": self.context.successful_queries,
             "success_rate": self.context.successful_queries
             / max(1, self.context.interaction_count),
-            "current_context": {
-                "model": self.context.current_model,
-                "last_query_type": (
-                    self.context.last_query_type.value
-                    if self.context.last_query_type
-                    else None
-                ),
-                "pending_clarifications": len(self.context.pending_clarifications),
-                "suggested_follow_ups": len(self.context.suggested_follow_ups),
-            },
-            "user_profile": {
-                "expertise_level": self.context.expertise_level,
-                "preferred_detail_level": self.context.preferred_detail_level,
-            },
+            "ai_agent_available": self.ai_agent is not None,
+            "dynamic_ai_enabled": True,
+            "conversation_engine": "RealTimeMetabolicAgent",
         }
-
-    def register_hook(self, event: str, callback: Callable) -> None:
-        """Register a callback for conversation events"""
-        self.conversation_hooks[event] = callback
 
     def display_conversation_status(self) -> None:
         """Display current conversation status"""
@@ -530,25 +879,21 @@ class ConversationEngine:
         status_table.add_column("Value", style="bold white")
 
         status_table.add_row("Session", summary["session_id"])
+        status_table.add_row("AI Engine", "Dynamic Real-Time Agent")
         status_table.add_row(
-            "State", summary["current_state"].replace("_", " ").title()
+            "AI Status", "Available" if summary["ai_agent_available"] else "Demo Mode"
         )
         status_table.add_row("Interactions", str(summary["interaction_count"]))
         status_table.add_row("Success Rate", f"{summary['success_rate']:.1%}")
 
-        if summary["current_context"]["model"]:
-            status_table.add_row("Current Model", summary["current_context"]["model"])
-
-        if summary["current_context"]["last_query_type"]:
-            status_table.add_row(
-                "Last Query",
-                summary["current_context"]["last_query_type"].replace("_", " ").title(),
-            )
-
         console.print(
             Panel(
                 status_table,
-                title="[bold blue]💬 Conversation Status[/bold blue]",
+                title="[bold blue]🧠 Dynamic AI Conversation Status[/bold blue]",
                 border_style="blue",
             )
         )
+
+
+# Backward compatibility alias
+ConversationEngine = DynamicAIConversationEngine

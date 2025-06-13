@@ -9,20 +9,23 @@ from cobra.io import read_sbml_model
 from pydantic import BaseModel, Field, PrivateAttr
 
 from ..base import BaseTool, ToolRegistry, ToolResult
+from .precision_config import PrecisionConfig, is_significant_flux
 from .simulation_wrapper import run_simulation
 from .utils import ModelUtils
 
 
 # Configuration for FBA tool
 class FBAConfig(BaseModel):
-    """Configuration for FBA tool"""
+    """Configuration for FBA tool with enhanced numerical precision"""
 
     model_config = {"protected_namespaces": ()}
     default_objective: str = "biomass_reaction"
     solver: str = "glpk"
-    tolerance: float = 1e-6
     additional_constraints: Dict[str, float] = Field(default_factory=dict)
     simulation_method: str = "pfba"  # Options: "fba", "pfba", "geometric", "slim", etc.
+
+    # Numerical precision settings
+    precision: PrecisionConfig = Field(default_factory=PrecisionConfig)
 
 
 # --------------------------
@@ -99,7 +102,7 @@ class FBATool(BaseTool):
                     fba_config_dict, "default_objective", "biomass_reaction"
                 ),
                 solver=getattr(fba_config_dict, "solver", "glpk"),
-                tolerance=getattr(fba_config_dict, "tolerance", 1e-6),
+                precision=PrecisionConfig(),
                 additional_constraints=getattr(
                     fba_config_dict, "additional_constraints", {}
                 ),
@@ -118,21 +121,47 @@ class FBATool(BaseTool):
         if not model_path.endswith((".xml", ".sbml")):
             raise ValueError("Model file must be in SBML format (.xml or .sbml)")
 
-    def _run(self, input_data: Any) -> ToolResult:
+    def _run_tool(self, input_data: Any) -> ToolResult:
+        import logging
+
+        logger = logging.getLogger(__name__)
+        logger.info(f"🔍 FBA TOOL DEBUG: input_data = {repr(input_data)}")
+        logger.info(f"🔍 FBA TOOL DEBUG: type(input_data) = {type(input_data)}")
+
         try:
             # Support both dict and string inputs
             if isinstance(input_data, dict):
+                logger.info(f"🔍 FBA TOOL DEBUG: Processing as dict")
                 model_path = input_data.get("model_path")
                 output_dir = input_data.get("output_dir", None)
+                media_name = input_data.get("media", None)
+                logger.info(
+                    f"🔍 FBA TOOL DEBUG: model_path = {repr(model_path)}, media = {repr(media_name)}"
+                )
             else:
+                logger.info(f"🔍 FBA TOOL DEBUG: Processing as string/other")
                 model_path = input_data
                 output_dir = None
+                media_name = None
+                logger.info(f"🔍 FBA TOOL DEBUG: model_path = {repr(model_path)}")
 
             self.validate_input(model_path)
             model = self._utils.load_model(model_path)
 
+            # Apply media if specified
+            if media_name:
+                logger.info(f"🔍 FBA TOOL DEBUG: Applying media: {media_name}")
+                from .modelseedpy_integration import get_modelseedpy_enhancement
+
+                enhancement = get_modelseedpy_enhancement()
+                model = enhancement.apply_media_with_cobrakbase(model, media_name)
+                logger.info(
+                    f"🔍 FBA TOOL DEBUG: Media {media_name} applied successfully"
+                )
+
             model.solver = self.fba_config.solver
-            model.tolerance = self.fba_config.tolerance
+            # Set solver tolerance (much smaller than flux significance threshold)
+            model.tolerance = self.fba_config.precision.model_tolerance
 
             # Set objective if available
             if hasattr(model, self.fba_config.default_objective):
@@ -154,10 +183,12 @@ class FBATool(BaseTool):
                     error=f"Solution status: {solution.status}",
                 )
 
+            # Use precision-aware flux filtering
+            flux_threshold = self.fba_config.precision.flux_threshold
             significant_fluxes = {
                 rxn.id: float(solution.fluxes[rxn.id])
                 for rxn in model.reactions
-                if abs(solution.fluxes[rxn.id]) > self.fba_config.tolerance
+                if is_significant_flux(solution.fluxes[rxn.id], flux_threshold)
             }
 
             subsystem_fluxes = {}
@@ -182,11 +213,21 @@ class FBATool(BaseTool):
                 json_path, csv_path = store.export_results(result_id, output_dir)
                 result_file = {"json": json_path, "csv": csv_path}
 
+            # Extract the actual growth rate from biomass reaction flux
+            growth_rate = solution.objective_value
+            biomass_reactions = [
+                rxn for rxn in model.reactions if rxn.objective_coefficient != 0
+            ]
+            if biomass_reactions:
+                # Use the actual biomass flux value (growth rate)
+                biomass_rxn = biomass_reactions[0]
+                growth_rate = float(solution.fluxes[biomass_rxn.id])
+
             return ToolResult(
                 success=True,
                 message="FBA simulation completed successfully",
                 data={
-                    "objective_value": solution.objective_value,
+                    "objective_value": growth_rate,  # Correct growth rate
                     "status": solution.status,
                     "significant_fluxes": significant_fluxes,
                     "subsystem_fluxes": subsystem_fluxes,

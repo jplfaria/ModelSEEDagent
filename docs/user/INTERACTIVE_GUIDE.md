@@ -1,136 +1,120 @@
-# 🧬 ModelSEEDagent Interactive Analysis Interface
+# User Guide
 
 ## Overview
 
-The Interactive Analysis Interface is a revolutionary conversational AI system for metabolic modeling that transforms complex command-line operations into natural language conversations. Built in Phase 3.2, this interface provides real-time visualization, intelligent query processing, and persistent session management.
+ModelSEEDagent provides a conversational AI interface for metabolic modeling that transforms complex analysis workflows into natural language conversations. The system combines specialized bioinformatics tools with intelligent reasoning to provide comprehensive metabolic analysis capabilities.
 
-## 🚀 Getting Started
+## Getting Started
 
-### Quick Launch ✅ **VERIFIED WORKING**
+### Quick Launch
 
 ```bash
-# Method 1: Using entry point script (RECOMMENDED)
-python run_cli.py interactive
-
-# Method 2: Direct module execution
-python -m src.interactive.interactive_cli
-
-# Method 3: Via CLI integration ✅ WORKING
+# Primary method: Interactive session
 modelseed-agent interactive
 
-# Method 4: Via main CLI ✅ WORKING
-python src/cli/main.py interactive
+# Alternative methods (if needed)
+python -m src.interactive.interactive_cli
 ```
 
 ### First Time Setup
 
-1. **Ensure virtual environment is activated**
+1. **Activate your virtual environment**
    ```bash
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
-2. **Configure the agent (optional)**
+2. **Configure API access** (if not already done)
    ```bash
-   modelseed-agent setup --backend argo --non-interactive
+   modelseed-agent setup
    ```
 
-3. **Launch the interface** - Run any of the working commands above
+3. **Launch the interface**
    ```bash
-   python run_cli.py interactive
+   modelseed-agent interactive
    ```
 
-4. **Create a session** - Choose "Create new session" when prompted
-5. **Start asking questions** - Use natural language to analyze models
+4. **Create a new session** when prompted
+5. **Start asking questions** using natural language
 
-### Environment Requirements ✅ **VERIFIED**
+### Environment Requirements
 
-- Python 3.11+ ✅
-- Virtual environment activated ✅
-- Dependencies installed via `pip install -r requirements.txt` ✅
-- Package installed in development mode via `pip install -e .` ✅
-- All tests passing: `pytest -v` (47/47 tests) ✅
+- Python 3.9 or higher
+- Virtual environment activated
+- Dependencies installed: `pip install -e .[all]`
+- API access configured (OpenAI or Argo Gateway)
 
-## 💬 Natural Language Queries
+## Natural Language Interface
 
-The interface understands natural language questions about metabolic modeling:
+The system understands natural language questions about metabolic modeling across several categories:
 
 ### Model Analysis
-```
-"Analyze the structure of my E. coli model"
-"What are the basic statistics of this model?"
-"Show me the model components"
-"Validate the SBML file structure"
-```
+- "Analyze the structure of my E. coli model"
+- "What are the basic statistics of this model?"
+- "Show me the model components"
+- "Validate the SBML file structure"
 
-### Growth Analysis
-```
-"What is the growth rate on glucose?"
-"Calculate biomass production"
-"Analyze growth conditions"
-"Compare growth on different substrates"
-```
+### Growth and Flux Analysis
+- "What is the growth rate on glucose?"
+- "Run flux balance analysis"
+- "Calculate flux variability"
+- "Find essential genes"
+- "Optimize metabolic fluxes"
 
 ### Pathway Analysis
-```
-"Analyze glycolysis pathway fluxes"
-"Show central carbon metabolism"
-"Examine pathway connectivity"
-"Find bottlenecks in amino acid synthesis"
-```
+- "Analyze glycolysis pathway fluxes"
+- "Show central carbon metabolism"
+- "Examine pathway connectivity"
+- "Find bottlenecks in amino acid synthesis"
 
-### Flux Analysis
-```
-"Run flux balance analysis"
-"Calculate flux variability"
-"Optimize metabolic fluxes"
-"Find essential genes"
-```
-
-### Visualization Requests
-```
-"Create a network visualization"
-"Generate a flux heatmap"
-"Show pathway diagrams"
-"Plot flux distributions"
-```
+### Media Intelligence
+- "Select the best media for my E. coli model"
+- "Make my media anaerobic for fermentation"
+- "Add vitamins and amino acids to the growth medium"
+- "Compare growth across different media types"
+- "Optimize media composition for maximum growth"
+- "Predict what nutrients this organism requires"
 
 ### Comparative Analysis
-```
-"Compare two growth conditions"
-"Analyze knockout vs wildtype"
-"Compare different carbon sources"
-"Evaluate experimental vs predicted data"
-```
+- "Compare two growth conditions"
+- "Analyze knockout vs wildtype"
+- "Compare different carbon sources"
+- "Evaluate experimental vs predicted data"
 
-## 🎨 Interactive Features ✅ **ALL WORKING**
+### Visualization
+- "Create a network visualization"
+- "Generate a flux heatmap"
+- "Show pathway diagrams"
+- "Plot flux distributions"
+
+## Core Features
 
 ### Session Management
 
 The interface automatically manages your analysis sessions:
 
-- **Session Creation**: Interactive prompts to name and describe sessions ✅
-- **Session Loading**: Resume previous analyses from any point ✅
-- **Session Analytics**: Track progress, success rates, and execution times ✅
-- **Auto-Save**: Automatic session persistence after each interaction ✅
+- **Session Creation** - Interactive prompts to name and describe sessions
+- **Session Loading** - Resume previous analyses from any point
+- **Session Analytics** - Track progress, success rates, and execution times
+- **Auto-Save** - Automatic session persistence after each interaction
 
-### Real-Time Visualization ✅ **VERIFIED WORKING**
+### Real-Time Visualization
 
-- **Workflow Graphs**: See your analysis pipeline in real-time ✅
-- **Progress Dashboards**: Monitor execution with live metrics ✅
-- **Network Visualizations**: Interactive metabolic network graphs ✅
-- **Flux Heatmaps**: Dynamic flux distribution displays ✅
-- **Automatic Browser Integration**: Visualizations open automatically ✅
+- **Workflow Graphs** - See your analysis pipeline in real-time
+- **Progress Dashboards** - Monitor execution with live metrics
+- **Network Visualizations** - Interactive metabolic network graphs
+- **Flux Heatmaps** - Dynamic flux distribution displays
+- **Automatic Browser Integration** - Visualizations open automatically
 
-### Intelligent Assistance ✅ **WORKING**
+### Intelligent Assistance
 
-- **Context Awareness**: Remembers previous questions and responses ✅
-- **Smart Suggestions**: Recommends follow-up analyses ✅
-- **Error Guidance**: Helpful error messages with suggested fixes ✅
-- **Progressive Disclosure**: Complexity adapted to your needs ✅
+- **Context Awareness** - Remembers previous questions and responses
+- **Smart Suggestions** - Recommends follow-up analyses
+- **Error Guidance** - Helpful error messages with suggested fixes
+- **Progressive Disclosure** - Complexity adapted to your needs
 
-## 🔧 Advanced Commands
+## Command Reference
 
-### Session Commands ✅ **WORKING**
+### Session Commands
 ```
 sessions          # List all available sessions
 switch <id>       # Switch to a different session
@@ -138,151 +122,167 @@ status            # Show current session status
 analytics         # View session analytics
 ```
 
-### Visualization Commands ✅ **WORKING**
+### Visualization Commands
 ```
 visualizations    # Show available visualizations
 viz               # Alias for visualizations
 open <type>       # Open specific visualization in browser
 ```
 
-### Utility Commands ✅ **WORKING**
+### Utility Commands
 ```
 help              # Show help information
 clear             # Clear the terminal
 exit              # Exit the interactive session
 ```
 
-## 📊 Session Analytics ✅ **WORKING**
+### Media Commands
+```
+media             # Show AI media tools interface
+media-select <model>    # AI-powered optimal media selection
+media-modify <command>  # Natural language media modification
+media-compare     # Cross-model media performance comparison
+```
+
+## Session Analytics
 
 The interface tracks comprehensive analytics for each session:
 
 ### Performance Metrics
-- **Total Interactions**: Number of queries processed ✅
-- **Success Rate**: Percentage of successful analyses ✅
-- **Average Execution Time**: Mean processing time per query ✅
-- **Tool Usage**: Statistics on which tools are used most ✅
+- **Total Interactions** - Number of queries processed
+- **Success Rate** - Percentage of successful analyses
+- **Average Execution Time** - Mean processing time per query
+- **Tool Usage** - Statistics on which tools are used most
 
 ### Activity Tracking
-- **Recent Activity**: Timeline of recent interactions ✅
-- **Query Types**: Distribution of query categories ✅
-- **Session Duration**: Total time spent in analysis ✅
-- **Error Analysis**: Categorization of any issues encountered ✅
+- **Recent Activity** - Timeline of recent interactions
+- **Query Types** - Distribution of query categories
+- **Session Duration** - Total time spent in analysis
+- **Error Analysis** - Categorization of any issues encountered
 
-## 🎯 Example Workflow
+## Example Workflow
 
 Here's a typical analysis workflow using the interactive interface:
 
-### 1. Launch and Setup ✅ **VERIFIED**
+### 1. Launch and Setup
 ```bash
-python run_cli.py interactive
+modelseed-agent interactive
 ```
 
-### 2. Create Session ✅ **WORKING**
+### 2. Create Session
 ```
 Session name: E_coli_glucose_analysis
 Description: Analyzing E. coli growth on glucose media
 ```
 
-### 3. Load Model ✅ **WORKING**
+### 3. Load Model
 ```
 "Load and analyze the E. coli core model"
 ```
 
-### 4. Basic Analysis ✅ **WORKING**
+### 4. Basic Analysis
 ```
 "What are the model statistics?"
 "Show me the growth rate on glucose"
 ```
 
-### 5. Detailed Analysis ✅ **WORKING**
+### 5. Detailed Analysis
 ```
 "Run flux balance analysis with glucose as carbon source"
 "Create a flux heatmap for central carbon metabolism"
 ```
 
-### 6. Visualization ✅ **WORKING**
+### 6. Visualization
 ```
 "Generate a network visualization of the metabolic network"
 "Open workflow visualization in browser"
 ```
 
-### 7. Comparative Analysis ✅ **WORKING**
+### 7. Comparative Analysis
 ```
 "Compare growth on glucose vs acetate"
 "What happens if I knockout gene XYZ?"
 ```
 
-## 🔍 Query Processing Intelligence ✅ **WORKING**
+### 8. Media Intelligence
+```
+"Select optimal media for this model"
+"Make the media anaerobic and test growth"
+"Compare media performance across different conditions"
+```
 
-The interface uses advanced NLP to understand your queries:
+## Query Processing Intelligence
 
-### Query Classification ✅ **WORKING**
-- **Structural Analysis**: Model components, validation, statistics
-- **Growth Analysis**: Biomass, growth rates, conditions
-- **Pathway Analysis**: Specific pathways, connectivity, bottlenecks
-- **Flux Analysis**: FBA, FVA, optimization, essential genes
-- **Network Analysis**: Topology, centrality, clustering
-- **Optimization**: Parameter tuning, constraint modification
-- **Comparison**: Multi-condition, multi-strain analysis
+The interface uses advanced natural language processing to understand your queries:
 
-### Confidence Scoring ✅ **WORKING**
-- **High Confidence (80-100%)**: Direct execution
-- **Medium Confidence (50-79%)**: Clarifying questions
-- **Low Confidence (<50%)**: Guided assistance
+### Query Classification
+- **Structural Analysis** - Model components, validation, statistics
+- **Growth Analysis** - Biomass, growth rates, conditions
+- **Pathway Analysis** - Specific pathways, connectivity, bottlenecks
+- **Flux Analysis** - FBA, FVA, optimization, essential genes
+- **Network Analysis** - Topology, centrality, clustering
+- **Optimization** - Parameter tuning, constraint modification
+- **Comparison** - Multi-condition, multi-strain analysis
+- **Media Intelligence** - Media selection, modification, optimization, compatibility
 
-### Context Awareness ✅ **WORKING**
-- **Previous Queries**: Remembers conversation history
-- **Active Model**: Knows what model you're working with
-- **Analysis State**: Tracks completed and pending analyses
-- **User Preferences**: Learns from your interaction patterns
+### Confidence Scoring
+- **High Confidence (80-100%)** - Direct execution
+- **Medium Confidence (50-79%)** - Clarifying questions
+- **Low Confidence (<50%)** - Guided assistance
 
-## 🎨 Visualization Gallery ✅ **ALL WORKING**
+### Context Awareness
+- **Previous Queries** - Remembers conversation history
+- **Active Model** - Knows what model you're working with
+- **Analysis State** - Tracks completed and pending analyses
+- **User Preferences** - Learns from your interaction patterns
 
-### Workflow Visualizations ✅ **WORKING**
+## Visualization Features
+
+### Workflow Visualizations
 Interactive graphs showing your analysis pipeline with:
-- **Real-time status updates** for each step ✅
-- **Execution timing** and performance metrics ✅
-- **Tool dependencies** and data flow ✅
-- **Error highlighting** and success indicators ✅
+- **Real-time status updates** for each step
+- **Execution timing** and performance metrics
+- **Tool dependencies** and data flow
+- **Error highlighting** and success indicators
 
-### Progress Dashboards ✅ **WORKING**
+### Progress Dashboards
 Comprehensive monitoring with:
-- **Execution timelines** with interactive hover ✅
-- **Tool performance** comparisons ✅
-- **Success rate** gauges with targets ✅
-- **Resource usage** tracking over time ✅
+- **Execution timelines** with interactive hover
+- **Tool performance** comparisons
+- **Success rate** gauges with targets
+- **Resource usage** tracking over time
 
-### Network Visualizations ✅ **WORKING**
+### Network Visualizations
 Beautiful metabolic network displays featuring:
-- **Node classification** by type (metabolites, reactions, genes) ✅
-- **Interactive zoom** and pan capabilities ✅
-- **Pathway highlighting** with custom colors ✅
-- **Connectivity analysis** with centrality metrics ✅
+- **Node classification** by type (metabolites, reactions, genes)
+- **Interactive zoom** and pan capabilities
+- **Pathway highlighting** with custom colors
+- **Connectivity analysis** with centrality metrics
 
-### Flux Heatmaps ✅ **WORKING**
+### Flux Heatmaps
 Dynamic flux analysis visualizations with:
-- **Condition comparisons** across multiple scenarios ✅
-- **Interactive hover** showing exact flux values ✅
-- **Color-coded significance** with customizable scales ✅
-- **Reaction filtering** and pathway focus ✅
+- **Condition comparisons** across multiple scenarios
+- **Interactive hover** showing exact flux values
+- **Color-coded significance** with customizable scales
+- **Reaction filtering** and pathway focus
 
-## 🛡️ Error Handling and Recovery ✅ **WORKING**
+## Error Handling and Recovery
 
 The interface provides intelligent error handling:
 
-### Graceful Degradation ✅ **WORKING**
-- **Network Issues**: Cached responses and offline mode
-- **Model Errors**: Validation guidance and fix suggestions
-- **Computation Failures**: Alternative approaches and simplified analyses
-- **Visualization Problems**: Fallback to text-based outputs
+### Graceful Degradation
+- **Network Issues** - Cached responses and offline mode
+- **Model Errors** - Validation guidance and fix suggestions
+- **Computation Failures** - Alternative approaches and simplified analyses
+- **Visualization Problems** - Fallback to text-based outputs
 
-### Recovery Features ✅ **WORKING**
-- **Session Persistence**: Automatic save on interruption
-- **State Recovery**: Resume from any point in analysis
-- **Error Diagnosis**: Detailed error analysis with solutions
-- **Retry Mechanisms**: Intelligent retry with parameter adjustment
+### Recovery Features
+- **Session Persistence** - Automatic save on interruption
+- **State Recovery** - Resume from any point in analysis
+- **Error Diagnosis** - Detailed error analysis with solutions
+- **Retry Mechanisms** - Intelligent retry with parameter adjustment
 
-## 🔧 Configuration Options
+## Configuration Options
 
 ### Session Configuration
 ```json
@@ -316,31 +316,31 @@ The interface provides intelligent error handling:
 }
 ```
 
-## 🚀 Tips for Effective Usage
+## Tips for Effective Usage
 
 ### Best Practices
 
-1. **Be Specific**: "Analyze glycolysis" vs "Show me some pathways"
-2. **Build Context**: Start with model loading, then dive into specifics
-3. **Use Follow-ups**: Take advantage of suggested next steps
-4. **Save Sessions**: Use descriptive names for easy retrieval
-5. **Explore Visualizations**: Interactive plots reveal hidden insights
+1. **Be Specific** - "Analyze glycolysis" vs "Show me some pathways"
+2. **Build Context** - Start with model loading, then dive into specifics
+3. **Use Follow-ups** - Take advantage of suggested next steps
+4. **Save Sessions** - Use descriptive names for easy retrieval
+5. **Explore Visualizations** - Interactive plots reveal hidden insights
 
 ### Common Patterns
 
-- **Exploratory Analysis**: Start broad, then narrow down
-- **Comparative Studies**: Use consistent terminology across comparisons
-- **Hypothesis Testing**: Frame questions as testable hypotheses
-- **Iterative Refinement**: Build on previous results progressively
+- **Exploratory Analysis** - Start broad, then narrow down
+- **Comparative Studies** - Use consistent terminology across comparisons
+- **Hypothesis Testing** - Frame questions as testable hypotheses
+- **Iterative Refinement** - Build on previous results progressively
 
 ### Advanced Tips
 
-- **Chaining Queries**: Reference previous results in new questions
-- **Batch Operations**: Combine multiple analyses in single requests
-- **Custom Visualizations**: Request specific plot types and parameters
-- **Export Integration**: Seamlessly move between interface and external tools
+- **Chaining Queries** - Reference previous results in new questions
+- **Batch Operations** - Combine multiple analyses in single requests
+- **Custom Visualizations** - Request specific plot types and parameters
+- **Export Integration** - Seamlessly move between interface and external tools
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -348,9 +348,8 @@ The interface provides intelligent error handling:
 A: Check virtual environment and dependencies:
 ```bash
 source venv/bin/activate
-pip install -r requirements.txt
 pip install -e .
-python run_cli.py interactive  # Use this method
+modelseed-agent interactive
 ```
 
 **Q: Visualizations don't open**
@@ -364,24 +363,16 @@ A: Try more specific terminology or use help command
 
 ### Getting Help
 
-- Use `help` command within the interface ✅
-- Check the example queries in this guide ✅
-- Review session analytics for usage patterns ✅
-- Consult the main documentation in the repository ✅
+- Use `help` command within the interface
+- Check the example queries in this guide
+- Review session analytics for usage patterns
+- Consult the main documentation in the repository
 
-## 🎯 What's Next?
+## Next Steps
 
-The Interactive Analysis Interface sets the foundation for:
+After getting familiar with the interactive interface:
 
-- **Advanced workflow automation** ✅ Working
-- **Multi-user collaboration features** 🚧 Future
-- **Web-based interface integration** 🚧 Future
-- **API-driven workflow orchestration** 🚧 Future
-
----
-
-**🧬 Current Status: Production Ready! ✅**
-
-**Recommended Launch Command**: `python run_cli.py interactive`
-
-Experience the future of metabolic modeling - where complex analyses become as simple as asking a question! 🧬✨
+- Explore the [Architecture Guide](../ARCHITECTURE.md) for system details
+- Review the [API Documentation](../api/overview.md) for programmatic access
+- Check the [Troubleshooting Guide](../troubleshooting.md) for common issues
+- Try the example notebooks for hands-on tutorials

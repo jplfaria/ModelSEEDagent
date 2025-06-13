@@ -4,6 +4,7 @@ from ..llm.base import BaseLLM
 from ..tools.base import BaseTool
 from .base import BaseAgent
 from .metabolic import MetabolicAgent
+from .real_time_metabolic import RealTimeMetabolicAgent
 
 
 class AgentFactory:
@@ -11,6 +12,8 @@ class AgentFactory:
 
     _agent_registry: Dict[str, Type[BaseAgent]] = {
         "metabolic": MetabolicAgent,
+        "real_time": RealTimeMetabolicAgent,
+        "dynamic": RealTimeMetabolicAgent,  # Alias for convenience
         # Add more agent types here as they are implemented
     }
 
@@ -82,4 +85,23 @@ def create_metabolic_agent(
     """
     return AgentFactory.create_agent(
         agent_type="metabolic", llm=llm, tools=tools, config=config
+    )
+
+
+def create_real_time_agent(
+    llm: BaseLLM, tools: List[BaseTool], config: Dict[str, Any]
+) -> RealTimeMetabolicAgent:
+    """
+    Convenience function to create a real-time dynamic AI metabolic agent.
+
+    Args:
+        llm: Language model instance
+        tools: List of tools for the agent
+        config: Agent configuration
+
+    Returns:
+        Configured RealTimeMetabolicAgent instance
+    """
+    return AgentFactory.create_agent(
+        agent_type="real_time", llm=llm, tools=tools, config=config
     )

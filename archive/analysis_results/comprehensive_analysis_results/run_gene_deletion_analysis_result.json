@@ -1,0 +1,13 @@
+{
+  "tool_name": "run_gene_deletion_analysis",
+  "description": "Gene Deletion Analysis",
+  "success": true,
+  "message": "Single gene deletion analysis completed for 137 genes",
+  "data_type": "<class 'dict'>",
+  "data_keys": [
+    "deletion_results",
+    "analysis",
+    "wild_type_growth"
+  ],
+  "timestamp": "2025-06-06T10:28:01.699597"
+}

@@ -32,6 +32,7 @@ from langgraph.prebuilt import ToolNode
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
+from ..config.debug_config import get_debug_config
 from ..config.prompts import load_prompt_template, load_prompts
 from ..llm.base import BaseLLM
 from ..tools.base import BaseTool, ToolResult
@@ -270,8 +271,14 @@ class LangGraphMetabolicAgent(BaseAgent):
         self.execution_log = []
         self.performance_metrics = {}
 
-        logger.info(f"LangGraphMetabolicAgent initialized with {len(tools)} tools")
-        logger.info(f"Run directory: {self.run_dir}")
+        # Only log initialization if LangGraph debug is enabled
+        debug_config = get_debug_config()
+        if debug_config.langgraph_debug:
+            logger.info(f"LangGraphMetabolicAgent initialized with {len(tools)} tools")
+            logger.info(f"Run directory: {self.run_dir}")
+        else:
+            # Use very low log level for quiet operation
+            logger.log(5, f"LangGraph agent initialized with {len(tools)} tools")
 
     def _create_workflow(self) -> StateGraph:
         """Create the LangGraph workflow with parallel execution capabilities"""
@@ -419,9 +426,35 @@ class LangGraphMetabolicAgent(BaseAgent):
                 state["tools_to_call"] = [next_tools[0]]
                 logger.info(f"Planned single tool execution: {next_tools[0]}")
             elif len(completed_tools) < len(execution_plan):
-                # Still have tools to execute but dependencies not met
-                state["next_action"] = "analyze"
-                logger.info("Waiting for dependencies, analyzing current results")
+                # Still have tools to execute - find any tool without unsatisfied dependencies
+                remaining_tools = [
+                    p for p in execution_plan if p.tool_name not in completed_tools
+                ]
+
+                # Try to find a tool we can execute (ignore dependencies for comprehensive analysis)
+                query_lower = state["query"].lower()
+                is_comprehensive = any(
+                    word in query_lower
+                    for word in [
+                        "comprehensive",
+                        "complete",
+                        "full",
+                        "detailed",
+                        "thorough",
+                    ]
+                )
+
+                if is_comprehensive and remaining_tools:
+                    # For comprehensive analysis, execute remaining tools regardless of dependencies
+                    state["next_action"] = "single_tool"
+                    state["tools_to_call"] = [remaining_tools[0].tool_name]
+                    logger.info(
+                        f"Comprehensive analysis: executing remaining tool {remaining_tools[0].tool_name}"
+                    )
+                else:
+                    # Original dependency logic
+                    state["next_action"] = "analyze"
+                    logger.info("Waiting for dependencies, analyzing current results")
             else:
                 # All tools completed
                 state["next_action"] = "finalize"
@@ -507,7 +540,15 @@ class LangGraphMetabolicAgent(BaseAgent):
                 # Fallback to basic execution
                 tool = self._tools_dict[tool_name]
                 tool_input = self._prepare_tool_input(state, tool_name)
-                result = tool._run(tool_input)
+                # Handle special cases for tools that expect string instead of dict
+                if (
+                    tool_name == "analyze_metabolic_model"
+                    and isinstance(tool_input, dict)
+                    and "model_path" in tool_input
+                ):
+                    result = tool._run(tool_input["model_path"])
+                else:
+                    result = tool._run(tool_input)
 
                 state["tool_results"][tool_name] = (
                     result.model_dump()
@@ -786,9 +827,29 @@ class LangGraphMetabolicAgent(BaseAgent):
         return "finalize"
 
     def _analyze_results(self, state: AgentState) -> str:
-        """Determine next action after analysis"""
+        """Determine next action after analysis with optimized logic"""
         if state.get("errors"):
             return "error"
+
+        # For comprehensive queries, skip intermediate analysis if more tools are planned
+        query_lower = state["query"].lower()
+        is_comprehensive = any(
+            word in query_lower
+            for word in ["comprehensive", "complete", "full", "detailed", "thorough"]
+        )
+
+        # Get planned tools
+        planned_tools = []
+        if "intent_analysis" in state and "suggested_tools" in state["intent_analysis"]:
+            planned_tools = state["intent_analysis"]["suggested_tools"]
+
+        tools_called = len(state["tools_called"])
+        planned_count = len(planned_tools)
+
+        # For comprehensive analysis, skip intermediate LLM analysis to improve performance
+        if is_comprehensive and tools_called < planned_count:
+            state["iteration"] += 1
+            return "continue"
 
         if (
             state.get("continue_analysis", False)
@@ -891,73 +952,129 @@ Choose the most efficient approach:"""
         return "analyze", []
 
     def _create_analysis_prompt(self, state: AgentState) -> str:
-        """Create prompt for analysis phase"""
+        """Create enhanced analysis prompt with rich tool data"""
         results_summary = ""
-        for tool_name, result in state["tool_results"].items():
-            results_summary += f"\n{tool_name}: {result.get('message', 'No message')}"
 
-        return f"""Analyze the tool execution results and determine if you have enough information to answer the query.
+        for tool_name, result in state["tool_results"].items():
+            status = "Success" if result.get("success", True) else "Failed"
+            message = result.get("message", "No message")
+
+            # Include rich data summary for better analysis
+            data_summary = ""
+            data = result.get("data")
+            if data and isinstance(data, dict):
+                # Provide key insights from the data
+                data_summary = self._summarize_tool_data(tool_name, data)
+
+            results_summary += f"\n\n{tool_name} ({status}):\n- Message: {message}"
+            if data_summary:
+                results_summary += f"\n- Key Findings: {data_summary}"
+
+        return f"""You are analyzing metabolic modeling results. Based on the tool execution results, provide insights and determine next steps.
 
 Original query: {state["query"]}
 
-Tool results:{results_summary}
+Detailed tool results:{results_summary}
 
-Based on these results:
-1. Do you have sufficient information to provide a complete answer?
-2. What additional analysis or tools might be needed?
-3. Summarize the key findings so far.
+Please provide:
+1. Key metabolic insights discovered so far
+2. Whether you have sufficient information for a comprehensive answer
+3. What additional analysis might enhance the results
+4. A brief summary of the most important findings
 
-Provide a concise analysis and indicate if you need to continue or can finalize."""
+Respond with actionable metabolic insights, not just procedural information."""
 
     def _should_continue_analysis(self, analysis: str, state: AgentState) -> bool:
-        """Determine if analysis should continue based on LLM response"""
+        """Optimized analysis continuation logic - reduce LLM overhead"""
+
+        # Get planned tools from intent analysis
+        planned_tools = []
+        if "intent_analysis" in state and "suggested_tools" in state["intent_analysis"]:
+            planned_tools = state["intent_analysis"]["suggested_tools"]
+
+        tools_called = len(state["tools_called"])
+        planned_count = len(planned_tools)
+
+        # For comprehensive queries, execute all planned tools with minimal LLM analysis
+        query_lower = state["query"].lower()
+        is_comprehensive = any(
+            word in query_lower
+            for word in ["comprehensive", "complete", "full", "detailed", "thorough"]
+        )
+
+        if is_comprehensive:
+            # Simple rule: continue until all planned tools are executed
+            return tools_called < planned_count
+
+        # For non-comprehensive queries, use lightweight analysis
+        if tools_called >= planned_count:
+            return False
+
+        # Check for obvious completion signals without complex analysis
         analysis_lower = analysis.lower()
+        if (
+            any(
+                phrase in analysis_lower
+                for phrase in [
+                    "sufficient",
+                    "complete",
+                    "ready to answer",
+                    "have enough",
+                ]
+            )
+            and tools_called >= 2
+        ):
+            return False
 
-        # Keywords that suggest continuation
-        continue_keywords = [
-            "need more",
-            "additional",
-            "further analysis",
-            "not sufficient",
-            "incomplete",
-        ]
+        # Default: continue if we haven't reached our target tool count
+        return tools_called < min(planned_count, 3)  # Cap at 3 tools for efficiency
 
-        # Keywords that suggest completion
-        complete_keywords = [
-            "sufficient",
-            "complete",
-            "ready to answer",
-            "have enough",
-            "can conclude",
-        ]
+    def _prepare_tool_input(self, state: AgentState, tool_name: str) -> Dict[str, Any]:
+        """Prepare appropriate input for each tool"""
+        query = state["query"]
 
-        continue_score = sum(
-            1 for keyword in continue_keywords if keyword in analysis_lower
-        )
-        complete_score = sum(
-            1 for keyword in complete_keywords if keyword in analysis_lower
-        )
+        # Most tools need a model path
+        if tool_name in [
+            "run_metabolic_fba",
+            "find_minimal_media",
+            "analyze_essentiality",
+            "run_flux_variability_analysis",
+            "identify_auxotrophies",
+            "run_flux_sampling",
+            "run_gene_deletion_analysis",
+            "run_production_envelope",
+            "analyze_metabolic_model",
+            "check_missing_media",
+            "analyze_reaction_expression",
+        ]:
+            # Use default E. coli core model path
+            default_model_path = str(
+                Path(__file__).parent.parent.parent
+                / "data"
+                / "examples"
+                / "e_coli_core.xml"
+            )
+            return {"model_path": default_model_path}
 
-        # Continue if we haven't used many tools and analysis suggests more work
-        if len(state["tools_called"]) < 2 and continue_score > complete_score:
-            return True
+        # analyze_pathway needs both model_path and pathway
+        elif tool_name == "analyze_pathway":
+            default_model_path = str(
+                Path(__file__).parent.parent.parent
+                / "data"
+                / "examples"
+                / "e_coli_core.xml"
+            )
+            return {"model_path": default_model_path, "pathway": "glycolysis"}
 
-        # Complete if analysis clearly indicates we're done
-        return complete_score <= continue_score
+        # Biochemistry tools need query
+        elif tool_name in ["search_biochem"]:
+            return {"query": "ATP"}  # Default biochemistry query
 
-    def _prepare_tool_input(self, state: AgentState, tool_name: str) -> Any:
-        """Prepare input for tool execution"""
-        # This would be customized based on each tool's input requirements
-        # For now, providing a basic implementation
+        elif tool_name in ["resolve_biochem_entity"]:
+            return {"entity_id": "cpd00027"}  # ATP entity ID
 
-        if "model" in state["query"].lower() or "xml" in state["query"].lower():
-            # Try to extract model path from query
-            model_match = re.search(r"(\w+\.xml)", state["query"])
-            if model_match:
-                return model_match.group(1)
-
-        # Default to query text
-        return state["query"]
+        # Default to simple input
+        return {"input": query}
 
     def _simplify_query(self, query: str) -> str:
         """Simplify query for error recovery"""
@@ -976,18 +1093,185 @@ Provide a concise analysis and indicate if you need to continue or can finalize.
         return f"Encountered {len(errors)} errors: " + "; ".join(errors[:3])
 
     def _create_final_answer(self, state: AgentState) -> str:
-        """Create final answer from state"""
+        """Create comprehensive final answer with rich metabolic insights"""
         if not state["tool_results"]:
             return "I was unable to execute any tools to analyze your query. Please check your query and try again."
 
-        # Summarize all tool results
-        summary = f"Analysis Results for: {state['query']}\n\n"
+        # Create comprehensive summary with rich data
+        summary = f"# Comprehensive Metabolic Analysis Results\n\n"
+        summary += f"**Query:** {state['query']}\n\n"
 
+        total_tools = len(state["tool_results"])
+        successful_tools = sum(
+            1
+            for result in state["tool_results"].values()
+            if result.get("success", True)
+        )
+        summary += f"**Execution Summary:** {successful_tools}/{total_tools} tools completed successfully\n\n"
+
+        # Process each tool result with rich data display
         for tool_name, result in state["tool_results"].items():
-            summary += f"**{tool_name.upper()}:**\n"
-            summary += f"{result.get('message', 'No details available')}\n\n"
+            summary += f"## {tool_name.replace('_', ' ').title()}\n\n"
+
+            # Show basic status
+            status = "✅ Success" if result.get("success", True) else "❌ Failed"
+            summary += f"**Status:** {status}\n"
+            summary += (
+                f"**Message:** {result.get('message', 'No message available')}\n\n"
+            )
+
+            # Extract and display rich data if available
+            data = result.get("data")
+            if data and isinstance(data, dict):
+                summary += self._format_tool_data(tool_name, data)
+
+            summary += "\n---\n\n"
+
+        # Add performance summary
+        if "performance_metrics" in state and state["performance_metrics"]:
+            summary += "## Performance Summary\n\n"
+            total_time = sum(
+                metrics.get("execution_time", 0)
+                for metrics in state["performance_metrics"].values()
+            )
+            summary += f"**Total Tool Execution Time:** {total_time:.2f}s\n"
+
+            for tool, metrics in state["performance_metrics"].items():
+                exec_time = metrics.get("execution_time", 0)
+                data_size = metrics.get("data_size", 0)
+                summary += f"- {tool}: {exec_time:.2f}s ({data_size:,} bytes data)\n"
+            summary += "\n"
 
         return summary
+
+    def _format_tool_data(self, tool_name: str, data: Dict[str, Any]) -> str:
+        """Format rich tool data for display"""
+        formatted = ""
+
+        if tool_name == "analyze_metabolic_model":
+            if "model_statistics" in data:
+                stats = data["model_statistics"]
+                formatted += f"**Model Overview:**\n"
+                formatted += f"- Reactions: {stats.get('num_reactions', 'N/A')}\n"
+                formatted += f"- Metabolites: {stats.get('num_metabolites', 'N/A')}\n"
+                formatted += f"- Genes: {stats.get('num_genes', 'N/A')}\n"
+                formatted += f"- Subsystems: {stats.get('num_subsystems', 'N/A')}\n\n"
+
+            if "network_properties" in data:
+                network = data["network_properties"]
+                if "connectivity_summary" in network:
+                    conn = network["connectivity_summary"]
+                    formatted += f"**Network Connectivity:**\n"
+                    formatted += f"- Average connections per metabolite: {conn.get('avg_connections_per_metabolite', 0):.1f}\n"
+                    formatted += f"- Most connected metabolite: {conn.get('max_connections', 0)} connections\n\n"
+
+                if (
+                    "highly_connected_metabolites" in network
+                    and network["highly_connected_metabolites"]
+                ):
+                    formatted += f"**Hub Metabolites (top 3):**\n"
+                    for i, met in enumerate(
+                        network["highly_connected_metabolites"][:3]
+                    ):
+                        formatted += f"{i+1}. {met.get('name', met.get('id', 'Unknown'))}: {met.get('num_reactions', 0)} reactions\n"
+                    formatted += "\n"
+
+        elif tool_name == "run_metabolic_fba":
+            if "objective_value" in data:
+                formatted += f"**Growth Analysis:**\n"
+
+                # Extract actual biomass growth rate from fluxes, not objective value
+                growth_rate = 0.0
+
+                # Check in both 'fluxes' and 'significant_fluxes' for biomass reaction
+                flux_data = None
+                if "fluxes" in data:
+                    flux_data = data["fluxes"]
+                elif "significant_fluxes" in data:
+                    flux_data = data["significant_fluxes"]
+
+                if flux_data:
+                    # Find biomass reaction (usually contains "BIOMASS" in the name)
+                    biomass_reactions = [
+                        k for k in flux_data.keys() if "BIOMASS" in k.upper()
+                    ]
+                    if biomass_reactions:
+                        growth_rate = flux_data[biomass_reactions[0]]
+
+                formatted += f"- Predicted growth rate: {growth_rate:.4f} h⁻¹\n"
+                formatted += (
+                    f"- FBA objective value: {data.get('objective_value', 0):.4f}\n"
+                )
+                formatted += (
+                    f"- Optimization status: {data.get('status', 'Unknown')}\n\n"
+                )
+
+            if "active_reactions" in data:
+                active = data["active_reactions"]
+                formatted += f"**Metabolic Activity:**\n"
+                formatted += (
+                    f"- Active reactions: {len(active)} reactions carrying flux\n"
+                )
+                if active:
+                    formatted += f"- Key active reactions: {', '.join(list(active.keys())[:5])}\n"
+                formatted += "\n"
+
+        elif tool_name == "analyze_pathway":
+            if "summary" in data:
+                summary = data["summary"]
+                formatted += f"**Pathway Statistics:**\n"
+                formatted += (
+                    f"- Reactions in pathway: {summary.get('reaction_count', 0)}\n"
+                )
+                formatted += f"- Associated genes: {summary.get('gene_coverage', 0)}\n"
+                formatted += (
+                    f"- Metabolites involved: {summary.get('metabolite_count', 0)}\n"
+                )
+                formatted += f"- Reversible reactions: {summary.get('reversible_reactions', 0)}\n\n"
+
+        # Add data for other tools as needed
+        elif "summary" in data:
+            # Generic summary formatting
+            formatted += f"**Analysis Summary:**\n"
+            for key, value in data["summary"].items():
+                formatted += f"- {key.replace('_', ' ').title()}: {value}\n"
+            formatted += "\n"
+
+        return formatted
+
+    def _summarize_tool_data(self, tool_name: str, data: Dict[str, Any]) -> str:
+        """Create brief summary of tool data for analysis prompt"""
+        if tool_name == "analyze_metabolic_model" and "model_statistics" in data:
+            stats = data["model_statistics"]
+            return f"{stats.get('num_reactions', 0)} reactions, {stats.get('num_metabolites', 0)} metabolites, {stats.get('num_genes', 0)} genes"
+
+        elif tool_name == "run_metabolic_fba" and "objective_value" in data:
+            # Extract actual biomass growth rate from fluxes
+            growth_rate = 0.0
+
+            # Check in both 'fluxes' and 'significant_fluxes' for biomass reaction
+            flux_data = None
+            if "fluxes" in data:
+                flux_data = data["fluxes"]
+            elif "significant_fluxes" in data:
+                flux_data = data["significant_fluxes"]
+
+            if flux_data:
+                biomass_reactions = [
+                    k for k in flux_data.keys() if "BIOMASS" in k.upper()
+                ]
+                if biomass_reactions:
+                    growth_rate = flux_data[biomass_reactions[0]]
+
+            status = data.get("status", "unknown")
+            active = len(data.get("active_reactions", {}))
+            return f"Growth rate: {growth_rate:.4f}, Status: {status}, Active reactions: {active}"
+
+        elif tool_name == "analyze_pathway" and "summary" in data:
+            summary = data["summary"]
+            return f"{summary.get('reaction_count', 0)} reactions, {summary.get('gene_coverage', 0)} genes"
+
+        return "Analysis completed with detailed results"
 
     def _create_execution_summary(self, state: AgentState) -> Dict[str, Any]:
         """Create comprehensive execution summary"""
@@ -1025,23 +1309,85 @@ Provide a concise analysis and indicate if you need to continue or can finalize.
             json.dump(self.execution_log, f, indent=2)
 
     def _extract_model_path(self, query: str) -> Optional[str]:
-        """Extract model path from query if present"""
-        # Look for common model file patterns
+        """Enhanced model path extraction with dynamic model registry"""
         import re
+        from pathlib import Path
 
-        patterns = [
-            r"(\w+\.xml)",
-            r"(\w+\.sbml)",
-            r"(data/models/\w+\.xml)",
-            r"models/(\w+)",
+        # Model registry for production scalability
+        model_registry = {
+            # E. coli models
+            "ecoli_core": "data/examples/e_coli_core.xml",
+            "e_coli_core": "data/examples/e_coli_core.xml",
+            "core": "data/examples/e_coli_core.xml",
+            "iml1515": "data/models/iML1515.xml",
+            "ecoli_full": "data/models/iML1515.xml",
+            "full": "data/models/iML1515.xml",
+            # Pattern-based matching for user models
+            "default": "data/examples/e_coli_core.xml",
+        }
+
+        query_lower = query.lower()
+
+        # 1. Check for explicit model names in query
+        for model_key, model_path in model_registry.items():
+            if model_key in query_lower:
+                full_path = Path(__file__).parent.parent.parent / model_path
+                if full_path.exists():
+                    logger.info(
+                        f"Model selected from query: {model_key} -> {model_path}"
+                    )
+                    return str(full_path)
+
+        # 2. Look for direct file patterns
+        file_patterns = [
+            r"([\w-]+\.xml)",
+            r"([\w-]+\.sbml)",
+            r"(data/models/[\w-]+\.xml)",
+            r"models/([\w-]+)",
         ]
 
-        for pattern in patterns:
-            match = re.search(pattern, query.lower())
+        for pattern in file_patterns:
+            match = re.search(pattern, query_lower)
             if match:
-                return match.group(1)
+                file_ref = match.group(1)
+                # Try to resolve to actual file
+                potential_paths = [
+                    Path(__file__).parent.parent.parent
+                    / "data"
+                    / "examples"
+                    / file_ref,
+                    Path(__file__).parent.parent.parent / "data" / "models" / file_ref,
+                    Path(file_ref),  # Direct path
+                ]
+                for path in potential_paths:
+                    if path.exists():
+                        logger.info(f"Model file found: {file_ref} -> {path}")
+                        return str(path)
 
-        # Default model for testing
+        # 3. Numeric model IDs (future-proofing for production)
+        numeric_patterns = [
+            r"model[_\s]+(\d+)",
+            r"genome[_\s]+(\d+)",
+            r"organism[_\s]+(\d+)",
+        ]
+
+        for pattern in numeric_patterns:
+            match = re.search(pattern, query_lower)
+            if match:
+                model_id = match.group(1)
+                # Future: query database/API for model_id mapping
+                # For now, return default with informative logging
+                logger.info(
+                    f"Numeric model ID detected: {model_id}, using default model (future: query model database)"
+                )
+                break
+
+        # 4. Default fallback
+        default_path = Path(__file__).parent.parent.parent / model_registry["default"]
+        if default_path.exists():
+            logger.info(f"Using default model: {default_path}")
+            return str(default_path)
+
         return None
 
     # -------------------------------

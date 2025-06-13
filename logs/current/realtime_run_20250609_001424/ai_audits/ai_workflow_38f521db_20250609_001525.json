@@ -1,0 +1,21 @@
+{
+  "workflow_id": "38f521db",
+  "session_id": "realtime_run_20250609_001424",
+  "user_query": "I need a comprehensive metabolic analysis of E. coli from y data examples folder",
+  "timestamp_start": "2025-06-09T00:14:43.735413",
+  "timestamp_end": "2025-06-09T00:15:25.688214",
+  "reasoning_steps": [],
+  "total_reasoning_steps": 0,
+  "tools_executed": [],
+  "tool_execution_order": [],
+  "tool_audit_files": [],
+  "final_result": "# Comprehensive Metabolic Analysis Results\n\n**Query:** I need a comprehensive metabolic analysis of E. coli from y data examples folder\n\n**Execution Summary:** 3/3 tools completed successfully\n\n## Analyze Metabolic Model\n\n**Status:** \u2705 Success\n**Message:** Model analysis completed successfully\n\n**Model Overview:**\n- Reactions: 95\n- Metabolites: 72\n- Genes: 137\n- Subsystems: 0\n\n**Network Connectivity:**\n- Average connections per metabolite: 5.0\n- Most connected metabolite: 35 connections\n\n**Hub Metabolites (top 3):**\n1. H+: 35 reactions\n2. H2O H2O: 18 reactions\n3. H+: 17 reactions\n\n\n---\n\n## Analyze Pathway\n\n**Status:** \u2705 Success\n**Message:** Pathway analysis completed for: glycolysis\n\n**Pathway Statistics:**\n- Reactions in pathway: 9\n- Associated genes: 15\n- Metabolites involved: 17\n- Reversible reactions: 7\n\n\n---\n\n## Run Metabolic Fba\n\n**Status:** \u2705 Success\n**Message:** FBA simulation completed successfully\n\n**Growth Analysis:**\n- Predicted growth rate: 0.8739 h\u207b\u00b9\n- FBA objective value: 518.4221\n- Optimization status: optimal\n\n\n---\n\n## Performance Summary\n\n**Total Tool Execution Time:** 12.01s\n- analyze_metabolic_model: 4.00s (12,148 bytes data)\n- analyze_pathway: 3.98s (2,035 bytes data)\n- run_metabolic_fba: 4.03s (2,940 bytes data)\n\n",
+  "success": true,
+  "error_message": null,
+  "ai_confidence_final": 0.8,
+  "reasoning_coherence": 0.0,
+  "tool_selection_accuracy": 0.0,
+  "total_duration_seconds": 41.952801,
+  "ai_thinking_time_seconds": 0.0,
+  "tool_execution_time_seconds": 0.0
+}

@@ -1,0 +1,97 @@
+{
+  "available_tools": [
+    {
+      "name": "run_metabolic_fba",
+      "description": "Run Flux Balance Analysis (FBA) on a metabolic model using a configurable simulation method.",
+      "status": "available"
+    },
+    {
+      "name": "analyze_essentiality",
+      "description": "Analyze gene and reaction essentiality to identify critical components\n    required for model growth and viability.",
+      "status": "available"
+    },
+    {
+      "name": "analyze_metabolic_model",
+      "description": "Analyze structural properties of a metabolic model including\n    reaction connectivity, pathway completeness, and potential gaps.",
+      "status": "available"
+    },
+    {
+      "name": "analyze_reaction_expression",
+      "description": "Analyze reaction expression levels using pFBA to obtain realistic flux distributions.",
+      "status": "available"
+    },
+    {
+      "name": "resolve_biochem_entity",
+      "description": "Resolve biochemistry entity IDs (compounds/reactions) to human-readable names and aliases",
+      "status": "available"
+    },
+    {
+      "name": "search_biochem",
+      "description": "Search the biochemistry database for compounds and reactions by name or alias",
+      "status": "available"
+    }
+  ],
+  "unavailable_tools": [
+    {
+      "name": "analyze_minimal_media",
+      "error": "Tool not found: analyze_minimal_media",
+      "status": "unavailable"
+    },
+    {
+      "name": "analyze_auxotrophy",
+      "error": "Tool not found: analyze_auxotrophy",
+      "status": "unavailable"
+    },
+    {
+      "name": "analyze_flux_variability",
+      "error": "Tool not found: analyze_flux_variability",
+      "status": "unavailable"
+    },
+    {
+      "name": "analyze_gene_deletion",
+      "error": "Tool not found: analyze_gene_deletion",
+      "status": "unavailable"
+    },
+    {
+      "name": "sample_metabolic_fluxes",
+      "error": "Tool not found: sample_metabolic_fluxes",
+      "status": "unavailable"
+    },
+    {
+      "name": "analyze_production_envelope",
+      "error": "Tool not found: analyze_production_envelope",
+      "status": "unavailable"
+    },
+    {
+      "name": "missing_media_analysis",
+      "error": "Tool not found: missing_media_analysis",
+      "status": "unavailable"
+    },
+    {
+      "name": "annotate_genome_rast",
+      "error": "Tool not found: annotate_genome_rast",
+      "status": "unavailable"
+    },
+    {
+      "name": "build_metabolic_model",
+      "error": "Tool not found: build_metabolic_model",
+      "status": "unavailable"
+    },
+    {
+      "name": "gapfill_model",
+      "error": "Tool not found: gapfill_model",
+      "status": "unavailable"
+    },
+    {
+      "name": "annotate_proteins_rast",
+      "error": "Tool not found: annotate_proteins_rast",
+      "status": "unavailable"
+    }
+  ],
+  "summary": {
+    "total_expected": 17,
+    "available_count": 6,
+    "unavailable_count": 11,
+    "availability_rate": 0.35294117647058826
+  }
+}

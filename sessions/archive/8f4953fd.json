@@ -1,0 +1,76 @@
+{
+  "id": "8f4953fd",
+  "name": "Analysis_20250608_2359",
+  "created_at": "2025-06-08T23:59:36.536578",
+  "last_active": "2025-06-09T00:07:09.713797",
+  "status": "active",
+  "description": "Interactive metabolic modeling analysis",
+  "model_files": [],
+  "interactions": [
+    {
+      "id": "ai_0",
+      "timestamp": "2025-06-09T00:00:28.665477",
+      "type": "query",
+      "input_data": "i need a comprehensive analysis of data/examples/e_coli_core.xml",
+      "output_data": "# Comprehensive Metabolic Analysis Results\n\n**Query:** i need a comprehensive analysis of data/examples/e_coli_core.xml\n\n**Execution Summary:** 3/3 tools completed successfully\n\n## Analyze Metabolic Model\n\n**Status:** \u2705 Success\n**Message:** Model analysis completed successfully\n\n**Model Overview:**\n- Reactions: 95\n- Metabolites: 72\n- Genes: 137\n- Subsystems: 0\n\n**Network Connectivity:**\n- Average connections per metabolite: 5.0\n- Most connected metabolite: 35 connections\n\n**Hub Metabolites (top 3):**\n1. H+: 35 reactions\n2. H2O H2O: 18 reactions\n3. H+: 17 reactions\n\n\n---\n\n## Analyze Pathway\n\n**Status:** \u2705 Success\n**Message:** Pathway analysis completed for: glycolysis\n\n**Pathway Statistics:**\n- Reactions in pathway: 9\n- Associated genes: 15\n- Metabolites involved: 17\n- Reversible reactions: 7\n\n\n---\n\n## Run Metabolic Fba\n\n**Status:** \u2705 Success\n**Message:** FBA simulation completed successfully\n\n**Growth Analysis:**\n- Predicted growth rate: 0.8739 h\u207b\u00b9\n- FBA objective value: 518.4221\n- Optimization status: optimal\n\n\n---\n\n## Performance Summary\n\n**Total Tool Execution Time:** 12.03s\n- analyze_metabolic_model: 3.96s (12,148 bytes data)\n- analyze_pathway: 4.07s (2,035 bytes data)\n- run_metabolic_fba: 3.99s (2,940 bytes data)\n\n",
+      "metadata": {
+        "ai_agent_used": true,
+        "tools_executed": [],
+        "ai_reasoning_steps": 0,
+        "audit_file": null,
+        "dynamic_decision_making": true,
+        "success": true
+      },
+      "execution_time": 50.293070793151855,
+      "success": true,
+      "error_message": null
+    },
+    {
+      "id": "ai_1",
+      "timestamp": "2025-06-09T00:07:09.713748",
+      "type": "query",
+      "input_data": "cani get more details on the network connectivity?",
+      "output_data": "Analysis completed successfully with timeout during conclusion generation",
+      "metadata": {
+        "ai_agent_used": true,
+        "tools_executed": [
+          "run_flux_variability_analysis"
+        ],
+        "ai_reasoning_steps": 0,
+        "audit_file": null,
+        "dynamic_decision_making": true,
+        "success": true
+      },
+      "execution_time": 329.3729739189148,
+      "success": true,
+      "error_message": null
+    }
+  ],
+  "context": {
+    "last_interaction": {
+      "id": "ai_1",
+      "timestamp": "2025-06-09T00:07:09.713748",
+      "type": "query",
+      "input_data": "cani get more details on the network connectivity?",
+      "output_data": "Analysis completed successfully with timeout during conclusion generation",
+      "metadata": {
+        "ai_agent_used": true,
+        "tools_executed": [
+          "run_flux_variability_analysis"
+        ],
+        "ai_reasoning_steps": 0,
+        "audit_file": null,
+        "dynamic_decision_making": true,
+        "success": true
+      },
+      "execution_time": 329.3729739189148,
+      "success": true,
+      "error_message": null
+    },
+    "last_query": "cani get more details on the network connectivity?"
+  },
+  "metadata": {},
+  "total_queries": 2,
+  "total_execution_time": 379.66604471206665,
+  "success_rate": 1.0
+}

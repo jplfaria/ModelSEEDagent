@@ -7,9 +7,11 @@ with intelligent workflow capabilities, real-time visualization,
 and comprehensive observability.
 """
 
+import glob
 import json
 import os
 import sys
+import uuid
 import webbrowser
 from datetime import datetime
 from pathlib import Path
@@ -35,16 +37,55 @@ from rich.table import Table
 from rich.text import Text
 from rich.tree import Tree
 
-# Add src to path
-sys.path.insert(0, str(Path(__file__).parent.parent))
+# Add project root to Python path for imports
+project_root = str(Path(__file__).parent.parent.parent)
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
 
+# Import warnings suppression for module reload issues
+import warnings
+
+warnings.filterwarnings(
+    "ignore", message=".*found in sys.modules.*", category=RuntimeWarning
+)
+
+from src.agents import create_real_time_agent
 from src.agents.langgraph_metabolic import LangGraphMetabolicAgent
 from src.agents.tool_integration import EnhancedToolIntegration
+from src.cli.audit_viewer import audit_app as ai_audit_app
+from src.config.debug_config import configure_logging, print_debug_status
+from src.interactive.streaming_interface import RealTimeStreamingInterface
 from src.llm.argo import ArgoLLM
 from src.llm.local_llm import LocalLLM
 from src.llm.openai_llm import OpenAILLM
+from src.tools.biochem.resolver import BiochemEntityResolverTool, BiochemSearchTool
+from src.tools.cobra.advanced_media_ai import (
+    AuxotrophyPredictionTool,
+    MediaOptimizationTool,
+)
 from src.tools.cobra.analysis import ModelAnalysisTool, PathwayAnalysisTool
+from src.tools.cobra.auxotrophy import AuxotrophyTool
+from src.tools.cobra.essentiality import EssentialityAnalysisTool
 from src.tools.cobra.fba import FBATool
+from src.tools.cobra.flux_sampling import FluxSamplingTool
+from src.tools.cobra.flux_variability import FluxVariabilityTool
+from src.tools.cobra.gene_deletion import GeneDeletionTool
+from src.tools.cobra.media_tools import (
+    MediaComparatorTool,
+    MediaCompatibilityTool,
+    MediaManipulatorTool,
+    MediaSelectorTool,
+)
+from src.tools.cobra.minimal_media import MinimalMediaTool
+from src.tools.cobra.missing_media import MissingMediaTool
+from src.tools.cobra.production_envelope import ProductionEnvelopeTool
+from src.tools.cobra.reaction_expression import ReactionExpressionTool
+from src.tools.modelseed import (
+    GapFillTool,
+    ModelBuildTool,
+    ModelCompatibilityTool,
+    RastAnnotationTool,
+)
 
 # Initialize Rich console for beautiful output
 console = Console()
@@ -69,7 +110,7 @@ def load_cli_config() -> Dict[str, Any]:
             with open(CLI_CONFIG_FILE, "r") as f:
                 config = json.load(f)
 
-            # Auto-recreate tools and agent if llm_config exists
+            # Auto-recreate tools and agent if configuration is available
             if config.get("llm_config") and config.get("llm_backend"):
                 try:
                     # Recreate LLM
@@ -87,6 +128,7 @@ def load_cli_config() -> Dict[str, Any]:
 
                     # Recreate tools
                     tools = [
+                        # COBRA.py tools - Basic Analysis
                         FBATool(
                             {
                                 "name": "run_metabolic_fba",
@@ -105,18 +147,144 @@ def load_cli_config() -> Dict[str, Any]:
                                 "description": "Analyze metabolic pathways",
                             }
                         ),
+                        # COBRA.py tools - Advanced Analysis
+                        FluxVariabilityTool(
+                            {
+                                "name": "run_flux_variability_analysis",
+                                "description": "Run FVA to determine flux ranges",
+                            }
+                        ),
+                        GeneDeletionTool(
+                            {
+                                "name": "run_gene_deletion_analysis",
+                                "description": "Analyze gene deletion effects",
+                            }
+                        ),
+                        EssentialityAnalysisTool(
+                            {
+                                "name": "analyze_essentiality",
+                                "description": "Identify essential genes and reactions",
+                            }
+                        ),
+                        FluxSamplingTool(
+                            {
+                                "name": "run_flux_sampling",
+                                "description": "Sample flux space for statistical analysis",
+                            }
+                        ),
+                        ProductionEnvelopeTool(
+                            {
+                                "name": "run_production_envelope",
+                                "description": "Analyze growth vs production trade-offs",
+                            }
+                        ),
+                        AuxotrophyTool(
+                            {
+                                "name": "identify_auxotrophies",
+                                "description": "Identify potential auxotrophies by testing nutrient removal",
+                            }
+                        ),
+                        MinimalMediaTool(
+                            {
+                                "name": "find_minimal_media",
+                                "description": "Determine minimal media components required for growth",
+                            }
+                        ),
+                        MissingMediaTool(
+                            {
+                                "name": "find_missing_media",
+                                "description": "Find missing media components preventing growth",
+                            }
+                        ),
+                        # AI Media Tools - Intelligent media management
+                        MediaSelectorTool(
+                            {
+                                "name": "select_optimal_media",
+                                "description": "AI-powered selection of optimal media for models",
+                            }
+                        ),
+                        MediaManipulatorTool(
+                            {
+                                "name": "manipulate_media_composition",
+                                "description": "Modify media using natural language commands",
+                            }
+                        ),
+                        MediaCompatibilityTool(
+                            {
+                                "name": "analyze_media_compatibility",
+                                "description": "Analyze media-model compatibility with AI suggestions",
+                            }
+                        ),
+                        MediaComparatorTool(
+                            {
+                                "name": "compare_media_performance",
+                                "description": "Compare model performance across different media",
+                            }
+                        ),
+                        # Advanced AI Media Tools
+                        MediaOptimizationTool(
+                            {
+                                "name": "optimize_media_composition",
+                                "description": "AI-driven media optimization for specific growth targets",
+                            }
+                        ),
+                        AuxotrophyPredictionTool(
+                            {
+                                "name": "predict_auxotrophies",
+                                "description": "AI-powered auxotrophy prediction from model gaps",
+                            }
+                        ),
+                        ReactionExpressionTool(
+                            {
+                                "name": "analyze_reaction_expression",
+                                "description": "Analyze reaction expression levels from omics data",
+                            }
+                        ),
+                        # ModelSEED tools
+                        RastAnnotationTool(
+                            {
+                                "name": "annotate_genome_rast",
+                                "description": "Annotate genome using RAST",
+                            }
+                        ),
+                        ModelBuildTool(
+                            {
+                                "name": "build_metabolic_model",
+                                "description": "Build metabolic model from genome",
+                            }
+                        ),
+                        GapFillTool(
+                            {
+                                "name": "gapfill_model",
+                                "description": "Gapfill metabolic model",
+                            }
+                        ),
+                        ModelCompatibilityTool(
+                            {
+                                "name": "test_modelseed_cobra_compatibility",
+                                "description": "Test ModelSEED-COBRApy compatibility",
+                            }
+                        ),
+                        # Biochemistry resolution tools
+                        BiochemEntityResolverTool(
+                            {
+                                "name": "resolve_biochem_entity",
+                                "description": "Resolve biochemistry entity IDs to human-readable names",
+                            }
+                        ),
+                        BiochemSearchTool(
+                            {
+                                "name": "search_biochem",
+                                "description": "Search biochemistry database for compounds and reactions",
+                            }
+                        ),
                     ]
 
-                    # Recreate agent
-                    agent_config = {
-                        "name": "modelseed_langgraph_agent",
-                        "description": "Enhanced ModelSEED agent with LangGraph workflows",
-                    }
-                    agent = LangGraphMetabolicAgent(llm, tools, agent_config)
-
-                    # Update runtime objects
+                    # Store configuration for lazy agent creation
+                    # Don't create agent immediately to avoid initialization spam
                     config["tools"] = tools
-                    config["agent"] = agent
+                    config["agent"] = None  # Will be created on demand
+                    config["agent_factory"] = lambda: get_or_create_cached_agent(llm, tools)
 
                 except Exception as e:
                     # If recreation fails, just log warning and continue with basic config
@@ -158,6 +326,29 @@ def save_cli_config(config: Dict[str, Any]) -> None:
 
 # Global state for configuration (now persistent)
 config_state = load_cli_config()
+
+# Initialize debug configuration early
+configure_logging()
+
+# Agent caching to prevent excessive recreations
+_agent_cache = {}
+
+
+def get_or_create_cached_agent(llm, tools):
+    """Get cached agent or create new one if needed"""
+    # Create cache key based on LLM type and tool count
+    llm_key = f"{type(llm).__name__}_{getattr(llm, 'model_name', 'unknown')}"
+    cache_key = f"{llm_key}_{len(tools)}"
+    
+    if cache_key not in _agent_cache:
+        from src.agents.langgraph_metabolic import LangGraphMetabolicAgent
+        agent_config = {
+            "name": "modelseed_langgraph_agent",
+            "description": "Enhanced ModelSEED agent with LangGraph workflows",
+        }
+        _agent_cache[cache_key] = LangGraphMetabolicAgent(llm, tools, agent_config)
+    
+    return _agent_cache[cache_key]
 
 # ASCII Art Banner
 BANNER = """
@@ -306,6 +497,12 @@ def main(
             "modelseed-agent status", "📊 Show system status and metrics"
         )
         commands_table.add_row(
+            "modelseed-agent debug", "🔍 Show debug configuration and control logging"
+        )
+        commands_table.add_row(
+            "modelseed-agent audit list", "🔍 Review tool execution history"
+        )
+        commands_table.add_row(
             "modelseed-agent --help", "❓ Show detailed help information"
         )
 
@@ -349,20 +546,37 @@ def setup(
 
     # Get defaults from environment or use fallbacks
     default_backend = os.getenv("DEFAULT_LLM_BACKEND", "argo")
-    default_model = os.getenv("DEFAULT_MODEL_NAME", "gpt4o")  # Changed default to gpt4o
+    default_model = os.getenv(
+        "DEFAULT_MODEL_NAME", "gpto1"
+    )  # Default to gpto1 reasoning model
 
     # Use provided backend or fall back to default/prompt
     if not llm_backend:
         if interactive:
-            llm_backend = questionary.select(
+            # Create simple string choices for questionary
+            choice_map = {
+                "🧬 Argo Gateway (Recommended)": "argo",
+                "🤖 OpenAI API": "openai",
+                "💻 Local LLM": "local",
+            }
+
+            # Map backend values to display text for default
+            backend_display_map = {
+                "argo": "🧬 Argo Gateway (Recommended)",
+                "openai": "🤖 OpenAI API",
+                "local": "💻 Local LLM",
+            }
+
+            selected_display = questionary.select(
                 "Choose LLM backend:",
-                choices=[
-                    questionary.Choice("argo", "🧬 Argo Gateway (Recommended)"),
-                    questionary.Choice("openai", "🤖 OpenAI API"),
-                    questionary.Choice("local", "💻 Local LLM"),
-                ],
-                default=default_backend,
+                choices=list(choice_map.keys()),
+                default=backend_display_map.get(
+                    default_backend, "🧬 Argo Gateway (Recommended)"
+                ),
             ).ask()
+
+            # Map display text back to backend value
+            llm_backend = choice_map.get(selected_display, "argo")
         else:
             llm_backend = default_backend
 
@@ -389,10 +603,10 @@ def setup(
             if llm_backend == "argo":
                 # Argo Gateway configuration with ACTUAL available models
                 argo_models = {
-                    # Dev Environment Models
-                    "gpt4o": "GPT-4o (Latest, Recommended)",
+                    # Dev Environment Models - prefer gpto1 as default
+                    "gpto1": "GPT-o1 (Reasoning, Recommended)",
+                    "gpt4o": "GPT-4o (Latest)",
                     "gpt4olatest": "GPT-4o Latest",
-                    "gpto1": "GPT-o1 (Reasoning)",
                     "gpto1mini": "GPT-o1 Mini",
                     "gpto1preview": "GPT-o1 Preview",
                     "gpto3mini": "GPT-o3 Mini",
@@ -411,17 +625,25 @@ def setup(
 
                     # Use provided model or prompt for selection
                     if not model_name:
-                        model_name = questionary.select(
+                        # Create simple string choices and mapping (same fix as backend selection)
+                        model_display_map = {v: k for k, v in argo_models.items()}
+
+                        # Set default - prefer gpto1 if available, otherwise use provided default
+                        if default_model in argo_models:
+                            default_display = argo_models[default_model]
+                        else:
+                            default_display = (
+                                "GPT-o1 (Reasoning, Recommended)"  # Default to gpto1
+                            )
+
+                        selected_display = questionary.select(
                             "Choose Argo model:",
-                            choices=[
-                                questionary.Choice(k, v) for k, v in argo_models.items()
-                            ],
-                            default=(
-                                default_model
-                                if default_model in argo_models
-                                else "gpt4o"
-                            ),
+                            choices=list(argo_models.values()),
+                            default=default_display,
                         ).ask()
+
+                        # Map display text back to model name
+                        model_name = model_display_map.get(selected_display, "gpto1")
 
                     # Show helpful info about o-series models
                     if model_name.startswith("gpto"):
@@ -439,7 +661,9 @@ def setup(
                         )
                 else:
                     user = os.getenv("ARGO_USER", "default_user")
-                    model_name = model_name or default_model
+                    model_name = (
+                        model_name or "gpto1"
+                    )  # Default to gpto1 in non-interactive mode
 
                 # Build configuration with proper handling for o-series models
                 llm_config = {
@@ -449,7 +673,7 @@ def setup(
                 }
 
                 # Handle token limits based on model type
-                if model_name.startswith("gpto"):
+                if model_name.startswith("gpto") or model_name.startswith("o"):
                     # For o-series models, be more conservative with max_completion_tokens
                     # and allow option to disable it completely
                     if interactive:
@@ -462,10 +686,14 @@ def setup(
                                 "Max completion tokens:", default="1000"
                             ).ask()
                     # For non-interactive, don't set token limit for o-series by default
+                    # Note: o-series models don't support temperature parameter
                 else:
                     # Standard models get normal configuration
                     llm_config["max_tokens"] = 1000
                     llm_config["temperature"] = 0.1
+
+                # Note: API key is optional for users on ANL network
+                # llm_config does not include api_key field unless explicitly set
 
             elif llm_backend == "openai":
                 if interactive:
@@ -493,8 +721,14 @@ def setup(
 
                 # Define available local models with their paths
                 local_model_paths = {
-                    "llama-3.1-8b": "/Users/jplfaria/.llama/checkpoints/Llama3.1-8B",
-                    "llama-3.2-3b": "/Users/jplfaria/.llama/checkpoints/Llama3.2-3B",
+                    "llama-3.1-8b": os.getenv(
+                        "LLAMA_8B_PATH",
+                        "/Users/jplfaria/.llama/checkpoints/Llama3.1-8B",
+                    ),
+                    "llama-3.2-3b": os.getenv(
+                        "LLAMA_3B_PATH",
+                        "/Users/jplfaria/.llama/checkpoints/Llama3.2-3B",
+                    ),
                 }
 
                 # Check if the provided model is a known name or a direct path
@@ -546,6 +780,7 @@ def setup(
 
         try:
             tools = [
+                # COBRA.py tools - Basic Analysis
                 FBATool(
                     {"name": "run_metabolic_fba", "description": "Run FBA analysis"}
                 ),
@@ -559,6 +794,134 @@ def setup(
                     {
                         "name": "analyze_pathway",
                         "description": "Analyze metabolic pathways",
+                    }
+                ),
+                # COBRA.py tools - Advanced Analysis
+                FluxVariabilityTool(
+                    {
+                        "name": "run_flux_variability_analysis",
+                        "description": "Run FVA to determine flux ranges",
+                    }
+                ),
+                GeneDeletionTool(
+                    {
+                        "name": "run_gene_deletion_analysis",
+                        "description": "Analyze gene deletion effects",
+                    }
+                ),
+                EssentialityAnalysisTool(
+                    {
+                        "name": "analyze_essentiality",
+                        "description": "Identify essential genes and reactions",
+                    }
+                ),
+                FluxSamplingTool(
+                    {
+                        "name": "run_flux_sampling",
+                        "description": "Sample flux space for statistical analysis",
+                    }
+                ),
+                ProductionEnvelopeTool(
+                    {
+                        "name": "run_production_envelope",
+                        "description": "Analyze growth vs production trade-offs",
+                    }
+                ),
+                AuxotrophyTool(
+                    {
+                        "name": "identify_auxotrophies",
+                        "description": "Identify potential auxotrophies by testing nutrient removal",
+                    }
+                ),
+                MinimalMediaTool(
+                    {
+                        "name": "find_minimal_media",
+                        "description": "Determine minimal media components required for growth",
+                    }
+                ),
+                MissingMediaTool(
+                    {
+                        "name": "find_missing_media",
+                        "description": "Find missing media components preventing growth",
+                    }
+                ),
+                # AI Media Tools - Intelligent media management
+                MediaSelectorTool(
+                    {
+                        "name": "select_optimal_media",
+                        "description": "AI-powered selection of optimal media for models",
+                    }
+                ),
+                MediaManipulatorTool(
+                    {
+                        "name": "manipulate_media_composition",
+                        "description": "Modify media using natural language commands",
+                    }
+                ),
+                MediaCompatibilityTool(
+                    {
+                        "name": "analyze_media_compatibility",
+                        "description": "Analyze media-model compatibility with AI suggestions",
+                    }
+                ),
+                MediaComparatorTool(
+                    {
+                        "name": "compare_media_performance",
+                        "description": "Compare model performance across different media",
+                    }
+                ),
+                # Advanced AI Media Tools - Optimization and prediction
+                MediaOptimizationTool(
+                    {
+                        "name": "optimize_media_composition",
+                        "description": "AI-driven media optimization for specific growth targets",
+                    }
+                ),
+                AuxotrophyPredictionTool(
+                    {
+                        "name": "predict_auxotrophies",
+                        "description": "AI-powered auxotrophy prediction from model gaps",
+                    }
+                ),
+                ReactionExpressionTool(
+                    {
+                        "name": "analyze_reaction_expression",
+                        "description": "Analyze reaction expression levels from omics data",
+                    }
+                ),
+                # ModelSEED tools
+                RastAnnotationTool(
+                    {
+                        "name": "annotate_genome_rast",
+                        "description": "Annotate genome using RAST",
+                    }
+                ),
+                ModelBuildTool(
+                    {
+                        "name": "build_metabolic_model",
+                        "description": "Build metabolic model from genome",
+                    }
+                ),
+                GapFillTool(
+                    {"name": "gapfill_model", "description": "Gapfill metabolic model"}
+                ),
+                ModelCompatibilityTool(
+                    {
+                        "name": "test_modelseed_cobra_compatibility",
+                        "description": "Test ModelSEED-COBRApy compatibility",
+                    }
+                ),
+                # Biochemistry resolution tools
+                BiochemEntityResolverTool(
+                    {
+                        "name": "resolve_biochem_entity",
+                        "description": "Resolve biochemistry entity IDs to human-readable names",
+                    }
+                ),
+                BiochemSearchTool(
+                    {
+                        "name": "search_biochem",
+                        "description": "Search biochemistry database for compounds and reactions",
                     }
                 ),
             ]
@@ -603,6 +966,112 @@ def setup(
     save_cli_config(config_state)
 
 
+def run_streaming_analysis(
+    query: str, model_file: Path, analysis_input: Dict[str, Any], log_llm_inputs: bool = False
+):
+    """Run analysis with real-time streaming interface"""
+    console.print("\n[bold cyan]🚀 Starting Real-Time AI Analysis[/bold cyan]")
+    console.print("[dim]Watch the AI make decisions in real-time...[/dim]\n")
+
+    try:
+        # Get LLM and tools from config
+        llm_config = config_state.get("llm_config")
+        llm_backend = config_state.get("llm_backend")
+
+        if not llm_config or not llm_backend:
+            print_error("LLM not configured. Run 'modelseed-agent setup' first.")
+            return None
+
+        # Create LLM
+        if llm_backend == "argo":
+            llm = ArgoLLM(llm_config)
+        elif llm_backend == "openai":
+            llm = OpenAILLM(llm_config)
+        else:
+            print_error(f"Unsupported LLM backend: {llm_backend}")
+            return None
+
+        # Get tools
+        tools = config_state.get("tools", [])
+        if not tools:
+            print_error("No tools configured. Run 'modelseed-agent setup' first.")
+            return None
+
+        # Create dynamic agent with optional LLM input logging
+        agent_config = {
+            "max_iterations": 6,
+            "log_llm_inputs": log_llm_inputs,  # Pass the CLI flag to agent
+        }
+        dynamic_agent = create_real_time_agent(llm, tools, agent_config)
+
+        # Create streaming interface
+        streaming = RealTimeStreamingInterface()
+
+        # Start streaming analysis
+        streaming.start_streaming(query)
+
+        # Show initial AI thinking
+        streaming.show_ai_analysis(
+            "Planning comprehensive metabolic analysis approach..."
+        )
+
+        # Add model file to the query context
+        enhanced_query = f"{query}\n\nModel file: {model_file}\n\nPlease load and analyze this metabolic model comprehensively."
+
+        # Show model loading
+        streaming.show_ai_analysis(f"Loading metabolic model: {model_file.name}")
+
+        # Run the dynamic agent
+        result = dynamic_agent.run({"query": enhanced_query})
+
+        # Show completion
+        if result.success:
+            streaming.show_workflow_complete(result.message, result.metadata)
+        else:
+            streaming.show_error(result.error)
+
+        # Stop streaming after brief pause
+        import time
+
+        time.sleep(1.5)
+        streaming.stop_streaming()
+
+        return result
+
+    except Exception as e:
+        print_error(f"Streaming analysis failed: {e}")
+        return None
+
+
+def run_regular_analysis(analysis_input: Dict[str, Any], max_iterations: int):
+    """Run analysis with regular progress display"""
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        TimeElapsedColumn(),
+        console=console,
+    ) as progress:
+
+        task = progress.add_task(
+            "🔬 Running intelligent analysis...", total=max_iterations
+        )
+
+        try:
+            # Execute analysis
+            result = config_state["agent"].run(analysis_input)
+
+            # Update task completion
+            progress.update(task, completed=max_iterations)
+
+            return result
+
+        except Exception as e:
+            progress.update(task, description="❌ Analysis failed")
+            print_error(f"Analysis failed: {e}")
+            return None
+
+
 @app.command()
 def analyze(
     model_path: str = typer.Argument(
@@ -622,6 +1091,16 @@ def analyze(
     ),
     format_output: str = typer.Option(
         "rich", "--format", help="Output format [rich, json, table]"
+    ),
+    stream: bool = typer.Option(
+        False,
+        "--stream",
+        help="Use real-time streaming AI agent with live reasoning display",
+    ),
+    log_llm_inputs: bool = typer.Option(
+        False,
+        "--log-llm-inputs",
+        help="🔍 Log complete LLM inputs (prompts + tool data) for analysis",
     ),
 ):
     """
@@ -672,33 +1151,17 @@ def analyze(
 
     console.print(f"📁 Results will be saved to: [cyan]{output_path}[/cyan]\n")
 
-    # Run analysis with beautiful progress display
-    with Progress(
-        SpinnerColumn(),
-        TextColumn("[progress.description]{task.description}"),
-        BarColumn(),
-        TimeElapsedColumn(),
-        console=console,
-    ) as progress:
+    # Choose between streaming and regular analysis
+    if stream:
+        result = run_streaming_analysis(query, model_file, analysis_input, log_llm_inputs)
+    else:
+        result = run_regular_analysis(analysis_input, max_iterations)
 
-        task = progress.add_task(
-            "🔬 Running intelligent analysis...", total=max_iterations
-        )
+    if not result:
+        return
 
-        try:
-            # Execute analysis
-            result = config_state["agent"].run(analysis_input)
-
-            # Update task completion
-            progress.update(task, completed=max_iterations)
-
-            # Store last run ID for status command
-            config_state["last_run_id"] = result.metadata.get("run_id")
-
-        except Exception as e:
-            progress.update(task, description="❌ Analysis failed")
-            print_error(f"Analysis failed: {e}")
-            return
+    # Store last run ID for status command
+    config_state["last_run_id"] = result.metadata.get("run_id")
 
     # Display results based on format
     if format_output == "rich":
@@ -882,11 +1345,47 @@ def interactive():
     except ImportError as e:
         console.print(f"[red]❌ Error importing interactive components: {e}[/red]")
         console.print(
-            "[yellow]💡 Try installing missing dependencies with: pip install -r requirements.txt[/yellow]"
+            "[yellow]💡 Try installing missing dependencies with: pip install .[all][/yellow]"
         )
     except Exception as e:
         console.print(f"[red]❌ Error starting interactive session: {e}[/red]")
         raise typer.Exit(1)
+
+
+@app.command()
+def debug():
+    """
+    🔍 Show debug configuration and logging control
+    
+    Display current debug settings and environment variables that control
+    different levels of logging verbosity for different components.
+    
+    Environment Variables:
+    - MODELSEED_DEBUG_LEVEL: overall debug level (quiet, normal, verbose, trace)
+    - MODELSEED_DEBUG_COBRAKBASE: enable cobrakbase debug messages (true/false)
+    - MODELSEED_DEBUG_LANGGRAPH: enable LangGraph initialization debug (true/false)
+    - MODELSEED_DEBUG_HTTP: enable HTTP/SSL debug messages (true/false)
+    - MODELSEED_DEBUG_TOOLS: enable tool execution debug (true/false)
+    - MODELSEED_DEBUG_LLM: enable LLM interaction debug (true/false)
+    - MODELSEED_LOG_LLM_INPUTS: enable complete LLM input logging (true/false)
+    """
+    print_banner()
+    console.print("[bold blue]🔍 Debug Configuration Status[/bold blue]\n")
+    
+    # Print debug status using the dedicated function
+    print_debug_status()
+    
+    console.print("\n[bold green]💡 Tips for Debug Control:[/bold green]")
+    console.print("   • Set MODELSEED_DEBUG_LEVEL=quiet to minimize all debug output")
+    console.print("   • Set MODELSEED_DEBUG_LEVEL=trace to enable all debug messages")
+    console.print("   • Use component-specific flags to control individual debug areas")
+    console.print("   • Set MODELSEED_LOG_LLM_INPUTS=true for detailed LLM analysis")
+    
+    console.print("\n[bold yellow]📝 Example Usage:[/bold yellow]")
+    console.print("   export MODELSEED_DEBUG_LEVEL=verbose")
+    console.print("   export MODELSEED_DEBUG_COBRAKBASE=true")
+    console.print("   export MODELSEED_DEBUG_LANGGRAPH=false")
+    console.print("   modelseed-agent interactive")
 
 
 @app.command()
@@ -1131,9 +1630,10 @@ def switch(
         }
 
         # Handle token configuration for o-series models
-        if not default_model.startswith("gpto"):
+        if not (default_model.startswith("gpto") or default_model.startswith("o")):
             llm_config["max_tokens"] = 1000
             llm_config["temperature"] = 0.1
+        # Note: o-series models don't get temperature parameter
 
     elif backend == "openai":
         api_key = os.getenv("OPENAI_API_KEY")
@@ -1156,8 +1656,12 @@ def switch(
 
         # Define available local models with their paths
         local_model_paths = {
-            "llama-3.1-8b": "/Users/jplfaria/.llama/checkpoints/Llama3.1-8B",
-            "llama-3.2-3b": "/Users/jplfaria/.llama/checkpoints/Llama3.2-3B",
+            "llama-3.1-8b": os.getenv(
+                "LLAMA_8B_PATH", "/Users/jplfaria/.llama/checkpoints/Llama3.1-8B"
+            ),
+            "llama-3.2-3b": os.getenv(
+                "LLAMA_3B_PATH", "/Users/jplfaria/.llama/checkpoints/Llama3.2-3B"
+            ),
         }
 
         # Check if the provided model is a known name or a direct path
@@ -1205,6 +1709,26 @@ def switch(
             PathwayAnalysisTool(
                 {"name": "analyze_pathway", "description": "Analyze metabolic pathways"}
             ),
+            # Add AI Media Tools to fallback list
+            MediaSelectorTool(
+                {
+                    "name": "select_optimal_media",
+                    "description": "AI-powered selection of optimal media for models",
+                }
+            ),
+            MediaManipulatorTool(
+                {
+                    "name": "manipulate_media_composition",
+                    "description": "Modify media using natural language commands",
+                }
+            ),
+            # Add advanced AI media tools to fallback
+            MediaOptimizationTool(
+                {
+                    "name": "optimize_media_composition",
+                    "description": "AI-driven media optimization for specific growth targets",
+                }
+            ),
         ]
 
         # Create agent
@@ -1227,10 +1751,13 @@ def switch(
 
         # Show model info
         model_name = llm_config["model_name"]
-        if model_name.startswith("gpto"):
+        if model_name.startswith("gpto") or model_name.startswith("o"):
             console.print(f"[yellow]Using reasoning model: {model_name}[/yellow]")
             console.print("• Optimized for complex reasoning tasks")
             console.print("• No temperature control (uses fixed reasoning temperature)")
+            console.print("• Uses prompt array format instead of messages")
+            if "max_tokens" not in llm_config:
+                console.print("• No token limit set (recommended for complex queries)")
         else:
             console.print(f"[green]Using model: {model_name}[/green]")
 
@@ -1241,6 +1768,660 @@ def switch(
     except Exception as e:
         print_error(f"Failed to switch to {backend}: {e}")
         return
+
+
+# Create audit subcommand group
+audit_app = typer.Typer(
+    name="audit",
+    help="🔍 Tool Execution Audit System - Review and analyze tool execution history for hallucination detection",
+    rich_markup_mode="rich",
+)
+
+app.add_typer(audit_app, name="audit")
+app.add_typer(ai_audit_app, name="ai-audit")
+
+
+@audit_app.command("list")
+def audit_list(
+    limit: int = typer.Option(
+        10, "--limit", "-l", help="Number of recent audits to show"
+    ),
+    session_id: Optional[str] = typer.Option(
+        None, "--session", "-s", help="Filter by session ID"
+    ),
+    tool_name: Optional[str] = typer.Option(
+        None, "--tool", "-t", help="Filter by tool name"
+    ),
+):
+    """
+    📋 List recent tool executions
+
+    Shows recent tool audit records with execution details and success status.
+    """
+    console.print("[bold blue]🔍 Tool Execution Audit History[/bold blue]\n")
+
+    # Find audit files
+    logs_dir = Path("logs")
+    if not logs_dir.exists():
+        print_warning("No logs directory found. No audit records available.")
+        return
+
+    # Collect audit files
+    audit_files = []
+    search_pattern = "*/tool_audits/*.json"
+
+    if session_id:
+        search_pattern = f"{session_id}/tool_audits/*.json"
+
+    for audit_file in logs_dir.glob(search_pattern):
+        try:
+            with open(audit_file, "r") as f:
+                audit_data = json.load(f)
+
+            # Filter by tool name if specified
+            if tool_name and audit_data.get("tool_name") != tool_name:
+                continue
+
+            audit_files.append((audit_file, audit_data))
+        except Exception:
+            # Skip corrupted files
+            continue
+
+    # Sort by timestamp (newest first)
+    audit_files.sort(key=lambda x: x[1].get("timestamp", ""), reverse=True)
+
+    if not audit_files:
+        print_warning("No audit records found matching the criteria.")
+        return
+
+    # Create results table
+    audit_table = Table(box=box.ROUNDED)
+    audit_table.add_column("Audit ID", style="bold cyan", width=12)
+    audit_table.add_column("Tool", style="bold yellow", width=20)
+    audit_table.add_column("Timestamp", style="bold white", width=19)
+    audit_table.add_column("Duration", style="bold green", width=10)
+    audit_table.add_column("Status", style="bold", width=10)
+    audit_table.add_column("Session", style="dim cyan", width=12)
+
+    # Show requested number of records
+    for audit_file, audit_data in audit_files[:limit]:
+        audit_id = audit_data.get("audit_id", "unknown")[:8]  # Short ID
+        tool_name = audit_data.get("tool_name", "unknown")
+        timestamp = audit_data.get("timestamp", "")
+
+        # Format timestamp
+        if timestamp:
+            try:
+                dt = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+                formatted_time = dt.strftime("%Y-%m-%d %H:%M:%S")
+            except:
+                formatted_time = timestamp[:19]
+        else:
+            formatted_time = "unknown"
+
+        # Execution details
+        execution = audit_data.get("execution", {})
+        duration = execution.get("duration_seconds", 0)
+        success = execution.get("success", False)
+
+        duration_str = f"{duration:.2f}s" if duration else "N/A"
+        status_str = "[green]✅ Success[/green]" if success else "[red]❌ Failed[/red]"
+
+        session_id = audit_data.get("session_id", "unknown")
+        session_id = session_id[:8] if session_id else "default"  # Short session ID
+
+        audit_table.add_row(
+            audit_id, tool_name, formatted_time, duration_str, status_str, session_id
+        )
+
+    console.print(audit_table)
+
+    # Summary info
+    total_shown = min(limit, len(audit_files))
+    total_available = len(audit_files)
+
+    console.print(
+        f"\n[dim]Showing {total_shown} of {total_available} audit records[/dim]"
+    )
+
+    if session_id:
+        console.print(f"[dim]Filtered by session: {session_id}[/dim]")
+    if tool_name:
+        console.print(f"[dim]Filtered by tool: {tool_name}[/dim]")
+
+    console.print(
+        f"\n[dim]Use 'modelseed-agent audit show <audit_id>' to view detailed execution data[/dim]"
+    )
+
+
+@audit_app.command("show")
+def audit_show(
+    audit_id: str = typer.Argument(..., help="Audit ID to display (full or partial)"),
+    show_console: bool = typer.Option(
+        True, "--console/--no-console", help="Show console output"
+    ),
+    show_files: bool = typer.Option(
+        True, "--files/--no-files", help="Show created files"
+    ),
+):
+    """
+    🔍 Show detailed audit information for a specific tool execution
+
+    Displays comprehensive execution details including inputs, outputs, console logs,
+    and file artifacts for hallucination detection analysis.
+    """
+    console.print(f"[bold blue]🔍 Tool Execution Audit: {audit_id}[/bold blue]\n")
+
+    # Find matching audit file
+    logs_dir = Path("logs")
+    if not logs_dir.exists():
+        print_error("No logs directory found.")
+        return
+
+    # Search for audit files matching the ID
+    matching_files = []
+    for audit_file in logs_dir.glob("*/tool_audits/*.json"):
+        try:
+            with open(audit_file, "r") as f:
+                audit_data = json.load(f)
+
+            full_audit_id = audit_data.get("audit_id", "")
+            if audit_id in full_audit_id:
+                matching_files.append((audit_file, audit_data))
+        except:
+            continue
+
+    if not matching_files:
+        print_error(f"No audit record found matching ID: {audit_id}")
+        return
+
+    if len(matching_files) > 1:
+        print_warning(f"Multiple matches found for '{audit_id}'. Showing first match.")
+
+    audit_file, audit_data = matching_files[0]
+
+    # Display audit header
+    header_table = Table(show_header=False, box=box.SIMPLE)
+    header_table.add_column("Field", style="bold cyan")
+    header_table.add_column("Value", style="bold white")
+
+    header_table.add_row("Audit ID", audit_data.get("audit_id", "N/A"))
+    header_table.add_row("Session ID", audit_data.get("session_id", "N/A"))
+    header_table.add_row("Tool Name", audit_data.get("tool_name", "N/A"))
+    header_table.add_row("Timestamp", audit_data.get("timestamp", "N/A"))
+
+    console.print(
+        Panel(
+            header_table,
+            title="[bold blue]📋 Audit Header[/bold blue]",
+            border_style="blue",
+        )
+    )
+
+    # Input data
+    input_data = audit_data.get("input", {})
+    if input_data:
+        console.print(f"\n[bold green]📥 Input Data:[/bold green]")
+        input_json = json.dumps(input_data, indent=2)
+        if len(input_json) > 500:
+            input_json = input_json[:500] + "\n... (truncated)"
+        console.print(Panel(input_json, border_style="green"))
+
+    # Output data
+    output_data = audit_data.get("output", {})
+    if output_data:
+        console.print(f"\n[bold yellow]📤 Output Data:[/bold yellow]")
+
+        # Structured output
+        structured = output_data.get("structured", {})
+        if structured:
+            console.print(f"\n[bold]🔧 Structured Results:[/bold]")
+            structured_json = json.dumps(structured, indent=2)
+            if len(structured_json) > 1000:
+                structured_json = structured_json[:1000] + "\n... (truncated)"
+            console.print(Panel(structured_json, border_style="yellow"))
+
+        # Console output
+        console_output = output_data.get("console", {})
+        if console_output and show_console:
+            console.print(f"\n[bold]💻 Console Output:[/bold]")
+            # Handle both string and dict formats for console output
+            if isinstance(console_output, dict):
+                stdout = console_output.get("stdout", "")
+                stderr = console_output.get("stderr", "")
+                console_text = (
+                    f"STDOUT:\n{stdout}\n\nSTDERR:\n{stderr}"
+                    if stdout or stderr
+                    else "No console output"
+                )
+            else:
+                console_text = str(console_output)
+
+            if len(console_text) > 1000:
+                console_text = console_text[:1000] + "\n... (truncated)"
+            console.print(Panel(console_text, border_style="cyan"))
+
+        # Created files
+        files = output_data.get("files", [])
+        if files and show_files:
+            console.print(f"\n[bold]📄 Created Files:[/bold]")
+            files_table = Table(box=box.ROUNDED)
+            files_table.add_column("File", style="cyan")
+            files_table.add_column("Exists", style="bold")
+            files_table.add_column("Size", style="green")
+
+            for file_path in files:
+                file_obj = Path(file_path)
+                exists = file_obj.exists()
+                if exists:
+                    size = file_obj.stat().st_size
+                    size_str = f"{size} bytes" if size < 1024 else f"{size/1024:.1f} KB"
+                    status = "[green]✅ Yes[/green]"
+                else:
+                    size_str = "N/A"
+                    status = "[red]❌ No[/red]"
+
+                files_table.add_row(str(file_path), status, size_str)
+
+            console.print(files_table)
+
+    # Execution details
+    execution = audit_data.get("execution", {})
+    if execution:
+        console.print(f"\n[bold blue]⚡ Execution Details:[/bold blue]")
+
+        exec_table = Table(show_header=False, box=box.SIMPLE)
+        exec_table.add_column("Metric", style="bold cyan")
+        exec_table.add_column("Value", style="bold white")
+
+        duration = execution.get("duration_seconds", 0)
+        success = execution.get("success", False)
+        error = execution.get("error")
+
+        exec_table.add_row("Duration", f"{duration:.3f} seconds")
+        exec_table.add_row("Success", "✅ Yes" if success else "❌ No")
+
+        if error:
+            exec_table.add_row(
+                "Error",
+                str(error)[:100] + "..." if len(str(error)) > 100 else str(error),
+            )
+
+        console.print(exec_table)
+
+    console.print(f"\n[dim]Audit file: {audit_file}[/dim]")
+
+
+@audit_app.command("session")
+def audit_session(
+    session_id: str = typer.Argument(..., help="Session ID to analyze"),
+    summary: bool = typer.Option(
+        False, "--summary", "-s", help="Show summary statistics only"
+    ),
+):
+    """
+    📊 Show all tool executions for a specific session
+
+    Displays comprehensive session-level audit information for workflow analysis
+    and hallucination pattern detection.
+    """
+    console.print(f"[bold blue]📊 Session Audit: {session_id}[/bold blue]\n")
+
+    # Find session directory
+    logs_dir = Path("logs")
+    session_dir = logs_dir / session_id
+
+    if not session_dir.exists():
+        print_error(f"Session directory not found: {session_id}")
+        return
+
+    audit_dir = session_dir / "tool_audits"
+    if not audit_dir.exists():
+        print_warning(f"No tool audits found for session: {session_id}")
+        return
+
+    # Load all audit files for this session
+    audit_records = []
+    for audit_file in audit_dir.glob("*.json"):
+        try:
+            with open(audit_file, "r") as f:
+                audit_data = json.load(f)
+            audit_records.append(audit_data)
+        except Exception as e:
+            print_warning(f"Could not load audit file {audit_file}: {e}")
+            continue
+
+    if not audit_records:
+        print_warning(f"No valid audit records found for session: {session_id}")
+        return
+
+    # Sort by timestamp
+    audit_records.sort(key=lambda x: x.get("timestamp", ""))
+
+    # Session summary statistics
+    total_tools = len(audit_records)
+    successful_tools = sum(
+        1 for r in audit_records if r.get("execution", {}).get("success", False)
+    )
+    total_duration = sum(
+        r.get("execution", {}).get("duration_seconds", 0) for r in audit_records
+    )
+    unique_tools = len(set(r.get("tool_name") for r in audit_records))
+
+    # Display session summary
+    summary_table = Table(box=box.ROUNDED)
+    summary_table.add_column("Metric", style="bold cyan")
+    summary_table.add_column("Value", style="bold white")
+
+    summary_table.add_row("Session ID", session_id)
+    summary_table.add_row("Total Executions", str(total_tools))
+    summary_table.add_row(
+        "Successful", f"{successful_tools} ({successful_tools/total_tools*100:.1f}%)"
+    )
+    summary_table.add_row("Failed", str(total_tools - successful_tools))
+    summary_table.add_row("Total Duration", f"{total_duration:.2f} seconds")
+    summary_table.add_row("Unique Tools", str(unique_tools))
+
+    if audit_records:
+        first_time = audit_records[0].get("timestamp", "")
+        last_time = audit_records[-1].get("timestamp", "")
+        if first_time and last_time:
+            try:
+                start_dt = datetime.fromisoformat(first_time.replace("Z", "+00:00"))
+                end_dt = datetime.fromisoformat(last_time.replace("Z", "+00:00"))
+                session_duration = (end_dt - start_dt).total_seconds()
+                summary_table.add_row(
+                    "Session Duration", f"{session_duration:.0f} seconds"
+                )
+            except:
+                pass
+
+    console.print(
+        Panel(
+            summary_table,
+            title="[bold blue]📊 Session Summary[/bold blue]",
+            border_style="blue",
+        )
+    )
+
+    if summary:
+        return
+
+    # Detailed tool execution timeline
+    console.print(f"\n[bold green]📋 Tool Execution Timeline:[/bold green]")
+
+    timeline_table = Table(box=box.ROUNDED)
+    timeline_table.add_column("#", style="bold blue", width=3)
+    timeline_table.add_column("Tool", style="bold yellow", width=25)
+    timeline_table.add_column("Time", style="bold white", width=8)
+    timeline_table.add_column("Duration", style="bold green", width=10)
+    timeline_table.add_column("Status", style="bold", width=10)
+    timeline_table.add_column("Files", style="cyan", width=8)
+
+    for i, record in enumerate(audit_records, 1):
+        tool_name = record.get("tool_name", "unknown")
+        timestamp = record.get("timestamp", "")
+
+        # Format time (just time part)
+        if timestamp:
+            try:
+                dt = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+                time_str = dt.strftime("%H:%M:%S")
+            except:
+                time_str = timestamp[11:19] if len(timestamp) > 19 else "unknown"
+        else:
+            time_str = "unknown"
+
+        execution = record.get("execution", {})
+        duration = execution.get("duration_seconds", 0)
+        success = execution.get("success", False)
+
+        duration_str = f"{duration:.2f}s"
+        status_str = "[green]✅[/green]" if success else "[red]❌[/red]"
+
+        # Count created files
+        files_count = len(record.get("output", {}).get("files", []))
+        files_str = str(files_count) if files_count > 0 else "-"
+
+        timeline_table.add_row(
+            str(i), tool_name, time_str, duration_str, status_str, files_str
+        )
+
+    console.print(timeline_table)
+
+    # Tool usage statistics
+    tool_stats = {}
+    for record in audit_records:
+        tool_name = record.get("tool_name", "unknown")
+        if tool_name not in tool_stats:
+            tool_stats[tool_name] = {"count": 0, "successes": 0, "total_duration": 0}
+
+        tool_stats[tool_name]["count"] += 1
+        if record.get("execution", {}).get("success", False):
+            tool_stats[tool_name]["successes"] += 1
+        tool_stats[tool_name]["total_duration"] += record.get("execution", {}).get(
+            "duration_seconds", 0
+        )
+
+    console.print(f"\n[bold yellow]🔧 Tool Usage Statistics:[/bold yellow]")
+
+    stats_table = Table(box=box.ROUNDED)
+    stats_table.add_column("Tool", style="bold cyan")
+    stats_table.add_column("Count", style="bold white")
+    stats_table.add_column("Success Rate", style="bold green")
+    stats_table.add_column("Avg Duration", style="bold yellow")
+
+    for tool_name, stats in sorted(
+        tool_stats.items(), key=lambda x: x[1]["count"], reverse=True
+    ):
+        count = stats["count"]
+        successes = stats["successes"]
+        success_rate = f"{successes/count*100:.1f}%" if count > 0 else "0%"
+        avg_duration = f"{stats['total_duration']/count:.2f}s" if count > 0 else "0s"
+
+        stats_table.add_row(tool_name, str(count), success_rate, avg_duration)
+
+    console.print(stats_table)
+
+    console.print(
+        f"\n[dim]Use 'modelseed-agent audit show <audit_id>' to view specific execution details[/dim]"
+    )
+
+
+@audit_app.command("verify")
+def audit_verify(
+    audit_id: str = typer.Argument(..., help="Audit ID to verify for hallucinations"),
+    check_files: bool = typer.Option(
+        True, "--check-files/--no-check-files", help="Verify file outputs exist"
+    ),
+    check_claims: bool = typer.Option(
+        True, "--check-claims/--no-check-claims", help="Compare claims vs data"
+    ),
+):
+    """
+    🔍 Verify tool execution for potential hallucinations
+
+    Performs automated checks to detect discrepancies between tool claims
+    and actual execution results, helping identify AI hallucinations.
+    """
+    console.print(f"[bold blue]🔍 Hallucination Verification: {audit_id}[/bold blue]\n")
+
+    # Find and load audit record
+    logs_dir = Path("logs")
+    if not logs_dir.exists():
+        print_error("No logs directory found.")
+        return
+
+    # Find matching audit file
+    audit_data = None
+    for candidate_file in logs_dir.glob("*/tool_audits/*.json"):
+        try:
+            with open(candidate_file, "r") as f:
+                data = json.load(f)
+
+            if audit_id in data.get("audit_id", ""):
+                audit_data = data
+                break
+        except:
+            continue
+
+    if not audit_data:
+        print_error(f"No audit record found matching ID: {audit_id}")
+        return
+
+    console.print(
+        f"[bold green]📋 Verifying: {audit_data.get('tool_name', 'unknown')}[/bold green]\n"
+    )
+
+    # Verification results
+    issues = []
+    verifications = []
+
+    # 1. Basic execution verification
+    execution = audit_data.get("execution", {})
+    success = execution.get("success", False)
+    error = execution.get("error")
+
+    if success:
+        verifications.append("✅ Tool execution completed successfully")
+    else:
+        issues.append(f"❌ Tool execution failed: {error}")
+
+    # 2. File verification
+    if check_files:
+        files = audit_data.get("output", {}).get("files", [])
+        if files:
+            existing_files = 0
+            for file_path in files:
+                if Path(file_path).exists():
+                    existing_files += 1
+                else:
+                    issues.append(f"❌ Claimed file does not exist: {file_path}")
+
+            if existing_files == len(files):
+                verifications.append(f"✅ All {len(files)} claimed files exist")
+            else:
+                issues.append(
+                    f"⚠️ Only {existing_files}/{len(files)} claimed files exist"
+                )
+        else:
+            verifications.append("ℹ️ No file outputs claimed")
+
+    # 3. Console vs structured output consistency
+    output_data = audit_data.get("output", {})
+    console_output = output_data.get("console", {})
+    structured = output_data.get("structured", {})
+
+    if console_output and structured:
+        # Check for error messages in console but success in structured output
+        if isinstance(console_output, dict):
+            console_text = (
+                console_output.get("stdout", "")
+                + " "
+                + console_output.get("stderr", "")
+            )
+        else:
+            console_text = str(console_output)
+        console_lower = console_text.lower()
+        if any(
+            error_word in console_lower
+            for error_word in ["error", "failed", "exception", "traceback"]
+        ):
+            if structured.get("success", True):  # Assuming success if not specified
+                issues.append(
+                    "⚠️ Console shows errors but structured output indicates success"
+                )
+            else:
+                verifications.append(
+                    "✅ Console errors match structured failure status"
+                )
+        else:
+            verifications.append("✅ No obvious error patterns in console output")
+
+    # 4. Data consistency checks
+    if structured:
+        # Check for None/null values in critical fields
+        def check_none_values(obj, path=""):
+            none_fields = []
+            if isinstance(obj, dict):
+                for key, value in obj.items():
+                    current_path = f"{path}.{key}" if path else key
+                    if value is None:
+                        none_fields.append(current_path)
+                    elif isinstance(value, (dict, list)):
+                        none_fields.extend(check_none_values(value, current_path))
+            elif isinstance(obj, list):
+                for i, item in enumerate(obj):
+                    current_path = f"{path}[{i}]"
+                    if item is None:
+                        none_fields.append(current_path)
+                    elif isinstance(item, (dict, list)):
+                        none_fields.extend(check_none_values(item, current_path))
+            return none_fields
+
+        none_fields = check_none_values(structured)
+        if none_fields:
+            issues.append(
+                f"⚠️ Found null/None values in: {', '.join(none_fields[:5])}{'...' if len(none_fields) > 5 else ''}"
+            )
+        else:
+            verifications.append("✅ No null/None values in structured output")
+
+    # 5. Execution time consistency
+    duration = execution.get("duration_seconds", 0)
+    if duration > 0:
+        if duration < 0.001:
+            issues.append("⚠️ Execution time suspiciously fast (< 1ms)")
+        elif duration > 300:  # 5 minutes
+            issues.append("⚠️ Execution time suspiciously long (> 5 minutes)")
+        else:
+            verifications.append(f"✅ Execution time reasonable ({duration:.3f}s)")
+
+    # Display verification results
+    if verifications:
+        console.print("[bold green]✅ Verification Passed:[/bold green]")
+        for verification in verifications:
+            console.print(f"  {verification}")
+
+    if issues:
+        console.print(f"\n[bold red]⚠️ Issues Found ({len(issues)}):[/bold red]")
+        for issue in issues:
+            console.print(f"  {issue}")
+
+    if not issues:
+        console.print(
+            f"\n[bold green]🎉 No hallucination indicators detected![/bold green]"
+        )
+        console.print(
+            "[dim]This execution appears to be consistent and trustworthy.[/dim]"
+        )
+    else:
+        console.print(
+            f"\n[bold yellow]🚨 Potential hallucination indicators found.[/bold yellow]"
+        )
+        console.print("[dim]Manual review recommended for this execution.[/dim]")
+
+    # Summary
+    console.print(f"\n[bold blue]📊 Verification Summary:[/bold blue]")
+    summary_table = Table(show_header=False, box=box.SIMPLE)
+    summary_table.add_column("Check", style="cyan")
+    summary_table.add_column("Result", style="bold")
+
+    summary_table.add_row("Total Checks", str(len(verifications) + len(issues)))
+    summary_table.add_row("Passed", f"[green]{len(verifications)}[/green]")
+    summary_table.add_row(
+        "Issues", f"[red]{len(issues)}[/red]" if issues else "[green]0[/green]"
+    )
+    summary_table.add_row(
+        "Trust Level",
+        (
+            "[green]High[/green]"
+            if not issues
+            else "[yellow]Medium[/yellow]" if len(issues) < 3 else "[red]Low[/red]"
+        ),
+    )
+
+    console.print(summary_table)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,72 @@
+{
+  "id": "08d45888",
+  "name": "Analysis_20250608_2325",
+  "created_at": "2025-06-08T23:25:14.127844",
+  "last_active": "2025-06-08T23:29:23.242648",
+  "status": "active",
+  "description": "Interactive metabolic modeling analysis",
+  "model_files": [],
+  "interactions": [
+    {
+      "id": "ai_0",
+      "timestamp": "2025-06-08T23:26:11.054101",
+      "type": "query",
+      "input_data": "I need a comprehensive metabolic analysis of E. coli",
+      "output_data": "# Comprehensive Metabolic Analysis Results\n\n**Query:** I need a comprehensive metabolic analysis of E. coli\n\n**Execution Summary:** 3/3 tools completed successfully\n\n## Analyze Metabolic Model\n\n**Status:** \u2705 Success\n**Message:** Model analysis completed successfully\n\n**Model Overview:**\n- Reactions: 95\n- Metabolites: 72\n- Genes: 137\n- Subsystems: 0\n\n**Network Connectivity:**\n- Average connections per metabolite: 5.0\n- Most connected metabolite: 35 connections\n\n**Hub Metabolites (top 3):**\n1. H+: 35 reactions\n2. H2O H2O: 18 reactions\n3. H+: 17 reactions\n\n\n---\n\n## Analyze Pathway\n\n**Status:** \u2705 Success\n**Message:** Pathway analysis completed for: glycolysis\n\n**Pathway Statistics:**\n- Reactions in pathway: 9\n- Associated genes: 15\n- Metabolites involved: 17\n- Reversible reactions: 7\n\n\n---\n\n## Run Metabolic Fba\n\n**Status:** \u2705 Success\n**Message:** FBA simulation completed successfully\n\n**Growth Analysis:**\n- Predicted growth rate: 518.4221 h\u207b\u00b9\n- Optimization status: optimal\n\n\n---\n\n## Performance Summary\n\n**Total Tool Execution Time:** 11.85s\n- analyze_metabolic_model: 3.88s (12,148 bytes data)\n- analyze_pathway: 3.99s (2,035 bytes data)\n- run_metabolic_fba: 3.97s (2,940 bytes data)\n\n",
+      "metadata": {
+        "ai_agent_used": true,
+        "tools_executed": [],
+        "ai_reasoning_steps": 0,
+        "audit_file": null,
+        "dynamic_decision_making": true,
+        "success": true
+      },
+      "execution_time": 50.00655913352966,
+      "success": true,
+      "error_message": null
+    },
+    {
+      "id": "ai_1",
+      "timestamp": "2025-06-08T23:29:23.242604",
+      "type": "query",
+      "input_data": "give me detailed explantion of the growth analysis?",
+      "output_data": "Error: Advanced AI agent execution failed: Workflow 74611819 not being monitored",
+      "metadata": {
+        "ai_agent_used": true,
+        "tools_executed": [],
+        "ai_reasoning_steps": 0,
+        "audit_file": null,
+        "dynamic_decision_making": true,
+        "success": false
+      },
+      "execution_time": 137.99664998054504,
+      "success": false,
+      "error_message": null
+    }
+  ],
+  "context": {
+    "last_interaction": {
+      "id": "ai_1",
+      "timestamp": "2025-06-08T23:29:23.242604",
+      "type": "query",
+      "input_data": "give me detailed explantion of the growth analysis?",
+      "output_data": "Error: Advanced AI agent execution failed: Workflow 74611819 not being monitored",
+      "metadata": {
+        "ai_agent_used": true,
+        "tools_executed": [],
+        "ai_reasoning_steps": 0,
+        "audit_file": null,
+        "dynamic_decision_making": true,
+        "success": false
+      },
+      "execution_time": 137.99664998054504,
+      "success": false,
+      "error_message": null
+    },
+    "last_query": "give me detailed explantion of the growth analysis?"
+  },
+  "metadata": {},
+  "total_queries": 2,
+  "total_execution_time": 188.0032091140747,
+  "success_rate": 0.5
+}

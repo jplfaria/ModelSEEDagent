@@ -1,0 +1,138 @@
+[
+  {
+    "timestamp": "2025-06-08T23:25:21.101735",
+    "step": "enhanced_planning",
+    "data": {
+      "iteration": 0,
+      "decision": "single_tool",
+      "tools_to_call": [
+        "analyze_metabolic_model"
+      ],
+      "completed_tools": [],
+      "total_planned_tools": 3,
+      "intent_analysis": {
+        "primary_intent": "comprehensive",
+        "secondary_intents": [],
+        "suggested_tools": [
+          "analyze_metabolic_model",
+          "analyze_pathway",
+          "run_metabolic_fba"
+        ],
+        "workflow_complexity": "complex",
+        "estimated_tools": 3,
+        "analysis_depth": "comprehensive"
+      },
+      "workflow_complexity": "complex"
+    }
+  },
+  {
+    "timestamp": "2025-06-08T23:25:37.134779",
+    "step": "enhanced_planning",
+    "data": {
+      "iteration": 0,
+      "decision": "single_tool",
+      "tools_to_call": [
+        "analyze_pathway"
+      ],
+      "completed_tools": [
+        "analyze_metabolic_model"
+      ],
+      "total_planned_tools": 3,
+      "intent_analysis": {
+        "primary_intent": "comprehensive",
+        "secondary_intents": [],
+        "suggested_tools": [
+          "analyze_metabolic_model",
+          "analyze_pathway",
+          "run_metabolic_fba"
+        ],
+        "workflow_complexity": "complex",
+        "estimated_tools": 3,
+        "analysis_depth": "comprehensive"
+      },
+      "workflow_complexity": "complex"
+    }
+  },
+  {
+    "timestamp": "2025-06-08T23:25:55.388787",
+    "step": "enhanced_planning",
+    "data": {
+      "iteration": 0,
+      "decision": "single_tool",
+      "tools_to_call": [
+        "run_metabolic_fba"
+      ],
+      "completed_tools": [
+        "analyze_metabolic_model",
+        "analyze_pathway"
+      ],
+      "total_planned_tools": 3,
+      "intent_analysis": {
+        "primary_intent": "comprehensive",
+        "secondary_intents": [],
+        "suggested_tools": [
+          "analyze_metabolic_model",
+          "analyze_pathway",
+          "run_metabolic_fba"
+        ],
+        "workflow_complexity": "complex",
+        "estimated_tools": 3,
+        "analysis_depth": "comprehensive"
+      },
+      "workflow_complexity": "complex"
+    }
+  },
+  {
+    "timestamp": "2025-06-08T23:26:11.052464",
+    "step": "enhanced_finalization",
+    "data": {
+      "total_iterations": 0,
+      "tools_used": [
+        "analyze_metabolic_model",
+        "analyze_pathway",
+        "run_metabolic_fba"
+      ],
+      "total_errors": 0,
+      "final_answer_length": 1197,
+      "execution_summary": {
+        "run_id": "20250608_232521",
+        "query": "I need a comprehensive metabolic analysis of E. coli",
+        "total_iterations": 0,
+        "tools_executed": [
+          "analyze_metabolic_model",
+          "analyze_pathway",
+          "run_metabolic_fba"
+        ],
+        "parallel_executions": 0,
+        "errors_encountered": 0,
+        "recovery_attempts": 0,
+        "final_status": "completed",
+        "execution_time": "2025-06-08T23:25:55.388698"
+      },
+      "performance_metrics": {
+        "analyze_metabolic_model": {
+          "execution_time": 3.88322114944458,
+          "data_size": 12148,
+          "category": "structural"
+        },
+        "analyze_pathway": {
+          "execution_time": 3.994349241256714,
+          "data_size": 2035,
+          "category": "structural"
+        },
+        "run_metabolic_fba": {
+          "execution_time": 3.9676620960235596,
+          "data_size": 2940,
+          "category": "functional"
+        }
+      },
+      "workflow_complexity": "complex",
+      "total_execution_time": 11.845232486724854,
+      "visualizations_created": [
+        "/Users/jplfaria/repos/ModelSEEDagent/logs/langgraph_run_20250608_232521/visualizations/workflow_graph.html",
+        "/Users/jplfaria/repos/ModelSEEDagent/logs/langgraph_run_20250608_232521/visualizations/workflow_graph.html",
+        "/Users/jplfaria/repos/ModelSEEDagent/logs/langgraph_run_20250608_232521/visualizations/performance_dashboard.html"
+      ]
+    }
+  }
+]

@@ -1,0 +1,90 @@
+{
+  "id": "1fe9a9a2",
+  "name": "Analysis_20250608_2006",
+  "created_at": "2025-06-08T20:06:44.613088",
+  "last_active": "2025-06-08T20:16:11.345182",
+  "status": "active",
+  "description": "Interactive metabolic modeling analysis",
+  "model_files": [],
+  "interactions": [
+    {
+      "id": "ai_0",
+      "timestamp": "2025-06-08T20:07:26.697431",
+      "type": "query",
+      "input_data": "What is the growth rate of E. coli?",
+      "output_data": " The FBA results show that under these simulated conditions, E. coli exhibits a strong aerobic metabolism with efficient ATP generation, leading to a calculated growth rate of approximately 0.8739 h\u207b\u00b9.",
+      "metadata": {
+        "ai_agent_used": true,
+        "tools_executed": [
+          "run_metabolic_fba"
+        ],
+        "ai_reasoning_steps": 0,
+        "audit_file": null,
+        "dynamic_decision_making": true,
+        "success": true
+      },
+      "execution_time": 36.526816844940186,
+      "success": true,
+      "error_message": null
+    },
+    {
+      "id": "ai_1",
+      "timestamp": "2025-06-08T20:16:11.345127",
+      "type": "query",
+      "input_data": "I need a comprehensive metabolic analysis of E. coli",
+      "output_data": " These modeling results predict that under aerobic, glucose-limited conditions, E. coli achieves a growth rate near 0.87 h\u207b\u00b9 by heavily utilizing central pathways (glycolysis, pentose phosphate, TCA) and require a relatively simple minimal medium. Seven genes and 18 reactions prove indispensable, reflecting the organism\u2019s reliance on core pathways for survival and biomass production. No additional nutrient auxotrophies were identified, indicating a robust metabolic network capable of synthesizing all vital building blocks from a straightforward nutrient set.",
+      "metadata": {
+        "ai_agent_used": true,
+        "tools_executed": [
+          "run_metabolic_fba",
+          "run_metabolic_fba",
+          "find_minimal_media",
+          "analyze_essentiality",
+          "run_flux_variability_analysis",
+          "identify_auxotrophies",
+          "run_flux_sampling"
+        ],
+        "ai_reasoning_steps": 0,
+        "audit_file": null,
+        "dynamic_decision_making": true,
+        "success": true
+      },
+      "execution_time": 260.3243839740753,
+      "success": true,
+      "error_message": null
+    }
+  ],
+  "context": {
+    "last_interaction": {
+      "id": "ai_1",
+      "timestamp": "2025-06-08T20:16:11.345127",
+      "type": "query",
+      "input_data": "I need a comprehensive metabolic analysis of E. coli",
+      "output_data": " These modeling results predict that under aerobic, glucose-limited conditions, E. coli achieves a growth rate near 0.87 h\u207b\u00b9 by heavily utilizing central pathways (glycolysis, pentose phosphate, TCA) and require a relatively simple minimal medium. Seven genes and 18 reactions prove indispensable, reflecting the organism\u2019s reliance on core pathways for survival and biomass production. No additional nutrient auxotrophies were identified, indicating a robust metabolic network capable of synthesizing all vital building blocks from a straightforward nutrient set.",
+      "metadata": {
+        "ai_agent_used": true,
+        "tools_executed": [
+          "run_metabolic_fba",
+          "run_metabolic_fba",
+          "find_minimal_media",
+          "analyze_essentiality",
+          "run_flux_variability_analysis",
+          "identify_auxotrophies",
+          "run_flux_sampling"
+        ],
+        "ai_reasoning_steps": 0,
+        "audit_file": null,
+        "dynamic_decision_making": true,
+        "success": true
+      },
+      "execution_time": 260.3243839740753,
+      "success": true,
+      "error_message": null
+    },
+    "last_query": "I need a comprehensive metabolic analysis of E. coli"
+  },
+  "metadata": {},
+  "total_queries": 2,
+  "total_execution_time": 296.8512008190155,
+  "success_rate": 1.0
+}

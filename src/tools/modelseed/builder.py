@@ -3,7 +3,8 @@ from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
-from ...tools.base import BaseTool, ToolRegistry, ToolResult
+from ..base import BaseTool, ToolRegistry, ToolResult
+from ..cobra.utils import ModelUtils
 
 
 class ModelBuildConfig(BaseModel):
@@ -20,71 +21,115 @@ class ModelBuildConfig(BaseModel):
 class ModelBuildTool(BaseTool):
     """Tool for building metabolic models using ModelSEED"""
 
-    name = "build_metabolic_model"
-    description = """Build a metabolic model from genome annotations using ModelSEED.
+    tool_name = "build_metabolic_model"
+    tool_description = """Build a metabolic model from genome annotations using ModelSEED.
     Can use RAST annotations or other supported annotation formats."""
 
     def __init__(self, config: Dict[str, Any]):
         super().__init__(config)
-        self.build_config = ModelBuildConfig(**config.get("build_config", {}))
+        # Use private attribute to avoid Pydantic field conflicts
+        self._build_config = ModelBuildConfig(**config.get("build_config", {}))
 
-    def _run(self, input_data: Dict[str, Any]) -> ToolResult:
+    def _run_tool(self, input_data: Dict[str, Any]) -> ToolResult:
         """
         Build a metabolic model using ModelSEED.
 
         Args:
             input_data: Dictionary containing:
-                - annotation_file: Path to genome annotation file
+                - annotation_file: Path to genome annotation file (optional)
+                - genome_object: Pre-loaded MSGenome object (optional)
                 - output_path: Where to save the model
                 - model_id: Identifier for the new model
-                - options: Additional building options
+                - template_model: Template model to use (optional)
 
         Returns:
             ToolResult containing the built model information
         """
         try:
-            # TODO: Implement actual ModelSEED integration
-            # This is a placeholder implementation
+            # Validate inputs
+            model_id = input_data.get("model_id", "model")
+            output_path = input_data.get("output_path", f"{model_id}.xml")
+
+            # Lazy import modelseedpy only when needed
+            import modelseedpy
+
+            # Initialize MSBuilder
+            builder = modelseedpy.MSBuilder()
+
+            # Handle genome input - either file path or MSGenome object
+            genome = None
+            if "genome_object" in input_data:
+                genome = input_data["genome_object"]
+            elif "annotation_file" in input_data:
+                annotation_file = Path(input_data["annotation_file"])
+                if not annotation_file.exists():
+                    raise FileNotFoundError(
+                        f"Annotation file not found: {annotation_file}"
+                    )
+                # Load genome from annotation file
+                genome = modelseedpy.MSGenome.from_fasta(str(annotation_file))
+            else:
+                raise ValueError(
+                    "Either annotation_file or genome_object must be provided"
+                )
+
+            # Configure builder
+            if "template_model" in input_data and input_data["template_model"]:
+                template_path = input_data["template_model"]
+                if Path(template_path).exists():
+                    template = ModelUtils().load_model(template_path)
+                    builder.template = template
+                else:
+                    # Use auto-select if template path doesn't exist
+                    builder.auto_select_template(genome)
+            else:
+                # Auto-select template based on genome
+                builder.auto_select_template(genome)
+
+            # Build the model
+            model = builder.build(genome, model_id)
+
+            # Optional gapfilling during build
+            if self._build_config.gapfill_on_build:
+                gapfiller = modelseedpy.MSGapfill(
+                    model, media=self._build_config.media_condition
+                )
+                gapfill_solutions = gapfiller.run_gapfilling()
+                if gapfill_solutions:
+                    gapfiller.integrate_gapfill_solution(gapfill_solutions[0])
+
+            # Save model
+            output_file = Path(output_path)
+            output_file.parent.mkdir(parents=True, exist_ok=True)
+            model.write_sbml_file(str(output_file))
+
+            # Gather statistics
+            stats = {
+                "num_reactions": len(model.reactions),
+                "num_metabolites": len(model.metabolites),
+                "num_genes": len(model.genes),
+                "objective_id": model.objective.direction,
+                "template_used": getattr(builder.template, "id", "auto-selected"),
+                "gapfilled": self._build_config.gapfill_on_build,
+            }
+
             return ToolResult(
-                success=False,
-                message="Model building not yet implemented",
-                error="Method not implemented",
+                success=True,
+                message=f"Model {model_id} built successfully with {stats['num_reactions']} reactions",
+                data={
+                    "model_id": model_id,
+                    "model_path": str(output_file),
+                    "statistics": stats,
+                    "model_object": model,  # Include model object for downstream tools
+                },
+                metadata={
+                    "tool_type": "model_building",
+                    "template_used": stats["template_used"],
+                    "gapfilled": stats["gapfilled"],
+                },
             )
-
-            # Example implementation structure:
-            # 1. Validate inputs
-            # annotation_file = Path(input_data["annotation_file"])
-            # if not annotation_file.exists():
-            #     raise FileNotFoundError(f"Annotation file not found: {annotation_file}")
-
-            # 2. Initialize ModelSEED client
-            # client = self._initialize_modelseed_client()
-
-            # 3. Submit build job
-            # job_id = self._submit_build_job(
-            #     client,
-            #     annotations=annotation_file,
-            #     model_id=input_data["model_id"]
-            # )
-
-            # 4. Monitor progress
-            # status = self._monitor_job(client, job_id)
-
-            # 5. Get and save model
-            # model = self._get_model(client, job_id)
-            # self._save_model(model, input_data["output_path"])
-
-            # return ToolResult(
-            #     success=True,
-            #     message="Model built successfully",
-            #     data={
-            #         "model_id": input_data["model_id"],
-            #         "model_path": input_data["output_path"],
-            #         "statistics": self._get_model_statistics(model)
-            #     }
-            # )
 
         except Exception as e:
             return ToolResult(
-                success=False, message="Error building model", error=str(e)
+                success=False, message=f"Error building model: {str(e)}", error=str(e)
             )

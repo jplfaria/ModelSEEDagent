@@ -1,0 +1,15 @@
+{
+  "id": "2c3272db",
+  "name": "Analysis_20250608_1859",
+  "created_at": "2025-06-08T18:59:09.985694",
+  "last_active": "2025-06-08T18:59:09.985709",
+  "status": "active",
+  "description": "Interactive metabolic modeling analysis",
+  "model_files": [],
+  "interactions": [],
+  "context": {},
+  "metadata": {},
+  "total_queries": 0,
+  "total_execution_time": 0.0,
+  "success_rate": 1.0
+}

@@ -1,0 +1,429 @@
+[
+  {
+    "experience_id": "1749351388.128483",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-07T21:56:28.128489",
+    "user_query": "I need a comprehensive metabolic analysis of E. coli",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "e_coli",
+      "query_type": "comprehensive",
+      "complexity": "high"
+    },
+    "tools_used": [
+      "run_metabolic_fba"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": []
+  },
+  {
+    "experience_id": "1749351948.29973",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-07T22:05:48.299741",
+    "user_query": "I need a comprehensive metabolic analysis of E. coli",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "e_coli",
+      "query_type": "comprehensive",
+      "complexity": "high"
+    },
+    "tools_used": [
+      "run_metabolic_fba"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": []
+  },
+  {
+    "experience_id": "1749353915.387579",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-07T22:38:35.387589",
+    "user_query": "I need a comprehensive metabolic analysis of E. coli",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "e_coli",
+      "query_type": "comprehensive",
+      "complexity": "high"
+    },
+    "tools_used": [
+      "run_metabolic_fba",
+      "run_metabolic_fba",
+      "run_metabolic_fba"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba",
+      "run_metabolic_fba",
+      "run_metabolic_fba"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": []
+  },
+  {
+    "experience_id": "1749422639.846035",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-08T17:43:59.846045",
+    "user_query": "I need a comprehensive metabolic analysis of E. coli",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "e_coli",
+      "query_type": "comprehensive",
+      "complexity": "high"
+    },
+    "tools_used": [
+      "run_metabolic_fba"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": []
+  },
+  {
+    "experience_id": "1749422812.580495",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-08T17:46:52.580497",
+    "user_query": "I need a comprehensive metabolic analysis of E. coli",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "e_coli",
+      "query_type": "comprehensive",
+      "complexity": "high"
+    },
+    "tools_used": [
+      "run_metabolic_fba"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": []
+  },
+  {
+    "experience_id": "1749426215.133264",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-08T18:43:35.133272",
+    "user_query": "I need a comprehensive metabolic analysis of E. coli",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "e_coli",
+      "query_type": "comprehensive",
+      "complexity": "high"
+    },
+    "tools_used": [
+      "run_metabolic_fba",
+      "find_minimal_media",
+      "analyze_essentiality",
+      "run_flux_variability_analysis",
+      "identify_auxotrophies"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba",
+      "find_minimal_media",
+      "analyze_essentiality",
+      "run_flux_variability_analysis",
+      "identify_auxotrophies"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": []
+  },
+  {
+    "experience_id": "1749427567.951761",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-08T19:06:07.951771",
+    "user_query": "I need a comprehensive metabolic analysis of E. coli core model in the data/examples folder",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "e_coli",
+      "query_type": "comprehensive",
+      "complexity": "high"
+    },
+    "tools_used": [
+      "run_metabolic_fba",
+      "find_minimal_media",
+      "analyze_essentiality",
+      "run_flux_variability_analysis",
+      "identify_auxotrophies"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba",
+      "find_minimal_media",
+      "analyze_essentiality",
+      "run_flux_variability_analysis",
+      "identify_auxotrophies"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": []
+  },
+  {
+    "experience_id": "1749429924.681521",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-08T19:45:24.681529",
+    "user_query": "I need a comprehensive metabolic analysis of E. coli core model in our data /Users/jplfaria/repos/ModelSEEDagent/data/examples/e_coli_core.xml",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "e_coli",
+      "query_type": "comprehensive",
+      "complexity": "high"
+    },
+    "tools_used": [
+      "run_metabolic_fba",
+      "analyze_essentiality",
+      "find_minimal_media",
+      "run_flux_variability_analysis",
+      "identify_auxotrophies"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba",
+      "analyze_essentiality",
+      "find_minimal_media",
+      "run_flux_variability_analysis",
+      "identify_auxotrophies"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": []
+  },
+  {
+    "experience_id": "1749431246.694892",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-08T20:07:26.694899",
+    "user_query": "What is the growth rate of E. coli?",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "e_coli",
+      "query_type": "growth_analysis",
+      "complexity": "medium"
+    },
+    "tools_used": [
+      "run_metabolic_fba"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": []
+  },
+  {
+    "experience_id": "1749431771.342563",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-08T20:16:11.342570",
+    "user_query": "I need a comprehensive metabolic analysis of E. coli",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "e_coli",
+      "query_type": "comprehensive",
+      "complexity": "high"
+    },
+    "tools_used": [
+      "run_metabolic_fba",
+      "run_metabolic_fba",
+      "find_minimal_media",
+      "analyze_essentiality",
+      "run_flux_variability_analysis",
+      "identify_auxotrophies"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba",
+      "run_metabolic_fba",
+      "find_minimal_media",
+      "analyze_essentiality",
+      "run_flux_variability_analysis",
+      "identify_auxotrophies"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": []
+  },
+  {
+    "experience_id": "1749434552.149133",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-08T21:02:32.149146",
+    "user_query": "What is the growth rate of E. coli?",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "e_coli",
+      "query_type": "growth_analysis",
+      "complexity": "medium"
+    },
+    "tools_used": [
+      "run_metabolic_fba"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": []
+  },
+  {
+    "experience_id": "1749435015.626491",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-08T21:10:15.626500",
+    "user_query": "I need a comprehensive metabolic analysis of E. coli",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "e_coli",
+      "query_type": "comprehensive",
+      "complexity": "high"
+    },
+    "tools_used": [
+      "run_metabolic_fba",
+      "find_minimal_media",
+      "analyze_essentiality",
+      "run_flux_variability_analysis",
+      "identify_auxotrophies"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba",
+      "find_minimal_media",
+      "analyze_essentiality",
+      "run_flux_variability_analysis",
+      "identify_auxotrophies"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": []
+  },
+  {
+    "experience_id": "1749444616.606045",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-08T23:50:16.606057",
+    "user_query": "can you give me nore details on the network connectivity analysis?",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "unknown",
+      "query_type": "general",
+      "complexity": "medium"
+    },
+    "tools_used": [
+      "run_flux_variability_analysis"
+    ],
+    "tool_sequence": [
+      "run_flux_variability_analysis"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": []
+  },
+  {
+    "experience_id": "1749445629.710138",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-09T00:07:09.710154",
+    "user_query": "cani get more details on the network connectivity?",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "unknown",
+      "query_type": "general",
+      "complexity": "medium"
+    },
+    "tools_used": [
+      "run_flux_variability_analysis"
+    ],
+    "tool_sequence": [
+      "run_flux_variability_analysis"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": []
+  },
+  {
+    "experience_id": "1749446829.10233",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-09T00:27:09.102343",
+    "user_query": "explore the predicte dgrowth rate in more detail and give me a summry of what you learn",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "unknown",
+      "query_type": "growth_analysis",
+      "complexity": "medium"
+    },
+    "tools_used": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "find_minimal_media",
+      "run_gene_deletion_analysis"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "find_minimal_media",
+      "run_gene_deletion_analysis"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": []
+  }
+]

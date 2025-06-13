@@ -332,10 +332,61 @@ class EnhancedToolIntegration:
             if plan.parameters:
                 input_data = plan.parameters
             else:
-                input_data = "default analysis"
+                # For analysis tools, provide model path and other parameters
+                if plan.tool_name in [
+                    "run_metabolic_fba",
+                    "find_minimal_media",
+                    "analyze_essentiality",
+                    "run_flux_variability_analysis",
+                    "identify_auxotrophies",
+                    "run_flux_sampling",
+                    "run_gene_deletion_analysis",
+                    "run_production_envelope",
+                    "analyze_metabolic_model",
+                    "check_missing_media",
+                    "analyze_reaction_expression",
+                ]:
+                    from pathlib import Path
 
-            # Execute tool
-            result = tool._run(input_data)
+                    default_model_path = str(
+                        Path(__file__).parent.parent.parent
+                        / "data"
+                        / "examples"
+                        / "e_coli_core.xml"
+                    )
+                    input_data = {"model_path": default_model_path}
+                elif plan.tool_name == "analyze_pathway":
+                    from pathlib import Path
+
+                    default_model_path = str(
+                        Path(__file__).parent.parent.parent
+                        / "data"
+                        / "examples"
+                        / "e_coli_core.xml"
+                    )
+                    input_data = {
+                        "model_path": default_model_path,
+                        "pathway": "glycolysis",
+                    }
+                else:
+                    input_data = "default analysis"
+
+            # Execute tool - handle special cases for tools that expect string instead of dict
+            if (
+                plan.tool_name == "analyze_metabolic_model"
+                and isinstance(input_data, dict)
+                and "model_path" in input_data
+            ):
+                result = tool._run(input_data["model_path"])
+            elif plan.tool_name == "analyze_pathway":
+                # analyze_pathway requires both model_path and pathway parameters
+                if isinstance(input_data, dict) and "model_path" in input_data:
+                    # Ensure pathway parameter is included
+                    if "pathway" not in input_data:
+                        input_data["pathway"] = "glycolysis"  # Default pathway
+                result = tool._run(input_data)
+            else:
+                result = tool._run(input_data)
             execution_time = time.time() - start_time
 
             # Create execution result
