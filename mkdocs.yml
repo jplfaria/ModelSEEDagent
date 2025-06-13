@@ -5,8 +5,7 @@ repo_url: https://github.com/ModelSEED/ModelSEEDagent
 repo_name: ModelSEED/ModelSEEDagent
 
 extra_javascript:
-  - https://unpkg.com/mermaid@10.9.1/dist/mermaid.min.js
-  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mtml-chtml.js
 
 extra_css:
   - https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css
@@ -46,10 +45,7 @@ markdown_extensions:
       anchor_linenums: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
-  - pymdownx.superfences:
-      custom_fences:
-        - name: mermaid
-          class: mermaid
+  - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
   - admonition

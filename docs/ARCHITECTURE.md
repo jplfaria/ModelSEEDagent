@@ -16,107 +16,92 @@ ModelSEEDagent is an AI-powered metabolic modeling platform that combines Large 
 
 ### High-Level Component Overview
 
-```mermaid
-graph TB
-    subgraph "User Interfaces"
-        UI1[Interactive Chat Interface]
-        UI2[CLI Commands]
-        UI3[Python API]
-        UI4[Web Interface<br/>(Future)]
-    end
-
-    subgraph "Agent Orchestration Layer"
-        AG1[LangGraph Workflows]
-        AG2[Metabolic Agent]
-        AG3[Reasoning Chains]
-        AG4[Collaborative Decision Making]
-    end
-
-    subgraph "LLM Abstraction Layer"
-        LLM1[Argo Gateway<br/>13 models]
-        LLM2[OpenAI API]
-        LLM3[Local LLMs<br/>Llama 3.x]
-        LLM4[Model Factory & Config]
-    end
-
-    subgraph "Tool Execution Layer"
-        T1[COBRApy Tools<br/>16 tools]
-        T2[ModelSEED Tools<br/>6 tools]
-        T3[Biochemistry Database<br/>3 tools]
-        T4[RAST Tools<br/>2 tools]
-        T5[Audit Tools<br/>2 tools]
-    end
-
-    subgraph "Data & Persistence Layer"
-        D1[Biochemistry Database<br/>SQLite]
-        D2[Session State]
-        D3[Audit Trails]
-        D4[Model Cache & Results]
-    end
-
-    UI1 --> AG1
-    UI2 --> AG2
-    UI3 --> AG3
-    UI4 --> AG4
-
-    AG1 --> LLM1
-    AG2 --> LLM2
-    AG3 --> LLM3
-    AG4 --> LLM4
-
-    LLM1 --> T1
-    LLM2 --> T2
-    LLM3 --> T3
-    LLM4 --> T4
-
-    T1 --> D1
-    T2 --> D2
-    T3 --> D3
-    T4 --> D4
-    T5 --> D1
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           USER INTERFACES                                  │
+├─────────────────┬─────────────────┬─────────────────┬─────────────────────┤
+│ Interactive     │ CLI Commands    │ Python API      │ Web Interface       │
+│ Chat Interface  │                 │                 │ (Future)            │
+└─────────┬───────┴─────────┬───────┴─────────┬───────┴─────────┬───────────┘
+          │                 │                 │                 │
+          ▼                 ▼                 ▼                 ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      AGENT ORCHESTRATION LAYER                             │
+├─────────────────┬─────────────────┬─────────────────┬─────────────────────┤
+│ LangGraph       │ Metabolic       │ Reasoning       │ Collaborative       │
+│ Workflows       │ Agent           │ Chains          │ Decision Making     │
+└─────────┬───────┴─────────┬───────┴─────────┬───────┴─────────┬───────────┘
+          │                 │                 │                 │
+          ▼                 ▼                 ▼                 ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        LLM ABSTRACTION LAYER                               │
+├─────────────────┬─────────────────┬─────────────────┬─────────────────────┤
+│ Argo Gateway    │ OpenAI API      │ Local LLMs      │ Model Factory &     │
+│ (13 models)     │                 │ (Llama 3.x)     │ Config              │
+└─────────┬───────┴─────────┬───────┴─────────┬───────┴─────────┬───────────┘
+          │                 │                 │                 │
+          ▼                 ▼                 ▼                 ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        TOOL EXECUTION LAYER                                │
+├─────────────────┬─────────────────┬─────────────────┬─────────────────────┤
+│ COBRApy Tools   │ ModelSEED Tools │ Biochemistry    │ RAST Tools    │ Audit │
+│ (16 tools)      │ (6 tools)       │ Database        │ (2 tools)     │ Tools │
+│                 │                 │ (3 tools)       │               │(2 tools)│
+└─────────┬───────┴─────────┬───────┴─────────┬───────┴─────────┬─────┬─────┘
+          │                 │                 │                 │     │
+          ▼                 ▼                 ▼                 ▼     │
+┌─────────────────────────────────────────────────────────────────────┘────┐
+│                     DATA & PERSISTENCE LAYER                            │
+├─────────────────┬─────────────────┬─────────────────┬─────────────────────┤
+│ Biochemistry    │ Session State   │ Audit Trails    │ Model Cache &       │
+│ Database        │                 │                 │ Results             │
+│ (SQLite)        │                 │                 │                     │
+└─────────────────┴─────────────────┴─────────────────┴─────────────────────┘
 ```
 
 
 ### Detailed Component Interaction Flow
 
-```mermaid
-flowchart TD
-    A[User Request] --> B[Query Processor]
-    B --> B1[Parse Intent]
-    B1 --> B2[Route to Agent]
-
-    B2 --> C[Agent Orchestrator]
-    C --> C1[Select Strategy]
-    C1 --> C2[Plan Workflow]
-
-    C2 --> D[LLM Backend]
-    D --> D1[Process Context]
-    D1 --> D2[Generate Plan]
-
-    D2 --> E[Tool Executor]
-    E --> E1[Validate Inputs]
-    E1 --> E2[Execute Tools]
-    E2 --> E3[Audit Results]
-
-    E3 --> F[Result Processor]
-    F --> F1[Format Output]
-    F1 --> F2[Update State]
-    F2 --> F3[Generate Response]
-
-    F3 --> G[User Response]
-
-    classDef userClass fill:#e1f5fe
-    classDef processClass fill:#f3e5f5
-    classDef llmClass fill:#e8f5e8
-    classDef toolClass fill:#fff3e0
-    classDef resultClass fill:#fce4ec
-
-    class A,G userClass
-    class B,B1,B2 processClass
-    class C,C1,C2 processClass
-    class D,D1,D2 llmClass
-    class E,E1,E2,E3 toolClass
-    class F,F1,F2,F3 resultClass
+```
+┌─────────────────┐
+│  User Request   │
+└─────────┬───────┘
+          │
+          ▼
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│ Query Processor │────│ Parse Intent    │────│ Route to Agent  │
+└─────────┬───────┘    └─────────────────┘    └─────────┬───────┘
+          │                                            │
+          ▼                                            ▼
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│Agent Orchestr.  │────│ Select Strategy │────│ Plan Workflow   │
+└─────────┬───────┘    └─────────────────┘    └─────────┬───────┘
+          │                                            │
+          ▼                                            ▼
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│  LLM Backend    │────│Process Context  │────│ Generate Plan   │
+└─────────┬───────┘    └─────────────────┘    └─────────┬───────┘
+          │                                            │
+          ▼                                            ▼
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│ Tool Executor   │────│Validate Inputs  │────│ Execute Tools   │
+└─────────┬───────┘    └─────────────────┘    └─────────┬───────┘
+          │                                            │
+          ▼                                            ▼
+┌─────────────────┐                          ┌─────────────────┐
+│ Audit Results   │                          │Result Processor │
+└─────────┬───────┘                          └─────────┬───────┘
+          │                                            │
+          └────────────────────┬───────────────────────┘
+                               ▼
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│ Format Output   │────│  Update State   │────│Generate Response│
+└─────────┬───────┘    └─────────────────┘    └─────────┬───────┘
+          │                                            │
+          ▼                                            ▼
+                         ┌─────────────────┐
+                         │ User Response   │
+                         └─────────────────┘
 ```
 
 ## Component Architecture
@@ -139,99 +124,53 @@ flowchart TD
 
 **Tool Organization and Communication**:
 
-```mermaid
-graph TD
-    subgraph "Tool Hierarchy"
-        BT[BaseTool<br/>- Common API<br/>- Validation<br/>- Error handling]
+```
+                        ┌─────────────────────────────────┐
+                        │         BaseTool                │
+                        │  • Common API                   │
+                        │  • Validation                   │
+                        │  • Error handling               │
+                        └─────────────┬───────────────────┘
+                                      │
+          ┌───────────────────────────┼───────────────────────────┐
+          │                           │                           │
+          ▼                           ▼                           ▼
+    ┌─────────────┐            ┌─────────────┐             ┌─────────────┐
+    │ COBRApy     │            │ ModelSEED   │             │ Biochem     │
+    │ Tools       │            │ Tools       │             │ Tools       │
+    │ (16 total)  │            │ (6 tools)   │             │ (3 tools)   │
+    └─────┬───────┘            └─────┬───────┘             └─────┬───────┘
+          │                          │                           │
+          ├─ FBA Analysis             ├─ Annotation               ├─ ID Resolution
+          ├─ Gene Knockout            ├─ Model Building           └─ DB Search
+          ├─ Essentiality             └─ Gapfilling
+          ├─ Flux Sampling
+          ├─ Flux Variability
+          │
+          └─ AI Media (6 tools):
+             ├─ Media Selection
+             ├─ Media Manipulation
+             ├─ Media Compatibility
+             ├─ Media Optimization
+             ├─ Auxotrophy Prediction
+             └─ Media Comparison
 
-        subgraph "Tool Categories"
-            CT[COBRApy Tools<br/>16 tools<br/>(includes 6 AI Media)]
-            MT[ModelSEED Tools<br/>6 tools]
-            BCT[Biochemistry Tools<br/>3 tools]
-            RT[RAST Tools<br/>2 tools]
-            AT[Audit Tools<br/>2 tools]
-        end
+    ┌─────────────┐            ┌─────────────┐
+    │ RAST Tools  │            │ Audit Tools │
+    │ (2 tools)   │            │ (2 tools)   │
+    └─────┬───────┘            └─────┬───────┘
+          │                          │
+          └─ RAST API                 ├─ Tool Auditing
+                                     ├─ AI Audit
+                                     └─ Real-time Verification
 
-        subgraph "COBRApy Capabilities"
-            FBA[FBA Analysis]
-            GKO[Gene Knockout]
-            ESS[Essentiality]
-            FS[Flux Sampling]
-            FVA[Flux Variability]
-        end
-
-        subgraph "ModelSEED Capabilities"
-            ANN[Annotation]
-            BUILD[Model Building]
-            GAP[Gapfilling]
-            RAST[RAST API]
-        end
-
-        subgraph "Biochemistry Capabilities"
-            IDR[ID Resolution]
-            DBS[DB Search]
-        end
-
-        subgraph "AI Media Capabilities (Part of COBRApy)"
-            SEL[Media Selection]
-            MAN[Media Manipulation]
-            COMP[Media Compatibility]
-            OPT[Media Optimization]
-            AUX[Auxotrophy Prediction]
-            COMPAR[Media Comparison]
-        end
-
-        subgraph "Audit Capabilities"
-            AUDIT[Tool Auditing]
-            AI_AUDIT[AI Audit]
-            VERIFY[Real-time Verification]
-        end
-
-        subgraph "Universal Infrastructure"
-            BD[BiomassDetector]
-            MM[MediaManager]
-            CM[CompoundMapper]
-        end
-    end
-
-    BT --> CT
-    BT --> MT
-    BT --> BCT
-    BT --> RT
-    BT --> AT
-
-    CT --> FBA
-    CT --> GKO
-    CT --> ESS
-    CT --> FS
-    CT --> FVA
-    CT --> SEL
-    CT --> MAN
-    CT --> COMP
-    CT --> OPT
-    CT --> AUX
-    CT --> COMPAR
-
-    MT --> ANN
-    MT --> BUILD
-    MT --> GAP
-
-    RT --> RAST
-
-    BCT --> IDR
-    BCT --> DBS
-
-    AT --> AUDIT
-    AT --> AI_AUDIT
-    AT --> VERIFY
-
-    CT --> BD
-    CT --> MM
-    CT --> CM
-    MT --> BD
-    MT --> MM
-    MT --> CM
-    AT --> BD
+    ┌─────────────────────────────────────────────────────────────┐
+    │                Universal Infrastructure                     │
+    │  ┌─────────────────┐ ┌─────────────────┐ ┌───────────────┐ │
+    │  │ BiomassDetector │ │  MediaManager   │ │CompoundMapper │ │
+    │  │                 │ │                 │ │               │ │
+    │  └─────────────────┘ └─────────────────┘ └───────────────┘ │
+    └─────────────────────────────────────────────────────────────┘
 ```
 
 **Tool Categories**:
@@ -343,45 +282,66 @@ src/tools/
 
 **AI Decision Flow Architecture**:
 
-```mermaid
-flowchart TD
-    UQ[User Query] --> QA[Query Analysis]
-    QA --> CB[Context Building]
-    CB --> RSS[Reasoning Strategy Selection]
-
-    RSS --> MSC[Multi-Step Chains]
-    RSS --> HT[Hypothesis Testing]
-    RSS --> CD[Collaborative Decision]
-
-    MSC --> TSE[Tool Selection & Execution]
-    HT --> TSE
-    CD --> TSE
-
-    TSE --> RSL[Result Synthesis & Learning]
-    RSL --> UR[User Response]
-
-    subgraph "Advanced AI Reasoning"
-        MSC --> MSC1[Plan 5-10 step sequences]
-        MSC1 --> MSC2[Dynamic adaptation]
-
-        HT --> HT1[Generate hypotheses]
-        HT1 --> HT2[Systematic testing]
-
-        CD --> CD1[Recognize uncertainty]
-        CD1 --> CD2[Request human guidance]
-    end
-
-    classDef userClass fill:#e1f5fe
-    classDef analysisClass fill:#f3e5f5
-    classDef reasoningClass fill:#e8f5e8
-    classDef executionClass fill:#fff3e0
-    classDef resultClass fill:#fce4ec
-
-    class UQ,UR userClass
-    class QA,CB,RSS analysisClass
-    class MSC,HT,CD,MSC1,MSC2,HT1,HT2,CD1,CD2 reasoningClass
-    class TSE executionClass
-    class RSL resultClass
+```
+         ┌─────────────┐
+         │ User Query  │
+         └──────┬──────┘
+                │
+                ▼
+    ┌─────────────────────┐
+    │   Query Analysis    │
+    └──────────┬──────────┘
+               │
+               ▼
+    ┌─────────────────────┐
+    │  Context Building   │
+    └──────────┬──────────┘
+               │
+               ▼
+    ┌─────────────────────┐
+    │ Reasoning Strategy  │
+    │    Selection        │
+    └─┬──────────┬────────┘
+      │          │
+      ▼          ▼
+┌─────────┐ ┌──────────┐ ┌─────────────────┐
+│Multi-   │ │Hypothesis│ │ Collaborative   │
+│Step     │ │Testing   │ │ Decision        │
+│Chains   │ │          │ │                 │
+└─┬───────┘ └─┬────────┘ └─┬───────────────┘
+  │           │            │
+  │ ┌─────────────────────┐│
+  │ │Plan 5-10 sequences ││
+  │ │Dynamic adaptation  ││
+  │ └─────────────────────┘│
+  │                       │
+  │ ┌─────────────────────┐│
+  │ │Generate hypotheses ││
+  │ │Systematic testing  ││
+  │ └─────────────────────┘│
+  │                       │
+  │ ┌─────────────────────┐│
+  │ │Recognize uncertainty││
+  │ │Request guidance    ││
+  │ └─────────────────────┘│
+  │           │            │
+  └───────────┼────────────┘
+              ▼
+  ┌─────────────────────┐
+  │ Tool Selection &    │
+  │   Execution         │
+  └──────────┬──────────┘
+             │
+             ▼
+  ┌─────────────────────┐
+  │ Result Synthesis &  │
+  │     Learning        │
+  └──────────┬──────────┘
+             │
+             ▼
+  ┌─────────────────────┐
+  │   User Response     │
+  └─────────────────────┘
 ```
 
 **1. Multi-Step Reasoning Chains**:
