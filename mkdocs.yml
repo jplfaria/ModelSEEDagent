@@ -85,4 +85,6 @@ nav:
     - Configuration: configuration.md
     - Deployment: deployment.md
     - Monitoring: monitoring.md
+    - Release Automation: operations/release-automation.md
+    - Documentation Automation: operations/documentation-automation.md
     - Documentation Updates: documentation-updates.md
