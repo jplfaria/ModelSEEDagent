@@ -22,13 +22,13 @@ from typing import Any, Dict, List, Optional, Union
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage
 from langchain_core.prompts import ChatPromptTemplate
 
+from ..config.debug_config import get_debug_config
 from ..llm.base import BaseLLM
 from ..tools import ToolRegistry
 from ..tools.ai_audit import create_ai_decision_verifier, get_ai_audit_logger
 from ..tools.base import BaseTool, ToolResult
 from ..tools.realtime_verification import create_realtime_detector
 from ..utils.console_output_capture import ConsoleOutputCapture
-from ..config.debug_config import get_debug_config
 from .base import AgentConfig, AgentResult, BaseAgent
 from .collaborative_reasoning import create_collaborative_reasoning_system
 from .hypothesis_system import create_hypothesis_system
@@ -104,7 +104,7 @@ class RealTimeMetabolicAgent(BaseAgent):
         # 🔍 Console Output Capture - Phase 1 CLI Debug Capture
         # Get debug configuration for console capture flags
         debug_config = get_debug_config()
-        
+
         console_capture_config = {
             "capture_console_debug": (
                 config.get("capture_console_debug", debug_config.capture_console_debug)
@@ -112,12 +112,16 @@ class RealTimeMetabolicAgent(BaseAgent):
                 else debug_config.capture_console_debug
             ),
             "capture_ai_reasoning_flow": (
-                config.get("capture_ai_reasoning_flow", debug_config.capture_ai_reasoning_flow)
+                config.get(
+                    "capture_ai_reasoning_flow", debug_config.capture_ai_reasoning_flow
+                )
                 if isinstance(config, dict)
                 else debug_config.capture_ai_reasoning_flow
             ),
             "capture_formatted_results": (
-                config.get("capture_formatted_results", debug_config.capture_formatted_results)
+                config.get(
+                    "capture_formatted_results", debug_config.capture_formatted_results
+                )
                 if isinstance(config, dict)
                 else debug_config.capture_formatted_results
             ),

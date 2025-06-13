@@ -284,7 +284,9 @@ def load_cli_config() -> Dict[str, Any]:
                     # Don't create agent immediately to avoid initialization spam
                     config["tools"] = tools
                     config["agent"] = None  # Will be created on demand
-                    config["agent_factory"] = lambda: get_or_create_cached_agent(llm, tools)
+                    config["agent_factory"] = lambda: get_or_create_cached_agent(
+                        llm, tools
+                    )
 
                 except Exception as e:
                     # If recreation fails, just log warning and continue with basic config
@@ -339,16 +341,18 @@ def get_or_create_cached_agent(llm, tools):
     # Create cache key based on LLM type and tool count
     llm_key = f"{type(llm).__name__}_{getattr(llm, 'model_name', 'unknown')}"
     cache_key = f"{llm_key}_{len(tools)}"
-    
+
     if cache_key not in _agent_cache:
         from src.agents.langgraph_metabolic import LangGraphMetabolicAgent
+
         agent_config = {
             "name": "modelseed_langgraph_agent",
             "description": "Enhanced ModelSEED agent with LangGraph workflows",
         }
         _agent_cache[cache_key] = LangGraphMetabolicAgent(llm, tools, agent_config)
-    
+
     return _agent_cache[cache_key]
+
 
 # ASCII Art Banner
 BANNER = """
@@ -967,7 +971,10 @@ def setup(
 
 
 def run_streaming_analysis(
-    query: str, model_file: Path, analysis_input: Dict[str, Any], log_llm_inputs: bool = False
+    query: str,
+    model_file: Path,
+    analysis_input: Dict[str, Any],
+    log_llm_inputs: bool = False,
 ):
     """Run analysis with real-time streaming interface"""
     console.print("\n[bold cyan]🚀 Starting Real-Time AI Analysis[/bold cyan]")
@@ -1153,7 +1160,9 @@ def analyze(
 
     # Choose between streaming and regular analysis
     if stream:
-        result = run_streaming_analysis(query, model_file, analysis_input, log_llm_inputs)
+        result = run_streaming_analysis(
+            query, model_file, analysis_input, log_llm_inputs
+        )
     else:
         result = run_regular_analysis(analysis_input, max_iterations)
 
@@ -1356,10 +1365,10 @@ def interactive():
 def debug():
     """
     🔍 Show debug configuration and logging control
-    
+
     Display current debug settings and environment variables that control
     different levels of logging verbosity for different components.
-    
+
     Environment Variables:
     - MODELSEED_DEBUG_LEVEL: overall debug level (quiet, normal, verbose, trace)
     - MODELSEED_DEBUG_COBRAKBASE: enable cobrakbase debug messages (true/false)
@@ -1374,21 +1383,27 @@ def debug():
     """
     print_banner()
     console.print("[bold blue]🔍 Debug Configuration Status[/bold blue]\n")
-    
+
     # Print debug status using the dedicated function
     print_debug_status()
-    
+
     console.print("\n[bold green]💡 Tips for Debug Control:[/bold green]")
     console.print("   • Set MODELSEED_DEBUG_LEVEL=quiet to minimize all debug output")
     console.print("   • Set MODELSEED_DEBUG_LEVEL=trace to enable all debug messages")
     console.print("   • Use component-specific flags to control individual debug areas")
     console.print("   • Set MODELSEED_LOG_LLM_INPUTS=true for detailed LLM analysis")
-    
+
     console.print("\n[bold cyan]💡 Console Capture Control:[/bold cyan]")
-    console.print("   • Set MODELSEED_CAPTURE_CONSOLE_DEBUG=true to capture console debug output")
-    console.print("   • Set MODELSEED_CAPTURE_AI_REASONING_FLOW=true to capture AI reasoning steps")
-    console.print("   • Set MODELSEED_CAPTURE_FORMATTED_RESULTS=true to capture final results")
-    
+    console.print(
+        "   • Set MODELSEED_CAPTURE_CONSOLE_DEBUG=true to capture console debug output"
+    )
+    console.print(
+        "   • Set MODELSEED_CAPTURE_AI_REASONING_FLOW=true to capture AI reasoning steps"
+    )
+    console.print(
+        "   • Set MODELSEED_CAPTURE_FORMATTED_RESULTS=true to capture final results"
+    )
+
     console.print("\n[bold yellow]📝 Example Usage:[/bold yellow]")
     console.print("   export MODELSEED_DEBUG_LEVEL=verbose")
     console.print("   export MODELSEED_DEBUG_COBRAKBASE=true")
