@@ -13,6 +13,9 @@ Environment Variables:
 - MODELSEED_DEBUG_TOOLS: enable tool execution debug (true/false)
 - MODELSEED_DEBUG_LLM: enable LLM interaction debug (true/false)
 - MODELSEED_LOG_LLM_INPUTS: enable complete LLM input logging (true/false)
+- MODELSEED_CAPTURE_CONSOLE_DEBUG: capture console debug output (true/false)
+- MODELSEED_CAPTURE_AI_REASONING_FLOW: capture AI reasoning steps (true/false)
+- MODELSEED_CAPTURE_FORMATTED_RESULTS: capture final formatted results (true/false)
 """
 
 import logging
@@ -45,6 +48,11 @@ class DebugFlags:
         
         # Special logging flags
         self.log_llm_inputs = self._get_bool_env("MODELSEED_LOG_LLM_INPUTS", False)
+        
+        # Console capture flags (Phase 1 CLI Debug Capture)
+        self.capture_console_debug = self._get_bool_env("MODELSEED_CAPTURE_CONSOLE_DEBUG", False)
+        self.capture_ai_reasoning_flow = self._get_bool_env("MODELSEED_CAPTURE_AI_REASONING_FLOW", False)
+        self.capture_formatted_results = self._get_bool_env("MODELSEED_CAPTURE_FORMATTED_RESULTS", False)
         
         # Auto-configure based on debug level
         self._auto_configure()
@@ -121,6 +129,11 @@ class DebugFlags:
             },
             "special_flags": {
                 "log_llm_inputs": self.log_llm_inputs,
+            },
+            "console_capture_flags": {
+                "console_debug": self.capture_console_debug,
+                "ai_reasoning_flow": self.capture_ai_reasoning_flow,
+                "formatted_results": self.capture_formatted_results,
             }
         }
         
@@ -179,6 +192,10 @@ def print_debug_status():
     for flag, enabled in config['special_flags'].items():
         status = "✅ ENABLED" if enabled else "❌ DISABLED"
         print(f"     {flag:12}: {status}")
+    print(f"   Console Capture Flags:")
+    for flag, enabled in config['console_capture_flags'].items():
+        status = "✅ ENABLED" if enabled else "❌ DISABLED"
+        print(f"     {flag:18}: {status}")
 
 
 def get_logging_level_for_component(component: str) -> int:

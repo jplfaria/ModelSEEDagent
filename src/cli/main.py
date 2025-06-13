@@ -1368,6 +1368,9 @@ def debug():
     - MODELSEED_DEBUG_TOOLS: enable tool execution debug (true/false)
     - MODELSEED_DEBUG_LLM: enable LLM interaction debug (true/false)
     - MODELSEED_LOG_LLM_INPUTS: enable complete LLM input logging (true/false)
+    - MODELSEED_CAPTURE_CONSOLE_DEBUG: capture console debug output (true/false)
+    - MODELSEED_CAPTURE_AI_REASONING_FLOW: capture AI reasoning steps (true/false)
+    - MODELSEED_CAPTURE_FORMATTED_RESULTS: capture final formatted results (true/false)
     """
     print_banner()
     console.print("[bold blue]🔍 Debug Configuration Status[/bold blue]\n")
@@ -1381,10 +1384,16 @@ def debug():
     console.print("   • Use component-specific flags to control individual debug areas")
     console.print("   • Set MODELSEED_LOG_LLM_INPUTS=true for detailed LLM analysis")
     
+    console.print("\n[bold cyan]💡 Console Capture Control:[/bold cyan]")
+    console.print("   • Set MODELSEED_CAPTURE_CONSOLE_DEBUG=true to capture console debug output")
+    console.print("   • Set MODELSEED_CAPTURE_AI_REASONING_FLOW=true to capture AI reasoning steps")
+    console.print("   • Set MODELSEED_CAPTURE_FORMATTED_RESULTS=true to capture final results")
+    
     console.print("\n[bold yellow]📝 Example Usage:[/bold yellow]")
     console.print("   export MODELSEED_DEBUG_LEVEL=verbose")
     console.print("   export MODELSEED_DEBUG_COBRAKBASE=true")
     console.print("   export MODELSEED_DEBUG_LANGGRAPH=false")
+    console.print("   export MODELSEED_CAPTURE_AI_REASONING_FLOW=true")
     console.print("   modelseed-agent interactive")
 
 

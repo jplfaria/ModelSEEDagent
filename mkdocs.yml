@@ -80,11 +80,16 @@ nav:
     - Overview: api/overview.md
     - Tool Implementation: api/tools.md
 
+  - Development Roadmaps:
+    - CLI Debug Capture: development/cli-debug-capture-roadmap.md
+
   - Operations:
     - Installation: installation.md
     - Configuration: configuration.md
     - Deployment: deployment.md
     - Monitoring: monitoring.md
+
+  - Dev Housekeeping:
     - Release Automation: operations/release-automation.md
     - Documentation Automation: operations/documentation-automation.md
     - Documentation Updates: documentation-updates.md

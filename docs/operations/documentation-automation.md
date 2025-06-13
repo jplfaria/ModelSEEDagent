@@ -50,7 +50,7 @@ The documentation automation system provides:
 ```python
 class DocumentationReviewer:
     - analyze_code_changes()      # Detect semantic code changes
-    - count_tools()              # Track tool inventory automatically  
+    - count_tools()              # Track tool inventory automatically
     - update_documentation()     # Apply intelligent updates
     - prevent_duplication()      # Avoid content redundancy
     - track_changes()           # Maintain change history
@@ -126,7 +126,7 @@ class CodeChange:
     file_path: str
     change_type: str              # 'added', 'modified', 'deleted'
     functions: List[str]          # Function definitions
-    classes: List[str]            # Class definitions  
+    classes: List[str]            # Class definitions
     imports: List[str]            # Import statements
     cli_commands: List[str]       # CLI command definitions
     config_options: List[str]     # Configuration options
@@ -145,24 +145,24 @@ def analyze_python_file(file_path: str) -> CodeChange:
     """
     Analyzes Python files using AST parsing to extract:
     - Tool class definitions and registrations
-    - CLI command implementations  
+    - CLI command implementations
     - Configuration parameter definitions
     - API endpoint definitions
     - Example usage patterns
     """
-    
+
     with open(file_path, 'r') as f:
         tree = ast.parse(f.read())
-    
+
     # Extract semantic elements
-    classes = [node.name for node in ast.walk(tree) 
+    classes = [node.name for node in ast.walk(tree)
                if isinstance(node, ast.ClassDef)]
     functions = [node.name for node in ast.walk(tree)
                  if isinstance(node, ast.FunctionDef)]
-    
+
     # Identify tools specifically
     tools = [cls for cls in classes if 'Tool' in cls]
-    
+
     return CodeChange(
         file_path=file_path,
         classes=classes,
@@ -185,22 +185,22 @@ def discover_tools(self) -> Dict[str, List[str]]:
     - Biochemistry tools in src/tools/biochem/
     - AI Media tools in src/tools/cobra/advanced_media_ai.py
     """
-    
+
     tool_categories = {
         'cobra': [],
-        'modelseed': [], 
+        'modelseed': [],
         'rast': [],
         'biochem': [],
         'ai_media': []
     }
-    
+
     # Scan tool directories
     for category, path in tool_paths.items():
         files = Path(path).glob('**/*.py')
         for file in files:
             tools = self.extract_tools_from_file(file)
             tool_categories[category].extend(tools)
-    
+
     return tool_categories
 ```
 
@@ -214,7 +214,7 @@ The system determines which documentation files need updates:
 def analyze_documentation_impact(self, changes: List[CodeChange]) -> Dict[str, List[str]]:
     """
     Maps code changes to documentation impact:
-    
+
     Code Change Type → Documentation Files Affected
     ────────────────────────────────────────────────
     Tool additions   → TOOL_REFERENCE.md, api/tools.md
@@ -224,9 +224,9 @@ def analyze_documentation_impact(self, changes: List[CodeChange]) -> Dict[str, L
     Examples         → user/INTERACTIVE_GUIDE.md
     Breaking changes → All relevant documentation
     """
-    
+
     impact_map = {}
-    
+
     for change in changes:
         if change.tools:
             impact_map.setdefault('tools', []).extend([
@@ -234,13 +234,13 @@ def analyze_documentation_impact(self, changes: List[CodeChange]) -> Dict[str, L
                 'docs/api/tools.md',
                 'docs/index.md'
             ])
-        
+
         if change.cli_commands:
             impact_map.setdefault('cli', []).extend([
                 'docs/user/README.md',
                 'docs/installation.md'
             ])
-            
+
     return impact_map
 ```
 
@@ -253,14 +253,14 @@ The system applies different update strategies based on content type:
 ```python
 def update_tool_counts(self, file_path: str, tool_count: int):
     """Updates tool count references throughout documentation"""
-    
+
     patterns = [
         r'ModelSEEDagent provides \*\*\d+ specialized',
         r'\*\*\d+ tools\*\* organized',
         r'provides \d+ specialized tools',
         r'- \*\*Tool Count\*\*: \d+ tools total'
     ]
-    
+
     for pattern in patterns:
         content = re.sub(
             pattern,
@@ -274,7 +274,7 @@ def update_tool_counts(self, file_path: str, tool_count: int):
 ```python
 def update_tool_status(self, file_path: str, tool_name: str, status: str):
     """Updates development status annotations for tools"""
-    
+
     if status == 'development':
         # Add "(in development - currently not functional)" annotation
         pattern = rf'(#{1,4}\s+\d+\.\s+{tool_name}[^(]*)'
@@ -287,15 +287,15 @@ def update_tool_status(self, file_path: str, tool_name: str, status: str):
 ```python
 def detect_content_duplication(self, content: str, file_path: str) -> List[str]:
     """Detects and prevents content duplication across files"""
-    
+
     # Check for duplicate sections
     sections = re.findall(r'^#{1,4}\s+(.+)$', content, re.MULTILINE)
-    
+
     duplicates = []
     for section in sections:
         if self.is_duplicate_section(section, file_path):
             duplicates.append(f"Duplicate section: {section}")
-    
+
     return duplicates
 ```
 
@@ -309,7 +309,7 @@ The documentation system triggers on:
 File Changes That Trigger Updates:
   - src/**/*.py           # Source code changes
   - docs/**/*.md          # Documentation edits
-  - scripts/**/*.py       # Script modifications  
+  - scripts/**/*.py       # Script modifications
   - README.md             # Main readme updates
   - pyproject.toml        # Project configuration
   - config/**/*.yaml      # Configuration files
@@ -320,7 +320,7 @@ File Changes That Trigger Updates:
 ```python
 def categorize_changes(self, file_changes: List[str]) -> Dict[str, List[str]]:
     """Categorizes file changes to determine update scope"""
-    
+
     categories = {
         'tools': [],        # Tool implementations
         'cli': [],          # CLI interface changes
@@ -329,7 +329,7 @@ def categorize_changes(self, file_changes: List[str]) -> Dict[str, List[str]]:
         'examples': [],     # Example code changes
         'tests': []         # Test file changes
     }
-    
+
     for file_path in file_changes:
         if 'src/tools/' in file_path:
             categories['tools'].append(file_path)
@@ -337,7 +337,7 @@ def categorize_changes(self, file_changes: List[str]) -> Dict[str, List[str]]:
             categories['cli'].append(file_path)
         elif 'config/' in file_path:
             categories['config'].append(file_path)
-            
+
     return categories
 ```
 
@@ -351,18 +351,18 @@ Documentation Files Automatically Updated:
     - docs/TOOL_REFERENCE.md      # Main tool reference
     - docs/api/tools.md           # Technical tool documentation
     - docs/index.md               # Homepage and overview
-    
+
   User Guides:
     - docs/user/README.md         # Getting started guide
     - docs/user/INTERACTIVE_GUIDE.md  # Interactive usage examples
-    
+
   Technical Documentation:
     - docs/configuration.md       # Configuration options
-    - docs/installation.md        # Installation instructions  
+    - docs/installation.md        # Installation instructions
     - docs/deployment.md          # Deployment guidance
     - docs/troubleshooting.md     # Troubleshooting guide
     - docs/monitoring.md          # Monitoring setup
-    
+
   API Documentation:
     - docs/api/overview.md        # API overview
     - docs/api/tools.md           # Detailed tool implementation
@@ -497,7 +497,7 @@ echo "✅ Documentation updated successfully"
 - name: Documentation Review
   run: |
     python scripts/docs_review.py --check
-    
+
     if [ $? -ne 0 ]; then
       echo "Documentation inconsistencies detected"
       python scripts/docs_review.py --update
@@ -515,7 +515,7 @@ echo "✅ Documentation updated successfully"
   "tasks": [
     {
       "label": "Update Documentation",
-      "type": "shell", 
+      "type": "shell",
       "command": "python scripts/docs_review.py --update",
       "group": "build",
       "presentation": {
@@ -534,7 +534,7 @@ echo "✅ Documentation updated successfully"
 ```python
 def generate_quality_metrics(self) -> Dict[str, Any]:
     """Generates documentation quality assessment"""
-    
+
     return {
         'consistency_score': self.calculate_consistency(),
         'coverage_percentage': self.calculate_coverage(),
@@ -641,12 +641,12 @@ python scripts/docs_review.py --report > doc_analysis_report.txt
 class MyAnalysisTool(BaseTool):
     """
     Purpose: Comprehensive metabolic pathway analysis
-    
+
     Usage: Used in automated tool discovery
     Category: cobra
     Status: functional
     """
-    
+
     def run_analysis(self):
         """Performs metabolic pathway analysis with flux optimization"""
         pass
@@ -659,7 +659,7 @@ class MyAnalysisTool(BaseTool):
 @ToolRegistry.register
 class OptimalMediaTool(BaseTool):
     """AI-powered optimal media selection tool"""
-    
+
     name = "select_optimal_media"
     category = "ai_media"  # Used for documentation categorization
     status = "functional"  # or "development"
@@ -687,7 +687,7 @@ config:
 ```yaml
 Roadmap:
   - AI-powered content generation for new features
-  - Cross-reference validation between documentation files  
+  - Cross-reference validation between documentation files
   - Automated example generation from tool usage
   - Integration with external documentation platforms
   - Multi-language documentation support
@@ -701,10 +701,10 @@ Roadmap:
 @app.route('/api/docs/update')
 def update_documentation():
     """API endpoint for triggering documentation updates"""
-    
+
     reviewer = DocumentationReviewer()
     result = reviewer.comprehensive_review()
-    
+
     return {
         'status': 'success',
         'files_updated': result.files_modified,

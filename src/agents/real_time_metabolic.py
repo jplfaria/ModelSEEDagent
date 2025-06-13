@@ -27,6 +27,8 @@ from ..tools import ToolRegistry
 from ..tools.ai_audit import create_ai_decision_verifier, get_ai_audit_logger
 from ..tools.base import BaseTool, ToolResult
 from ..tools.realtime_verification import create_realtime_detector
+from ..utils.console_output_capture import ConsoleOutputCapture
+from ..config.debug_config import get_debug_config
 from .base import AgentConfig, AgentResult, BaseAgent
 from .collaborative_reasoning import create_collaborative_reasoning_system
 from .hypothesis_system import create_hypothesis_system
@@ -98,6 +100,53 @@ class RealTimeMetabolicAgent(BaseAgent):
             config.get("log_llm_inputs", False) if isinstance(config, dict) else False
         )
         self._llm_cache = {}
+
+        # 🔍 Console Output Capture - Phase 1 CLI Debug Capture
+        # Get debug configuration for console capture flags
+        debug_config = get_debug_config()
+        
+        console_capture_config = {
+            "capture_console_debug": (
+                config.get("capture_console_debug", debug_config.capture_console_debug)
+                if isinstance(config, dict)
+                else debug_config.capture_console_debug
+            ),
+            "capture_ai_reasoning_flow": (
+                config.get("capture_ai_reasoning_flow", debug_config.capture_ai_reasoning_flow)
+                if isinstance(config, dict)
+                else debug_config.capture_ai_reasoning_flow
+            ),
+            "capture_formatted_results": (
+                config.get("capture_formatted_results", debug_config.capture_formatted_results)
+                if isinstance(config, dict)
+                else debug_config.capture_formatted_results
+            ),
+            "console_output_max_size_mb": (
+                config.get("console_output_max_size_mb", 50)
+                if isinstance(config, dict)
+                else 50
+            ),
+            "debug_capture_level": (
+                config.get("debug_capture_level", "basic")
+                if isinstance(config, dict)
+                else "basic"
+            ),
+        }
+
+        # Initialize console capture (enabled if any capture option is True)
+        console_capture_enabled = any(
+            [
+                console_capture_config["capture_console_debug"],
+                console_capture_config["capture_ai_reasoning_flow"],
+                console_capture_config["capture_formatted_results"],
+            ]
+        )
+
+        self.console_capture = ConsoleOutputCapture(
+            run_dir=self.run_dir,
+            enabled=console_capture_enabled,
+            config=console_capture_config,
+        )
 
         # Initialize Phase 8 Advanced Agentic Capabilities
         tools_registry = {t.tool_name: t for t in tools}
@@ -397,6 +446,20 @@ Think step by step about the query requirements and tool capabilities."""
             )
             response_text = response.text.strip()
 
+            # 🔍 Console Output Capture - Capture AI tool selection reasoning
+            if self.console_capture.enabled:
+                self.console_capture.capture_reasoning_step(
+                    step_type="tool_selection_response",
+                    content=response_text,
+                    metadata={
+                        "query": query[:100] + "..." if len(query) > 100 else query,
+                        "available_tools": available_tools,
+                        "execution_time": duration,
+                        "llm_model": getattr(self.llm, "model_name", "unknown"),
+                        "phase": "first_tool_selection",
+                    },
+                )
+
             # Parse AI response with robust, flexible parsing
             selected_tool, reasoning = self._parse_tool_selection_response(
                 response_text
@@ -600,6 +663,20 @@ Make your decision based on the ACTUAL DATA PATTERNS you see, not generic workfl
                 f"🔍 DECISION TIMEOUT DEBUG: Decision LLM call completed in {duration:.2f}s"
             )
             response_text = response.text.strip()
+
+            # 🔍 Console Output Capture - Capture AI decision analysis reasoning
+            if self.console_capture.enabled:
+                self.console_capture.capture_reasoning_step(
+                    step_type="decision_analysis_response",
+                    content=response_text,
+                    metadata={
+                        "step_number": step_number,
+                        "knowledge_base_size": len(knowledge_base),
+                        "execution_time": duration,
+                        "llm_model": getattr(self.llm, "model_name", "unknown"),
+                        "phase": "decision_analysis",
+                    },
+                )
 
             # Parse AI decision with robust, flexible parsing
             decision = self._parse_decision_response(response_text)
@@ -865,6 +942,19 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
                 f"🔍 CONCLUSION TIMEOUT DEBUG: Conclusion LLM call completed in {duration:.2f}s"
             )
             response_text = response.text.strip()
+
+            # 🔍 Console Output Capture - Capture AI final conclusions
+            if self.console_capture.enabled:
+                self.console_capture.capture_reasoning_step(
+                    step_type="final_conclusions_response",
+                    content=response_text,
+                    metadata={
+                        "tools_executed": len(knowledge_base),
+                        "execution_time": duration,
+                        "llm_model": getattr(self.llm, "model_name", "unknown"),
+                        "phase": "final_conclusions",
+                    },
+                )
 
             # Parse response into structured conclusions
             conclusions = {"summary": "Analysis completed based on collected data"}
@@ -1728,6 +1818,23 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
 
         logger.info(f"   💾 Full LLM input saved: {llm_input_file}")
 
+        # 🔍 Console Output Capture - Capture LLM input for debugging
+        if self.console_capture.enabled:
+            self.console_capture.capture_reasoning_step(
+                step_type=f"llm_input_{phase}",
+                content=prompt,
+                metadata={
+                    "step": step,
+                    "run_id": self.run_id,
+                    "phase": phase,
+                    "llm_model": getattr(self.llm, "model_name", "unknown"),
+                    "prompt_length_chars": len(prompt),
+                    "prompt_length_words": len(prompt.split()),
+                    "knowledge_base_size": len(knowledge_base),
+                    "llm_input_file": str(llm_input_file),
+                },
+            )
+
     def _log_ai_decision(self, decision_type: str, data: Dict[str, Any]):
         """Log AI decision-making for audit trail"""
         log_entry = {
@@ -1861,12 +1968,13 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
             )
             try:
                 # Use cached LangGraph agent to avoid initialization spam
-                if not hasattr(self, '_langgraph_delegate'):
+                if not hasattr(self, "_langgraph_delegate"):
                     from .langgraph_metabolic import LangGraphMetabolicAgent
+
                     self._langgraph_delegate = LangGraphMetabolicAgent(
                         llm=self.llm, tools=list(self._tools_dict.values()), config={}
                     )
-                
+
                 langgraph = self._langgraph_delegate
                 result = langgraph.run({"query": query})
 
@@ -2026,6 +2134,30 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
             logger.warning(
                 "Learning memory record_analysis method not available, skipping"
             )
+
+        # 🔍 Console Output Capture - Capture final formatted results
+        if self.console_capture.enabled:
+            final_message = final_conclusions.get(
+                "conclusions", final_conclusions.get("summary", "Analysis completed")
+            )
+            self.console_capture.capture_formatted_output(
+                output_type="final_analysis_result",
+                content=final_message,
+                metadata={
+                    "tools_executed": [t["tool"] for t in self.tool_execution_history],
+                    "reasoning_steps": len(self.audit_trail),
+                    "confidence_score": confidence_score,
+                    "knowledge_base_size": len(self.knowledge_base),
+                    "execution_history_size": len(self.tool_execution_history),
+                },
+            )
+
+            # Save complete reasoning flow before finishing
+            self.console_capture.save_reasoning_flow()
+
+            # Log capture summary
+            capture_summary = self.console_capture.get_capture_summary()
+            logger.info(f"🔍 Console capture summary: {capture_summary}")
 
         return AgentResult(
             success=True,
