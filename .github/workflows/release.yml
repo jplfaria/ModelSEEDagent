@@ -1,0 +1,296 @@
+name: 🚀 Create Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Release type'
+        required: true
+        default: 'auto'
+        type: choice
+        options:
+          - auto
+          - patch
+          - minor
+          - major
+      skip_pypi:
+        description: 'Skip PyPI publishing'
+        required: false
+        default: false
+        type: boolean
+      dry_run:
+        description: 'Dry run (no actual release)'
+        required: false
+        default: false
+        type: boolean
+
+  # Optional: Uncomment for automatic triggers
+  # schedule:
+  #   - cron: '0 0 * * 1'  # Every Monday at midnight
+  # push:
+  #   branches: [main]
+  #   paths: ['src/**', 'pyproject.toml']
+
+permissions:
+  contents: write
+  pull-requests: write
+  packages: write
+
+jobs:
+  analyze-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      version_bump: ${{ steps.version.outputs.bump }}
+      new_version: ${{ steps.version.outputs.new_version }}
+      current_version: ${{ steps.version.outputs.current_version }}
+      has_changes: ${{ steps.changes.outputs.has_changes }}
+      changelog: ${{ steps.changelog.outputs.content }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get current version
+        id: current
+        run: |
+          current=$(grep '^version = ' pyproject.toml | sed 's/version = "\(.*\)"/\1/')
+          echo "version=$current" >> $GITHUB_OUTPUT
+          echo "Current version: $current"
+
+      - name: Get latest release
+        id: latest_release
+        run: |
+          latest=$(gh release list --limit 1 --json tagName --jq '.[0].tagName // "v0.0.0"')
+          echo "tag=$latest" >> $GITHUB_OUTPUT
+          echo "Latest release: $latest"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Analyze commits since last release
+        id: changes
+        run: |
+          # Get commits since last release
+          if [ "${{ steps.latest_release.outputs.tag }}" = "v0.0.0" ]; then
+            commits=$(git log --oneline --pretty=format:"%s")
+          else
+            commits=$(git log ${{ steps.latest_release.outputs.tag }}..HEAD --oneline --pretty=format:"%s")
+          fi
+
+          echo "=== Commits since last release ==="
+          echo "$commits"
+          echo "=================================="
+
+          # Count changes by type
+          breaking_changes=$(echo "$commits" | grep -E "BREAKING CHANGE|!:" | wc -l)
+          features=$(echo "$commits" | grep "^feat" | wc -l)
+          fixes=$(echo "$commits" | grep "^fix" | wc -l)
+          total_commits=$(echo "$commits" | wc -l)
+
+          echo "breaking_changes=$breaking_changes" >> $GITHUB_OUTPUT
+          echo "features=$features" >> $GITHUB_OUTPUT
+          echo "fixes=$fixes" >> $GITHUB_OUTPUT
+          echo "total_commits=$total_commits" >> $GITHUB_OUTPUT
+          echo "has_changes=$([ $total_commits -gt 0 ] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+
+          # Store commits for changelog
+          echo "commits<<EOF" >> $GITHUB_OUTPUT
+          echo "$commits" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Determine version bump
+        id: version
+        run: |
+          current="${{ steps.current.outputs.version }}"
+          release_type="${{ github.event.inputs.release_type || 'auto' }}"
+
+          # Parse current version
+          IFS='.' read -ra VERSION_PARTS <<< "$current"
+          major=${VERSION_PARTS[0]}
+          minor=${VERSION_PARTS[1]}
+          patch=${VERSION_PARTS[2]}
+
+          echo "Current: $major.$minor.$patch"
+
+          # Determine bump type
+          if [ "$release_type" != "auto" ]; then
+            bump_type="$release_type"
+          elif [ "${{ steps.changes.outputs.breaking_changes }}" -gt 0 ]; then
+            bump_type="major"
+          elif [ "${{ steps.changes.outputs.features }}" -gt 0 ]; then
+            bump_type="minor"
+          elif [ "${{ steps.changes.outputs.fixes }}" -gt 0 ]; then
+            bump_type="patch"
+          else
+            bump_type="patch"  # Default for any other changes
+          fi
+
+          # Calculate new version
+          case $bump_type in
+            major)
+              new_version="$((major + 1)).0.0"
+              ;;
+            minor)
+              new_version="$major.$((minor + 1)).0"
+              ;;
+            patch)
+              new_version="$major.$minor.$((patch + 1))"
+              ;;
+          esac
+
+          echo "bump=$bump_type" >> $GITHUB_OUTPUT
+          echo "new_version=$new_version" >> $GITHUB_OUTPUT
+          echo "current_version=$current" >> $GITHUB_OUTPUT
+
+          echo "Version bump: $current → $new_version ($bump_type)"
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          commits="${{ steps.changes.outputs.commits }}"
+
+          # Create categorized changelog
+          changelog="## 🎉 What's Changed\n\n"
+
+          # Breaking changes
+          breaking=$(echo "$commits" | grep -E "BREAKING CHANGE|!:" || true)
+          if [ -n "$breaking" ]; then
+            changelog="$changelog### 💥 Breaking Changes\n"
+            echo "$breaking" | while read -r line; do
+              changelog="$changelog- $line\n"
+            done
+            changelog="$changelog\n"
+          fi
+
+          # Features
+          features=$(echo "$commits" | grep "^feat" || true)
+          if [ -n "$features" ]; then
+            changelog="$changelog### ✨ New Features\n"
+            echo "$features" | while read -r line; do
+              clean_line=$(echo "$line" | sed 's/^feat: //')
+              changelog="$changelog- $clean_line\n"
+            done
+            changelog="$changelog\n"
+          fi
+
+          # Bug fixes
+          fixes=$(echo "$commits" | grep "^fix" || true)
+          if [ -n "$fixes" ]; then
+            changelog="$changelog### 🐛 Bug Fixes\n"
+            echo "$fixes" | while read -r line; do
+              clean_line=$(echo "$line" | sed 's/^fix: //')
+              changelog="$changelog- $clean_line\n"
+            done
+            changelog="$changelog\n"
+          fi
+
+          # Documentation
+          docs=$(echo "$commits" | grep "^docs" || true)
+          if [ -n "$docs" ]; then
+            changelog="$changelog### 📚 Documentation\n"
+            echo "$docs" | while read -r line; do
+              clean_line=$(echo "$line" | sed 's/^docs: //')
+              changelog="$changelog- $clean_line\n"
+            done
+            changelog="$changelog\n"
+          fi
+
+          # Other changes
+          others=$(echo "$commits" | grep -v -E "^(feat|fix|docs|BREAKING)" || true)
+          if [ -n "$others" ]; then
+            changelog="$changelog### 🔧 Other Changes\n"
+            echo "$others" | while read -r line; do
+              changelog="$changelog- $line\n"
+            done
+            changelog="$changelog\n"
+          fi
+
+          changelog="$changelog\n**Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ steps.latest_release.outputs.tag }}...v${{ steps.version.outputs.new_version }}"
+
+          # Store changelog
+          echo "content<<EOF" >> $GITHUB_OUTPUT
+          echo -e "$changelog" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+  create-release:
+    needs: analyze-changes
+    runs-on: ubuntu-latest
+    if: needs.analyze-changes.outputs.has_changes == 'true' || github.event.inputs.release_type != ''
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Update version in pyproject.toml
+        if: github.event.inputs.dry_run != 'true'
+        run: |
+          new_version="${{ needs.analyze-changes.outputs.new_version }}"
+          sed -i "s/^version = .*/version = \"$new_version\"/" pyproject.toml
+          echo "Updated version to $new_version"
+
+      - name: Commit version bump
+        if: github.event.inputs.dry_run != 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add pyproject.toml
+          git commit -m "chore: bump version to ${{ needs.analyze-changes.outputs.new_version }}
+
+          🤖 Generated with [Claude Code](https://claude.ai/code)
+
+          Co-Authored-By: Claude <noreply@anthropic.com>"
+          git push
+
+      - name: Create Git tag
+        if: github.event.inputs.dry_run != 'true'
+        run: |
+          tag="v${{ needs.analyze-changes.outputs.new_version }}"
+          git tag -a "$tag" -m "Release $tag"
+          git push origin "$tag"
+          echo "Created tag: $tag"
+
+      - name: Create GitHub Release
+        if: github.event.inputs.dry_run != 'true'
+        run: |
+          gh release create "v${{ needs.analyze-changes.outputs.new_version }}" \
+            --title "🚀 Release v${{ needs.analyze-changes.outputs.new_version }}" \
+            --notes "${{ needs.analyze-changes.outputs.changelog }}" \
+            --latest
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build package
+        if: github.event.inputs.skip_pypi != 'true' && github.event.inputs.dry_run != 'true'
+        run: |
+          pip install build
+          python -m build
+
+      - name: Publish to PyPI
+        if: github.event.inputs.skip_pypi != 'true' && github.event.inputs.dry_run != 'true'
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
+          skip_existing: true
+
+      - name: Summary
+        run: |
+          echo "## 🎉 Release Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version**: ${{ needs.analyze-changes.outputs.current_version }} → ${{ needs.analyze-changes.outputs.new_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Bump Type**: ${{ needs.analyze-changes.outputs.version_bump }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Breaking Changes**: ${{ needs.analyze-changes.outputs.breaking_changes }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Features**: ${{ needs.analyze-changes.outputs.features }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Bug Fixes**: ${{ needs.analyze-changes.outputs.fixes }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Dry Run**: ${{ github.event.inputs.dry_run || 'false' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📝 Generated Changelog" >> $GITHUB_STEP_SUMMARY
+          echo "${{ needs.analyze-changes.outputs.changelog }}" >> $GITHUB_STEP_SUMMARY

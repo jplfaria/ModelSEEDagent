@@ -355,11 +355,11 @@ class PrecisionConfig(BaseModel):
     numerical_precision: int = 6      # Decimal places for output
 ```
 
-## ModelSEED Tools (5 tools)
+## ModelSEED Tools (5 tools) - IN DEVELOPMENT (CURRENTLY NOT FUNCTIONAL)
 
 ### Model Building Tools
 
-#### `build_metabolic_model`
+#### `build_metabolic_model` (in development - currently not functional)
 
 **Purpose**: Construct metabolic models from genome annotations
 
@@ -400,7 +400,7 @@ class ModelBuilderConfig(BaseModel):
 }
 ```
 
-#### `gapfill_metabolic_model`
+#### `gapfill_metabolic_model` (in development - currently not functional)
 
 **Purpose**: Automated model gap-filling for growth
 

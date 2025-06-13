@@ -1,0 +1,156 @@
+name-template: '🚀 Release v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
+
+categories:
+  - title: '💥 Breaking Changes'
+    labels:
+      - 'breaking-change'
+      - 'breaking'
+    collapse-after: 3
+
+  - title: '✨ New Features'
+    labels:
+      - 'feature'
+      - 'enhancement'
+      - 'feat'
+    collapse-after: 5
+
+  - title: '🐛 Bug Fixes'
+    labels:
+      - 'bug'
+      - 'bugfix'
+      - 'fix'
+    collapse-after: 5
+
+  - title: '📚 Documentation'
+    labels:
+      - 'documentation'
+      - 'docs'
+    collapse-after: 3
+
+  - title: '⚡ Performance Improvements'
+    labels:
+      - 'performance'
+      - 'perf'
+    collapse-after: 3
+
+  - title: '🔧 Maintenance'
+    labels:
+      - 'chore'
+      - 'maintenance'
+      - 'refactor'
+    collapse-after: 3
+
+change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+change-title-escapes: '\<*_&'
+
+version-resolver:
+  major:
+    labels:
+      - 'breaking-change'
+      - 'breaking'
+  minor:
+    labels:
+      - 'feature'
+      - 'enhancement'
+      - 'feat'
+  patch:
+    labels:
+      - 'bug'
+      - 'bugfix'
+      - 'fix'
+      - 'documentation'
+      - 'docs'
+      - 'chore'
+      - 'maintenance'
+  default: patch
+
+template: |
+  ## 🎉 What's Changed
+
+  $CHANGES
+
+  ## 📊 Release Statistics
+
+  - **Total Changes**: $CHANGES_COUNT
+  - **Contributors**: $CONTRIBUTORS
+
+  ## 🔗 Links
+
+  - **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
+  - **Documentation**: https://jplfaria.github.io/ModelSEEDagent/
+  - **Package**: https://pypi.org/project/modelseed-agent/
+
+  ## 📦 Installation
+
+  ```bash
+  pip install modelseed-agent==$RESOLVED_VERSION
+  ```
+
+  Or with Poetry:
+
+  ```bash
+  poetry add modelseed-agent@$RESOLVED_VERSION
+  ```
+
+  ## 🙏 Thank You
+
+  Thanks to all the contributors who made this release possible!
+
+  ---
+
+  🤖 **This release was automatically generated**
+
+exclude-labels:
+  - 'skip-changelog'
+  - 'no-changelog'
+
+include-pre-releases: false
+
+exclude-contributors:
+  - 'dependabot'
+  - 'github-actions'
+  - 'renovate'
+
+autolabeler:
+  - label: 'breaking-change'
+    title:
+      - '/breaking change/i'
+      - '/breaking:/i'
+    body:
+      - '/BREAKING CHANGE/i'
+
+  - label: 'feature'
+    title:
+      - '/^feat/i'
+      - '/feature/i'
+      - '/enhancement/i'
+    files:
+      - 'src/**/*.py'
+
+  - label: 'bug'
+    title:
+      - '/^fix/i'
+      - '/bug/i'
+      - '/bugfix/i'
+    files:
+      - 'src/**/*.py'
+
+  - label: 'documentation'
+    title:
+      - '/^docs/i'
+      - '/documentation/i'
+    files:
+      - 'docs/**/*'
+      - '*.md'
+      - 'mkdocs.yml'
+
+  - label: 'chore'
+    title:
+      - '/^chore/i'
+      - '/maintenance/i'
+      - '/refactor/i'
+    files:
+      - '.github/**/*'
+      - 'pyproject.toml'
+      - '.pre-commit-config.yaml'

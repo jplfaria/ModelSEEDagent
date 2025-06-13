@@ -1,6 +1,928 @@
 {
   "updates": [
     {
+      "commit": "aa0c5f21",
+      "timestamp": "2025-06-13 00:23:13",
+      "automated_updates": [
+        {
+          "file": "docs/troubleshooting.md",
+          "type": "content_update",
+          "summary": "Updated docs/troubleshooting.md with latest tool information"
+        },
+        {
+          "file": "docs/deployment.md",
+          "type": "content_update",
+          "summary": "Updated docs/deployment.md with latest tool information"
+        },
+        {
+          "file": "docs/TOOL_REFERENCE.md",
+          "type": "content_update",
+          "summary": "Updated docs/TOOL_REFERENCE.md with latest tool information"
+        },
+        {
+          "file": "docs/index.md",
+          "type": "content_update",
+          "summary": "Updated docs/index.md with latest tool information"
+        },
+        {
+          "file": "docs/configuration.md",
+          "type": "content_update",
+          "summary": "Updated docs/configuration.md with latest tool information"
+        },
+        {
+          "file": "docs/installation.md",
+          "type": "content_update",
+          "summary": "Updated docs/installation.md with latest tool information"
+        },
+        {
+          "file": "docs/monitoring.md",
+          "type": "content_update",
+          "summary": "Updated docs/monitoring.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/claude_instructions.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/claude_instructions.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/PROJECT_STATUS.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/PROJECT_STATUS.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/technical_analysis_legacy.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/technical_analysis_legacy.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/PHASE8_USER_GUIDE.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/PHASE8_USER_GUIDE.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/REPOSITORY_REVIEW_AND_IMPROVEMENT_PLAN.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/REPOSITORY_REVIEW_AND_IMPROVEMENT_PLAN.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/DEBUG_CONFIGURATION.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/DEBUG_CONFIGURATION.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/roadmaps/DYNAMIC_AI_AGENT_ROADMAP.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/roadmaps/DYNAMIC_AI_AGENT_ROADMAP.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/improvements/CLI_IMPROVEMENTS_SUMMARY.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/improvements/CLI_IMPROVEMENTS_SUMMARY.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/improvements/LOCAL_MODELS_SUCCESS_SUMMARY.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/improvements/LOCAL_MODELS_SUCCESS_SUMMARY.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/development/TOOL_OUTPUT_SUMMARIZATION_ANALYSIS.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/development/TOOL_OUTPUT_SUMMARIZATION_ANALYSIS.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/development/CONTRIBUTING.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/development/CONTRIBUTING.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/development/LANGGRAPH_OPTIMIZATION_REPORT.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/development/LANGGRAPH_OPTIMIZATION_REPORT.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/planning/REPOSITORY_CLEANUP_PLAN.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/planning/REPOSITORY_CLEANUP_PLAN.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/planning/REPOSITORY_CLEANUP_SUMMARY.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/planning/REPOSITORY_CLEANUP_SUMMARY.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/phase_summaries/PHASE1_COMPLETION_SUMMARY.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/phase_summaries/PHASE1_COMPLETION_SUMMARY.md with latest tool information"
+        },
+        {
+          "file": "docs/user/INTERACTIVE_GUIDE.md",
+          "type": "content_update",
+          "summary": "Updated docs/user/INTERACTIVE_GUIDE.md with latest tool information"
+        },
+        {
+          "file": "docs/user/README.md",
+          "type": "content_update",
+          "summary": "Updated docs/user/README.md with latest tool information"
+        },
+        {
+          "file": "docs/api/overview.md",
+          "type": "content_update",
+          "summary": "Updated docs/api/overview.md with latest tool information"
+        },
+        {
+          "file": "docs/api/tools.md",
+          "type": "content_update",
+          "summary": "Updated docs/api/tools.md with latest tool information"
+        },
+        {
+          "file": "scripts/docs_review.py",
+          "type": "content_update",
+          "summary": "Updated scripts/docs_review.py with latest tool information"
+        }
+      ],
+      "files_modified": [
+        "docs/troubleshooting.md",
+        "docs/deployment.md",
+        "docs/TOOL_REFERENCE.md",
+        "docs/index.md",
+        "docs/configuration.md",
+        "docs/installation.md",
+        "docs/monitoring.md",
+        "docs/archive/claude_instructions.md",
+        "docs/archive/PROJECT_STATUS.md",
+        "docs/archive/technical_analysis_legacy.md",
+        "docs/archive/PHASE8_USER_GUIDE.md",
+        "docs/archive/REPOSITORY_REVIEW_AND_IMPROVEMENT_PLAN.md",
+        "docs/archive/DEBUG_CONFIGURATION.md",
+        "docs/archive/roadmaps/DYNAMIC_AI_AGENT_ROADMAP.md",
+        "docs/archive/improvements/CLI_IMPROVEMENTS_SUMMARY.md",
+        "docs/archive/improvements/LOCAL_MODELS_SUCCESS_SUMMARY.md",
+        "docs/archive/development/TOOL_OUTPUT_SUMMARIZATION_ANALYSIS.md",
+        "docs/archive/development/CONTRIBUTING.md",
+        "docs/archive/development/LANGGRAPH_OPTIMIZATION_REPORT.md",
+        "docs/archive/planning/REPOSITORY_CLEANUP_PLAN.md",
+        "docs/archive/planning/REPOSITORY_CLEANUP_SUMMARY.md",
+        "docs/archive/phase_summaries/PHASE1_COMPLETION_SUMMARY.md",
+        "docs/user/INTERACTIVE_GUIDE.md",
+        "docs/user/README.md",
+        "docs/api/overview.md",
+        "docs/api/tools.md",
+        "scripts/docs_review.py"
+      ],
+      "tool_count_updates": {
+        "current_total": 29,
+        "categories": {
+          "cobra": 16,
+          "modelseed": 6,
+          "biochem": 3,
+          "rast": 2,
+          "audit": 2
+        }
+      },
+      "link_fixes": [],
+      "new_files_created": []
+    },
+    {
+      "commit": "c946c96a",
+      "timestamp": "2025-06-13 00:00:59",
+      "automated_updates": [
+        {
+          "file": "docs/troubleshooting.md",
+          "type": "content_update",
+          "summary": "Updated docs/troubleshooting.md with latest tool information"
+        },
+        {
+          "file": "docs/deployment.md",
+          "type": "content_update",
+          "summary": "Updated docs/deployment.md with latest tool information"
+        },
+        {
+          "file": "docs/TOOL_REFERENCE.md",
+          "type": "content_update",
+          "summary": "Updated docs/TOOL_REFERENCE.md with latest tool information"
+        },
+        {
+          "file": "docs/index.md",
+          "type": "content_update",
+          "summary": "Updated docs/index.md with latest tool information"
+        },
+        {
+          "file": "docs/configuration.md",
+          "type": "content_update",
+          "summary": "Updated docs/configuration.md with latest tool information"
+        },
+        {
+          "file": "docs/installation.md",
+          "type": "content_update",
+          "summary": "Updated docs/installation.md with latest tool information"
+        },
+        {
+          "file": "docs/monitoring.md",
+          "type": "content_update",
+          "summary": "Updated docs/monitoring.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/claude_instructions.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/claude_instructions.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/PROJECT_STATUS.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/PROJECT_STATUS.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/technical_analysis_legacy.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/technical_analysis_legacy.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/PHASE8_USER_GUIDE.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/PHASE8_USER_GUIDE.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/REPOSITORY_REVIEW_AND_IMPROVEMENT_PLAN.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/REPOSITORY_REVIEW_AND_IMPROVEMENT_PLAN.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/DEBUG_CONFIGURATION.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/DEBUG_CONFIGURATION.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/roadmaps/DYNAMIC_AI_AGENT_ROADMAP.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/roadmaps/DYNAMIC_AI_AGENT_ROADMAP.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/improvements/CLI_IMPROVEMENTS_SUMMARY.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/improvements/CLI_IMPROVEMENTS_SUMMARY.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/improvements/LOCAL_MODELS_SUCCESS_SUMMARY.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/improvements/LOCAL_MODELS_SUCCESS_SUMMARY.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/development/TOOL_OUTPUT_SUMMARIZATION_ANALYSIS.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/development/TOOL_OUTPUT_SUMMARIZATION_ANALYSIS.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/development/CONTRIBUTING.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/development/CONTRIBUTING.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/development/LANGGRAPH_OPTIMIZATION_REPORT.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/development/LANGGRAPH_OPTIMIZATION_REPORT.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/planning/REPOSITORY_CLEANUP_PLAN.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/planning/REPOSITORY_CLEANUP_PLAN.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/planning/REPOSITORY_CLEANUP_SUMMARY.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/planning/REPOSITORY_CLEANUP_SUMMARY.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/phase_summaries/PHASE1_COMPLETION_SUMMARY.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/phase_summaries/PHASE1_COMPLETION_SUMMARY.md with latest tool information"
+        },
+        {
+          "file": "docs/user/INTERACTIVE_GUIDE.md",
+          "type": "content_update",
+          "summary": "Updated docs/user/INTERACTIVE_GUIDE.md with latest tool information"
+        },
+        {
+          "file": "docs/user/README.md",
+          "type": "content_update",
+          "summary": "Updated docs/user/README.md with latest tool information"
+        },
+        {
+          "file": "docs/api/overview.md",
+          "type": "content_update",
+          "summary": "Updated docs/api/overview.md with latest tool information"
+        },
+        {
+          "file": "docs/api/tools.md",
+          "type": "content_update",
+          "summary": "Updated docs/api/tools.md with latest tool information"
+        },
+        {
+          "file": "scripts/docs_review.py",
+          "type": "content_update",
+          "summary": "Updated scripts/docs_review.py with latest tool information"
+        }
+      ],
+      "files_modified": [
+        "docs/troubleshooting.md",
+        "docs/deployment.md",
+        "docs/TOOL_REFERENCE.md",
+        "docs/index.md",
+        "docs/configuration.md",
+        "docs/installation.md",
+        "docs/monitoring.md",
+        "docs/archive/claude_instructions.md",
+        "docs/archive/PROJECT_STATUS.md",
+        "docs/archive/technical_analysis_legacy.md",
+        "docs/archive/PHASE8_USER_GUIDE.md",
+        "docs/archive/REPOSITORY_REVIEW_AND_IMPROVEMENT_PLAN.md",
+        "docs/archive/DEBUG_CONFIGURATION.md",
+        "docs/archive/roadmaps/DYNAMIC_AI_AGENT_ROADMAP.md",
+        "docs/archive/improvements/CLI_IMPROVEMENTS_SUMMARY.md",
+        "docs/archive/improvements/LOCAL_MODELS_SUCCESS_SUMMARY.md",
+        "docs/archive/development/TOOL_OUTPUT_SUMMARIZATION_ANALYSIS.md",
+        "docs/archive/development/CONTRIBUTING.md",
+        "docs/archive/development/LANGGRAPH_OPTIMIZATION_REPORT.md",
+        "docs/archive/planning/REPOSITORY_CLEANUP_PLAN.md",
+        "docs/archive/planning/REPOSITORY_CLEANUP_SUMMARY.md",
+        "docs/archive/phase_summaries/PHASE1_COMPLETION_SUMMARY.md",
+        "docs/user/INTERACTIVE_GUIDE.md",
+        "docs/user/README.md",
+        "docs/api/overview.md",
+        "docs/api/tools.md",
+        "scripts/docs_review.py"
+      ],
+      "tool_count_updates": {
+        "current_total": 29,
+        "categories": {
+          "cobra": 16,
+          "modelseed": 6,
+          "biochem": 3,
+          "rast": 2,
+          "audit": 2
+        }
+      },
+      "link_fixes": [],
+      "new_files_created": []
+    },
+    {
+      "commit": "a83dc918",
+      "timestamp": "2025-06-12 23:41:05",
+      "automated_updates": [
+        {
+          "file": "docs/troubleshooting.md",
+          "type": "content_update",
+          "summary": "Updated docs/troubleshooting.md with latest tool information"
+        },
+        {
+          "file": "docs/deployment.md",
+          "type": "content_update",
+          "summary": "Updated docs/deployment.md with latest tool information"
+        },
+        {
+          "file": "docs/TOOL_REFERENCE.md",
+          "type": "content_update",
+          "summary": "Updated docs/TOOL_REFERENCE.md with latest tool information"
+        },
+        {
+          "file": "docs/index.md",
+          "type": "content_update",
+          "summary": "Updated docs/index.md with latest tool information"
+        },
+        {
+          "file": "docs/configuration.md",
+          "type": "content_update",
+          "summary": "Updated docs/configuration.md with latest tool information"
+        },
+        {
+          "file": "docs/installation.md",
+          "type": "content_update",
+          "summary": "Updated docs/installation.md with latest tool information"
+        },
+        {
+          "file": "docs/monitoring.md",
+          "type": "content_update",
+          "summary": "Updated docs/monitoring.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/claude_instructions.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/claude_instructions.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/PROJECT_STATUS.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/PROJECT_STATUS.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/technical_analysis_legacy.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/technical_analysis_legacy.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/PHASE8_USER_GUIDE.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/PHASE8_USER_GUIDE.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/REPOSITORY_REVIEW_AND_IMPROVEMENT_PLAN.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/REPOSITORY_REVIEW_AND_IMPROVEMENT_PLAN.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/DEBUG_CONFIGURATION.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/DEBUG_CONFIGURATION.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/roadmaps/DYNAMIC_AI_AGENT_ROADMAP.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/roadmaps/DYNAMIC_AI_AGENT_ROADMAP.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/improvements/CLI_IMPROVEMENTS_SUMMARY.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/improvements/CLI_IMPROVEMENTS_SUMMARY.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/improvements/LOCAL_MODELS_SUCCESS_SUMMARY.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/improvements/LOCAL_MODELS_SUCCESS_SUMMARY.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/development/TOOL_OUTPUT_SUMMARIZATION_ANALYSIS.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/development/TOOL_OUTPUT_SUMMARIZATION_ANALYSIS.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/development/CONTRIBUTING.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/development/CONTRIBUTING.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/development/LANGGRAPH_OPTIMIZATION_REPORT.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/development/LANGGRAPH_OPTIMIZATION_REPORT.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/planning/REPOSITORY_CLEANUP_PLAN.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/planning/REPOSITORY_CLEANUP_PLAN.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/planning/REPOSITORY_CLEANUP_SUMMARY.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/planning/REPOSITORY_CLEANUP_SUMMARY.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/phase_summaries/PHASE1_COMPLETION_SUMMARY.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/phase_summaries/PHASE1_COMPLETION_SUMMARY.md with latest tool information"
+        },
+        {
+          "file": "docs/user/INTERACTIVE_GUIDE.md",
+          "type": "content_update",
+          "summary": "Updated docs/user/INTERACTIVE_GUIDE.md with latest tool information"
+        },
+        {
+          "file": "docs/user/README.md",
+          "type": "content_update",
+          "summary": "Updated docs/user/README.md with latest tool information"
+        },
+        {
+          "file": "docs/api/overview.md",
+          "type": "content_update",
+          "summary": "Updated docs/api/overview.md with latest tool information"
+        },
+        {
+          "file": "docs/api/tools.md",
+          "type": "content_update",
+          "summary": "Updated docs/api/tools.md with latest tool information"
+        },
+        {
+          "file": "scripts/docs_review.py",
+          "type": "content_update",
+          "summary": "Updated scripts/docs_review.py with latest tool information"
+        }
+      ],
+      "files_modified": [
+        "docs/troubleshooting.md",
+        "docs/deployment.md",
+        "docs/TOOL_REFERENCE.md",
+        "docs/index.md",
+        "docs/configuration.md",
+        "docs/installation.md",
+        "docs/monitoring.md",
+        "docs/archive/claude_instructions.md",
+        "docs/archive/PROJECT_STATUS.md",
+        "docs/archive/technical_analysis_legacy.md",
+        "docs/archive/PHASE8_USER_GUIDE.md",
+        "docs/archive/REPOSITORY_REVIEW_AND_IMPROVEMENT_PLAN.md",
+        "docs/archive/DEBUG_CONFIGURATION.md",
+        "docs/archive/roadmaps/DYNAMIC_AI_AGENT_ROADMAP.md",
+        "docs/archive/improvements/CLI_IMPROVEMENTS_SUMMARY.md",
+        "docs/archive/improvements/LOCAL_MODELS_SUCCESS_SUMMARY.md",
+        "docs/archive/development/TOOL_OUTPUT_SUMMARIZATION_ANALYSIS.md",
+        "docs/archive/development/CONTRIBUTING.md",
+        "docs/archive/development/LANGGRAPH_OPTIMIZATION_REPORT.md",
+        "docs/archive/planning/REPOSITORY_CLEANUP_PLAN.md",
+        "docs/archive/planning/REPOSITORY_CLEANUP_SUMMARY.md",
+        "docs/archive/phase_summaries/PHASE1_COMPLETION_SUMMARY.md",
+        "docs/user/INTERACTIVE_GUIDE.md",
+        "docs/user/README.md",
+        "docs/api/overview.md",
+        "docs/api/tools.md",
+        "scripts/docs_review.py"
+      ],
+      "tool_count_updates": {
+        "current_total": 29,
+        "categories": {
+          "cobra": 16,
+          "modelseed": 6,
+          "biochem": 3,
+          "rast": 2,
+          "audit": 2
+        }
+      },
+      "link_fixes": [],
+      "new_files_created": []
+    },
+    {
+      "commit": "052764b0",
+      "timestamp": "2025-06-12 23:18:33",
+      "automated_updates": [
+        {
+          "file": "README.md",
+          "type": "content_update",
+          "summary": "Updated README.md with latest tool information"
+        },
+        {
+          "file": "docs/user/README.md",
+          "type": "content_update",
+          "summary": "Updated docs/user/README.md with latest tool information"
+        },
+        {
+          "file": "docs/troubleshooting.md",
+          "type": "content_update",
+          "summary": "Updated docs/troubleshooting.md with latest tool information"
+        },
+        {
+          "file": "docs/deployment.md",
+          "type": "content_update",
+          "summary": "Updated docs/deployment.md with latest tool information"
+        },
+        {
+          "file": "docs/TOOL_REFERENCE.md",
+          "type": "content_update",
+          "summary": "Updated docs/TOOL_REFERENCE.md with latest tool information"
+        },
+        {
+          "file": "docs/index.md",
+          "type": "content_update",
+          "summary": "Updated docs/index.md with latest tool information"
+        },
+        {
+          "file": "docs/configuration.md",
+          "type": "content_update",
+          "summary": "Updated docs/configuration.md with latest tool information"
+        },
+        {
+          "file": "docs/installation.md",
+          "type": "content_update",
+          "summary": "Updated docs/installation.md with latest tool information"
+        },
+        {
+          "file": "docs/monitoring.md",
+          "type": "content_update",
+          "summary": "Updated docs/monitoring.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/claude_instructions.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/claude_instructions.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/PROJECT_STATUS.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/PROJECT_STATUS.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/technical_analysis_legacy.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/technical_analysis_legacy.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/PHASE8_USER_GUIDE.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/PHASE8_USER_GUIDE.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/REPOSITORY_REVIEW_AND_IMPROVEMENT_PLAN.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/REPOSITORY_REVIEW_AND_IMPROVEMENT_PLAN.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/DEBUG_CONFIGURATION.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/DEBUG_CONFIGURATION.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/roadmaps/DYNAMIC_AI_AGENT_ROADMAP.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/roadmaps/DYNAMIC_AI_AGENT_ROADMAP.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/improvements/CLI_IMPROVEMENTS_SUMMARY.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/improvements/CLI_IMPROVEMENTS_SUMMARY.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/improvements/LOCAL_MODELS_SUCCESS_SUMMARY.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/improvements/LOCAL_MODELS_SUCCESS_SUMMARY.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/development/TOOL_OUTPUT_SUMMARIZATION_ANALYSIS.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/development/TOOL_OUTPUT_SUMMARIZATION_ANALYSIS.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/development/CONTRIBUTING.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/development/CONTRIBUTING.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/development/LANGGRAPH_OPTIMIZATION_REPORT.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/development/LANGGRAPH_OPTIMIZATION_REPORT.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/planning/REPOSITORY_CLEANUP_PLAN.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/planning/REPOSITORY_CLEANUP_PLAN.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/planning/REPOSITORY_CLEANUP_SUMMARY.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/planning/REPOSITORY_CLEANUP_SUMMARY.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/phase_summaries/PHASE1_COMPLETION_SUMMARY.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/phase_summaries/PHASE1_COMPLETION_SUMMARY.md with latest tool information"
+        },
+        {
+          "file": "docs/user/INTERACTIVE_GUIDE.md",
+          "type": "content_update",
+          "summary": "Updated docs/user/INTERACTIVE_GUIDE.md with latest tool information"
+        },
+        {
+          "file": "docs/api/overview.md",
+          "type": "content_update",
+          "summary": "Updated docs/api/overview.md with latest tool information"
+        },
+        {
+          "file": "docs/api/tools.md",
+          "type": "content_update",
+          "summary": "Updated docs/api/tools.md with latest tool information"
+        },
+        {
+          "file": "scripts/docs_review.py",
+          "type": "content_update",
+          "summary": "Updated scripts/docs_review.py with latest tool information"
+        }
+      ],
+      "files_modified": [
+        "README.md",
+        "docs/user/README.md",
+        "docs/troubleshooting.md",
+        "docs/deployment.md",
+        "docs/TOOL_REFERENCE.md",
+        "docs/index.md",
+        "docs/configuration.md",
+        "docs/installation.md",
+        "docs/monitoring.md",
+        "docs/archive/claude_instructions.md",
+        "docs/archive/PROJECT_STATUS.md",
+        "docs/archive/technical_analysis_legacy.md",
+        "docs/archive/PHASE8_USER_GUIDE.md",
+        "docs/archive/REPOSITORY_REVIEW_AND_IMPROVEMENT_PLAN.md",
+        "docs/archive/DEBUG_CONFIGURATION.md",
+        "docs/archive/roadmaps/DYNAMIC_AI_AGENT_ROADMAP.md",
+        "docs/archive/improvements/CLI_IMPROVEMENTS_SUMMARY.md",
+        "docs/archive/improvements/LOCAL_MODELS_SUCCESS_SUMMARY.md",
+        "docs/archive/development/TOOL_OUTPUT_SUMMARIZATION_ANALYSIS.md",
+        "docs/archive/development/CONTRIBUTING.md",
+        "docs/archive/development/LANGGRAPH_OPTIMIZATION_REPORT.md",
+        "docs/archive/planning/REPOSITORY_CLEANUP_PLAN.md",
+        "docs/archive/planning/REPOSITORY_CLEANUP_SUMMARY.md",
+        "docs/archive/phase_summaries/PHASE1_COMPLETION_SUMMARY.md",
+        "docs/user/INTERACTIVE_GUIDE.md",
+        "docs/api/overview.md",
+        "docs/api/tools.md",
+        "scripts/docs_review.py"
+      ],
+      "tool_count_updates": {
+        "current_total": 29,
+        "categories": {
+          "cobra": 16,
+          "modelseed": 6,
+          "biochem": 3,
+          "rast": 2,
+          "audit": 2
+        }
+      },
+      "link_fixes": [],
+      "new_files_created": []
+    },
+    {
+      "commit": "052764b0",
+      "timestamp": "2025-06-12 23:18:12",
+      "automated_updates": [
+        {
+          "file": "README.md",
+          "type": "content_update",
+          "summary": "Updated README.md with latest tool information"
+        },
+        {
+          "file": "docs/user/README.md",
+          "type": "content_update",
+          "summary": "Updated docs/user/README.md with latest tool information"
+        },
+        {
+          "file": "docs/troubleshooting.md",
+          "type": "content_update",
+          "summary": "Updated docs/troubleshooting.md with latest tool information"
+        },
+        {
+          "file": "docs/deployment.md",
+          "type": "content_update",
+          "summary": "Updated docs/deployment.md with latest tool information"
+        },
+        {
+          "file": "docs/TOOL_REFERENCE.md",
+          "type": "content_update",
+          "summary": "Updated docs/TOOL_REFERENCE.md with latest tool information"
+        },
+        {
+          "file": "docs/index.md",
+          "type": "content_update",
+          "summary": "Updated docs/index.md with latest tool information"
+        },
+        {
+          "file": "docs/configuration.md",
+          "type": "content_update",
+          "summary": "Updated docs/configuration.md with latest tool information"
+        },
+        {
+          "file": "docs/installation.md",
+          "type": "content_update",
+          "summary": "Updated docs/installation.md with latest tool information"
+        },
+        {
+          "file": "docs/monitoring.md",
+          "type": "content_update",
+          "summary": "Updated docs/monitoring.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/claude_instructions.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/claude_instructions.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/PROJECT_STATUS.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/PROJECT_STATUS.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/technical_analysis_legacy.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/technical_analysis_legacy.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/PHASE8_USER_GUIDE.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/PHASE8_USER_GUIDE.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/REPOSITORY_REVIEW_AND_IMPROVEMENT_PLAN.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/REPOSITORY_REVIEW_AND_IMPROVEMENT_PLAN.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/DEBUG_CONFIGURATION.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/DEBUG_CONFIGURATION.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/roadmaps/DYNAMIC_AI_AGENT_ROADMAP.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/roadmaps/DYNAMIC_AI_AGENT_ROADMAP.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/improvements/CLI_IMPROVEMENTS_SUMMARY.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/improvements/CLI_IMPROVEMENTS_SUMMARY.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/improvements/LOCAL_MODELS_SUCCESS_SUMMARY.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/improvements/LOCAL_MODELS_SUCCESS_SUMMARY.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/development/TOOL_OUTPUT_SUMMARIZATION_ANALYSIS.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/development/TOOL_OUTPUT_SUMMARIZATION_ANALYSIS.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/development/CONTRIBUTING.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/development/CONTRIBUTING.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/development/LANGGRAPH_OPTIMIZATION_REPORT.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/development/LANGGRAPH_OPTIMIZATION_REPORT.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/planning/REPOSITORY_CLEANUP_PLAN.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/planning/REPOSITORY_CLEANUP_PLAN.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/planning/REPOSITORY_CLEANUP_SUMMARY.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/planning/REPOSITORY_CLEANUP_SUMMARY.md with latest tool information"
+        },
+        {
+          "file": "docs/archive/phase_summaries/PHASE1_COMPLETION_SUMMARY.md",
+          "type": "content_update",
+          "summary": "Updated docs/archive/phase_summaries/PHASE1_COMPLETION_SUMMARY.md with latest tool information"
+        },
+        {
+          "file": "docs/user/INTERACTIVE_GUIDE.md",
+          "type": "content_update",
+          "summary": "Updated docs/user/INTERACTIVE_GUIDE.md with latest tool information"
+        },
+        {
+          "file": "docs/api/overview.md",
+          "type": "content_update",
+          "summary": "Updated docs/api/overview.md with latest tool information"
+        },
+        {
+          "file": "docs/api/tools.md",
+          "type": "content_update",
+          "summary": "Updated docs/api/tools.md with latest tool information"
+        },
+        {
+          "file": "scripts/docs_review.py",
+          "type": "content_update",
+          "summary": "Updated scripts/docs_review.py with latest tool information"
+        }
+      ],
+      "files_modified": [
+        "README.md",
+        "docs/user/README.md",
+        "docs/troubleshooting.md",
+        "docs/deployment.md",
+        "docs/TOOL_REFERENCE.md",
+        "docs/index.md",
+        "docs/configuration.md",
+        "docs/installation.md",
+        "docs/monitoring.md",
+        "docs/archive/claude_instructions.md",
+        "docs/archive/PROJECT_STATUS.md",
+        "docs/archive/technical_analysis_legacy.md",
+        "docs/archive/PHASE8_USER_GUIDE.md",
+        "docs/archive/REPOSITORY_REVIEW_AND_IMPROVEMENT_PLAN.md",
+        "docs/archive/DEBUG_CONFIGURATION.md",
+        "docs/archive/roadmaps/DYNAMIC_AI_AGENT_ROADMAP.md",
+        "docs/archive/improvements/CLI_IMPROVEMENTS_SUMMARY.md",
+        "docs/archive/improvements/LOCAL_MODELS_SUCCESS_SUMMARY.md",
+        "docs/archive/development/TOOL_OUTPUT_SUMMARIZATION_ANALYSIS.md",
+        "docs/archive/development/CONTRIBUTING.md",
+        "docs/archive/development/LANGGRAPH_OPTIMIZATION_REPORT.md",
+        "docs/archive/planning/REPOSITORY_CLEANUP_PLAN.md",
+        "docs/archive/planning/REPOSITORY_CLEANUP_SUMMARY.md",
+        "docs/archive/phase_summaries/PHASE1_COMPLETION_SUMMARY.md",
+        "docs/user/INTERACTIVE_GUIDE.md",
+        "docs/api/overview.md",
+        "docs/api/tools.md",
+        "scripts/docs_review.py"
+      ],
+      "tool_count_updates": {
+        "current_total": 29,
+        "categories": {
+          "cobra": 16,
+          "modelseed": 6,
+          "biochem": 3,
+          "rast": 2,
+          "audit": 2
+        }
+      },
+      "link_fixes": [],
+      "new_files_created": []
+    },
+    {
       "commit": "f037486d",
       "timestamp": "2025-06-12 21:56:44",
       "automated_updates": [
