@@ -139,27 +139,27 @@ Universal compound and reaction information tools:
 
 Genome-scale model construction and annotation tools:
 
-### 1. Model Builder (`build_modelseed_model`)
+### 1. Model Builder (`build_modelseed_model`) (in development - currently not functional)
 **Purpose**: Build metabolic models from genome annotations
 **Usage**: `"build a model from this genome"`
 **What it does**: Creates draft metabolic models from gene annotations
 
-### 2. Model Gapfiller (`gapfill_modelseed_model`)
+### 2. Model Gapfiller (`gapfill_modelseed_model`) (in development - currently not functional)
 **Purpose**: Fill gaps in metabolic networks to enable growth
 **Usage**: `"gapfill this model"`
 **What it does**: Adds missing reactions needed for biomass production
 
-### 3. Annotation Tool (`annotate_with_modelseed`)
+### 3. Annotation Tool (`annotate_with_modelseed`) (in development - currently not functional)
 **Purpose**: Annotate models with ModelSEED database information
 **Usage**: Automatically applied during model analysis
 **What it does**: Adds standardized biochemistry annotations
 
-### 4. Compatibility Checker (`check_modelseed_compatibility`)
+### 4. Compatibility Checker (`check_modelseed_compatibility`) (in development - currently not functional)
 **Purpose**: Check ModelSEED-COBRApy compatibility
 **Usage**: `"check model compatibility"`
 **What it does**: Validates model format and suggests conversions
 
-### 5. Protein Annotator (`annotate_proteins_rast`)
+### 5. Protein Annotator (`annotate_proteins_rast`) (in development - currently not functional)
 **Purpose**: Functional annotation of protein sequences
 **Usage**: `"annotate protein functions"`
 **What it does**: Assigns enzyme functions and metabolic roles
@@ -170,12 +170,12 @@ Genome-scale model construction and annotation tools:
 
 Genome annotation and analysis tools:
 
-### 1. RAST Annotator (`annotate_with_rast`)
+### 1. RAST Annotator (`annotate_with_rast`) (in development - currently not functional)
 **Purpose**: Genome annotation using RAST server
 **Usage**: `"annotate this genome with RAST"`
 **What it does**: Automated genome annotation and functional assignment
 
-### 2. Annotation Analyzer (`analyze_rast_annotations`)
+### 2. Annotation Analyzer (`analyze_rast_annotations`) (in development - currently not functional)
 **Purpose**: Quality assessment of genome annotations
 **Usage**: `"analyze annotation quality"`
 **What it does**: Evaluates completeness and accuracy of genome annotations
