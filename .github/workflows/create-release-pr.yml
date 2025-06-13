@@ -1,0 +1,314 @@
+name: 📝 Create Release PR
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Release type'
+        required: true
+        default: 'auto'
+        type: choice
+        options:
+          - auto
+          - patch
+          - minor
+          - major
+      target_branch:
+        description: 'Target branch (usually main)'
+        required: true
+        default: 'main'
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  create-release-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout dev branch
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get current version
+        id: current
+        run: |
+          current=$(grep '^version = ' pyproject.toml | sed 's/version = "\(.*\)"/\1/')
+          echo "version=$current" >> $GITHUB_OUTPUT
+          echo "Current version: $current"
+
+      - name: Get latest release
+        id: latest_release
+        run: |
+          latest=$(gh release list --limit 1 --json tagName --jq '.[0].tagName // "v0.0.0"')
+          echo "tag=$latest" >> $GITHUB_OUTPUT
+          echo "Latest release: $latest"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Analyze commits for version bump
+        id: analyze
+        run: |
+          # Get commits since last release
+          if [ "${{ steps.latest_release.outputs.tag }}" = "v0.0.0" ]; then
+            commits=$(git log --oneline --pretty=format:"%s")
+          else
+            commits=$(git log ${{ steps.latest_release.outputs.tag }}..HEAD --oneline --pretty=format:"%s")
+          fi
+
+          echo "=== Commits since last release ==="
+          echo "$commits"
+          echo "=================================="
+
+          # Count changes by type
+          breaking_changes=$(echo "$commits" | grep -E "BREAKING CHANGE|!:" | wc -l)
+          features=$(echo "$commits" | grep "^feat" | wc -l)
+          fixes=$(echo "$commits" | grep "^fix" | wc -l)
+
+          echo "breaking_changes=$breaking_changes" >> $GITHUB_OUTPUT
+          echo "features=$features" >> $GITHUB_OUTPUT
+          echo "fixes=$fixes" >> $GITHUB_OUTPUT
+
+          # Store commits for PR description
+          echo "commits<<EOF" >> $GITHUB_OUTPUT
+          echo "$commits" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Calculate new version
+        id: version
+        run: |
+          current="${{ steps.current.outputs.version }}"
+          release_type="${{ github.event.inputs.release_type }}"
+
+          # Parse current version
+          IFS='.' read -ra VERSION_PARTS <<< "$current"
+          major=${VERSION_PARTS[0]}
+          minor=${VERSION_PARTS[1]}
+          patch=${VERSION_PARTS[2]}
+
+          # Determine bump type
+          if [ "$release_type" != "auto" ]; then
+            bump_type="$release_type"
+          elif [ "${{ steps.analyze.outputs.breaking_changes }}" -gt 0 ]; then
+            bump_type="major"
+          elif [ "${{ steps.analyze.outputs.features }}" -gt 0 ]; then
+            bump_type="minor"
+          elif [ "${{ steps.analyze.outputs.fixes }}" -gt 0 ]; then
+            bump_type="patch"
+          else
+            bump_type="patch"
+          fi
+
+          # Calculate new version
+          case $bump_type in
+            major)
+              new_version="$((major + 1)).0.0"
+              ;;
+            minor)
+              new_version="$major.$((minor + 1)).0"
+              ;;
+            patch)
+              new_version="$major.$minor.$((patch + 1))"
+              ;;
+          esac
+
+          echo "bump=$bump_type" >> $GITHUB_OUTPUT
+          echo "new_version=$new_version" >> $GITHUB_OUTPUT
+
+          echo "Version bump: $current → $new_version ($bump_type)"
+
+      - name: Generate detailed changelog
+        id: changelog
+        run: |
+          commits="${{ steps.analyze.outputs.commits }}"
+
+          # Create detailed changelog
+          changelog=""
+
+          # Breaking changes
+          breaking=$(echo "$commits" | grep -E "BREAKING CHANGE|!:" || true)
+          if [ -n "$breaking" ]; then
+            changelog="$changelog## 💥 Breaking Changes\n\n"
+            echo "$breaking" | while read -r line; do
+              changelog="$changelog- $line\n"
+            done
+            changelog="$changelog\n"
+          fi
+
+          # Features
+          features=$(echo "$commits" | grep "^feat" || true)
+          if [ -n "$features" ]; then
+            changelog="$changelog## ✨ New Features\n\n"
+            echo "$features" | while read -r line; do
+              clean_line=$(echo "$line" | sed 's/^feat: //')
+              changelog="$changelog- $clean_line\n"
+            done
+            changelog="$changelog\n"
+          fi
+
+          # Bug fixes
+          fixes=$(echo "$commits" | grep "^fix" || true)
+          if [ -n "$fixes" ]; then
+            changelog="$changelog## 🐛 Bug Fixes\n\n"
+            echo "$fixes" | while read -r line; do
+              clean_line=$(echo "$line" | sed 's/^fix: //')
+              changelog="$changelog- $clean_line\n"
+            done
+            changelog="$changelog\n"
+          fi
+
+          # Documentation
+          docs=$(echo "$commits" | grep "^docs" || true)
+          if [ -n "$docs" ]; then
+            changelog="$changelog## 📚 Documentation\n\n"
+            echo "$docs" | while read -r line; do
+              clean_line=$(echo "$line" | sed 's/^docs: //')
+              changelog="$changelog- $clean_line\n"
+            done
+            changelog="$changelog\n"
+          fi
+
+          # Performance improvements
+          perf=$(echo "$commits" | grep "^perf" || true)
+          if [ -n "$perf" ]; then
+            changelog="$changelog## ⚡ Performance Improvements\n\n"
+            echo "$perf" | while read -r line; do
+              clean_line=$(echo "$line" | sed 's/^perf: //')
+              changelog="$changelog- $clean_line\n"
+            done
+            changelog="$changelog\n"
+          fi
+
+          # Other changes
+          others=$(echo "$commits" | grep -v -E "^(feat|fix|docs|perf|BREAKING)" || true)
+          if [ -n "$others" ]; then
+            changelog="$changelog## 🔧 Other Changes\n\n"
+            echo "$others" | while read -r line; do
+              changelog="$changelog- $line\n"
+            done
+            changelog="$changelog\n"
+          fi
+
+          # Store changelog
+          echo "content<<EOF" >> $GITHUB_OUTPUT
+          echo -e "$changelog" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create release branch
+        run: |
+          branch_name="release/v${{ steps.version.outputs.new_version }}"
+          git checkout -b "$branch_name"
+          echo "Created branch: $branch_name"
+          echo "branch_name=$branch_name" >> $GITHUB_ENV
+
+      - name: Update version in pyproject.toml
+        run: |
+          new_version="${{ steps.version.outputs.new_version }}"
+          sed -i "s/^version = .*/version = \"$new_version\"/" pyproject.toml
+          echo "Updated version to $new_version"
+
+      - name: Update CHANGELOG.md
+        run: |
+          new_version="${{ steps.version.outputs.new_version }}"
+          release_date=$(date +"%Y-%m-%d")
+
+          # Create or update CHANGELOG.md
+          if [ ! -f CHANGELOG.md ]; then
+            echo "# Changelog" > CHANGELOG.md
+            echo "" >> CHANGELOG.md
+            echo "All notable changes to this project will be documented in this file." >> CHANGELOG.md
+            echo "" >> CHANGELOG.md
+            echo "The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)," >> CHANGELOG.md
+            echo "and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)." >> CHANGELOG.md
+            echo "" >> CHANGELOG.md
+          fi
+
+          # Prepare new changelog entry
+          new_entry="## [${new_version}] - ${release_date}\n\n${{ steps.changelog.outputs.content }}\n"
+
+          # Insert new entry after the header
+          awk -v new_entry="$new_entry" '
+          /^# Changelog/ { print; getline; print; print new_entry; next }
+          { print }
+          ' CHANGELOG.md > CHANGELOG.tmp && mv CHANGELOG.tmp CHANGELOG.md
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add pyproject.toml CHANGELOG.md
+          git commit -m "chore: prepare release v${{ steps.version.outputs.new_version }}
+
+          - Bump version from ${{ steps.current.outputs.version }} to ${{ steps.version.outputs.new_version }}
+          - Update CHANGELOG.md with release notes
+          - Ready for release to ${{ github.event.inputs.target_branch }}
+
+          🤖 Generated with [Claude Code](https://claude.ai/code)
+
+          Co-Authored-By: Claude <noreply@anthropic.com>"
+
+      - name: Push release branch
+        run: |
+          git push origin "${{ env.branch_name }}"
+
+      - name: Create Pull Request
+        run: |
+          pr_body="## 🚀 Release v${{ steps.version.outputs.new_version }}
+
+          This PR prepares the release of **v${{ steps.version.outputs.new_version }}** from \`dev\` to \`${{ github.event.inputs.target_branch }}\`.
+
+          ### 📊 Release Summary
+          - **Current Version**: ${{ steps.current.outputs.version }}
+          - **New Version**: ${{ steps.version.outputs.new_version }}
+          - **Version Bump**: ${{ steps.version.outputs.bump }}
+          - **Breaking Changes**: ${{ steps.analyze.outputs.breaking_changes }}
+          - **New Features**: ${{ steps.analyze.outputs.features }}
+          - **Bug Fixes**: ${{ steps.analyze.outputs.fixes }}
+
+          ### 📝 Changes in this Release
+
+          ${{ steps.changelog.outputs.content }}
+
+          ### ✅ Checklist
+          - [x] Version bumped in \`pyproject.toml\`
+          - [x] \`CHANGELOG.md\` updated
+          - [ ] PR reviewed and approved
+          - [ ] Ready to merge and create release
+
+          ### 🎯 Next Steps
+          1. Review this PR
+          2. Merge to trigger release creation
+          3. Release will be automatically created with these notes
+          4. Optional: Publish to PyPI
+
+          ---
+          🤖 This PR was automatically generated by the release workflow."
+
+          gh pr create \
+            --title "🚀 Release v${{ steps.version.outputs.new_version }}" \
+            --body "$pr_body" \
+            --base "${{ github.event.inputs.target_branch }}" \
+            --head "${{ env.branch_name }}" \
+            --label "release" \
+            --label "auto-generated"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Output PR information
+        run: |
+          echo "## 🎉 Release PR Created!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version**: ${{ steps.current.outputs.version }} → ${{ steps.version.outputs.new_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch**: \`${{ env.branch_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Target**: \`${{ github.event.inputs.target_branch }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Type**: ${{ steps.version.outputs.bump }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📝 Generated Changelog" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.changelog.outputs.content }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🔗 [View the PR](https://github.com/${{ github.repository }}/pulls)"

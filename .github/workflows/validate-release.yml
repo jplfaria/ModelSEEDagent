@@ -1,0 +1,274 @@
+name: 🔍 Validate Release
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+    paths: ['pyproject.toml', 'CHANGELOG.md']
+
+  workflow_call:
+    inputs:
+      version:
+        description: 'Version to validate'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+  validate-version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Validate pyproject.toml
+        run: |
+          echo "📋 Validating pyproject.toml structure..."
+          poetry check
+
+          # Extract version
+          version=$(poetry version --short)
+          echo "Version: $version"
+
+          # Validate semantic versioning
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "❌ Invalid version format: $version"
+            echo "Must follow semantic versioning (X.Y.Z)"
+            exit 1
+          fi
+
+          echo "✅ Version format is valid"
+
+      - name: Validate changelog
+        run: |
+          echo "📋 Validating CHANGELOG.md..."
+
+          if [ ! -f CHANGELOG.md ]; then
+            echo "❌ CHANGELOG.md not found"
+            exit 1
+          fi
+
+          # Check if version is mentioned in changelog
+          version=$(poetry version --short)
+          if ! grep -q "## \[$version\]" CHANGELOG.md; then
+            echo "❌ Version $version not found in CHANGELOG.md"
+            echo "Expected format: ## [$version] - YYYY-MM-DD"
+            exit 1
+          fi
+
+          echo "✅ CHANGELOG.md is valid"
+
+      - name: Check for required files
+        run: |
+          echo "📋 Checking required files..."
+
+          required_files=(
+            "README.md"
+            "pyproject.toml"
+            "src/"
+            "LICENSE"
+          )
+
+          for file in "${required_files[@]}"; do
+            if [ ! -e "$file" ]; then
+              echo "❌ Required file/directory missing: $file"
+              exit 1
+            fi
+          done
+
+          echo "✅ All required files present"
+
+  test-package:
+    runs-on: ubuntu-latest
+    needs: validate-version
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+
+      - name: Install dependencies
+        run: |
+          poetry install --with dev
+
+      - name: Run tests
+        run: |
+          echo "🧪 Running test suite..."
+          if [ -d "tests" ]; then
+            poetry run pytest tests/ -v
+          else
+            echo "⚠️ No tests directory found, skipping tests"
+          fi
+
+      - name: Run linting
+        run: |
+          echo "🔍 Running code quality checks..."
+
+          # Run black check
+          if poetry run black --check src/; then
+            echo "✅ Code formatting (black) passed"
+          else
+            echo "❌ Code formatting issues found"
+            exit 1
+          fi
+
+          # Run isort check
+          if poetry run isort --check-only src/; then
+            echo "✅ Import sorting (isort) passed"
+          else
+            echo "❌ Import sorting issues found"
+            exit 1
+          fi
+
+      - name: Build package
+        run: |
+          echo "📦 Building package..."
+          poetry build
+
+          # Check if build artifacts exist
+          if [ ! -d "dist" ] || [ -z "$(ls -A dist)" ]; then
+            echo "❌ Build failed - no artifacts created"
+            exit 1
+          fi
+
+          echo "✅ Package built successfully"
+          ls -la dist/
+
+      - name: Test package installation
+        run: |
+          echo "🔧 Testing package installation..."
+
+          # Create a temporary environment and test installation
+          python -m venv test_env
+          source test_env/bin/activate
+
+          # Install the built package
+          pip install dist/*.whl
+
+          # Try to import the package
+          python -c "import src; print('✅ Package imports successfully')"
+
+          # Clean up
+          deactivate
+          rm -rf test_env
+
+  security-scan:
+    runs-on: ubuntu-latest
+    needs: validate-version
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run security scan
+        run: |
+          echo "🔒 Running security scan..."
+
+          # Install safety
+          pip install safety
+
+          # Check for known security vulnerabilities
+          if poetry export -f requirements.txt --output requirements.txt; then
+            safety check -r requirements.txt
+            echo "✅ Security scan passed"
+          else
+            echo "⚠️ Could not export requirements, skipping security scan"
+          fi
+
+  validate-release-notes:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check PR for release notes
+        run: |
+          echo "📝 Validating release notes in PR..."
+
+          # Get PR body
+          pr_body=$(gh pr view ${{ github.event.pull_request.number }} --json body --jq '.body')
+
+          # Check for required sections
+          required_sections=(
+            "Release Summary"
+            "Changes in this Release"
+            "Checklist"
+          )
+
+          for section in "${required_sections[@]}"; do
+            if ! echo "$pr_body" | grep -qi "$section"; then
+              echo "❌ Missing required section: $section"
+              exit 1
+            fi
+          done
+
+          echo "✅ Release notes are properly formatted"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  summary:
+    runs-on: ubuntu-latest
+    needs: [validate-version, test-package, security-scan]
+    if: always()
+
+    steps:
+      - name: Generate validation summary
+        run: |
+          echo "## 🔍 Release Validation Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Check job statuses
+          validation_status="${{ needs.validate-version.result }}"
+          test_status="${{ needs.test-package.result }}"
+          security_status="${{ needs.security-scan.result }}"
+
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Version & Files | $([ "$validation_status" = "success" ] && echo "✅ Passed" || echo "❌ Failed") |" >> $GITHUB_STEP_SUMMARY
+          echo "| Tests & Build | $([ "$test_status" = "success" ] && echo "✅ Passed" || echo "❌ Failed") |" >> $GITHUB_STEP_SUMMARY
+          echo "| Security Scan | $([ "$security_status" = "success" ] && echo "✅ Passed" || echo "❌ Failed") |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Overall status
+          if [ "$validation_status" = "success" ] && [ "$test_status" = "success" ] && [ "$security_status" = "success" ]; then
+            echo "🎉 **All validation checks passed!** This release is ready to be merged." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Some validation checks failed.** Please review and fix the issues before merging." >> $GITHUB_STEP_SUMMARY
+          fi
