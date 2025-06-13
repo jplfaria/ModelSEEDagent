@@ -83,6 +83,7 @@ nav:
   - Development Roadmaps:
     - CLI Debug Capture: development/cli-debug-capture-roadmap.md
     - 12-Factor Agents: development/12-factor-agents-roadmap.md
+    - Testing Infrastructure: development/testing-infrastructure-roadmap.md
 
   - Operations:
     - Installation: installation.md
