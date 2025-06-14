@@ -2,7 +2,7 @@
 
 **AI-Powered Metabolic Modeling Platform**
 
-ModelSEEDagent is a production-ready AI platform that combines large language models with **32 specialized metabolic modeling tools**. Built on LangGraph for intelligent workflow orchestration, it provides comprehensive AI-driven analysis capabilities for metabolic modeling and systems biology research.
+ModelSEEDagent is a production-ready AI platform that combines large language models with **29 specialized metabolic modeling tools**. Built on LangGraph for intelligent workflow orchestration, it provides comprehensive AI-driven analysis capabilities for metabolic modeling and systems biology research.
 
 ## 📚 **Documentation**
 
@@ -154,7 +154,7 @@ ModelSEEDagent/
 ├── notebooks/                     # Interactive tutorials
 ├── src/                           # Main source code
 │   ├── agents/                    # AI agents and reasoning
-│   ├── tools/                     # 25 specialized tools
+│   ├── tools/                     # 29 specialized tools
 │   │   ├── cobra/                 # 12 COBRApy tools
 │   │   ├── modelseed/             # 3 ModelSEED tools
 │   │   ├── biochem/               # 2 biochemistry tools
@@ -177,7 +177,7 @@ ModelSEEDagent/
 **Quick Links:**
 - **[Getting Started](https://jplfaria.github.io/ModelSEEDagent/user/README/)** - Installation and basic usage
 - **[User Guide](https://jplfaria.github.io/ModelSEEDagent/user/INTERACTIVE_GUIDE/)** - Interactive interface guide
-- **[Tool Reference](https://jplfaria.github.io/ModelSEEDagent/TOOL_REFERENCE/)** - All 32 tools overview
+- **[Tool Reference](https://jplfaria.github.io/ModelSEEDagent/TOOL_REFERENCE/)** - All 29 tools overview
 - **[API Documentation](https://jplfaria.github.io/ModelSEEDagent/api/overview/)** - Programmatic usage
 - **[Configuration](https://jplfaria.github.io/ModelSEEDagent/configuration/)** - Setup and configuration options
 

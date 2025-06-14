@@ -38,14 +38,14 @@
 
 ## Testing Coverage Summary
 
-- **Total Tools Implemented**: 25
-- **Tools Currently Tested**: 23 (92% coverage)
+- **Total Tools Implemented**: 29
+- **Tools Currently Tested**: 23 (79% coverage)
 - **COBRA Tools**: 12 implemented, 12 tested (100% coverage)
 - **AI Media Tools**: 6 implemented, 6 tested (100% coverage)
 - **Biochemistry Tools**: 2 implemented, 2 tested (100% coverage)
 - **System Tools**: 3 implemented, 3 tested (100% coverage)
-- **ModelSEED Tools**: 3 implemented, 0 tested (service dependencies)
-- **RAST Tools**: 1 implemented, 0 tested (not working)
+- **ModelSEED Tools**: 4 implemented, 0 tested (service dependencies)
+- **RAST Tools**: 2 implemented, 0 tested (not working)
 
 ## Auxotrophy vs AuxotrophyPrediction Tool Differences
 

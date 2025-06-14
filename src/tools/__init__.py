@@ -16,6 +16,7 @@ from .modelseed.annotation import ProteinAnnotationTool, RastAnnotationTool
 from .modelseed.builder import ModelBuildTool
 from .modelseed.compatibility import ModelCompatibilityTool
 from .modelseed.gapfill import GapFillTool
+from .system.audit_tools import AIAuditTool, RealtimeVerificationTool, ToolAuditTool
 
 __all__ = [
     "BaseTool",
@@ -41,4 +42,7 @@ __all__ = [
     "ModelBuildTool",
     "GapFillTool",
     "ModelCompatibilityTool",
+    "ToolAuditTool",
+    "AIAuditTool",
+    "RealtimeVerificationTool",
 ]

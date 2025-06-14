@@ -2,7 +2,7 @@
 
 ## Overview
 
-ModelSEEDagent provides **29 specialized metabolic modeling tools** organized into five main categories. Each tool is designed for specific analysis tasks and integrates seamlessly with the AI reasoning system.
+ModelSEEDagent provides **29 specialized metabolic modeling tools** organized into six main categories. Each tool is designed for specific analysis tasks and integrates seamlessly with the AI reasoning system.
 
 ## Tool Categories
 
@@ -11,6 +11,7 @@ ModelSEEDagent provides **29 specialized metabolic modeling tools** organized in
 3. [ModelSEED Tools (5 tools)](#modelseed-tools) - Genome annotation and model building
 4. [Biochemistry Tools (2 tools)](#biochemistry-tools) - Universal compound and reaction resolution
 5. [RAST Tools (2 tools)](#rast-tools) - Genome annotation and analysis
+6. [System Tools (3 tools)](#system-tools) - AI auditing and verification
 
 For detailed technical implementation information, see the [API Tool Implementation Reference](api/tools.md).
 
@@ -201,6 +202,27 @@ modelseed-agent interactive
 
 For detailed technical implementation information including parameters, precision configurations, and advanced usage patterns, see the [API Tool Implementation Reference](api/tools.md).
 
+---
+
+## System Tools
+
+AI auditing and verification tools for transparency and quality assurance:
+
+### 1. Tool Audit (`tool_audit`)
+**Purpose**: Audit and verify tool execution with detailed tracking
+**Usage**: Automatically tracks all tool executions during workflows
+**What it does**: Records tool inputs, outputs, execution times, and success/failure status
+
+### 2. AI Audit (`ai_audit`)
+**Purpose**: Audit AI reasoning and decision-making processes
+**Usage**: Monitors AI agent decisions and reasoning chains
+**What it does**: Tracks AI model responses, reasoning steps, and decision paths for transparency
+
+### 3. Realtime Verification (`realtime_verification`)
+**Purpose**: Live verification of AI statements against actual results
+**Usage**: Automatically validates AI claims during execution
+**What it does**: Cross-references AI assertions with tool outputs to detect and prevent hallucinations
+
 ## Summary
 
-ModelSEEDagent's 27 tools provide comprehensive metabolic modeling capabilities through an intuitive AI interface. Each tool is designed to work seamlessly with the AI reasoning system, allowing for complex multi-step analyses through simple natural language commands.
+ModelSEEDagent's 29 tools provide comprehensive metabolic modeling capabilities through an intuitive AI interface. Each tool is designed to work seamlessly with the AI reasoning system, allowing for complex multi-step analyses through simple natural language commands.

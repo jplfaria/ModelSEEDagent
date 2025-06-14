@@ -11,7 +11,7 @@ This page tracks automated and manual updates to the ModelSEEDagent documentatio
 
 **Changes:**
 - **README.md**: Updated README.md with latest tool information
-- **Tool Count**: 32 tools total
+- **Tool Count**: 29 tools total
 
 ---
 
