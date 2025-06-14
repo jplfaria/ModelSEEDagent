@@ -97,7 +97,7 @@ jobs:
               # Create minimal config for FBATool
               config = {'fba_config': {'solver': 'glpk'}}
               fba_tool = FBATool(config)
-              result = fba_tool.run({'model_path': 'data/examples/e_coli_core.xml'})
+              result = fba_tool.run('data/examples/e_coli_core.xml')
 
               print('\\nAnalyzing results...')
               growth_rate = result.data['growth_rate']
