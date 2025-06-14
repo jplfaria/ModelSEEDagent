@@ -117,21 +117,21 @@ git add src/tools/new_tool.py
 git commit -m "feat: Add new analysis tool"
 
 # Git hook shows:
-# 🟡 RECOMMENDATION: Consider running 'claude-code review-docs'
+# RECOMMENDATION: Consider running 'claude-code review-docs'
 #    Changes detected that may affect documentation
-# 🔧 Tool files changed:
+# Tool files changed:
 #    • src/tools/new_tool.py
 
 # Update documentation
 ./claude-code review-docs
 
 # Output:
-# 🔍 Starting documentation review...
-# 📁 Analyzed 3 changed files
-# ✅ Updated 2 documentation files:
+# Starting documentation review...
+# Analyzed 3 changed files
+# Updated 2 documentation files:
 #    • README.md
 #    • docs/TOOL_REFERENCE.md
-# 💾 Documentation review completed and saved
+# Documentation review completed and saved
 
 # Commit the updates
 git add docs/ README.md
@@ -145,7 +145,7 @@ git commit -m "docs: Update documentation for new analysis tool"
 ./claude-code review-docs --check
 
 # Output:
-# 📊 Documentation Review Status
+# Documentation Review Status
 #    • Files changed since last review: 5
 #    • Tool files changed: 1
 #    • Current tool count: 30
@@ -164,7 +164,7 @@ git commit -m "docs: Update documentation for new analysis tool"
 # Tool Files: 1
 # Current Tool Count: 30
 #
-# 🟡 RECOMMENDATION: Consider running 'claude-code review-docs'
+# RECOMMENDATION: Consider running 'claude-code review-docs'
 #    Changes detected that may affect documentation
 ```
 
@@ -179,14 +179,14 @@ The system automatically updates these files when you run `./claude-code review-
 
 ## Benefits of This Approach
 
-### ✅ Advantages
+### Advantages
 - **Full Control** - You decide when documentation gets updated
 - **No Complexity** - Simple commands, no complex automation to debug
 - **Smart Reminders** - Helpful hints without being intrusive
 - **Reliable** - No automatic systems that can fail or misbehave
 - **Fast Development** - Focus on coding, update docs when convenient
 
-### 🔄 Comparison with Previous System
+### Comparison with Previous System
 - **Before**: Complex automatic git analysis, frequent failures, debugging overhead
 - **After**: Simple trigger-based system, reliable operation, developer control
 
