@@ -86,11 +86,11 @@ jobs:
                   sys.exit(1)
 
               from src.tools.cobra.fba import FBATool
-              from src.tools.cobra.utils import load_model
+              from src.tools.cobra.utils import ModelUtils
 
               print('\\n=== Running FBA Validation ===')
               print('Loading e_coli_core model...')
-              model = load_model('data/examples/e_coli_core.xml')
+              model = ModelUtils.load_model('data/examples/e_coli_core.xml')
               print(f'Model loaded: {len(model.reactions)} reactions, {len(model.metabolites)} metabolites')
 
               print('\\nRunning FBA analysis...')
