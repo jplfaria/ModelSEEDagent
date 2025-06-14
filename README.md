@@ -87,17 +87,17 @@ Pre-built workflow templates combining media selection with analysis:
 
 **🧪 [Complete Tool Testing Status](https://jplfaria.github.io/ModelSEEDagent/TOOL_TESTING_STATUS/)** - Live testing coverage and results
 
-**Current Status**: 19/25 tools actively tested (76% coverage) with 100% success rate across 4 model types
+**Current Status**: 23/25 tools actively tested (92% coverage) with 100% success rate across 4 model types
 
 | Category | Implemented | Tested | Success Rate | Status |
 |----------|-------------|--------|--------------|--------|
-| **COBRA Tools** | 12 | 11 | 100% (44/44) | Complete coverage |
-| **AI Media Tools** | 6 | 6 | 100% (24/24) | Complete coverage |
-| **Biochemistry Tools** | 2 | 2 | 100% (8/8) | Complete coverage |
+| **COBRA Tools** | 12 | 12 | 100% (48/48) | ✅ Complete coverage |
+| **AI Media Tools** | 6 | 6 | 100% (24/24) | ✅ Complete coverage |
+| **Biochemistry Tools** | 2 | 2 | 100% (8/8) | ✅ Complete coverage |
+| **System Tools** | 3 | 3 | 100% (12/12) | ✅ Functional validation |
 | **ModelSEED Tools** | 3 | 0 | N/A | Service dependencies |
-| **System Tools** | 3 | 0 | N/A | Different test approach |
 
-**Last Comprehensive Test**: 2025-06-10 | **Models Tested**: e_coli_core, iML1515, EcoliMG1655, B_aphidicola
+**Last Comprehensive Test**: 2025-06-14 | **Models Tested**: e_coli_core, iML1515, EcoliMG1655, B_aphidicola
 
 ## Specialized Tools (25 Total)
 
@@ -125,7 +125,7 @@ Pre-built workflow templates combining media selection with analysis:
 - **Gapfilling** - Advanced MSGapfill algorithms
 - **Protein Annotation** - Individual protein sequence annotation
 
-### System Tools (3 tools) - Alternative Testing
+### System Tools (3 tools) - 100% Tested
 - **Tool Audit** - Execution auditing and verification
 - **AI Audit** - AI reasoning and decision auditing
 - **Realtime Verification** - Live hallucination detection
@@ -154,11 +154,12 @@ ModelSEEDagent/
 ├── notebooks/                     # Interactive tutorials
 ├── src/                           # Main source code
 │   ├── agents/                    # AI agents and reasoning
-│   ├── tools/                     # 23 specialized tools
-│   │   ├── cobra/                 # 11 COBRApy tools
-│   │   ├── modelseed/             # 4 ModelSEED tools
-│   │   │   ├── biochem/             # 2 biochemistry tools
-│   │   └── ai_media/           # 6 AI media tools
+│   ├── tools/                     # 25 specialized tools
+│   │   ├── cobra/                 # 12 COBRApy tools
+│   │   ├── modelseed/             # 3 ModelSEED tools
+│   │   ├── biochem/               # 2 biochemistry tools
+│   │   ├── system/                # 3 system tools
+│   │   └── ai_media/              # 6 AI media tools
 │   ├── interactive/            # User interfaces
 │   ├── cli/                    # Command-line interfaces
 │   └── llm/                    # Multi-LLM backend support
