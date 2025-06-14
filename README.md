@@ -41,7 +41,7 @@ modelseed-agent setup --backend argo
 - **Pattern Learning** - Cross-model learning and intelligent recommendations
 - **AI Transparency** - Advanced hallucination detection and audit system
 - **Natural Language Interface** - Conversational AI for complex metabolic analysis
-- **AI Media Intelligence** - 6 specialized tools for intelligent media management and optimization
+- **AI Media Intelligence** - 29 specialized tools for intelligent media management and optimization
 
 ## Advanced AI Features
 
@@ -99,7 +99,7 @@ Pre-built workflow templates combining media selection with analysis:
 
 **Last Comprehensive Test**: 2025-06-14 | **Models Tested**: e_coli_core, iML1515, EcoliMG1655, B_aphidicola
 
-## Specialized Tools (32 Total)
+## Specialized Tools (29 Total)
 
 ### AI Media Tools (6 tools) - 100% Tested
 - **Media Selection** - AI-powered optimal media selection for models

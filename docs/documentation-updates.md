@@ -4,6 +4,18 @@ This page tracks automated and manual updates to the ModelSEEDagent documentatio
 
 ## Recent Changes
 
+### 2025-06-14 10:35:48 (Commit: a8e81082)
+
+**Files Modified:** 25 files
+- .github/workflows/docs.yml, .github/workflows/testbed-ci.yml, README.md, docs/TOOL_REFERENCE.md, docs/TOOL_TESTING_STATUS.md, docs/development/testing-infrastructure-roadmap.md, docs/documentation-updates.json, docs/documentation-updates.md, mkdocs.yml, scripts/docs_review.py...
+
+**Changes:**
+- **Documentation Review**: Manual documentation review and update
+- **Tool Count**: 29 tools total
+
+---
+
+
 ### 2025-06-14 13:56:53 (Commit: 3a04513f)
 
 **Files Modified:** 1 files
