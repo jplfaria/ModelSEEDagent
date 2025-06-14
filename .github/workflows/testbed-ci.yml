@@ -94,8 +94,10 @@ jobs:
               print(f'Model loaded: {len(model.reactions)} reactions, {len(model.metabolites)} metabolites')
 
               print('\\nRunning FBA analysis...')
-              fba_tool = FBATool()
-              result = fba_tool.run({'model_file': 'data/examples/e_coli_core.xml'})
+              # Create minimal config for FBATool
+              config = {'fba_config': {'solver': 'glpk'}}
+              fba_tool = FBATool(config)
+              result = fba_tool.run({'model_path': 'data/examples/e_coli_core.xml'})
 
               print('\\nAnalyzing results...')
               growth_rate = result.data['growth_rate']
