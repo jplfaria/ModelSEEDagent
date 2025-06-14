@@ -54,6 +54,7 @@ jobs:
           fi
 
       - name: Run essential testbed validation
+        id: validation
         run: |
           echo " Running essential biological validation..."
           echo "Model: e_coli_core"
@@ -118,7 +119,7 @@ jobs:
           echo "| Component | Status |" >> $GITHUB_STEP_SUMMARY
           echo "|-----------|--------|" >> $GITHUB_STEP_SUMMARY
 
-          if [ $? -eq 0 ]; then
+          if [ "${{ steps.validation.outcome }}" = "success" ]; then
             echo "| **Model**: e_coli_core |  Loaded successfully |" >> $GITHUB_STEP_SUMMARY
             echo "| **Tool**: FBA |  Executed successfully |" >> $GITHUB_STEP_SUMMARY
             echo "| **Biological Validation** |  Growth rate in valid range |" >> $GITHUB_STEP_SUMMARY
