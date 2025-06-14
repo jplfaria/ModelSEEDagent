@@ -153,6 +153,10 @@ ModelSEEDagent is **production-ready** and actively maintained. For detailed pro
 - **Issues**: GitHub issue tracker for bug reports and feature requests
 - **Community**: Discussions and Q&A forum
 
+## Documentation
+
+This comprehensive documentation was developed with the assistance of AI technology to ensure clarity, completeness, and technical accuracy. All content has been reviewed and validated by the ModelSEEDagent development team.
+
 ---
 
 **Ready to start metabolic modeling with AI?** Begin with the [Installation Guide](installation.md).
