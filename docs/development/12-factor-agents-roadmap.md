@@ -13,75 +13,27 @@ The 12-Factor Agents principles provide a framework for building reliable Large 
 
 ## Current State Assessment
 
-### Strong Implementation (Factors 1, 4, 10, 6)
+The table below evaluates ModelSEEDagent against the twelve principles described in the 12-Factor-Agents specification [12fa].
+Scores range from 0 (not started) to 10 (fully satisfied).
 
-**Factor 1: Natural Language to Tool Calls** - Score: 9/10
-- 29+ specialized metabolic modeling tools
-- Natural language queries converted to structured tool calls
-- Clean tool interface design
-- Minor: Could improve tool discovery and selection logic
+| Principle | Score | Evidence | Key gaps |
+|-----------|------:|----------|----------|
+| 1. Natural-Language → Tool Calls | 8 | LangGraph agent converts free-text into structured calls for 29 tools. | Tool-selector logic lives in a large module and is not unit-tested. |
+| 2. Own Your Prompts | 3 | Prompts are hard-coded across multiple Python files and YAML configs. | No central template store, versioning or automated tests. |
+| 3. Own Your Context Window | 4 | Agent trims old history but does not prioritise or compress content. | No explicit token budgeting or context manager. |
+| 4. Tools Return Structured Output | 8 | All tools emit a Pydantic `ToolResult`; FBA exports JSON/CSV. | Error payloads are not standardised. |
+| 5. Unify Execution & Business State | 6 | Session folders capture run artefacts; audit system records history. | State mutates inside agents; no single immutable state object. |
+| 6. Launch / Pause / Resume with Simple APIs | 7 | CLI supports resume and interactive sessions. | No REST endpoint or programmatic API yet. |
+| 7. Contact Humans with Tool Calls | 3 | No human-approval or escalation hooks beyond CLI. | Need interactive approval / escalation tools. |
+| 8. Own Your Control Flow | 5 | LangGraph DAG provides implicit structure. | Flow definitions are embedded in code; not declarative or visualised. |
+| 9. Compact Errors into Context Window | 3 | Errors are logged to files. | Not summarised or injected back into the LLM context. |
+| 10. Small, Focused Agents | 7 | Separate classes for streaming vs batch. | Main agent modules exceed one thousand lines; further decomposition needed. |
+| 11. Trigger from Anywhere | 4 | CLI and Python import are available. | Missing webhook, scheduler and REST triggers. |
+| 12. Stateless Reducer | 3 | Individual tools are mostly pure functions. | Agents hold mutable state; reducer pattern not yet implemented. |
 
-**Factor 4: Tools are Structured Outputs** - Score: 8/10
-- Clear input/output specifications for all tools
-- COBRA.py integration provides structured data interfaces
-- JSON-based tool communication
-- Minor: Standardize error response formats
+High-level view: principles 1, 4 and 10 are strong; 5, 6 and 8 are mid-stage; the remaining six principles require foundational work.
 
-**Factor 10: Small, Focused Agents** - Score: 8/10
-- Domain-specific (metabolic modeling) vs general-purpose
-- Specialized tool sets for different workflows
-- Minor: Could further decompose complex workflows
-
-**Factor 6: Launch/Pause/Resume with Simple APIs** - Score: 7/10
-- Session management and state persistence
-- Interactive CLI with conversation history
-- Needs: API endpoints for programmatic control
-
-### Partial Implementation (Factors 5, 7, 11)
-
-**Factor 5: Unify Execution and Business State** - Score: 6/10
-- Basic state tracking in sessions
-- Tool audit system for execution history
-- Needs: Tighter integration with metabolic modeling workflows
-- Needs: Business logic state unification
-
-**Factor 7: Contact Humans with Tool Calls** - Score: 5/10
-- Interactive CLI provides human interaction
-- Needs: Structured human-in-the-loop tool calls
-- Needs: Escalation mechanisms for complex decisions
-
-**Factor 11: Trigger from Anywhere** - Score: 6/10
-- CLI interface
-- Programmatic tool execution
-- Needs: Web API, webhook triggers
-- Needs: Multiple interaction channels
-
-### Needs Significant Work (Factors 2, 3, 8, 9, 12)
-
-**Factor 2: Own Your Prompts** - Score: 4/10
-- Prompts scattered across codebase
-- No centralized prompt management
-- Limited prompt versioning and testing
-
-**Factor 3: Own Your Context Window** - Score: 4/10
-- Basic context management
-- No strategic context pruning
-- Limited context prioritization
-
-**Factor 8: Own Your Control Flow** - Score: 5/10
-- LangGraph provides some structure
-- Needs: More explicit decision trees
-- Needs: Deterministic flow control
-
-**Factor 9: Compact Errors into Context Window** - Score: 3/10
-- Standard error handling only
-- No error context integration for AI learning
-- Limited error recovery mechanisms
-
-**Factor 12: Stateless Reducer** - Score: 3/10
-- Heavy use of mutable state
-- Not designed as pure functions
-- Difficult to predict behavior
+[12fa]: https://github.com/humanlayer/12-factor-agents/blob/main/README.md
 
 ## Implementation Roadmap
 
