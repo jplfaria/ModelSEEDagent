@@ -73,6 +73,7 @@ nav:
   - Technical Reference:
     - Architecture: ARCHITECTURE.md
     - Tool Reference: TOOL_REFERENCE.md
+    - Tool Testing Status: TOOL_TESTING_STATUS.md
     - Debug Configuration: debug.md
     - Troubleshooting: troubleshooting.md
 

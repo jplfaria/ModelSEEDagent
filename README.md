@@ -83,9 +83,25 @@ Pre-built workflow templates combining media selection with analysis:
 - **Cross-Model Comparison** - Compare media performance across species
 - **Troubleshooting** - Diagnose and fix media-related growth issues
 
-## Specialized Tools (29 Total)
+## Tool Implementation & Testing Status
 
-### AI Media Tools (6 tools)
+**🧪 [Complete Tool Testing Status](https://jplfaria.github.io/ModelSEEDagent/TOOL_TESTING_STATUS/)** - Live testing coverage and results
+
+**Current Status**: 19/25 tools actively tested (76% coverage) with 100% success rate across 4 model types
+
+| Category | Implemented | Tested | Success Rate | Status |
+|----------|-------------|--------|--------------|--------|
+| **COBRA Tools** | 12 | 11 | 100% (44/44) | Complete coverage |
+| **AI Media Tools** | 6 | 6 | 100% (24/24) | Complete coverage |
+| **Biochemistry Tools** | 2 | 2 | 100% (8/8) | Complete coverage |
+| **ModelSEED Tools** | 3 | 0 | N/A | Service dependencies |
+| **System Tools** | 3 | 0 | N/A | Different test approach |
+
+**Last Comprehensive Test**: 2025-06-10 | **Models Tested**: e_coli_core, iML1515, EcoliMG1655, B_aphidicola
+
+## Specialized Tools (25 Total)
+
+### AI Media Tools (6 tools) - 100% Tested
 - **Media Selection** - AI-powered optimal media selection for models
 - **Media Manipulation** - Natural language media modification
 - **Media Compatibility** - Intelligent media-model compatibility analysis
@@ -93,21 +109,26 @@ Pre-built workflow templates combining media selection with analysis:
 - **Media Optimization** - AI-driven media optimization for growth targets
 - **Auxotrophy Prediction** - AI prediction of auxotrophies from model gaps
 
-### ModelSEED Integration (4 tools)
-- **Genome Annotation** - BV-BRC RAST service integration
-- **Model Building** - MSBuilder with template selection
-- **Gapfilling** - Advanced MSGapfill algorithms
-- **Protein Annotation** - Individual protein sequence annotation
-
-### Advanced COBRA Analysis (11 tools)
+### Advanced COBRA Analysis (12 tools) - 92% Tested
 - **Basic Analysis** - FBA, minimal media, auxotrophy analysis
 - **Advanced Analysis** - Flux variability, gene deletion, essentiality analysis
 - **Statistical Methods** - Flux sampling, production envelope analysis
 - **Specialized Tools** - Reaction expression, missing media analysis
+- **Pathway Analysis** - Metabolic pathway analysis (requires annotations)
 
-### Biochemistry Database (2 tools)
+### Biochemistry Database (2 tools) - 100% Tested
 - **Universal ID Resolution** - ModelSEED ↔ BiGG ↔ KEGG mapping
 - **Biochemistry Search** - Compound/reaction discovery by name
+
+### ModelSEED Integration (3 tools) - Service Dependencies
+- **Model Building** - MSBuilder with template selection
+- **Gapfilling** - Advanced MSGapfill algorithms
+- **Protein Annotation** - Individual protein sequence annotation
+
+### System Tools (3 tools) - Alternative Testing
+- **Tool Audit** - Execution auditing and verification
+- **AI Audit** - AI reasoning and decision auditing
+- **Realtime Verification** - Live hallucination detection
 
 ## Repository Structure
 

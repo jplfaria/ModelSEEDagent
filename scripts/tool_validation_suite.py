@@ -1,23 +1,30 @@
 #!/usr/bin/env python3
 """
-Comprehensive Tool Testbed with Biological Validation
-===================================================
+ModelSEED Tool Validation Suite with Biological Validation
+=========================================================
 
-This script tests ALL tools (COBRA + AI Media + Biochemistry) against all 4 models
-with detailed biological knowledge validation to ensure results are scientifically meaningful.
+This script provides comprehensive validation for ALL ModelSEED tools (COBRA + AI Media + Biochemistry)
+against multiple models with detailed biological knowledge validation to ensure results are scientifically meaningful.
 
-Models tested (4 total):
+This is the main tool validation system for ModelSEEDagent, providing:
+
+**Validation Levels:**
+- **Comprehensive Validation**: Full 19 tools × 4 models (76 test combinations)
+- **CI Validation**: Essential subset (FBA on e_coli_core) for continuous integration
+- **Future: Audit Validation**: System tools validation (separate approach)
+
+**Models tested (4 total):**
 - data/examples/e_coli_core.xml (BiGG core model)
 - data/examples/iML1515.xml (BiGG genome-scale model)
 - data/examples/EcoliMG1655.xml (ModelSEED E. coli model)
-- data/examples/Mycoplasma_G37.GMM.mdl.xml (ModelSEED minimal organism)
+- data/examples/B_aphidicola.xml (ModelSEED minimal organism)
 
-Tools tested (20 total):
-- 12 COBRA tools (FBA, ModelAnalysis, PathwayAnalysis, etc.)
+**Tools validated (19 total):**
+- 11 COBRA tools (FBA, ModelAnalysis, FluxVariability, etc.)
 - 6 AI Media tools (MediaSelector, MediaManipulator, etc.)
 - 2 Biochemistry tools (BiochemEntityResolver, BiochemSearch)
 
-Biological validation includes:
+**Biological validation includes:**
 - Growth rate feasibility (0.0-2.0 h⁻¹ for bacteria)
 - Essential gene counts (10-20% of total genes)
 - Media compatibility scores (model format matching)
@@ -380,8 +387,8 @@ class BiologicalValidator:
         return validation
 
 
-class ComprehensiveToolTestbed:
-    """Comprehensive testbed for all tools with biological validation"""
+class ModelSEEDToolValidationSuite:
+    """Comprehensive validation suite for all ModelSEED tools with biological validation"""
 
     def __init__(self):
         self.results = {}
@@ -405,11 +412,13 @@ class ComprehensiveToolTestbed:
         # Initialize all tools
         basic_config = {"fba_config": {}, "model_config": {}}
 
-        # COBRA tools (11 tools - PathwayAnalysis removed)
+        # COBRA tools (12 tools - PathwayAnalysis re-enabled with annotation awareness)
         self.cobra_tools = {
             "FBA": FBATool(basic_config),
             "ModelAnalysis": ModelAnalysisTool(basic_config),
-            # "PathwayAnalysis": PathwayAnalysisTool(basic_config),  # Removed - annotations not reliable
+            "PathwayAnalysis": PathwayAnalysisTool(
+                basic_config
+            ),  # Re-enabled - requires pathway annotations
             "FluxVariability": FluxVariabilityTool(basic_config),
             "GeneDeletion": GeneDeletionTool(basic_config),
             "Essentiality": EssentialityAnalysisTool(basic_config),
@@ -440,9 +449,9 @@ class ComprehensiveToolTestbed:
         # Combine all tools
         self.all_tools = {**self.cobra_tools, **self.media_tools, **self.biochem_tools}
 
-        print(f"🧪 Comprehensive Tool Testbed Initialized")
+        print(f"🧪 ModelSEED Tool Validation Suite Initialized")
         print(
-            f"📊 Testing {len(self.all_tools)} tools ({len(self.cobra_tools)} COBRA + {len(self.media_tools)} Media + {len(self.biochem_tools)} Biochem)"
+            f"📊 Validating {len(self.all_tools)} tools ({len(self.cobra_tools)} COBRA + {len(self.media_tools)} Media + {len(self.biochem_tools)} Biochem)"
         )
         print(f"🧬 Testing on {len(self.models)} models (2 BiGG + 2 ModelSEED)")
         print(f"🔬 With biological validation for scientific accuracy")
@@ -460,7 +469,9 @@ class ComprehensiveToolTestbed:
         cobra_params = {
             "FBA": self._get_fba_params(model_name),
             "ModelAnalysis": {},
-            # "PathwayAnalysis": {"pathway_name": "glycolysis"},  # Removed - annotations not reliable
+            "PathwayAnalysis": self._get_pathway_analysis_params(
+                model_name
+            ),  # Re-enabled with model-specific params
             "FluxVariability": {"fraction_of_optimum": 0.9},
             "GeneDeletion": self._get_gene_deletion_params(model_name),
             "Essentiality": {"threshold": 0.01},  # 1% of wildtype growth
@@ -521,6 +532,20 @@ class ComprehensiveToolTestbed:
         else:
             # BiGG models use default media
             return {}
+
+    def _get_pathway_analysis_params(self, model_name: str) -> Dict[str, Any]:
+        """Get pathway analysis parameters with annotation awareness"""
+
+        # Basic pathway analysis - will test for annotation availability
+        if "iML1515" in model_name:
+            # Genome-scale model likely has good annotations
+            return {"pathway_name": "glycolysis", "detailed_analysis": True}
+        elif "core" in model_name.lower():
+            # Core model may have limited annotations
+            return {"pathway_name": "central_metabolism", "detailed_analysis": False}
+        else:
+            # ModelSEED models may have different annotation formats
+            return {"pathway_name": "core_pathways", "allow_partial_annotation": True}
 
     def _get_gene_deletion_params(self, model_name: str) -> Dict[str, Any]:
         """Get model-specific gene deletion parameters"""
@@ -620,6 +645,31 @@ class ComprehensiveToolTestbed:
             elif tool_name == "ModelAnalysis":
                 # ModelAnalysis expects just the model_path string
                 result = tool._run_tool(model_path)
+            elif tool_name == "PathwayAnalysis":
+                # PathwayAnalysis may fail due to missing annotations - handle gracefully
+                try:
+                    result = tool._run_tool(tool_params)
+                except Exception as e:
+                    if "pathway" in str(e).lower() or "annotation" in str(e).lower():
+                        # Create a result indicating annotation issues
+                        test_result["warnings"].append(
+                            f"PathwayAnalysis failed due to annotation issues: {str(e)}"
+                        )
+                        result = type(
+                            "Result",
+                            (),
+                            {
+                                "success": False,
+                                "message": f"PathwayAnalysis requires pathway annotations not available in {model_name}",
+                                "data": {
+                                    "annotation_available": False,
+                                    "reason": str(e),
+                                },
+                                "error": None,
+                            },
+                        )()
+                    else:
+                        raise  # Re-raise if it's a different error
             else:
                 # COBRA and Media tools
                 result = tool._run_tool(tool_params)
@@ -739,7 +789,7 @@ class ComprehensiveToolTestbed:
 
         return " | ".join(summary_parts) if summary_parts else "Completed"
 
-    def run_comprehensive_test(self):
+    def run_comprehensive_validation(self):
         """Run all tools on all models with comprehensive validation"""
 
         total_tests = len(self.all_tools) * len(self.models)
@@ -1031,33 +1081,33 @@ class ComprehensiveToolTestbed:
 def main():
     """Main execution function"""
 
-    print("🧪 Comprehensive Tool Testbed with Biological Validation")
-    print("=" * 60)
-    print("Testing ALL tools (COBRA + AI Media + Biochemistry) on ALL models")
+    print("🧪 ModelSEED Tool Validation Suite with Biological Validation")
+    print("=" * 70)
+    print("Validating ALL tools (COBRA + AI Media + Biochemistry) on ALL models")
     print("with comprehensive biological knowledge validation.\n")
 
-    testbed = ComprehensiveToolTestbed()
+    validation_suite = ModelSEEDToolValidationSuite()
 
     try:
-        # Run comprehensive tests
-        testbed.run_comprehensive_test()
+        # Run comprehensive validation
+        validation_suite.run_comprehensive_validation()
 
         # Generate comprehensive report
-        testbed.generate_comprehensive_report()
+        validation_suite.generate_comprehensive_report()
 
         # Save detailed results
-        output_file = testbed.save_comprehensive_results()
+        output_file = validation_suite.save_comprehensive_results()
 
-        print(f"\n🎉 Comprehensive testbed complete!")
+        print(f"\n🎉 Tool validation suite complete!")
         print(f"📊 View detailed results with biological validation in: {output_file}")
         print(
-            f"🔬 All {len(testbed.all_tools)} tools tested on {len(testbed.models)} models"
+            f"🔬 All {len(validation_suite.all_tools)} tools validated on {len(validation_suite.models)} models"
         )
 
     except KeyboardInterrupt:
-        print("\n⚠️  Testbed interrupted by user")
+        print("\n⚠️  Validation suite interrupted by user")
     except Exception as e:
-        print(f"\n💥 Testbed failed with error: {e}")
+        print(f"\n💥 Validation suite failed with error: {e}")
         traceback.print_exc()
 
 

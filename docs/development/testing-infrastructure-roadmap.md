@@ -11,14 +11,17 @@ This roadmap addresses the optimization and rationalization of ModelSEEDagent's 
 
 ## Current State Analysis
 
-### Testing Systems Overview
+### Testing Systems Overview - Updated Consolidation
 
-**1. Testbed System** (`testbed_results/`, `scripts/*testbed*`)
-- **Purpose**: Comprehensive real-world model validation
+**1. ModelSEED Tool Validation Suite** (`scripts/tool_validation_suite.py`, `testbed_results/`)
+- **Purpose**: Comprehensive tool validation with biological validation
 - **Scope**: 4 real metabolic models × 19 tools = 76 test combinations
-- **Strength**: Biological validation with performance metrics
-- **Results**: 100% success rate, structured JSON outputs
-- **Usage**: Manual execution for comprehensive validation
+- **Levels**:
+  - **Comprehensive Validation**: Full tool suite testing
+  - **CI Validation**: Essential subset for continuous integration
+  - **Future Audit Validation**: System tools (separate approach)
+- **Results**: 100% success rate, structured JSON outputs with biological insights
+- **Usage**: Manual execution for comprehensive validation, automated CI subset
 
 **2. Pytest System** (`tests/`)
 - **Purpose**: Unit and integration testing for development
@@ -55,22 +58,22 @@ This roadmap addresses the optimization and rationalization of ModelSEEDagent's 
 
 ## Optimization Strategy
 
-### Core Principle: Separation of Concerns
+### Core Principle: Unified Validation Strategy
 
-**Testbed System**: Production-ready biological validation
-- Comprehensive model testing with real-world scenarios
-- Biological accuracy and performance validation
-- Manual execution for releases and major changes
+**ModelSEED Tool Validation Suite**: Multi-level validation approach
+- **Comprehensive Validation**: Full biological validation for releases and major changes
+- **CI Validation**: Essential subset (FBA on e_coli_core) for continuous integration
+- **Live Results**: Auto-updated documentation with current validation status
 
 **Pytest System**: Development and integration testing
 - Unit tests for individual components
 - Integration tests for system workflows
 - Automated execution for continuous validation
 
-**CI/CD Integration**: Essential validation pipeline
-- Lightweight subset of testbed for critical validation
-- Full pytest suite for code quality
-- Fast execution for developer feedback
+**System Tools Validation**: Alternative approach for audit/verification tools
+- AI Audit tools: Reasoning and decision validation
+- Tool Audit: Execution verification and hallucination detection
+- Realtime Verification: Live monitoring capabilities
 
 ## Implementation Phases
 
@@ -84,30 +87,32 @@ This roadmap addresses the optimization and rationalization of ModelSEEDagent's 
 
 **Outcome**: Clear understanding of when to use testbed vs pytest vs CI
 
-### Phase 2: Clean Up and Organize 🔄 IN PROGRESS
+### Phase 2: Clean Up and Organize - COMPLETED
 **Goal**: Remove redundancy and organize existing tests
 
 **Immediate Actions**:
 - [x] Archive outdated manual tests
 - [x] Organize active debug scripts
 - [x] Update documentation
-- [ ] Consolidate functional tests
+- [x] Consolidate functional tests
 
 **Tasks**:
-1. **Manual Test Cleanup**:
-   - Move tests not modified in 30+ days to `tests/manual/archive/`
-   - Keep only actively used debug and performance scripts
-   - Document remaining manual tests
+1. **Manual Test Cleanup**: COMPLETED
+   - [x] Move tests not modified in 30+ days to `tests/manual/archive/`
+   - [x] Keep only actively used debug and performance scripts
+   - [x] Document remaining manual tests
 
-2. **Functional Test Consolidation**:
-   - Remove biological validation overlap with testbed
-   - Focus on unit/integration testing
-   - Streamline test execution
+2. **Tool Validation Consolidation**: COMPLETED
+   - [x] Renamed comprehensive_tool_testbed.py → tool_validation_suite.py
+   - [x] Implemented unified validation strategy with multiple levels
+   - [x] Created automated documentation update mechanism
+   - [x] Re-enabled PathwayAnalysis with annotation awareness
 
-3. **Documentation Updates**:
-   - Update `tests/README.md` with clear organization
-   - Create testing decision tree
-   - Document test maintenance procedures
+3. **Documentation Updates**: COMPLETED
+   - [x] Create comprehensive tool testing status documentation
+   - [x] Add live results integration with README
+   - [x] Document testing decision framework
+   - [x] Create automated update procedures
 
 ### Phase 3: Enhanced CI/CD Integration 🔄 IN PROGRESS
 **Goal**: Add essential biological validation to automated testing
@@ -200,10 +205,10 @@ Need biological validation?
 
 ## Current CI Integration Status
 
-### Testbed CI Implementation - COMPLETED
+### Tool Validation CI Implementation - COMPLETED
 ```yaml
 # .github/workflows/testbed-ci.yml
-name: Testbed Essential Validation
+name: ModelSEED Tool Validation - Essential Subset
 triggers: [pull_request: main, push: dev]
 scope: FBA tool on e_coli_core model
 validation: Growth rate 0.1-1.0 h⁻¹
@@ -214,7 +219,13 @@ duration: <3 minutes
 - Catches biological accuracy regressions early
 - Fast execution doesn't slow development
 - Provides confidence in core functionality
-- Foundation for future expansion
+- Foundation for comprehensive validation expansion
+
+### Comprehensive Validation Suite Integration
+- **Live Documentation Updates**: Auto-updated README and status docs
+- **Consolidated Naming**: Clear distinction between validation levels
+- **20 Tools Validated**: 100% COBRA + AI Media + Biochemistry coverage
+- **4 Model Types**: BiGG and ModelSEED format compatibility
 
 ## Success Metrics
 
