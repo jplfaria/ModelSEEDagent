@@ -24,7 +24,18 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install mkdocs mkdocs-material pymdown-extensions
+          pip install mkdocs mkdocs-material pymdown-extensions pyyaml
+
+      - name: Update Documentation
+        run: |
+          python scripts/docs_review.py --comprehensive
+          if [ -n "$(git status --porcelain)" ]; then
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git add docs/documentation-updates.md
+            git commit -m "docs: Update documentation-updates.md [skip ci]"
+            git push
+          fi
 
       - name: Build documentation
         run: |
