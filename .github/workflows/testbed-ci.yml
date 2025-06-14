@@ -65,50 +65,75 @@ jobs:
           # Run FBA on e_coli_core model
           poetry run python -c "
           import sys
+          import os
+          import traceback
+
           sys.path.insert(0, '.')
 
-          from src.tools.cobra.fba import FBATool
-          from src.tools.cobra.utils import load_model
+          try:
+              # Check environment
+              print('=== Environment Check ===')
+              print(f'Python: {sys.version}')
+              print(f'Working directory: {os.getcwd()}')
+              print(f'Model file exists: {os.path.exists(\"data/examples/e_coli_core.xml\")}')
 
-          print(' Loading e_coli_core model...')
-          model = load_model('data/examples/e_coli_core.xml')
-          print(f' Model loaded: {len(model.reactions)} reactions, {len(model.metabolites)} metabolites')
+              # Check imports
+              try:
+                  import cobra
+                  print(f'COBRApy version: {cobra.__version__}')
+              except ImportError as e:
+                  print(f'ERROR: Failed to import cobra: {e}')
+                  sys.exit(1)
 
-          print(' Running FBA analysis...')
-          fba_tool = FBATool()
-          result = fba_tool.run({'model_file': 'data/examples/e_coli_core.xml'})
+              from src.tools.cobra.fba import FBATool
+              from src.tools.cobra.utils import load_model
 
-          print(' Analyzing results...')
-          growth_rate = result.data['growth_rate']
-          objective_value = result.data['objective_value']
+              print('\\n=== Running FBA Validation ===')
+              print('Loading e_coli_core model...')
+              model = load_model('data/examples/e_coli_core.xml')
+              print(f'Model loaded: {len(model.reactions)} reactions, {len(model.metabolites)} metabolites')
 
-          print(f'Growth Rate: {growth_rate:.4f} h⁻¹')
-          print(f'Objective Value: {objective_value:.4f}')
+              print('\\nRunning FBA analysis...')
+              fba_tool = FBATool()
+              result = fba_tool.run({'model_file': 'data/examples/e_coli_core.xml'})
 
-          # Biological validation
-          if 0.1 <= growth_rate <= 1.0:
-              print(' PASSED: Growth rate within expected biological range (0.1-1.0 h⁻¹)')
+              print('\\nAnalyzing results...')
+              growth_rate = result.data['growth_rate']
+              objective_value = result.data['objective_value']
+
+              print(f'Growth Rate: {growth_rate:.4f} h⁻¹')
+              print(f'Objective Value: {objective_value:.4f}')
+
+              # Biological validation
               exit_code = 0
-          else:
-              print(f' FAILED: Growth rate {growth_rate:.4f} outside expected range (0.1-1.0 h⁻¹)')
-              exit_code = 1
+              if 0.1 <= growth_rate <= 1.0:
+                  print('PASSED: Growth rate within expected biological range (0.1-1.0 h⁻¹)')
+              else:
+                  print(f'FAILED: Growth rate {growth_rate:.4f} outside expected range (0.1-1.0 h⁻¹)')
+                  exit_code = 1
 
-          # Additional validation
-          if objective_value > 0:
-              print(' PASSED: Positive objective value indicates feasible solution')
-          else:
-              print(' FAILED: Non-positive objective value indicates infeasible solution')
-              exit_code = 1
+              # Additional validation
+              if objective_value > 0:
+                  print('PASSED: Positive objective value indicates feasible solution')
+              else:
+                  print('FAILED: Non-positive objective value indicates infeasible solution')
+                  exit_code = 1
 
-          print('=' * 50)
-          if exit_code == 0:
-              print(' Essential testbed validation PASSED')
-              print(' Core biological functionality verified')
-          else:
-              print(' Essential testbed validation FAILED')
-              print(' Core biological functionality compromised')
+              print('\\n' + '=' * 50)
+              if exit_code == 0:
+                  print('Essential testbed validation PASSED')
+                  print('Core biological functionality verified')
+              else:
+                  print('Essential testbed validation FAILED')
+                  print('Core biological functionality compromised')
 
-          sys.exit(exit_code)
+              sys.exit(exit_code)
+
+          except Exception as e:
+              print(f'\\nERROR: {str(e)}')
+              print('\\nFull traceback:')
+              traceback.print_exc()
+              sys.exit(1)
           "
 
       - name: Validation summary
