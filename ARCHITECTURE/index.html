@@ -1,0 +1,2616 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI-Powered Metabolic Modeling Platform">
+      
+      
+        <meta name="author" content="ModelSEED Team">
+      
+      
+      
+        <link rel="prev" href="../user/INTERACTIVE_GUIDE/">
+      
+      
+        <link rel="next" href="../TOOL_REFERENCE/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>Architecture - ModelSEEDagent Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="light-blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#modelseedagent-system-architecture" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ModelSEEDagent Documentation" class="md-header__button md-logo" aria-label="ModelSEEDagent Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ModelSEEDagent Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Architecture
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="light-blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="light-blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ModelSEED/ModelSEEDagent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ModelSEED/ModelSEEDagent
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../user/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Technical Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../api/overview/" class="md-tabs__link">
+          
+  
+  
+  API Documentation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../development/cli-debug-capture-roadmap/" class="md-tabs__link">
+          
+  
+  
+  Development Roadmaps
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../installation/" class="md-tabs__link">
+          
+  
+  
+  Operations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../operations/release-automation/" class="md-tabs__link">
+          
+  
+  
+  Dev Housekeeping
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ModelSEEDagent Documentation" class="md-nav__button md-logo" aria-label="ModelSEEDagent Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ModelSEEDagent Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ModelSEED/ModelSEEDagent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ModelSEED/ModelSEEDagent
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    User Guide
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            User Guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user/INTERACTIVE_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    User Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Technical Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Technical Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Design Principles
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-architecture-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      System Architecture Diagram
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="System Architecture Diagram">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#high-level-component-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      High-Level Component Overview
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#detailed-component-interaction-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Detailed Component Interaction Flow
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#component-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Component Architecture
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Component Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-agent-layer-srcagents" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Agent Layer (src/agents/)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-tool-ecosystem-srctools" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Tool Ecosystem (src/tools/)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-llm-integration-srcllm" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. LLM Integration (src/llm/)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-interactive-interfaces-srcinteractive" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Interactive Interfaces (src/interactive/)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-configuration-settings-srcconfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Configuration &amp; Settings (src/config/)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advanced Features
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#advanced-ai-reasoning-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advanced AI Reasoning System
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-flow-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Flow Architecture
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Flow Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tool-execution-pipeline-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tool Execution Pipeline Details
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quality-assurance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quality Assurance
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quality Assurance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#testing-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testing Strategy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audit-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Audit &amp; Verification
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-characteristics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Characteristics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Characteristics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scalability" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scalability
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reliability" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reliability
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-extension-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration &amp; Extension Framework
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration &amp; Extension Framework">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#extension-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Extension Framework
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Extension Framework">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adding-new-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      Adding New Tools
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-agent-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Agent Development
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#llm-backend-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      LLM Backend Integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database Extensions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-organization-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Organization Principles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-requirements-for-contributions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testing Requirements for Contributions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices-for-contributors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best Practices for Contributors
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quality-assurance-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quality Assurance &amp; Monitoring
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quality Assurance &amp; Monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#real-time-system-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      Real-Time System Health
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reliability-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reliability Features
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TOOL_REFERENCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tool Reference
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TOOL_TESTING_STATUS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tool Testing Status
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Debug Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Troubleshooting
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    API Documentation
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            API Documentation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tool Implementation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Development Roadmaps
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Development Roadmaps
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/cli-debug-capture-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CLI Debug Capture
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/12-factor-agents-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    12-Factor Agents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/testing-infrastructure-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Testing Infrastructure
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Operations
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Operations
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Deployment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Dev Housekeeping
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Dev Housekeeping
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../operations/release-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Release Automation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../operations/documentation-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Documentation Automation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../documentation-updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Documentation Updates
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Design Principles
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-architecture-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      System Architecture Diagram
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="System Architecture Diagram">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#high-level-component-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      High-Level Component Overview
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#detailed-component-interaction-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Detailed Component Interaction Flow
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#component-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Component Architecture
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Component Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-agent-layer-srcagents" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Agent Layer (src/agents/)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-tool-ecosystem-srctools" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Tool Ecosystem (src/tools/)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-llm-integration-srcllm" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. LLM Integration (src/llm/)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-interactive-interfaces-srcinteractive" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Interactive Interfaces (src/interactive/)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-configuration-settings-srcconfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Configuration &amp; Settings (src/config/)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advanced Features
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#advanced-ai-reasoning-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advanced AI Reasoning System
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-flow-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Flow Architecture
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Flow Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tool-execution-pipeline-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tool Execution Pipeline Details
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quality-assurance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quality Assurance
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quality Assurance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#testing-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testing Strategy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audit-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Audit &amp; Verification
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-characteristics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Characteristics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Characteristics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scalability" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scalability
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reliability" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reliability
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-extension-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration &amp; Extension Framework
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration &amp; Extension Framework">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#extension-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Extension Framework
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Extension Framework">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adding-new-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      Adding New Tools
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-agent-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Agent Development
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#llm-backend-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      LLM Backend Integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database Extensions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-organization-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Organization Principles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-requirements-for-contributions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testing Requirements for Contributions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices-for-contributors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best Practices for Contributors
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quality-assurance-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quality Assurance &amp; Monitoring
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quality Assurance &amp; Monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#real-time-system-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      Real-Time System Health
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reliability-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reliability Features
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="modelseedagent-system-architecture">ModelSEEDagent - System Architecture</h1>
+<h2 id="overview">Overview</h2>
+<p>ModelSEEDagent is an AI-powered metabolic modeling platform that combines Large Language Models with specialized computational biology tools. The system uses an intelligent agent-based approach where AI components orchestrate workflows by selecting and chaining appropriate tools to solve complex metabolic modeling problems.</p>
+<h2 id="design-principles">Design Principles</h2>
+<ul>
+<li><strong>AI-Driven Orchestration</strong>: LLMs intelligently select tools and manage workflows</li>
+<li><strong>Modular Design</strong>: Clean separation between reasoning, tool execution, and data layers</li>
+<li><strong>Universal Compatibility</strong>: Seamless integration across ModelSEED and COBRApy ecosystems</li>
+<li><strong>Production Ready</strong>: Comprehensive testing, audit trails, and performance optimization</li>
+<li><strong>Extensible Framework</strong>: Easy addition of new tools, agents, and LLM backends</li>
+</ul>
+<h2 id="system-architecture-diagram">System Architecture Diagram</h2>
+<h3 id="high-level-component-overview">High-Level Component Overview</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                           USER INTERFACES                                  │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├─────────────────┬─────────────────┬─────────────────┬─────────────────────┤
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│ Interactive     │ CLI Commands    │ Python API      │ Web Interface       │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│ Chat Interface  │                 │                 │ (Future)            │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>└─────────┬───────┴─────────┬───────┴─────────┬───────┴─────────┬───────────┘
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>          │                 │                 │                 │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>          ▼                 ▼                 ▼                 ▼
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>┌─────────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                      AGENT ORCHESTRATION LAYER                             │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>├─────────────────┬─────────────────┬─────────────────┬─────────────────────┤
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│ LangGraph       │ Metabolic       │ Reasoning       │ Collaborative       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│ Workflows       │ Agent           │ Chains          │ Decision Making     │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>└─────────┬───────┴─────────┬───────┴─────────┬───────┴─────────┬───────────┘
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>          │                 │                 │                 │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>          ▼                 ▼                 ▼                 ▼
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>┌─────────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│                        LLM ABSTRACTION LAYER                               │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>├─────────────────┬─────────────────┬─────────────────┬─────────────────────┤
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│ Argo Gateway    │ OpenAI API      │ Local LLMs      │ Model Factory &amp;     │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│ (13 models)     │                 │ (Llama 3.x)     │ Config              │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>└─────────┬───────┴─────────┬───────┴─────────┬───────┴─────────┬───────────┘
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>          │                 │                 │                 │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>          ▼                 ▼                 ▼                 ▼
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>┌─────────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                        TOOL EXECUTION LAYER                                │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>├─────────────────┬─────────────────┬─────────────────┬─────────────────────┤
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│ COBRApy Tools   │ ModelSEED Tools │ Biochemistry    │ RAST Tools    │ Audit │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│ (16 tools)      │ (6 tools)       │ Database        │ (2 tools)     │ Tools │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│                 │                 │ (3 tools)       │               │(2 tools)│
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>└─────────┬───────┴─────────┬───────┴─────────┬───────┴─────────┬─────┬─────┘
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>          │                 │                 │                 │     │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>          ▼                 ▼                 ▼                 ▼     │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>┌─────────────────────────────────────────────────────────────────────┘────┐
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│                     DATA &amp; PERSISTENCE LAYER                            │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>├─────────────────┬─────────────────┬─────────────────┬─────────────────────┤
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│ Biochemistry    │ Session State   │ Audit Trails    │ Model Cache &amp;       │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│ Database        │                 │                 │ Results             │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│ (SQLite)        │                 │                 │                     │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>└─────────────────┴─────────────────┴─────────────────┴─────────────────────┘
+</code></pre></div>
+<h3 id="detailed-component-interaction-flow">Detailed Component Interaction Flow</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│  User Request   │ (Natural language query)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>└─────────┬───────┘
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>          │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>          ▼
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>┌─────────────────┐
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│ Query Processor │ (Parse intent and route to appropriate agent)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>└─────────┬───────┘
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>          │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>          ▼
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>┌─────────────────┐
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│Agent Orchestr.  │ (Select strategy and plan workflow)
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>└─────────┬───────┘
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>          │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>          ▼
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>┌─────────────────┐
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│  LLM Backend    │ (Process context and generate execution plan)
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>└─────────┬───────┘
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>          │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>          ▼
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>┌─────────────────┐
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│ Tool Executor   │ (Validate inputs and execute selected tools)
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>└─────────┬───────┘
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>          │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>          ▼
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>┌─────────────────┐
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│Result Processor │ (Process tool outputs and audit results)
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>└─────────┬───────┘
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>          │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>          ▼
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>┌─────────────────┐
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│ Format &amp; State  │ (Format output, update session state)
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>└─────────┬───────┘
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>          │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>          ▼
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>┌─────────────────┐
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│ User Response   │ (Return structured response to user)
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>└─────────────────┘
+</code></pre></div>
+<p><strong>Key Decision Points in Flow:</strong>
+- <strong>Query Processing</strong>: Determines if request needs single tool or multi-step workflow
+- <strong>Agent Selection</strong>: Routes to RealTimeMetabolicAgent vs LangGraphMetabolicAgent based on complexity
+- <strong>Tool Selection</strong>: LLM analyzes context to choose appropriate tools and parameters
+- <strong>Result Analysis</strong>: AI evaluates tool outputs to determine if additional steps are needed
+- <strong>Response Generation</strong>: Formats final results with appropriate level of detail</p>
+<h2 id="component-architecture">Component Architecture</h2>
+<h3 id="1-agent-layer-srcagents">1. Agent Layer (<code>src/agents/</code>)</h3>
+<p><strong>Core Agent System</strong>:
+- <code>base.py</code> - Base agent interface and common functionality
+- <code>metabolic.py</code> - Primary metabolic modeling agent
+- <code>langgraph_metabolic.py</code> - LangGraph workflow orchestration
+- <code>factory.py</code> - Agent creation and configuration</p>
+<p><strong>Advanced Reasoning Capabilities</strong>:
+- <code>reasoning_chains.py</code> - Multi-step analysis workflows
+- <code>hypothesis_system.py</code> - Scientific hypothesis generation and testing
+- <code>collaborative_reasoning.py</code> - AI-human collaborative decision making
+- <code>pattern_memory.py</code> - Cross-model learning and pattern recognition</p>
+<h3 id="2-tool-ecosystem-srctools">2. Tool Ecosystem (<code>src/tools/</code>)</h3>
+<p><strong>Tool Organization and Communication</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>                        ┌─────────────────────────────────┐
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>                        │         BaseTool                │
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>                        │  • Common API                   │
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>                        │  • Validation                   │
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>                        │  • Error handling               │
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>                        └─────────────┬───────────────────┘
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>                                      │
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>          ┌───────────────────────────┼───────────────────────────┐
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>          │                           │                           │
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>          ▼                           ▼                           ▼
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    ┌─────────────┐            ┌─────────────┐             ┌─────────────┐
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    │ COBRApy     │            │ ModelSEED   │             │ Biochem     │
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    │ Tools       │            │ Tools       │             │ Tools       │
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    │ (16 total)  │            │ (6 tools)   │             │ (3 tools)   │
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    └─────┬───────┘            └─────┬───────┘             └─────┬───────┘
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>          │                          │                           │
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>          ├─ FBA Analysis             ├─ Annotation               ├─ ID Resolution
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>          ├─ Gene Knockout            ├─ Model Building           └─ DB Search
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>          ├─ Essentiality             └─ Gapfilling
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>          ├─ Flux Sampling
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>          ├─ Flux Variability
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>          │
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>          └─ AI Media (6 tools):
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>             ├─ Media Selection
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>             ├─ Media Manipulation
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>             ├─ Media Compatibility
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>             ├─ Media Optimization
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>             ├─ Auxotrophy Prediction
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>             └─ Media Comparison
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>    ┌─────────────┐            ┌─────────────┐
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>    │ RAST Tools  │            │ Audit Tools │
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>    │ (2 tools)   │            │ (2 tools)   │
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>    └─────┬───────┘            └─────┬───────┘
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>          │                          │
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>          └─ RAST API                 ├─ Tool Auditing
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>                                     ├─ AI Audit
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>                                     └─ Real-time Verification
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>    ┌─────────────────────────────────────────────────────────────┐
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>    │                Universal Infrastructure                     │
+<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>    │  ┌─────────────────┐ ┌─────────────────┐ ┌───────────────┐ │
+<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a>    │  │ BiomassDetector │ │  MediaManager   │ │CompoundMapper │ │
+<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a>    │  │                 │ │                 │ │               │ │
+<a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a>    │  └─────────────────┘ └─────────────────┘ └───────────────┘ │
+<a id="__codelineno-2-46" name="__codelineno-2-46" href="#__codelineno-2-46"></a>    └─────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<p><strong>Tool Categories</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>src/tools/
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>├── base.py                 # BaseTool interface
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>├── cobra/                  # COBRApy integration (16 tools total)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>│   ├── fba.py             # Flux Balance Analysis
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>│   ├── flux_variability.py # Flux Variability Analysis
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>│   ├── gene_deletion.py   # Gene knockout analysis
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>│   ├── essentiality.py    # Essential gene/reaction analysis
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>│   ├── auxotrophy.py      # Auxotrophy analysis
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>│   ├── minimal_media.py   # Minimal media prediction
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>│   ├── missing_media.py   # Missing media analysis
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>│   ├── analysis.py        # Model and pathway analysis (2 tools)
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>│   ├── flux_sampling.py   # Flux sampling analysis
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>│   ├── production_envelope.py # Production envelope analysis
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>│   ├── reaction_expression.py # Reaction expression analysis
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>│   ├── media_tools.py     # AI Media Intelligence (4 tools)
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>│   ├── advanced_media_ai.py # Advanced AI Media tools (2 tools)
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>│   └── utils.py           # Universal model infrastructure
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>├── modelseed/             # ModelSEED integration (6 tools)
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>│   ├── annotation.py      # Genome/protein annotation (2 tools)
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>│   ├── builder.py         # Model building with MSBuilder
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>│   ├── gapfill.py         # Advanced gapfilling
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>│   └── compatibility.py   # ModelSEED-COBRApy compatibility (2 tools)
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>├── biochem/               # Biochemistry tools (3 tools)
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>│   ├── resolver.py        # Universal ID resolution (2 tools)
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>│   └── standalone_resolver.py # Standalone biochem resolution
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>├── rast/                  # RAST integration (2 tools)
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>│   └── annotation.py      # RAST annotation services (2 tools)
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>└── audit/                 # Audit and verification tools (2 tools)
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>    ├── audit.py           # Tool execution auditing
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>    ├── ai_audit.py        # AI audit tools
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>    └── realtime_verification.py # Real-time verification
+</code></pre></div></p>
+<p><strong>Universal Model Infrastructure</strong> (<code>src/tools/cobra/utils.py</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>┌──────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>│                   UNIVERSAL MODEL LAYER                         │
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>├──────────────────────────────────────────────────────────────────┤
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  │
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>│  │ BiomassDetector │  │  MediaManager   │  │ CompoundMapper  │  │
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>│  │                 │  │                 │  │                 │  │
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>│  │ • Auto-detect   │  │ • Universal     │  │ • ID Translation│  │
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>│  │   objectives    │  │   media support │  │ • Cross-system  │  │
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>│  │ • Multi-strategy│  │ • Format auto-  │  │   mapping       │  │
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>│  │   detection     │  │   detection     │  │ • Fuzzy matching│  │
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>│  │ • Works across  │  │ • Growth testing│  │ • Exchange rxn  │  │
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>│  │   model types   │  │ • Composition   │  │   identification│  │
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>│  └─────────────────┘  └─────────────────┘  └─────────────────┘  │
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>│                               │                                  │
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>│  ┌───────────────────────────┼─────────────────────────────┐    │
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>│  │            Unified Model Interface                      │    │
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>│  │  • ModelSEED ↔ COBRApy seamless conversion            │    │
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>│  │  • Automatic format detection and handling             │    │
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>│  │  • Preserved metadata and annotations                  │    │
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>│  │  • Perfect round-trip fidelity                         │    │
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>│  └─────────────────────────────────────────────────────────┘    │
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>└──────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<p><strong>BiomassDetector</strong> - Auto-detection of biomass reactions across model types:
+- Multi-strategy detection: objective analysis, ID patterns, name patterns, product count
+- Works with both COBRApy (BIGG) and ModelSEEDpy models
+- Automatic objective setting for any model type</p>
+<p><strong>MediaManager</strong> - Universal media handling system:
+- Support for JSON (ModelSEED) and TSV media formats
+- Automatic media application with exchange reaction mapping
+- Growth testing with different media compositions
+- Media format auto-detection and conversion</p>
+<p><strong>CompoundMapper</strong> - Intelligent compound ID translation:
+- Bidirectional mapping between ModelSEED and BIGG compound IDs
+- Model type auto-detection (ModelSEED vs BIGG naming conventions)
+- Smart exchange reaction identification across naming systems
+- Fuzzy matching for variant compound IDs</p>
+<h3 id="3-llm-integration-srcllm">3. LLM Integration (<code>src/llm/</code>)</h3>
+<p><strong>Multi-Backend Support</strong>:
+- <code>base.py</code> - LLM interface specification
+- <code>argo.py</code> - Argo Gateway integration (13 models including GPT-o1)
+- <code>openai_llm.py</code> - Direct OpenAI API integration
+- <code>local_llm.py</code> - Local model support (Llama 3.x)
+- <code>factory.py</code> - Dynamic LLM backend selection</p>
+<h3 id="4-interactive-interfaces-srcinteractive">4. Interactive Interfaces (<code>src/interactive/</code>)</h3>
+<p><strong>User Experience Layer</strong>:
+- <code>conversation_engine.py</code> - Natural language conversation handling
+- <code>interactive_cli.py</code> - Rich CLI interfaces
+- <code>query_processor.py</code> - Query parsing and routing
+- <code>session_manager.py</code> - Session state persistence
+- <code>phase8_interface.py</code> - Advanced reasoning interfaces</p>
+<h3 id="5-configuration-settings-srcconfig">5. Configuration &amp; Settings (<code>src/config/</code>)</h3>
+<p><strong>System Configuration</strong>:
+- <code>settings.py</code> - Application configuration management
+- <code>prompts.py</code> - LLM prompt templates and optimization</p>
+<h2 id="advanced-features">Advanced Features</h2>
+<h3 id="advanced-ai-reasoning-system">Advanced AI Reasoning System</h3>
+<p><strong>AI Decision Flow Architecture</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>         ┌─────────────┐
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>         │ User Query  │
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>         └──────┬──────┘
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>                │
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>                ▼
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    ┌─────────────────────┐
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    │   Query Analysis    │
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    └──────────┬──────────┘
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>               │
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>               ▼
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    ┌─────────────────────┐
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    │  Context Building   │
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    └──────────┬──────────┘
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>               │
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>               ▼
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    ┌─────────────────────┐
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>    │ Reasoning Strategy  │
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>    │    Selection        │
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    └─┬──────────┬────────┘
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>      │          │
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>      ▼          ▼
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>┌─────────┐ ┌──────────┐ ┌─────────────────┐
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>│Multi-   │ │Hypothesis│ │ Collaborative   │
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>│Step     │ │Testing   │ │ Decision        │
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>│Chains   │ │          │ │                 │
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>└─┬───────┘ └─┬────────┘ └─┬───────────────┘
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>  │           │            │
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>  │ ┌─────────────────────┐│
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>  │ │Plan 5-10 sequences ││
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>  │ │Dynamic adaptation  ││
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>  │ └─────────────────────┘│
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>  │                       │
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>  │ ┌─────────────────────┐│
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>  │ │Generate hypotheses ││
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>  │ │Systematic testing  ││
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>  │ └─────────────────────┘│
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>  │                       │
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>  │ ┌─────────────────────┐│
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>  │ │Recognize uncertainty││
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>  │ │Request guidance    ││
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>  │ └─────────────────────┘│
+<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>  │           │            │
+<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a>  └───────────┼────────────┘
+<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a>              ▼
+<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a>  ┌─────────────────────┐
+<a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a>  │ Tool Selection &amp;    │
+<a id="__codelineno-5-47" name="__codelineno-5-47" href="#__codelineno-5-47"></a>  │   Execution         │
+<a id="__codelineno-5-48" name="__codelineno-5-48" href="#__codelineno-5-48"></a>  └──────────┬──────────┘
+<a id="__codelineno-5-49" name="__codelineno-5-49" href="#__codelineno-5-49"></a>             │
+<a id="__codelineno-5-50" name="__codelineno-5-50" href="#__codelineno-5-50"></a>             ▼
+<a id="__codelineno-5-51" name="__codelineno-5-51" href="#__codelineno-5-51"></a>  ┌─────────────────────┐
+<a id="__codelineno-5-52" name="__codelineno-5-52" href="#__codelineno-5-52"></a>  │ Result Synthesis &amp;  │
+<a id="__codelineno-5-53" name="__codelineno-5-53" href="#__codelineno-5-53"></a>  │     Learning        │
+<a id="__codelineno-5-54" name="__codelineno-5-54" href="#__codelineno-5-54"></a>  └──────────┬──────────┘
+<a id="__codelineno-5-55" name="__codelineno-5-55" href="#__codelineno-5-55"></a>             │
+<a id="__codelineno-5-56" name="__codelineno-5-56" href="#__codelineno-5-56"></a>             ▼
+<a id="__codelineno-5-57" name="__codelineno-5-57" href="#__codelineno-5-57"></a>  ┌─────────────────────┐
+<a id="__codelineno-5-58" name="__codelineno-5-58" href="#__codelineno-5-58"></a>  │   User Response     │
+<a id="__codelineno-5-59" name="__codelineno-5-59" href="#__codelineno-5-59"></a>  └─────────────────────┘
+</code></pre></div>
+<p><strong>1. Multi-Step Reasoning Chains</strong>:
+- AI plans complex 5-10 step analysis sequences
+- Dynamic adaptation based on intermediate results
+- Complete audit trails for verification</p>
+<p><strong>2. Hypothesis-Driven Analysis</strong>:
+- Scientific hypothesis generation from observations
+- Systematic testing with appropriate tools
+- Evidence collection and evaluation</p>
+<p><strong>3. Collaborative Reasoning</strong>:
+- AI recognizes uncertainty and requests human guidance
+- Seamless integration of human expertise
+- Hybrid AI-human decision making</p>
+<p><strong>4. Pattern Learning &amp; Memory</strong>:
+- Cross-model learning from analysis history
+- Pattern-based tool selection recommendations
+- Continuous improvement through experience</p>
+<h2 id="data-flow-architecture">Data Flow Architecture</h2>
+<h3 id="tool-execution-pipeline-details">Tool Execution Pipeline Details</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>┌────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>│                        TOOL EXECUTION PIPELINE                        │
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>├────────────────────────────────────────────────────────────────────────┤
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>│  1. INVOCATION                                                         │
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>│     │ ✓ Agent selects appropriate tool                                  │
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>│     │ ✓ Passes context and parameters                                   │
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>│     └─→ 2. VALIDATION                                                  │
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>│           │ ✓ Schema validation (Pydantic)                             │
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>│           │ ✓ Type checking and constraints                            │
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>│           │ ✓ Model/file existence verification                        │
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>│           └─→ 3. PRE-EXECUTION AUDIT                                   │
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>│                 │ ✓ Log tool call with inputs                          │
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>│                 │ ✓ Create unique audit ID                             │
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>│                 │ ✓ Record timestamp and context                       │
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>│                 └─→ 4. EXECUTION                                        │
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>│                       │ ✓ Run tool with validated inputs               │
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>│                       │ ✓ Handle errors gracefully                     │
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>│                       │ ✓ Capture all outputs                          │
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>│                       └─→ 5. RESULT PROCESSING                         │
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>│                             │ ✓ Structure output data                   │
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>│                             │ ✓ Apply biochemistry enrichment           │
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>│                             │ ✓ Generate human-readable summaries       │
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>│                             └─→ 6. POST-EXECUTION AUDIT                │
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>│                                   │ ✓ Log results and performance       │
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>│                                   │ ✓ Record any errors or warnings     │
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>│                                   │ ✓ Update tool usage statistics      │
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>│                                   └─→ 7. VERIFICATION                  │
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>│                                         │ ✓ Hallucination detection      │
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>│                                         │ ✓ Result consistency checks    │
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>│                                         │ ✓ Confidence scoring           │
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a>│                                         └─→ 8. CACHING &amp; RETURN        │
+<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a>│                                               ✓ Store in cache if applicable │
+<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a>│                                               ✓ Return structured result     │
+<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a>│                                               ✓ Update session state         │
+<a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a>└────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h2 id="quality-assurance">Quality Assurance</h2>
+<h3 id="testing-strategy">Testing Strategy</h3>
+<p><strong>Multi-Level Testing</strong>:
+- <strong>Unit Tests</strong>: Individual tool functionality
+- <strong>Integration Tests</strong>: Tool chain workflows
+- <strong>System Tests</strong>: End-to-end agent behavior
+- <strong>Performance Tests</strong>: Optimization verification</p>
+<p><strong>Test Coverage</strong>:
+- 100% pass rate across all capabilities
+- Continuous integration validation
+- Performance regression detection</p>
+<h3 id="audit-verification">Audit &amp; Verification</h3>
+<p><strong>Comprehensive Auditing</strong>:
+- Every tool execution logged with full context
+- Hallucination detection with confidence scoring
+- Real-time verification of AI claims vs actual results</p>
+<p><strong>Audit Capabilities</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># View tool execution audit</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>modelseed-agent<span class="w"> </span>audit<span class="w"> </span>show<span class="w"> </span>&lt;audit_id&gt;
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Verify AI reasoning accuracy</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>modelseed-agent<span class="w"> </span>audit<span class="w"> </span>verify<span class="w"> </span>&lt;session_id&gt;
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Pattern learning analysis</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>modelseed-agent<span class="w"> </span>audit<span class="w"> </span>patterns
+</code></pre></div></p>
+<h2 id="performance-characteristics">Performance Characteristics</h2>
+<h3 id="scalability">Scalability</h3>
+<ul>
+<li><strong>Tool Execution</strong>: Sub-second for most operations</li>
+<li><strong>Caching</strong>: 6600x speedup for repeated operations</li>
+<li><strong>Parallel Processing</strong>: 5x speedup for independent tools</li>
+<li><strong>Memory Efficiency</strong>: Optimized for large-scale analysis</li>
+</ul>
+<h3 id="reliability">Reliability</h3>
+<ul>
+<li><strong>Error Handling</strong>: Comprehensive exception management</li>
+<li><strong>Fault Tolerance</strong>: Graceful degradation for failed tools</li>
+<li><strong>State Recovery</strong>: Session persistence and recovery</li>
+<li><strong>Verification</strong>: Real-time accuracy checking</li>
+</ul>
+<h2 id="integration-extension-framework">Integration &amp; Extension Framework</h2>
+<h3 id="extension-framework">Extension Framework</h3>
+<p>This section provides detailed guidance for developers who want to extend ModelSEEDagent functionality.</p>
+<h4 id="adding-new-tools">Adding New Tools</h4>
+<p><strong>Step-by-Step Process</strong>:
+1. <strong>Inherit from BaseTool</strong>: Create your tool class extending <code>src/tools/base.py</code>
+2. <strong>Define Schemas</strong>: Use Pydantic for input/output validation
+3. <strong>Implement Logic</strong>: Add your tool's core functionality in <code>_execute()</code> method
+4. <strong>Register Tool</strong>: Add to appropriate tool factory
+5. <strong>Test Integration</strong>: Ensure compatibility with existing workflows</p>
+<p><strong>Example Implementation</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">src.tools.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseTool</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">MyCustomToolInput</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="n">parameter1</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Description of parameter&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="n">parameter2</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Positive integer parameter&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="k">class</span><span class="w"> </span><span class="nc">MyCustomToolOutput</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    <span class="n">result</span><span class="p">:</span> <span class="nb">str</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    <span class="n">confidence</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="k">class</span><span class="w"> </span><span class="nc">MyCustomTool</span><span class="p">(</span><span class="n">BaseTool</span><span class="p">):</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;my_custom_tool&quot;</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Brief description of what this tool does&quot;</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>    <span class="n">input_schema</span> <span class="o">=</span> <span class="n">MyCustomToolInput</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>    <span class="n">output_schema</span> <span class="o">=</span> <span class="n">MyCustomToolOutput</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">:</span> <span class="n">MyCustomToolInput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MyCustomToolOutput</span><span class="p">:</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>        <span class="c1"># Implement your tool logic here</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_data</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">parameter1</span><span class="p">,</span> <span class="n">inputs</span><span class="o">.</span><span class="n">parameter2</span><span class="p">)</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>        <span class="k">return</span> <span class="n">MyCustomToolOutput</span><span class="p">(</span><span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
+</code></pre></div></p>
+<h4 id="custom-agent-development">Custom Agent Development</h4>
+<p><strong>Key Components</strong>:
+1. <strong>Base Agent Class</strong>: Inherit from <code>src/agents/base.py</code>
+2. <strong>Tool Selection</strong>: Implement intelligent tool choice logic
+3. <strong>Reasoning Patterns</strong>: Define how your agent processes information
+4. <strong>LLM Integration</strong>: Configure language model interactions</p>
+<p><strong>Agent Interface Requirements</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">CustomAgent</span><span class="p">(</span><span class="n">BaseAgent</span><span class="p">):</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">llm_backend</span><span class="p">,</span> <span class="n">tools</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">llm_backend</span><span class="p">,</span> <span class="n">tools</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AgentResult</span><span class="p">:</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>        <span class="c1"># Implement your agent&#39;s core logic</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>        <span class="k">pass</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">select_tools</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>        <span class="c1"># Define tool selection strategy</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>        <span class="k">pass</span>
+</code></pre></div></p>
+<h4 id="llm-backend-integration">LLM Backend Integration</h4>
+<p><strong>Implementation Steps</strong>:
+1. <strong>Implement Interface</strong>: Extend <code>src/llm/base.py</code>
+2. <strong>Add Configuration</strong>: Define connection parameters
+3. <strong>Register Backend</strong>: Add to LLM factory
+4. <strong>Test Compatibility</strong>: Verify with existing agent workflows</p>
+<h4 id="database-extensions">Database Extensions</h4>
+<p><strong>Biochemistry Database Customization</strong>:
+1. <strong>Schema Extension</strong>: Add new tables or columns to biochemistry.db
+2. <strong>Data Import</strong>: Tools for adding custom compound/reaction data
+3. <strong>Resolution Algorithms</strong>: Implement new ID mapping strategies
+4. <strong>Tool Integration</strong>: Update existing tools to use new data</p>
+<h3 id="code-organization-principles">Code Organization Principles</h3>
+<p><strong>Directory Structure Guidelines</strong>:
+- <strong>Tools</strong>: Group by functionality in <code>src/tools/[category]/</code>
+- <strong>Agents</strong>: Specialized agents in <code>src/agents/</code>
+- <strong>LLM Backends</strong>: New backends in <code>src/llm/</code>
+- <strong>Tests</strong>: Mirror source structure in <code>tests/</code></p>
+<p><strong>Naming Conventions</strong>:
+- <strong>Classes</strong>: PascalCase (e.g., <code>MyCustomTool</code>)
+- <strong>Functions</strong>: snake_case (e.g., <code>process_metabolic_data</code>)
+- <strong>Files</strong>: snake_case (e.g., <code>custom_tool.py</code>)
+- <strong>Constants</strong>: UPPER_SNAKE_CASE (e.g., <code>DEFAULT_TIMEOUT</code>)</p>
+<h3 id="testing-requirements-for-contributions">Testing Requirements for Contributions</h3>
+<p><strong>Test Coverage Requirements</strong>:
+- <strong>Unit Tests</strong>: 100% coverage for new tool functionality
+- <strong>Integration Tests</strong>: Verify tool chains work correctly
+- <strong>Agent Tests</strong>: Validate reasoning and decision-making
+- <strong>Performance Tests</strong>: Ensure no regression in execution time</p>
+<p><strong>Test Structure</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestMyCustomTool</span><span class="p">:</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_basic_functionality</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>        <span class="c1"># Test core functionality</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>        <span class="k">pass</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_input_validation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>        <span class="c1"># Test schema validation</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>        <span class="k">pass</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_error_handling</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>        <span class="c1"># Test graceful failure modes</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>        <span class="k">pass</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_integration_with_agents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>        <span class="c1"># Test tool works with existing agents</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>        <span class="k">pass</span>
+</code></pre></div></p>
+<h3 id="best-practices-for-contributors">Best Practices for Contributors</h3>
+<p><strong>Code Quality</strong>:
+- Follow existing code style and patterns
+- Add comprehensive docstrings to all public methods
+- Include type hints for all function parameters and returns
+- Handle errors gracefully with informative messages</p>
+<p><strong>Documentation</strong>:
+- Update relevant documentation when adding features
+- Include usage examples in docstrings
+- Add entries to tool reference documentation
+- Update architecture diagrams if adding new components</p>
+<p><strong>Performance Considerations</strong>:
+- Implement caching where appropriate
+- Use async/await for I/O operations
+- Profile code for performance bottlenecks
+- Consider memory usage for large datasets</p>
+<h2 id="quality-assurance-monitoring">Quality Assurance &amp; Monitoring</h2>
+<h3 id="real-time-system-health">Real-Time System Health</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>┌─────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>│                    MONITORING DASHBOARD                        │
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>├─────────────────────────────────────────────────────────────────┤
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>│  Performance Metrics    │  Quality Metrics   │  System Health   │
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>│  • Tool execution time  │  • Audit scores    │  • Memory usage   │
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>│  • Cache hit rates      │  • Error rates     │  • CPU load       │
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>│  • Query response time  │  • Accuracy score  │  • Disk usage     │
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>│  • Throughput rates     │  • User satisfaction│  • Network status │
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>└─────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h3 id="reliability-features">Reliability Features</h3>
+<p><strong>Error Handling &amp; Recovery</strong>:
+- Graceful degradation for tool failures
+- Automatic retry mechanisms with exponential backoff
+- Fallback strategies for LLM backend failures
+- Session state recovery and persistence</p>
+<p><strong>Performance Optimization</strong>:
+- 6,600x+ speedup through intelligent caching with TTL and LRU policies
+- 5x parallel execution for independent operations with async/await
+- Memory-efficient data structures and pattern storage
+- Optimized database queries and resource-aware execution</p>
+<p><strong>Security &amp; Compliance</strong>:
+- Input sanitization and validation
+- Secure credential management
+- Audit trail compliance
+- Rate limiting and access controls</p>
+<h2 id="summary">Summary</h2>
+<p>This architecture provides a robust, scalable foundation for AI-powered metabolic modeling with:</p>
+<ul>
+<li><strong>Modular Design</strong>: Clean separation between reasoning, execution, and data layers</li>
+<li><strong>Universal Compatibility</strong>: Seamless integration across modeling ecosystems</li>
+<li><strong>Advanced AI</strong>: Sophisticated reasoning with transparency and verification</li>
+<li><strong>Production Ready</strong>: Comprehensive testing, monitoring, and reliability features</li>
+<li><strong>Extensible Framework</strong>: Easy integration of new tools, agents, and backends</li>
+</ul>
+<p>The system is designed for professional use in research, education, and production environments, with emphasis on reliability, performance, and user experience.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.share", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mtml-chtml.js"></script>
+      
+    
+  </body>
+</html>
