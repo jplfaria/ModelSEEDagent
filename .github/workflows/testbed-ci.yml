@@ -100,27 +100,13 @@ jobs:
               result = fba_tool.run('data/examples/e_coli_core.xml')
 
               print('\\nAnalyzing results...')
-              print(f'Result type: {type(result)}')
-              print(f'Result data keys: {list(result.data.keys()) if hasattr(result, \"data\") and isinstance(result.data, dict) else \"No data dict\"}')
-              print(f'Result data: {result.data if hasattr(result, \"data\") else \"No data attr\"}')
 
-              # Extract growth rate and objective value from result
-              if 'growth_rate' in result.data:
-                  growth_rate = result.data['growth_rate']
-                  objective_value = result.data.get('objective_value', growth_rate)
-              elif 'objective_value' in result.data:
-                  objective_value = result.data['objective_value']
-                  growth_rate = objective_value
-              else:
-                  # Try to find any numeric value that could be growth rate
-                  numeric_values = {k: v for k, v in result.data.items() if isinstance(v, (int, float))}
-                  print(f'Available numeric values: {numeric_values}')
-                  if numeric_values:
-                      growth_rate = list(numeric_values.values())[0]
-                      objective_value = growth_rate
-                  else:
-                      growth_rate = 0.0
-                      objective_value = 0.0
+              # Extract growth rate from FBA result (objective_value = growth rate)
+              growth_rate = result.data.get('objective_value', 0.0)
+              objective_value = growth_rate
+
+              print(f'FBA Status: {result.data.get(\"status\", \"unknown\")}')
+              print(f'Significant fluxes found: {len(result.data.get(\"significant_fluxes\", {}))} reactions')
 
               print(f'Growth Rate: {growth_rate:.4f} h⁻¹')
               print(f'Objective Value: {objective_value:.4f}')
