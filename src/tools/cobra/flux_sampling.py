@@ -17,7 +17,7 @@ from .error_handling import (
     validate_solver_availability,
 )
 from .precision_config import PrecisionConfig, is_significant_flux, safe_divide
-from .utils import ModelUtils
+from .utils_optimized import OptimizedModelUtils
 
 
 class FluxSamplingConfig(BaseModel):
@@ -44,7 +44,7 @@ class FluxSamplingTool(BaseTool):
     and variability across the metabolic network."""
 
     _sampling_config: FluxSamplingConfig = PrivateAttr()
-    _utils: ModelUtils = PrivateAttr()
+    _utils: OptimizedModelUtils = PrivateAttr()
 
     def __init__(self, config: Dict[str, Any]):
         super().__init__(config)
@@ -61,7 +61,7 @@ class FluxSamplingTool(BaseTool):
                 solver=getattr(sampling_config_dict, "solver", "glpk"),
                 precision=PrecisionConfig(),
             )
-        self._utils = ModelUtils()
+        self._utils = OptimizedModelUtils(use_cache=True)
 
     @property
     def sampling_config(self) -> FluxSamplingConfig:

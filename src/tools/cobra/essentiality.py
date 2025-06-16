@@ -15,7 +15,7 @@ from .precision_config import (
     calculate_growth_fraction,
     is_significant_growth,
 )
-from .utils import ModelUtils
+from .utils_optimized import OptimizedModelUtils
 
 
 class EssentialityConfig(BaseModel):
@@ -40,7 +40,7 @@ class EssentialityAnalysisTool(BaseTool):
     required for model growth and viability."""
 
     _essentiality_config: EssentialityConfig = PrivateAttr()
-    _utils: ModelUtils = PrivateAttr()
+    _utils: OptimizedModelUtils = PrivateAttr()
 
     def __init__(self, config: Dict[str, Any]):
         super().__init__(config)
@@ -57,7 +57,7 @@ class EssentialityAnalysisTool(BaseTool):
                 solver=getattr(essentiality_config_dict, "solver", "glpk"),
                 processes=getattr(essentiality_config_dict, "processes", None),
             )
-        self._utils = ModelUtils()
+        self._utils = OptimizedModelUtils(use_cache=True)
 
     @property
     def essentiality_config(self) -> EssentialityConfig:

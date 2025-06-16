@@ -16,7 +16,7 @@ from .error_handling import (
     validate_numerical_parameters,
     validate_solver_availability,
 )
-from .utils import ModelUtils
+from .utils_optimized import OptimizedModelUtils
 
 
 class ProductionEnvelopeConfig(BaseModel):
@@ -37,7 +37,7 @@ class ProductionEnvelopeTool(BaseTool):
     growth rate and product formation, useful for metabolic engineering design."""
 
     _envelope_config: ProductionEnvelopeConfig = PrivateAttr()
-    _utils: ModelUtils = PrivateAttr()
+    _utils: OptimizedModelUtils = PrivateAttr()
 
     def __init__(self, config: Dict[str, Any]):
         super().__init__(config)
@@ -50,7 +50,7 @@ class ProductionEnvelopeTool(BaseTool):
                 solver=getattr(envelope_config_dict, "solver", "glpk"),
                 tolerance=getattr(envelope_config_dict, "tolerance", 1e-6),
             )
-        self._utils = ModelUtils()
+        self._utils = OptimizedModelUtils(use_cache=True)
 
     @property
     def envelope_config(self) -> ProductionEnvelopeConfig:

@@ -22,7 +22,7 @@ from pydantic import BaseModel, Field
 from ..base import BaseTool, ToolRegistry, ToolResult
 from .media_library import MediaLibrary, get_media_library
 from .modelseedpy_integration import ModelSEEDpyEnhancement, get_modelseedpy_enhancement
-from .utils import ModelUtils
+from .utils_optimized import OptimizedModelUtils
 
 logger = logging.getLogger(__name__)
 
@@ -72,7 +72,7 @@ class MediaOptimizationTool(BaseTool):
         super().model_post_init(__context)
         self._media_library = get_media_library()
         self._enhancement = get_modelseedpy_enhancement()
-        self._model_utils = ModelUtils()
+        self._model_utils = OptimizedModelUtils(use_cache=True)
 
     def _run_tool(self, input_data: Dict[str, Any]) -> ToolResult:
         """Optimize media composition for specific targets"""
@@ -534,7 +534,7 @@ class AuxotrophyPredictionTool(BaseTool):
         super().model_post_init(__context)
         self._media_library = get_media_library()
         self._enhancement = get_modelseedpy_enhancement()
-        self._model_utils = ModelUtils()
+        self._model_utils = OptimizedModelUtils(use_cache=True)
 
     def _run_tool(self, input_data: Dict[str, Any]) -> ToolResult:
         """Predict auxotrophies for a model"""

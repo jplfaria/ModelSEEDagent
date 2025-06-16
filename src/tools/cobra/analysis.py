@@ -4,7 +4,7 @@ import cobra
 from pydantic import BaseModel, Field, PrivateAttr
 
 from ..base import BaseTool, ToolRegistry, ToolResult
-from .utils import ModelUtils
+from .utils_optimized import OptimizedModelUtils
 
 
 class ModelAnalysisConfig(BaseModel):
@@ -26,7 +26,7 @@ class ModelAnalysisTool(BaseTool):
     reaction connectivity, pathway completeness, and potential gaps."""
 
     _analysis_config: ModelAnalysisConfig = PrivateAttr()
-    _utils: ModelUtils = PrivateAttr()
+    _utils: OptimizedModelUtils = PrivateAttr()
 
     def __init__(self, config: Dict[str, Any]):
         super().__init__(config)
@@ -48,7 +48,7 @@ class ModelAnalysisTool(BaseTool):
                     analysis_config_dict, "track_metabolites", True
                 ),
             )
-        self._utils = ModelUtils()
+        self._utils = OptimizedModelUtils(use_cache=True)
 
     @property
     def analysis_config(self) -> ModelAnalysisConfig:
@@ -276,11 +276,11 @@ class PathwayAnalysisTool(BaseTool):
     tool_description = """Analyze specific metabolic pathways including flux distributions,
     gene associations, and regulatory features."""
 
-    _utils: ModelUtils = PrivateAttr()
+    _utils: OptimizedModelUtils = PrivateAttr()
 
     def __init__(self, config: Dict[str, Any]):
         super().__init__(config)
-        self._utils = ModelUtils()
+        self._utils = OptimizedModelUtils(use_cache=True)
 
     def _run_tool(self, input_data: Any) -> ToolResult:
         try:

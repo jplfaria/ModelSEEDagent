@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field, PrivateAttr
 
 from ..base import BaseTool, ToolRegistry, ToolResult
 from .precision_config import PrecisionConfig, is_significant_flux
-from .utils import ModelUtils
+from .utils_optimized import OptimizedModelUtils
 
 
 class FluxVariabilityConfig(BaseModel):
@@ -33,7 +33,7 @@ class FluxVariabilityTool(BaseTool):
     flux values for each reaction in the model while maintaining a specified fraction of the optimal objective."""
 
     _fva_config: FluxVariabilityConfig = PrivateAttr()
-    _utils: ModelUtils = PrivateAttr()
+    _utils: OptimizedModelUtils = PrivateAttr()
 
     def __init__(self, config: Dict[str, Any]):
         super().__init__(config)
@@ -52,7 +52,7 @@ class FluxVariabilityTool(BaseTool):
                 pfba_factor=getattr(fva_config_dict, "pfba_factor", None),
                 precision=PrecisionConfig(),
             )
-        self._utils = ModelUtils()
+        self._utils = OptimizedModelUtils(use_cache=True)
 
     @property
     def fva_config(self) -> FluxVariabilityConfig:

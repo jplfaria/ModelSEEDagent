@@ -11,7 +11,7 @@ from pydantic import BaseModel, Field, PrivateAttr
 from ..base import BaseTool, ToolRegistry, ToolResult
 from .precision_config import PrecisionConfig, is_significant_flux
 from .simulation_wrapper import run_simulation
-from .utils import ModelUtils
+from .utils_optimized import OptimizedModelUtils
 
 
 # Configuration for FBA tool
@@ -89,7 +89,7 @@ class FBATool(BaseTool):
     tool_description = "Run Flux Balance Analysis (FBA) on a metabolic model using a configurable simulation method."
 
     _fba_config: FBAConfig = PrivateAttr()
-    _utils: ModelUtils = PrivateAttr()
+    _utils: OptimizedModelUtils = PrivateAttr()
 
     def __init__(self, config: Dict[str, Any]):
         super().__init__(config)
@@ -108,7 +108,7 @@ class FBATool(BaseTool):
                 ),
                 simulation_method=getattr(fba_config_dict, "simulation_method", "pfba"),
             )
-        self._utils = ModelUtils()
+        self._utils = OptimizedModelUtils(use_cache=True)
 
     @property
     def fba_config(self) -> FBAConfig:
@@ -160,8 +160,10 @@ class FBATool(BaseTool):
                 )
 
             model.solver = self.fba_config.solver
-            # Set solver tolerance (much smaller than flux significance threshold)
-            model.tolerance = self.fba_config.precision.model_tolerance
+            # Configure solver with optimized tolerance setting (fixes GLPK warnings)
+            model = self._utils.configure_solver_optimally(
+                model, self.fba_config.precision.model_tolerance
+            )
 
             # Set objective if available
             if hasattr(model, self.fba_config.default_objective):

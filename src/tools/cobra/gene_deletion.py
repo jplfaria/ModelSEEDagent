@@ -10,7 +10,7 @@ from .precision_config import (
     calculate_growth_fraction,
     is_significant_growth,
 )
-from .utils import ModelUtils
+from .utils_optimized import OptimizedModelUtils
 
 
 class GeneDeletionConfig(BaseModel):
@@ -37,7 +37,7 @@ class GeneDeletionTool(BaseTool):
     on model growth and identify essential genes."""
 
     _deletion_config: GeneDeletionConfig = PrivateAttr()
-    _utils: ModelUtils = PrivateAttr()
+    _utils: OptimizedModelUtils = PrivateAttr()
 
     def __init__(self, config: Dict[str, Any]):
         super().__init__(config)
@@ -54,7 +54,7 @@ class GeneDeletionTool(BaseTool):
                 return_solution=getattr(deletion_config_dict, "return_solution", False),
                 precision=PrecisionConfig(),
             )
-        self._utils = ModelUtils()
+        self._utils = OptimizedModelUtils(use_cache=True)
 
     @property
     def deletion_config(self) -> GeneDeletionConfig:

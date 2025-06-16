@@ -1,0 +1,43 @@
+{
+  "baseline_timestamp": "2025-06-16T12:23:21",
+  "session_id": "realtime_run_20250616_121614",
+  "description": "Baseline performance before optimization",
+  "session_metrics": {
+    "total_session_time": 353.31,
+    "total_interactions": 2,
+    "tools_executed": 6,
+    "tools_list": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "find_minimal_media",
+      "analyze_essentiality",
+      "run_flux_sampling",
+      "run_gene_deletion_analysis"
+    ]
+  },
+  "performance_issues": {
+    "argollm_initializations": 40,
+    "estimated_ssl_context_loads": 40,
+    "model_loads_from_disk": 8,
+    "glpk_tolerance_warnings": 8,
+    "estimated_wasted_time": {
+      "llm_initialization_overhead": "2-4 seconds",
+      "model_loading_io": "1.2 seconds",
+      "total_overhead": "3.2-5.2 seconds"
+    }
+  },
+  "optimization_targets": {
+    "target_session_time": 90,
+    "target_argollm_inits": 2,
+    "target_model_loads": 1,
+    "target_glpk_warnings": 0,
+    "expected_improvement": "4-6x faster"
+  },
+  "test_scenario": {
+    "command": "modelseed-agent interactive",
+    "query1": "I need a comprehensive metabolic analysis of E. col for our data examples ecoli cor emodel",
+    "query2": "explore the predicted growth rate in more detail and give me a summary of what you learn",
+    "expected_tools": 6,
+    "model_file": "/Users/jplfaria/repos/ModelSEEDagent/data/examples/e_coli_core.xml"
+  }
+}

@@ -27,10 +27,17 @@ class LLMFactory:
 
     @classmethod
     def create(cls, backend: str, config: Dict[str, Any]) -> BaseLLM:
-        """Create an LLM instance based on the specified backend"""
+        """Create an LLM instance based on the specified backend with connection pooling"""
         try:
-            llm_class = cls._get_llm_class(backend)
-            return llm_class(config)
+            # Use connection pooling for supported backends
+            if backend == "argo":
+                from .connection_pool import create_pooled_llm
+
+                return create_pooled_llm(backend, config)
+            else:
+                # Use direct creation for other backends
+                llm_class = cls._get_llm_class(backend)
+                return llm_class(config)
         except Exception as e:
             raise ValueError(f"Failed to create {backend} LLM: {str(e)}")
 
