@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field, PrivateAttr
 
 from ..base import BaseTool, ToolRegistry, ToolResult
 from .precision_config import PrecisionConfig, is_significant_flux
+from .utils import get_process_count_from_env, should_disable_auditing
 from .utils_optimized import OptimizedModelUtils
 
 
@@ -17,7 +18,9 @@ class FluxVariabilityConfig(BaseModel):
     loopless: bool = False
     fraction_of_optimum: float = 1.0
     solver: str = "glpk"
-    processes: Optional[int] = None
+    processes: Optional[int] = (
+        1  # Default to 1 to prevent multiprocessing connection pool issues
+    )
     pfba_factor: Optional[float] = None
 
     # Numerical precision settings
@@ -36,6 +39,10 @@ class FluxVariabilityTool(BaseTool):
     _utils: OptimizedModelUtils = PrivateAttr()
 
     def __init__(self, config: Dict[str, Any]):
+        # Disable auditing in subprocess to prevent connection pool issues
+        if should_disable_auditing():
+            config = config.copy()
+            config["audit_enabled"] = False
         super().__init__(config)
         fva_config_dict = config.get("fva_config", {})
         if isinstance(fva_config_dict, dict):
@@ -88,13 +95,18 @@ class FluxVariabilityTool(BaseTool):
             if reaction_list is None:
                 reaction_list = [rxn.id for rxn in model.reactions]
 
+            # Get process count with environment variable override
+            processes = get_process_count_from_env(
+                self.fva_config.processes, "COBRA_FVA_PROCESSES"
+            )
+
             # Run FVA
             fva_result = flux_variability_analysis(
                 model=model,
                 reaction_list=reaction_list,
                 loopless=loopless,
                 fraction_of_optimum=fraction_of_optimum,
-                processes=self.fva_config.processes,
+                processes=processes,
                 pfba_factor=self.fva_config.pfba_factor,
             )
 

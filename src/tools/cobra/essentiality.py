@@ -15,6 +15,7 @@ from .precision_config import (
     calculate_growth_fraction,
     is_significant_growth,
 )
+from .utils import get_process_count_from_env, should_disable_auditing
 from .utils_optimized import OptimizedModelUtils
 
 
@@ -25,7 +26,9 @@ class EssentialityConfig(BaseModel):
     include_genes: bool = True
     include_reactions: bool = True
     solver: str = "glpk"
-    processes: Optional[int] = None
+    processes: Optional[int] = (
+        1  # Default to 1 to prevent multiprocessing connection pool issues
+    )
 
     # Numerical precision settings
     precision: PrecisionConfig = Field(default_factory=PrecisionConfig)
@@ -43,6 +46,10 @@ class EssentialityAnalysisTool(BaseTool):
     _utils: OptimizedModelUtils = PrivateAttr()
 
     def __init__(self, config: Dict[str, Any]):
+        # Disable auditing in subprocess to prevent connection pool issues
+        if should_disable_auditing():
+            config = config.copy()
+            config["audit_enabled"] = False
         super().__init__(config)
         essentiality_config_dict = config.get("essentiality_config", {})
         if isinstance(essentiality_config_dict, dict):
@@ -115,9 +122,16 @@ class EssentialityAnalysisTool(BaseTool):
                 "reaction_analysis": None,
             }
 
+            # Get process count with environment variable override
+            processes = get_process_count_from_env(
+                self.essentiality_config.processes, "COBRA_ESSENTIALITY_PROCESSES"
+            )
+
             # Analyze gene essentiality
             if include_genes:
-                essential_genes = find_essential_genes(model, threshold=threshold)
+                essential_genes = find_essential_genes(
+                    model, threshold=threshold, processes=processes
+                )
                 gene_analysis = self._detailed_gene_analysis(
                     model, essential_genes, wild_type_growth, threshold
                 )
@@ -130,7 +144,7 @@ class EssentialityAnalysisTool(BaseTool):
             # Analyze reaction essentiality
             if include_reactions:
                 essential_reactions = find_essential_reactions(
-                    model, threshold=threshold
+                    model, threshold=threshold, processes=processes
                 )
                 reaction_analysis = self._detailed_reaction_analysis(
                     model, essential_reactions, wild_type_growth, threshold

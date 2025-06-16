@@ -10,6 +10,7 @@ from .precision_config import (
     calculate_growth_fraction,
     is_significant_growth,
 )
+from .utils import get_process_count_from_env, should_disable_auditing
 from .utils_optimized import OptimizedModelUtils
 
 
@@ -21,7 +22,9 @@ class GeneDeletionConfig(BaseModel):
     deletion_type: str = "single"  # "single" or "double"
     method: str = "fba"  # "fba" or "moma" or "room"
     solver: str = "glpk"
-    processes: Optional[int] = None
+    processes: Optional[int] = (
+        1  # Default to 1 to prevent multiprocessing connection pool issues
+    )
     return_solution: bool = False
 
     # Numerical precision settings
@@ -40,6 +43,10 @@ class GeneDeletionTool(BaseTool):
     _utils: OptimizedModelUtils = PrivateAttr()
 
     def __init__(self, config: Dict[str, Any]):
+        # Disable auditing in subprocess to prevent connection pool issues
+        if should_disable_auditing():
+            config = config.copy()
+            config["audit_enabled"] = False
         super().__init__(config)
         deletion_config_dict = config.get("deletion_config", {})
         if isinstance(deletion_config_dict, dict):
@@ -99,6 +106,11 @@ class GeneDeletionTool(BaseTool):
             if gene_list is None:
                 gene_list = [gene.id for gene in model.genes]
 
+            # Get process count with environment variable override
+            processes = get_process_count_from_env(
+                self.deletion_config.processes, "COBRA_GENE_DELETION_PROCESSES"
+            )
+
             # Run deletion analysis
             if deletion_type == "single":
                 deletion_results = single_gene_deletion(
@@ -110,7 +122,7 @@ class GeneDeletionTool(BaseTool):
                         if self.deletion_config.return_solution
                         else None
                     ),
-                    processes=self.deletion_config.processes,
+                    processes=processes,
                 )
             elif deletion_type == "double":
                 deletion_results = double_gene_deletion(
@@ -123,7 +135,7 @@ class GeneDeletionTool(BaseTool):
                         if self.deletion_config.return_solution
                         else None
                     ),
-                    processes=self.deletion_config.processes,
+                    processes=processes,
                 )
             else:
                 raise ValueError(f"Unsupported deletion type: {deletion_type}")
