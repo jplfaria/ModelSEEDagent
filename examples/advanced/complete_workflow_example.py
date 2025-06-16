@@ -104,7 +104,8 @@ def main():
 
         print("✅ Configuration example ready")
         print("   # To use the API:")
-        print("   llm = ArgoLLM(config)")
+        print("   from src.llm.factory import LLMFactory")
+        print("   llm = LLMFactory.create('argo', config)")
         print("   tools = [FBATool({'name': 'fba', 'description': 'FBA analysis'})]")
         print("   agent = LangGraphMetabolicAgent(llm, tools, {'name': 'demo_agent'})")
 

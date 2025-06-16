@@ -38,7 +38,9 @@ class ModelSEEDpyEnhancement:
         """Initialize ModelSEEDpy enhancement capabilities"""
         self.media_library = MediaLibrary()
         self.compound_mapper = CompoundMapper()
-        self.model_utils = ModelUtils()
+        from .utils_optimized import OptimizedModelUtils
+
+        self.model_utils = OptimizedModelUtils(use_cache=True)
 
         # Try to import cobrakbase
         self.cobrakbase_available = self._check_cobrakbase()

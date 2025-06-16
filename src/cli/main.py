@@ -117,14 +117,10 @@ def load_cli_config() -> Dict[str, Any]:
                     llm_config = config["llm_config"]
                     llm_backend = config["llm_backend"]
 
-                    if llm_backend == "argo":
-                        llm = ArgoLLM(llm_config)
-                    elif llm_backend == "openai":
-                        llm = OpenAILLM(llm_config)
-                    elif llm_backend == "local":
-                        llm = LocalLLM(llm_config)
-                    else:
-                        return config  # Return config without recreating if backend unknown
+                    # Use factory for connection pooling
+                    from src.llm.factory import LLMFactory
+
+                    llm = LLMFactory.create(llm_backend, llm_config)
 
                     # Recreate tools
                     tools = [
@@ -762,12 +758,10 @@ def setup(
                 }
 
             # Create LLM instance
-            if llm_backend == "argo":
-                llm = ArgoLLM(llm_config)
-            elif llm_backend == "openai":
-                llm = OpenAILLM(llm_config)
-            else:
-                llm = LocalLLM(llm_config)
+            # Use factory for connection pooling
+            from src.llm.factory import LLMFactory
+
+            llm = LLMFactory.create(llm_backend, llm_config)
 
             config_state["llm_backend"] = llm_backend
             config_state["llm_config"] = llm_config
@@ -989,13 +983,13 @@ def run_streaming_analysis(
             print_error("LLM not configured. Run 'modelseed-agent setup' first.")
             return None
 
-        # Create LLM
-        if llm_backend == "argo":
-            llm = ArgoLLM(llm_config)
-        elif llm_backend == "openai":
-            llm = OpenAILLM(llm_config)
-        else:
-            print_error(f"Unsupported LLM backend: {llm_backend}")
+        # Create LLM using factory for connection pooling
+        try:
+            from src.llm.factory import LLMFactory
+
+            llm = LLMFactory.create(llm_backend, llm_config)
+        except Exception as e:
+            print_error(f"Failed to create LLM: {e}")
             return None
 
         # Get tools
@@ -1713,13 +1707,10 @@ def switch(
         }
 
     try:
-        # Create LLM instance
-        if backend == "argo":
-            llm = ArgoLLM(llm_config)
-        elif backend == "openai":
-            llm = OpenAILLM(llm_config)
-        else:
-            llm = LocalLLM(llm_config)
+        # Create LLM instance using factory for connection pooling
+        from src.llm.factory import LLMFactory
+
+        llm = LLMFactory.create(backend, llm_config)
 
         # Initialize tools (reuse existing if available)
         tools = config_state.get("tools") or [

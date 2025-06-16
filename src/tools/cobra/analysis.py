@@ -160,15 +160,23 @@ class ModelAnalysisTool(BaseTool):
                 / num_metabolites
             )
 
-        # Sort and limit lists
+        # Sort and limit lists, removing duplicates by name
         network_stats["highly_connected_metabolites"].sort(
             key=lambda x: x["num_reactions"], reverse=True
         )
-        network_stats["highly_connected_metabolites"] = network_stats[
-            "highly_connected_metabolites"
-        ][
+
+        # Remove duplicates by metabolite name while preserving order
+        seen_names = set()
+        unique_metabolites = []
+        for metabolite in network_stats["highly_connected_metabolites"]:
+            name = metabolite["name"]
+            if name not in seen_names:
+                seen_names.add(name)
+                unique_metabolites.append(metabolite)
+
+        network_stats["highly_connected_metabolites"] = unique_metabolites[
             :10
-        ]  # Top 10 most connected
+        ]  # Top 10 unique
 
         return network_stats
 
