@@ -9,11 +9,11 @@ ModelSEEDagent provides a conversational AI interface for metabolic modeling tha
 ### Quick Launch
 
 ```bash
-# Primary method: Interactive session
-modelseed-agent interactive
-
-# Alternative methods (if needed)
+# Primary method: Module-based launch (stable)
 python -m src.interactive.interactive_cli
+
+# Alternate method (beta CLI – may still have import issues)
+modelseed-agent interactive
 ```
 
 ### First Time Setup

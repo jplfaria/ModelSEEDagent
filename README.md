@@ -2,7 +2,7 @@
 
 **AI-Powered Metabolic Modeling Platform**
 
-ModelSEEDagent is a production-ready AI platform that combines large language models with **29 specialized metabolic modeling tools**. Built on LangGraph for intelligent workflow orchestration, it provides comprehensive AI-driven analysis capabilities for metabolic modeling and systems biology research.
+ModelSEEDagent combines large-language-model reasoning with **29 specialised metabolic-modeling tools**.  The **interactive interface is production-ready and fully tested**; the Typer-based CLI is available in **beta** while we finish import cleanup and help-formatting fixes.
 
 ## 📚 **Documentation**
 
@@ -18,18 +18,20 @@ The full documentation is available as a beautiful, searchable site with:
 ## Quick Start
 
 ```bash
-# Install with all dependencies
+# 1) Install in editable mode (recommended for development)
 pip install -e .
 
-# Basic analysis
-modelseed-agent analyze data/examples/e_coli_core.xml --query "Find essential genes"
+# 2) Launch the interactive natural-language interface (stable)
+python -m src.interactive.interactive_cli
 
-# Interactive natural language interface
+#  ── or, via the Typer CLI (beta – some commands may still fail) ──
 modelseed-agent interactive
 
-# Configure API access (Argo Gateway recommended)
-modelseed-agent setup --backend argo
+# 3) Example analysis using the beta CLI
+modelseed-agent analyze data/examples/e_coli_core.xml --query "Find essential genes"
 ```
+
+> ⚠️  The Typer CLI is still under active refactor – if you run into import errors use the module launch shown above.
 
 ## Core Capabilities
 
