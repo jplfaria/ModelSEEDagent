@@ -4,6 +4,18 @@
 **Validation Success Rate**: 92/92 tests passing (100% success rate)
 **Models Tested**: 4 (e_coli_core, iML1515, EcoliMG1655, B_aphidicola)
 
+## Validation Commands
+
+### Run Comprehensive Validation
+```bash
+# Full validation suite: 23 tools × 4 models = 92 tests
+python scripts/tool_validation_suite.py
+```
+
+**Output Location**: `data/validation_results/YYYYMMDD_HHMMSS_validation_run/`
+**Estimated Time**: 15-30 minutes
+**Features**: Biological validation, cross-format testing, comprehensive analysis
+
 ## Current Tool Implementation vs Testing Coverage
 
 | Tool Name | Category | Status | In Testbed | Success Rate | Last Test | Notes |
