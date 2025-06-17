@@ -69,6 +69,7 @@ nav:
   - User Guide:
     - Getting Started: user/README.md
     - User Guide: user/INTERACTIVE_GUIDE.md
+    - Tool Catalogue: user-guide/tool-catalogue.md
 
   - Technical Reference:
     - Architecture: ARCHITECTURE.md
