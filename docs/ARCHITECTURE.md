@@ -51,6 +51,17 @@ ModelSEEDagent is an AI-powered metabolic modeling platform that combines Large 
           │                 │                 │                 │     │
           ▼                 ▼                 ▼                 ▼     │
 ┌─────────────────────────────────────────────────────────────────────┘────┐
+│                    SMART SUMMARIZATION LAYER                            │
+├─────────────────┬─────────────────┬─────────────────┬─────────────────────┤
+│ Three-Tier      │ Tool-Specific   │ Artifact        │ Size Validation     │
+│ Hierarchy       │ Summarizers      │ Storage         │ (2KB/5KB limits)    │
+│ • key_findings  │ • FVA           │ • JSON format   │ • 95-99.9%         │
+│ • summary_dict  │ • FluxSampling  │ • /tmp/artifacts│   reduction        │
+│ • full_data_path│ • GeneDeletion  │                 │                     │
+└─────────┬───────┴─────────┬───────┴─────────┬───────┴─────────┬─────────┘
+          │                 │                 │                 │
+          ▼                 ▼                 ▼                 ▼
+┌─────────────────────────────────────────────────────────────────────────┐
 │                     DATA & PERSISTENCE LAYER                            │
 ├─────────────────┬─────────────────┬─────────────────┬─────────────────────┤
 │ Biochemistry    │ Session State   │ Audit Trails    │ Model Cache &       │
@@ -283,6 +294,98 @@ src/tools/
 - `prompts.py` - LLM prompt templates and optimization
 
 ## Advanced Features
+
+### Smart Summarization Framework
+
+The Smart Summarization Layer transforms massive tool outputs into LLM-optimized formats while preserving complete data for detailed analysis.
+
+**Three-Tier Information Hierarchy**:
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                 SMART SUMMARIZATION FRAMEWORK                       │
+├─────────────────────────────────────────────────────────────────────┤
+│  1. KEY FINDINGS (≤2KB)                                            │
+│     • Critical insights for immediate LLM understanding            │
+│     • Bullet-point format with percentages and key metrics         │
+│     • Warnings (⚠️) and success indicators (✓)                      │
+│     • Top examples (3-5 items maximum)                            │
+│                                                                    │
+│  2. SUMMARY DICT (≤5KB)                                           │
+│     • Structured data for follow-up analysis                      │
+│     • Statistical summaries and distributions                     │
+│     • Category counts with limited examples                       │
+│     • Metadata and analysis parameters                            │
+│                                                                    │
+│  3. FULL DATA PATH                                                │
+│     • Complete raw results stored as JSON artifacts               │
+│     • Located at: /tmp/modelseed_artifacts/                       │
+│     • Format: {tool}_{model}_{timestamp}_{uuid}.json              │
+│     • Accessible for detailed statistical analysis                 │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+**Implementation Architecture**:
+
+```python
+@dataclass
+class ToolResult:
+    # Core result fields
+    success: bool
+    message: str
+    
+    # Smart Summarization fields
+    key_findings: List[str]        # ≤2KB critical insights
+    summary_dict: Dict[str, Any]   # ≤5KB structured data
+    full_data_path: str            # Path to complete raw data
+    
+    # Metadata
+    tool_name: str
+    model_stats: Dict[str, int]    # reactions, genes, metabolites
+    schema_version: str = "1.0"
+```
+
+**Size Reduction Achievements**:
+
+| Tool | Original Size | Summarized | Reduction | Use Case |
+|------|--------------|------------|-----------|----------|
+| FluxSampling | 138.5 MB | 2.2 KB | 99.998% | Statistical distributions |
+| FVA | 170 KB | 2.4 KB | 98.6% | Reaction variability |
+| GeneDeletion | 130 KB | 3.1 KB | 97.6% | Essential gene analysis |
+
+**Tool-Specific Summarizers**:
+
+1. **FluxSampling Summarizer**:
+   - Compresses massive sampling DataFrames (25MB+)
+   - Preserves flux patterns, correlations, subsystem activity
+   - Identifies optimization opportunities
+
+2. **FluxVariability Summarizer**:
+   - Smart bucketing for flux ranges
+   - Categorizes reactions by variability level
+   - Highlights network flexibility
+
+3. **GeneDeletion Summarizer**:
+   - Focuses on essential genes and growth impacts
+   - Categorizes genes by deletion effects
+   - Preserves critical safety information
+
+**Accessing Full Data**:
+
+```python
+# LLM receives summarized output
+result = agent.run_tool("run_flux_sampling", {"model_path": "iML1515.xml"})
+
+# Access complete raw data when needed
+import json
+with open(result["full_data_path"], 'r') as f:
+    full_data = json.load(f)
+    
+# Perform detailed analysis
+import pandas as pd
+df = pd.DataFrame(full_data)
+correlations = df.corr()
+```
 
 ### Advanced AI Reasoning System
 

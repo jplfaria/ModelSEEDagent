@@ -186,78 +186,47 @@ class EssentialityAnalysisTool(BaseTool):
         wild_type_growth: float,
         threshold: float,
     ) -> Dict[str, Any]:
-        """Perform detailed analysis of essential genes"""
-
-        gene_analysis = {
-            "essential_gene_details": [],
-            "functional_categories": {},
-            "subsystem_analysis": {},
-            "statistics": {},
-        }
-
-        # Analyze each essential gene
+        """Streamlined analysis of essential genes (no data duplication)"""
+        
+        functional_categories = {}
+        subsystem_counts = {}
+        reaction_counts = []
+        
+        # Single pass analysis to avoid data duplication
         for gene in essential_genes:
             # Get associated reactions
             associated_reactions = [rxn for rxn in model.reactions if gene in rxn.genes]
-
-            # Categorize by subsystems
+            num_reactions = len(associated_reactions)
+            reaction_counts.append(num_reactions)
+            
+            # Categorize by subsystems (count only, no gene lists)
             subsystems = set()
             for rxn in associated_reactions:
                 if rxn.subsystem:
                     subsystems.add(rxn.subsystem)
-
-            gene_details = {
-                "gene_id": gene.id,
-                "gene_name": gene.name if gene.name else gene.id,
-                "associated_reactions": [rxn.id for rxn in associated_reactions],
-                "num_reactions": len(associated_reactions),
-                "subsystems": list(subsystems),
-                "functional_category": self._categorize_gene_function(list(subsystems)),
-            }
-
-            gene_analysis["essential_gene_details"].append(gene_details)
-
-            # Count by functional category
-            func_cat = gene_details["functional_category"]
-            if func_cat not in gene_analysis["functional_categories"]:
-                gene_analysis["functional_categories"][func_cat] = 0
-            gene_analysis["functional_categories"][func_cat] += 1
-
-            # Count by subsystem
+            
+            # Count functional categories (no gene details stored)
+            func_cat = self._categorize_gene_function(list(subsystems))
+            functional_categories[func_cat] = functional_categories.get(func_cat, 0) + 1
+            
+            # Count subsystems (no gene lists stored)
             for subsystem in subsystems:
-                if subsystem not in gene_analysis["subsystem_analysis"]:
-                    gene_analysis["subsystem_analysis"][subsystem] = []
-                gene_analysis["subsystem_analysis"][subsystem].append(gene.id)
-
-        # Generate statistics
-        gene_analysis["statistics"] = {
-            "total_essential_genes": len(essential_genes),
-            "genes_with_single_reaction": len(
-                [
-                    g
-                    for g in gene_analysis["essential_gene_details"]
-                    if g["num_reactions"] == 1
-                ]
-            ),
-            "genes_with_multiple_reactions": len(
-                [
-                    g
-                    for g in gene_analysis["essential_gene_details"]
-                    if g["num_reactions"] > 1
-                ]
-            ),
-            "most_connected_gene": (
-                max(
-                    gene_analysis["essential_gene_details"],
-                    key=lambda x: x["num_reactions"],
-                )
-                if gene_analysis["essential_gene_details"]
-                else None
-            ),
-            "subsystems_affected": len(gene_analysis["subsystem_analysis"]),
+                subsystem_counts[subsystem] = subsystem_counts.get(subsystem, 0) + 1
+        
+        return {
+            "summary": {
+                "total_essential_genes": len(essential_genes),
+                "functional_categories": functional_categories,
+                "subsystems_affected": len(subsystem_counts),
+                "top_subsystems": sorted(subsystem_counts.items(), key=lambda x: x[1], reverse=True)[:5],
+            },
+            "connectivity": {
+                "single_reaction_genes": sum(1 for count in reaction_counts if count == 1),
+                "multi_reaction_genes": sum(1 for count in reaction_counts if count > 1),
+                "max_reactions_per_gene": max(reaction_counts) if reaction_counts else 0,
+                "avg_reactions_per_gene": sum(reaction_counts) / len(reaction_counts) if reaction_counts else 0,
+            }
         }
-
-        return gene_analysis
 
     def _detailed_reaction_analysis(
         self,
@@ -266,96 +235,51 @@ class EssentialityAnalysisTool(BaseTool):
         wild_type_growth: float,
         threshold: float,
     ) -> Dict[str, Any]:
-        """Perform detailed analysis of essential reactions"""
-
-        reaction_analysis = {
-            "essential_reaction_details": [],
-            "subsystem_analysis": {},
-            "network_analysis": {},
-            "statistics": {},
-        }
-
-        # Analyze each essential reaction
+        """Streamlined analysis of essential reactions (no data duplication)"""
+        
+        subsystem_counts = {}
+        network_counts = {"exchange": 0, "transport": 0, "metabolic": 0, "gene_associated": 0, "spontaneous": 0}
+        gene_counts = []
+        
+        # Single pass analysis to avoid data duplication
         for rxn in essential_reactions:
-            # Analyze network position
+            # Network classification
             is_exchange = rxn.id.startswith(("EX_", "DM_", "SK_"))
             is_transport = "transport" in rxn.name.lower() if rxn.name else False
-
-            reaction_details = {
-                "reaction_id": rxn.id,
-                "reaction_name": rxn.name if rxn.name else rxn.id,
-                "equation": rxn.build_reaction_string(),
-                "subsystem": rxn.subsystem or "Unknown",
-                "genes": [gene.id for gene in rxn.genes],
-                "num_genes": len(rxn.genes),
-                "is_reversible": rxn.reversibility,
-                "is_exchange": is_exchange,
-                "is_transport": is_transport,
-                "bounds": rxn.bounds,
-            }
-
-            reaction_analysis["essential_reaction_details"].append(reaction_details)
-
-            # Count by subsystem
+            num_genes = len(rxn.genes)
+            
+            # Count network types
+            if is_exchange:
+                network_counts["exchange"] += 1
+            elif is_transport:
+                network_counts["transport"] += 1
+            else:
+                network_counts["metabolic"] += 1
+                
+            if num_genes > 0:
+                network_counts["gene_associated"] += 1
+            else:
+                network_counts["spontaneous"] += 1
+            
+            gene_counts.append(num_genes)
+            
+            # Count subsystems (no reaction lists stored)
             subsystem = rxn.subsystem or "Unknown"
-            if subsystem not in reaction_analysis["subsystem_analysis"]:
-                reaction_analysis["subsystem_analysis"][subsystem] = []
-            reaction_analysis["subsystem_analysis"][subsystem].append(rxn.id)
-
-        # Network analysis
-        reaction_analysis["network_analysis"] = {
-            "exchange_reactions": len(
-                [
-                    r
-                    for r in reaction_analysis["essential_reaction_details"]
-                    if r["is_exchange"]
-                ]
-            ),
-            "transport_reactions": len(
-                [
-                    r
-                    for r in reaction_analysis["essential_reaction_details"]
-                    if r["is_transport"]
-                ]
-            ),
-            "metabolic_reactions": len(
-                [
-                    r
-                    for r in reaction_analysis["essential_reaction_details"]
-                    if not r["is_exchange"] and not r["is_transport"]
-                ]
-            ),
-            "gene_associated": len(
-                [
-                    r
-                    for r in reaction_analysis["essential_reaction_details"]
-                    if r["num_genes"] > 0
-                ]
-            ),
-            "spontaneous": len(
-                [
-                    r
-                    for r in reaction_analysis["essential_reaction_details"]
-                    if r["num_genes"] == 0
-                ]
-            ),
+            subsystem_counts[subsystem] = subsystem_counts.get(subsystem, 0) + 1
+        
+        return {
+            "summary": {
+                "total_essential_reactions": len(essential_reactions),
+                "subsystems_affected": len(subsystem_counts),
+                "top_subsystems": sorted(subsystem_counts.items(), key=lambda x: x[1], reverse=True)[:5],
+            },
+            "network_analysis": network_counts,
+            "gene_association": {
+                "max_genes_per_reaction": max(gene_counts) if gene_counts else 0,
+                "avg_genes_per_reaction": sum(gene_counts) / len(gene_counts) if gene_counts else 0,
+                "reactions_with_genes": sum(1 for count in gene_counts if count > 0),
+            }
         }
-
-        # Generate statistics
-        reaction_analysis["statistics"] = {
-            "total_essential_reactions": len(essential_reactions),
-            "subsystems_affected": len(reaction_analysis["subsystem_analysis"]),
-            "most_gene_associated": (
-                max(
-                    reaction_analysis["essential_reaction_details"],
-                    key=lambda x: x["num_genes"],
-                )
-                if reaction_analysis["essential_reaction_details"]
-                else None
-            ),
-        }
-
-        return reaction_analysis
 
     def _categorize_gene_function(self, subsystems: List[str]) -> str:
         """Categorize gene function based on associated subsystems"""
@@ -402,6 +326,7 @@ class EssentialityAnalysisTool(BaseTool):
         }
 
         if results["essential_genes"] is not None:
+            gene_analysis = results.get("gene_analysis", {})
             summary["gene_essentiality"] = {
                 "essential_count": len(results["essential_genes"]),
                 "essentiality_rate": (
@@ -411,16 +336,16 @@ class EssentialityAnalysisTool(BaseTool):
                 ),
                 "top_functional_categories": (
                     sorted(
-                        results["gene_analysis"]["functional_categories"].items(),
+                        gene_analysis.get("summary", {}).get("functional_categories", {}).items(),
                         key=lambda x: x[1],
                         reverse=True,
                     )[:5]
-                    if results["gene_analysis"]["functional_categories"]
-                    else []
                 ),
+                "connectivity_stats": gene_analysis.get("connectivity", {}),
             }
 
         if results["essential_reactions"] is not None:
+            reaction_analysis = results.get("reaction_analysis", {})
             summary["reaction_essentiality"] = {
                 "essential_count": len(results["essential_reactions"]),
                 "essentiality_rate": (
@@ -428,7 +353,8 @@ class EssentialityAnalysisTool(BaseTool):
                     if len(model.reactions) > 0
                     else 0
                 ),
-                "network_breakdown": results["reaction_analysis"]["network_analysis"],
+                "network_breakdown": reaction_analysis.get("network_analysis", {}),
+                "gene_association_stats": reaction_analysis.get("gene_association", {}),
             }
 
         return summary

@@ -110,13 +110,11 @@ class FluxVariabilityTool(BaseTool):
                 pfba_factor=self.fva_config.pfba_factor,
             )
 
-            # Process results
-            fva_summary = {
-                "fixed_reactions": [],  # reactions with min = max (no variability)
-                "variable_reactions": [],  # reactions with min != max
-                "blocked_reactions": [],  # reactions with min = max = 0
-                "essential_reactions": [],  # reactions where min > 0 or max < 0
-            }
+            # Process results - create lightweight summary without data duplication
+            blocked_reactions = []
+            fixed_reactions = []
+            variable_reactions = []
+            essential_reactions = []
 
             # Use configurable tolerance for flux comparisons
             tolerance = self.fva_config.precision.flux_threshold
@@ -125,42 +123,35 @@ class FluxVariabilityTool(BaseTool):
                 min_flux = row["minimum"]
                 max_flux = row["maximum"]
 
-                flux_data = {
-                    "reaction_id": reaction_id,
-                    "minimum": float(min_flux),
-                    "maximum": float(max_flux),
-                    "range": float(max_flux - min_flux),
-                }
-
-                # Categorize reaction
+                # Categorize reaction by ID only (data is in fva_results)
                 if abs(min_flux) < tolerance and abs(max_flux) < tolerance:
-                    fva_summary["blocked_reactions"].append(flux_data)
+                    blocked_reactions.append(reaction_id)
                 elif abs(max_flux - min_flux) < tolerance:
-                    fva_summary["fixed_reactions"].append(flux_data)
+                    fixed_reactions.append(reaction_id)
                 else:
-                    fva_summary["variable_reactions"].append(flux_data)
+                    variable_reactions.append(reaction_id)
 
                 # Check if essential (always carries flux in same direction)
                 if min_flux > tolerance or max_flux < -tolerance:
-                    fva_summary["essential_reactions"].append(flux_data)
-
-            # Sort by flux range (most variable first)
-            fva_summary["variable_reactions"].sort(
-                key=lambda x: x["range"], reverse=True
-            )
+                    essential_reactions.append(reaction_id)
 
             return ToolResult(
                 success=True,
                 message=f"FVA completed for {len(reaction_list)} reactions",
                 data={
                     "fva_results": fva_result.to_dict(),
-                    "summary": fva_summary,
+                    "summary": {
+                        "blocked_reactions": blocked_reactions,
+                        "fixed_reactions": fixed_reactions,
+                        "variable_reactions": variable_reactions,
+                        "essential_reactions": essential_reactions,
+                    },
                     "statistics": {
                         "total_reactions": len(reaction_list),
-                        "blocked_reactions": len(fva_summary["blocked_reactions"]),
-                        "fixed_reactions": len(fva_summary["fixed_reactions"]),
-                        "variable_reactions": len(fva_summary["variable_reactions"]),
-                        "essential_reactions": len(fva_summary["essential_reactions"]),
+                        "blocked_reactions": len(blocked_reactions),
+                        "fixed_reactions": len(fixed_reactions),
+                        "variable_reactions": len(variable_reactions),
+                        "essential_reactions": len(essential_reactions),
                     },
                 },
                 metadata={

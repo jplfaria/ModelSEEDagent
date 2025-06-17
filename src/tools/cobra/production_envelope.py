@@ -172,17 +172,18 @@ class ProductionEnvelopeTool(BaseTool):
             # Analyze the envelope
             analysis = self._analyze_envelope(envelope_data, reaction_objects, model)
 
+            # Create lightweight envelope summary instead of full DataFrame
+            envelope_summary = self._create_envelope_summary(envelope_data, reactions)
+            
             return ToolResult(
                 success=True,
                 message=f"Production envelope calculated for {len(reactions)} reaction(s) with {points} points",
-                data={"envelope_data": envelope_data.to_dict(), "analysis": analysis},
+                data={"envelope_summary": envelope_summary, "analysis": analysis},
                 metadata={
                     "model_id": model.id,
                     "reactions": reactions,
                     "points": points,
                     "objective": str(model.objective.expression),
-                    "c_source": c_source,
-                    "c_uptake_rates": c_uptake_rates,
                 },
             )
 
@@ -276,145 +277,124 @@ class ProductionEnvelopeTool(BaseTool):
         reactions: List[cobra.Reaction],
         model: cobra.Model,
     ) -> Dict[str, Any]:
-        """Analyze production envelope data"""
-
+        """Streamlined envelope analysis focusing on key insights"""
+        # Find objective column (usually flux_maximum or similar)
+        objective_col = None
+        for col in ['flux_maximum', 'flux_minimum', 'biomass', 'growth']:
+            if col in envelope_data.columns:
+                objective_col = col
+                break
+        
+        if objective_col is None:
+            # Fallback to first numeric column
+            numeric_cols = envelope_data.select_dtypes(include=['float64', 'int64']).columns
+            objective_col = numeric_cols[0] if len(numeric_cols) > 0 else envelope_data.columns[0]
+        
+        # Find reaction columns (columns that match our requested reactions)
+        reaction_names = [rxn.id for rxn in reactions]
+        reaction_cols = [col for col in envelope_data.columns if col in reaction_names]
+        
         analysis = {
-            "envelope_summary": {},
-            "optimization_analysis": {},
-            "trade_offs": {},
-            "design_points": {},
+            "summary": {
+                "total_points": len(envelope_data),
+                "reactions_analyzed": len(reaction_cols),
+                "objective_column": objective_col,
+            },
+            "key_insights": []
         }
+        
+        # Add objective max if numeric
+        try:
+            analysis["summary"]["objective_max"] = float(envelope_data[objective_col].max())
+        except (ValueError, TypeError):
+            analysis["summary"]["objective_max"] = "N/A"
+        
+        # Generate key insights for each reaction
+        for col in reaction_cols:
+            production_values = envelope_data[col]
+            max_production = float(production_values.max())
+            min_production = float(production_values.min())
+            
+            # Try correlation if objective is numeric
+            try:
+                correlation = envelope_data[objective_col].corr(production_values)
+                
+                # Classify trade-off relationship
+                if correlation > 0.1:
+                    trade_off = "synergistic"
+                    insight = f"Production increases with {objective_col} (r={correlation:.2f})"
+                elif correlation < -0.1:
+                    trade_off = "competitive" 
+                    insight = f"Production competes with {objective_col} (r={correlation:.2f})"
+                else:
+                    trade_off = "independent"
+                    insight = f"Production independent of {objective_col} (r={correlation:.2f})"
+            except (ValueError, TypeError):
+                trade_off = "unknown"
+                insight = f"Production analysis limited due to non-numeric objective"
+            
+            analysis["key_insights"].append({
+                "reaction": col,
+                "trade_off_type": trade_off,
+                "max_production": max_production,
+                "min_production": min_production,
+                "insight": insight
+            })
+        
+        return analysis
 
-        # Get objective column (usually growth rate)
-        objective_col = envelope_data.columns[
-            0
-        ]  # First column is typically the objective
-        reaction_cols = envelope_data.columns[
-            1:
-        ]  # Subsequent columns are the reactions
-
-        # Basic envelope summary
-        analysis["envelope_summary"] = {
+    def _create_envelope_summary(self, envelope_data, reactions):
+        """Create lightweight summary of envelope data instead of full DataFrame"""
+        # Find objective column
+        objective_col = None
+        for col in ['flux_maximum', 'flux_minimum', 'biomass', 'growth']:
+            if col in envelope_data.columns:
+                objective_col = col
+                break
+        
+        if objective_col is None:
+            numeric_cols = envelope_data.select_dtypes(include=['float64', 'int64']).columns
+            objective_col = numeric_cols[0] if len(numeric_cols) > 0 else envelope_data.columns[0]
+        
+        # Find reaction columns from our requested reactions
+        reaction_names = [r for r in reactions]  # reactions is already a list of strings
+        reaction_cols = [col for col in envelope_data.columns if col in reaction_names]
+        
+        # Basic envelope statistics
+        envelope_summary = {
             "total_points": len(envelope_data),
-            "objective_range": {
+            "reactions": {}
+        }
+        
+        # Add objective statistics if numeric
+        try:
+            envelope_summary["objective"] = {
+                "column": objective_col,
                 "min": float(envelope_data[objective_col].min()),
                 "max": float(envelope_data[objective_col].max()),
                 "mean": float(envelope_data[objective_col].mean()),
-            },
-            "production_ranges": {},
-        }
-
-        # Analyze each reaction's production range
+            }
+        except (ValueError, TypeError):
+            envelope_summary["objective"] = {"column": objective_col, "type": "non-numeric"}
+        
+        # Reaction-specific statistics  
         for col in reaction_cols:
             production_values = envelope_data[col]
-            analysis["envelope_summary"]["production_ranges"][col] = {
-                "min": float(production_values.min()),
-                "max": float(production_values.max()),
-                "mean": float(production_values.mean()),
+            
+            envelope_summary["reactions"][col] = {
+                "production_range": {
+                    "min": float(production_values.min()),
+                    "max": float(production_values.max()),
+                    "mean": float(production_values.mean()),
+                }
             }
-
-        # Optimization analysis
-        max_objective_idx = envelope_data[objective_col].idxmax()
-        max_production_points = {}
-
-        for col in reaction_cols:
-            max_prod_idx = envelope_data[col].idxmax()
-            max_production_points[col] = {
-                "max_production": float(envelope_data.loc[max_prod_idx, col]),
-                "objective_at_max_production": float(
-                    envelope_data.loc[max_prod_idx, objective_col]
-                ),
-                "production_at_max_objective": float(
-                    envelope_data.loc[max_objective_idx, col]
-                ),
-            }
-
-        analysis["optimization_analysis"] = {
-            "max_objective": float(envelope_data.loc[max_objective_idx, objective_col]),
-            "max_production_points": max_production_points,
-        }
-
-        # Trade-off analysis
-        trade_offs = {}
-        for col in reaction_cols:
-            # Calculate correlation between objective and production
-            correlation = envelope_data[objective_col].corr(envelope_data[col])
-
-            # Find points with high production and reasonable growth
-            high_production_threshold = envelope_data[col].quantile(0.8)
-            reasonable_growth_threshold = envelope_data[objective_col].max() * 0.5
-
-            good_points = envelope_data[
-                (envelope_data[col] >= high_production_threshold)
-                & (envelope_data[objective_col] >= reasonable_growth_threshold)
-            ]
-
-            trade_offs[col] = {
-                "correlation_with_objective": float(correlation),
-                "trade_off_severity": (
-                    "positive"
-                    if correlation > 0.1
-                    else "negative" if correlation < -0.1 else "neutral"
-                ),
-                "high_production_high_growth_points": len(good_points),
-                "feasible_design_space": (
-                    len(good_points) / len(envelope_data)
-                    if len(envelope_data) > 0
-                    else 0
-                ),
-            }
-
-        analysis["trade_offs"] = trade_offs
-
-        # Identify promising design points
-        design_points = []
-
-        for col in reaction_cols:
-            # Find Pareto-optimal points (high production, high growth)
-            production_values = envelope_data[col]
-            objective_values = envelope_data[objective_col]
-
-            # Score each point as weighted sum of normalized production and objective
-            norm_production = (production_values - production_values.min()) / (
-                production_values.max() - production_values.min() + 1e-6
-            )
-            norm_objective = (objective_values - objective_values.min()) / (
-                objective_values.max() - objective_values.min() + 1e-6
-            )
-
-            # Weight production and growth equally
-            scores = 0.5 * norm_production + 0.5 * norm_objective
-
-            # Find top 5 scoring points
-            top_indices = scores.nlargest(5).index
-
-            top_points = []
-            for idx in top_indices:
-                top_points.append(
-                    {
-                        "production": float(envelope_data.loc[idx, col]),
-                        "objective": float(envelope_data.loc[idx, objective_col]),
-                        "score": float(scores[idx]),
-                        "production_efficiency": (
-                            float(
-                                envelope_data.loc[idx, col] / envelope_data[col].max()
-                            )
-                            if envelope_data[col].max() > 0
-                            else 0
-                        ),
-                        "growth_efficiency": (
-                            float(
-                                envelope_data.loc[idx, objective_col]
-                                / envelope_data[objective_col].max()
-                            )
-                            if envelope_data[objective_col].max() > 0
-                            else 0
-                        ),
-                    }
-                )
-
-            design_points.append({"reaction": col, "top_design_points": top_points})
-
-        analysis["design_points"] = design_points
-
-        return analysis
+            
+            # Add correlation if objective is numeric
+            try:
+                objective_values = envelope_data[objective_col]
+                correlation = float(objective_values.corr(production_values))
+                envelope_summary["reactions"][col]["correlation_with_objective"] = correlation
+            except (ValueError, TypeError):
+                envelope_summary["reactions"][col]["correlation_with_objective"] = "N/A"
+        
+        return envelope_summary
