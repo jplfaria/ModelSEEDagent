@@ -68,7 +68,7 @@ nav:
 
   - Getting Started:
     - Installation: getting-started/installation.md
-    - Quick Start (CLI): getting-started/quickstart-cli.md
+    - Quick Start: getting-started/quickstart-cli.md
     - Interactive Guide: getting-started/interactive-guide.md
 
   - User Guide:
@@ -80,12 +80,12 @@ nav:
     - Architecture: ARCHITECTURE.md
     - Performance: performance.md
     - Configuration: configuration.md
-    - Debug Configuration: debug.md
     - Troubleshooting: troubleshooting.md
+    - Debug Mode: debug.md
 
-  - Testing & Validation:
-    - Tool Testing Status: TOOL_TESTING_STATUS.md
-    - Testing Infrastructure: development/testing-infrastructure-roadmap.md
+  - Testing:
+    - Tool Status: TOOL_TESTING_STATUS.md
+    - Test Infrastructure: development/testing-infrastructure-roadmap.md
 
   - API Documentation:
     - Overview: api/overview.md

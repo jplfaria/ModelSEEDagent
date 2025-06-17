@@ -295,16 +295,25 @@ class PathwayAnalysisTool(BaseTool):
             # Support both dict and string inputs (for consistency with other tools)
             if isinstance(input_data, dict):
                 model_path = input_data.get("model_path")
+                model_object = input_data.get("model_object")
                 pathway = input_data.get("pathway")
-                if not model_path or not pathway:
-                    raise ValueError("Both model_path and pathway must be provided")
+                
+                # Load model from path or use provided object
+                if model_object is not None:
+                    model = model_object
+                    # For pathway analysis with model objects, use default pathway analysis
+                    pathway = pathway or "all_subsystems"
+                elif model_path:
+                    model = self._utils.load_model(model_path)
+                    if not pathway:
+                        raise ValueError("pathway parameter required when using model_path")
+                else:
+                    raise ValueError("Either model_path or model_object must be provided")
             else:
                 # For string input, we can't determine pathway, so raise an error
                 raise ValueError(
-                    "PathwayAnalysisTool requires dictionary input with model_path and pathway keys"
+                    "PathwayAnalysisTool requires dictionary input with model_path/model_object and pathway keys"
                 )
-
-            model = self._utils.load_model(model_path)
 
             # Handle models with empty subsystems by using alternative grouping methods
             pathway_reactions = []
