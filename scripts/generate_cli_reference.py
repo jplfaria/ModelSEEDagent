@@ -1,9 +1,14 @@
 import inspect
+import sys
 import textwrap
 from pathlib import Path
 from typing import Dict, List
 
 import typer
+
+# Add project root to path
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
 
 # Path where markdown reference will be written
 OUTPUT_MD = (

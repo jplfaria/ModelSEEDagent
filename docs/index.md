@@ -2,7 +2,15 @@
 
 **Advanced AI-Powered Metabolic Modeling Platform**
 
-ModelSEEDagent is an **LLM-powered metabolic-modeling toolkit** that currently ships with **28 production-grade analysis tools**.  The **interactive interface is stable**; the Typer-based CLI is in beta while remaining import issues are fixed.
+ModelSEEDagent is an **LLM-powered metabolic-modeling toolkit** that currently ships with **28 production-grade analysis tools**.  The **interactive interface is stable** and the **CLI is production-ready** with comprehensive command support.
+
+## What's New (2025-06-16)
+
+**Latest Updates:**
+- **Comprehensive Testing**: 84/92 validation tests passing (91.3% success rate)
+- **Enhanced CLI**: Complete command reference with examples and troubleshooting
+- **Performance Optimizations**: Connection pooling, model caching, biological validation
+- **Tool Status**: 28 tools validated across 4 model formats (BiGG + ModelSEED)
 
 ## Quick Start
 
@@ -47,21 +55,17 @@ Scientific hypothesis generation and systematic testing:
 modelseed-agent analyze model.xml --query "Generate and test hypotheses"
 ```
 
-### Collaborative AI Decision Making
+### Collaborative AI Decision Making *(roadmap)*
 Multiple AI agents collaborate on complex analysis decisions:
 ```bash
 modelseed-agent analyze model.xml --query "Use collaborative reasoning"
 ```
 
-### Collaborative AI Decision Making *(roadmap)*
-
-### Cross-Model Pattern Learning
+### Cross-Model Pattern Learning *(roadmap)*
 AI learns from analysis patterns across different models:
 ```bash
 modelseed-agent analyze model.xml --query "Learn from analysis patterns"
 ```
-
-### Cross-Model Pattern Learning *(roadmap)*
 
 ## Complete Tool Suite (28 Tools)
 

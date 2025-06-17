@@ -111,7 +111,7 @@ ls tests/manual/archive/
 - **Functional Tests**: 5 modules, 2,300+ lines of validation code
 - **Integration Tests**: 4 workflow validation modules
 - **Manual Tests**: 15+ active scripts, 6 archived
-- **Testbed Coverage**: 19 tools × 4 models = 76 biological validations
+- **Testbed Coverage**: 28 tools × 4 models = 112 biological validations
 
 ### **CI/CD Integration**
 - **Pull Requests**: Essential testbed (FBA on e_coli_core) + full pytest suite

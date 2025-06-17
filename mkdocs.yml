@@ -78,11 +78,14 @@ nav:
 
   - Technical Reference:
     - Architecture: ARCHITECTURE.md
-    - Tool Reference (catalogue): user-guide/tool-catalogue.md
-    - Tool Reference Pages: tool-reference/index.md
-    - Tool Testing Status: TOOL_TESTING_STATUS.md
+    - Performance: performance.md
+    - Configuration: configuration.md
     - Debug Configuration: debug.md
     - Troubleshooting: troubleshooting.md
+
+  - Testing & Validation:
+    - Tool Testing Status: TOOL_TESTING_STATUS.md
+    - Testing Infrastructure: development/testing-infrastructure-roadmap.md
 
   - API Documentation:
     - Overview: api/overview.md
@@ -92,7 +95,8 @@ nav:
     - Contributing: developer/contributing.md
     - Testing: developer/testing.md
     - Style Guide: developer/style-guide.md
-    - Roadmap: development/DEVELOPMENT_ROADMAP.md
+    - Development Roadmap: development/DEVELOPMENT_ROADMAP.md
+    - 12-Factor Agents: development/12-factor-agents-roadmap.md
 
   - Operations:
     - Deployment: operations/deployment.md

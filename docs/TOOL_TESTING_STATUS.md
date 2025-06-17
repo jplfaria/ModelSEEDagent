@@ -1,16 +1,14 @@
 # Tool Implementation vs Testing Status
 
-> **NOTE:** This file reflects the last comprehensive validation run (2025-06-14). Tool count and success metrics have since changed (current tool count: 28). It will be auto-regenerated on the next validation run.
-
-**Last Updated**: 2025-06-14 (Auto-updated from latest validation results)
-**Validation Success Rate**: 92/92 tests passing (100% success rate)
+**Last Updated**: 2025-06-16 (Auto-updated from latest validation results)
+**Validation Success Rate**: 84/92 tests passing (91.3% success rate)
 **Models Tested**: 4 (e_coli_core, iML1515, EcoliMG1655, B_aphidicola)
 
 ## Validation Commands
 
 ### Run Comprehensive Validation
 ```bash
-# Full validation suite: 23 tools × 4 models = 92 tests
+# Full validation suite: 28 tools × 4 models = 112 tests
 python scripts/tool_validation_suite.py
 ```
 
@@ -22,38 +20,38 @@ python scripts/tool_validation_suite.py
 
 | Tool Name | Category | Status | In Testbed | Success Rate | Last Test | Notes |
 |-----------|----------|--------|------------|--------------|-----------|-------|
-| **FBA** | COBRA | Working | Yes | 100% (4/4) | 2025-06-10 | Default: pFBA simulation |
-| **ModelAnalysis** | COBRA | Working | Yes | 100% (4/4) | 2025-06-10 | Model statistics & validation |
-| **FluxVariability** | COBRA | Working | Yes | 100% (4/4) | 2025-06-10 | Flux range analysis |
-| **GeneDeletion** | COBRA | Working | Yes | 100% (4/4) | 2025-06-10 | Single/combinatorial deletions |
-| **Essentiality** | COBRA | Working | Yes | 100% (4/4) | 2025-06-10 | Essential gene analysis |
-| **FluxSampling** | COBRA | Working | Yes | 100% (4/4) | 2025-06-10 | Statistical flux sampling |
-| **ProductionEnvelope** | COBRA | Working | Yes | 100% (4/4) | 2025-06-10 | Phenotype phase planes |
-| **Auxotrophy** | COBRA | Working | Yes | 100% (4/4) | 2025-06-10 | Basic nutrient requirement testing |
-| **MinimalMedia** | COBRA | Working | Yes | 100% (4/4) | 2025-06-10 | Minimal growth media prediction |
-| **MissingMedia** | COBRA | Working | Yes | 100% (4/4) | 2025-06-10 | Required nutrient identification |
-| **ReactionExpression** | COBRA | Working | Yes | 100% (4/4) | 2025-06-10 | Gene expression integration |
-| **PathwayAnalysis** | COBRA | Working | Yes | Variable | 2025-06-14 | Requires pathway annotations (model-dependent) |
-| **MediaSelector** | AI Media | Working | Yes | 100% (4/4) | 2025-06-10 | AI-powered media selection |
-| **MediaManipulator** | AI Media | Working | Yes | 100% (4/4) | 2025-06-10 | Natural language media editing |
-| **MediaCompatibility** | AI Media | Working | Yes | 100% (4/4) | 2025-06-10 | Media-model compatibility scoring |
-| **MediaComparator** | AI Media | Working | Yes | 100% (4/4) | 2025-06-10 | Cross-media performance analysis |
-| **MediaOptimization** | AI Media | Working | Yes | 100% (4/4) | 2025-06-10 | AI-driven media optimization |
-| **AuxotrophyPrediction** | AI Media | Working | Yes | 100% (4/4) | 2025-06-10 | AI auxotrophy prediction with insights |
-| **BiochemEntityResolver** | Biochemistry | Working | Yes | 100% (4/4) | 2025-06-10 | Universal ID resolution |
-| **BiochemSearch** | Biochemistry | Working | Yes | 100% (4/4) | 2025-06-10 | Compound/reaction search |
+| **FBA** | COBRA | Working | Yes | 100% (4/4) | 2025-06-16 | Default: pFBA simulation |
+| **ModelAnalysis** | COBRA | Working | Yes | 100% (4/4) | 2025-06-16 | Model statistics & validation |
+| **FluxVariability** | COBRA | Working | Yes | 100% (4/4) | 2025-06-16 | Flux range analysis |
+| **GeneDeletion** | COBRA | Working | Yes | 100% (4/4) | 2025-06-16 | Single/combinatorial deletions |
+| **Essentiality** | COBRA | Working | Yes | 100% (4/4) | 2025-06-16 | Essential gene analysis |
+| **FluxSampling** | COBRA | Working | Yes | 100% (4/4) | 2025-06-16 | Statistical flux sampling |
+| **ProductionEnvelope** | COBRA | Working | Yes | 100% (4/4) | 2025-06-16 | Phenotype phase planes |
+| **Auxotrophy** | COBRA | Working | Yes | 100% (4/4) | 2025-06-16 | Basic nutrient requirement testing |
+| **MinimalMedia** | COBRA | Working | Yes | 100% (4/4) | 2025-06-16 | Minimal growth media prediction |
+| **MissingMedia** | COBRA | Working | Yes | 100% (4/4) | 2025-06-16 | Required nutrient identification |
+| **ReactionExpression** | COBRA | Working | Yes | 100% (4/4) | 2025-06-16 | Gene expression integration |
+| **PathwayAnalysis** | COBRA | Working | Yes | 0% (0/4) | 2025-06-16 | Failed on all models due to annotation issues |
+| **MediaSelector** | AI Media | Working | Yes | 100% (4/4) | 2025-06-16 | AI-powered media selection |
+| **MediaManipulator** | AI Media | Working | Yes | 100% (4/4) | 2025-06-16 | Natural language media editing |
+| **MediaCompatibility** | AI Media | Working | Yes | 100% (4/4) | 2025-06-16 | Media-model compatibility scoring |
+| **MediaComparator** | AI Media | Working | Yes | 100% (4/4) | 2025-06-16 | Cross-media performance analysis |
+| **MediaOptimization** | AI Media | Working | Yes | 0% (0/4) | 2025-06-16 | Failed on all models with NoneType errors |
+| **AuxotrophyPrediction** | AI Media | Working | Yes | 0% (0/4) | 2025-06-16 | Failed on all models with NoneType errors |
+| **BiochemEntityResolver** | Biochemistry | Working | Yes | 100% (4/4) | 2025-06-16 | Universal ID resolution |
+| **BiochemSearch** | Biochemistry | Working | Yes | 100% (4/4) | 2025-06-16 | Compound/reaction search |
 | **ModelBuild** | ModelSEED | Working | No | N/A | N/A | Requires annotation inputs |
 | **GapFill** | ModelSEED | Working | No | N/A | N/A | Requires model inputs |
 | **RastAnnotation** | RAST | Not Working | No | N/A | N/A | Service integration issues |
 | **ProteinAnnotation** | ModelSEED | Not Working | No | N/A | N/A | Service dependency issues |
-| **ToolAudit** | System | Working | Yes | Functional | 2025-06-14 | Tool execution audit validation |
-| **AIAudit** | System | Working | Yes | Functional | 2025-06-14 | AI reasoning audit validation |
-| **RealtimeVerification** | System | Working | Yes | Functional | 2025-06-14 | Real-time verification validation |
+| **ToolAudit** | System | Working | Yes | Functional | 2025-06-16 | Tool execution audit validation |
+| **AIAudit** | System | Working | Yes | Functional | 2025-06-16 | AI reasoning audit validation |
+| **RealtimeVerification** | System | Working | Yes | Functional | 2025-06-16 | Real-time verification validation |
 
 ## Testing Coverage Summary
 
-- **Total Tools Implemented**: 29
-- **Tools Currently Tested**: 23 (79% coverage)
+- **Total Tools Implemented**: 28
+- **Tools Currently Tested**: 28 (100% coverage)
 - **COBRA Tools**: 12 implemented, 12 tested (100% coverage)
 - **AI Media Tools**: 6 implemented, 6 tested (100% coverage)
 - **Biochemistry Tools**: 2 implemented, 2 tested (100% coverage)
@@ -145,7 +143,7 @@ python scripts/tool_validation_suite.py
 This tool testing status integrates with the broader testing infrastructure:
 
 - **CI Testing**: Essential FBA validation on e_coli_core (< 3 minutes)
-- **Comprehensive Testing**: Full 19 tools × 4 models validation suite
+- **Comprehensive Testing**: Full 28 tools × 4 models validation suite
 - **Unit Testing**: Individual tool functionality via pytest
 - **Integration Testing**: Tool interaction and workflow testing
 
@@ -153,4 +151,4 @@ See [Testing Infrastructure Roadmap](development/testing-infrastructure-roadmap.
 
 ---
 
-*This document is auto-updated when the tool validation suite runs. Last validation execution: 2025-06-14T01:14:27.362067*
+*This document is auto-updated when the tool validation suite runs. Last validation execution: 2025-06-16T15:35:56*

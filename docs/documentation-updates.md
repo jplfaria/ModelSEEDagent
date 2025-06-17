@@ -11,7 +11,7 @@ This page tracks automated and manual updates to the ModelSEEDagent documentatio
 
 **Changes:**
 - **Documentation Review**: Manual documentation review and update
-- **Tool Count**: 29 tools total
+- **Tool Count**: 28 tools total
 
 ---
 
@@ -23,7 +23,7 @@ This page tracks automated and manual updates to the ModelSEEDagent documentatio
 
 **Changes:**
 - **Documentation Review**: Manual documentation review and update
-- **Tool Count**: 29 tools total
+- **Tool Count**: 28 tools total
 
 ---
 
@@ -35,7 +35,7 @@ This page tracks automated and manual updates to the ModelSEEDagent documentatio
 
 **Changes:**
 - **Documentation Review**: Manual documentation review and update
-- **Tool Count**: 29 tools total
+- **Tool Count**: 28 tools total
 
 ---
 
@@ -47,7 +47,7 @@ This page tracks automated and manual updates to the ModelSEEDagent documentatio
 
 **Changes:**
 - **README.md**: Updated README.md with latest tool information
-- **Tool Count**: 29 tools total
+- **Tool Count**: 28 tools total
 
 ---
 
@@ -98,7 +98,7 @@ This page tracks automated and manual updates to the ModelSEEDagent documentatio
 - **docs/api/overview.md**: Updated docs/api/overview.md with latest tool information
 - **docs/api/tools.md**: Updated docs/api/tools.md with latest tool information
 - **scripts/docs_review.py**: Updated scripts/docs_review.py with latest tool information
-- **Tool Count**: 29 tools total
+- **Tool Count**: 28 tools total
 
 ---
 
@@ -138,7 +138,7 @@ This page tracks automated and manual updates to the ModelSEEDagent documentatio
 - **docs/api/overview.md**: Updated docs/api/overview.md with latest tool information
 - **docs/api/tools.md**: Updated docs/api/tools.md with latest tool information
 - **scripts/docs_review.py**: Updated scripts/docs_review.py with latest tool information
-- **Tool Count**: 29 tools total
+- **Tool Count**: 28 tools total
 
 ---
 
@@ -178,7 +178,7 @@ This page tracks automated and manual updates to the ModelSEEDagent documentatio
 - **docs/api/overview.md**: Updated docs/api/overview.md with latest tool information
 - **docs/api/tools.md**: Updated docs/api/tools.md with latest tool information
 - **scripts/docs_review.py**: Updated scripts/docs_review.py with latest tool information
-- **Tool Count**: 29 tools total
+- **Tool Count**: 28 tools total
 
 ---
 
@@ -218,7 +218,7 @@ This page tracks automated and manual updates to the ModelSEEDagent documentatio
 - **docs/api/overview.md**: Updated docs/api/overview.md with latest tool information
 - **docs/api/tools.md**: Updated docs/api/tools.md with latest tool information
 - **scripts/docs_review.py**: Updated scripts/docs_review.py with latest tool information
-- **Tool Count**: 29 tools total
+- **Tool Count**: 28 tools total
 
 ---
 
@@ -258,7 +258,7 @@ This page tracks automated and manual updates to the ModelSEEDagent documentatio
 - **docs/api/overview.md**: Updated docs/api/overview.md with latest tool information
 - **docs/api/tools.md**: Updated docs/api/tools.md with latest tool information
 - **scripts/docs_review.py**: Updated scripts/docs_review.py with latest tool information
-- **Tool Count**: 29 tools total
+- **Tool Count**: 28 tools total
 
 ---
 
@@ -297,7 +297,7 @@ This page tracks automated and manual updates to the ModelSEEDagent documentatio
 - **docs/api/overview.md**: Updated docs/api/overview.md with latest tool information
 - **docs/api/tools.md**: Updated docs/api/tools.md with latest tool information
 - **scripts/docs_review.py**: Updated scripts/docs_review.py with latest tool information
-- **Tool Count**: 29 tools total
+- **Tool Count**: 28 tools total
 
 ---
 
@@ -334,7 +334,7 @@ This page tracks automated and manual updates to the ModelSEEDagent documentatio
 - **docs/api/overview.md**: Updated docs/api/overview.md with latest tool information
 - **docs/api/tools.md**: Updated docs/api/tools.md with latest tool information
 - **scripts/docs_review.py**: Updated scripts/docs_review.py with latest tool information
-- **Tool Count**: 29 tools total
+- **Tool Count**: 28 tools total
 
 ---
 
@@ -371,7 +371,7 @@ This page tracks automated and manual updates to the ModelSEEDagent documentatio
 - **docs/api/overview.md**: Updated docs/api/overview.md with latest tool information
 - **docs/api/tools.md**: Updated docs/api/tools.md with latest tool information
 - **scripts/docs_review.py**: Updated scripts/docs_review.py with latest tool information
-- **Tool Count**: 29 tools total
+- **Tool Count**: 28 tools total
 
 ---
 
