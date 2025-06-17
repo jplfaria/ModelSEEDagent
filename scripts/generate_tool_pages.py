@@ -9,7 +9,12 @@ from typing import List
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from src.tools.base import ToolRegistry
+try:
+    from src.tools.base import ToolRegistry
+except ImportError as e:
+    print(f"Cannot import ToolRegistry: {e}")
+    print("Tool pages generation requires full package installation - skipping")
+    sys.exit(0)
 
 DOCS_ROOT = Path(__file__).resolve().parent.parent / "docs" / "tool-reference"
 
@@ -18,16 +23,20 @@ SAFE_IMPORT_BASE = "src.tools"
 
 def import_all_tools():
     """Import every module under src.tools so registry is populated."""
-    base = importlib.import_module(SAFE_IMPORT_BASE)
-    for modinfo in Path(base.__file__).parent.rglob("*.py"):
-        module_name = f"{SAFE_IMPORT_BASE}." + ".".join(
-            modinfo.relative_to(Path(base.__file__).parent).with_suffix("").parts
-        )
-        try:
-            importlib.import_module(module_name)
-        except Exception:
-            # Ignore modules that fail to import (e.g., service-dependent)
-            continue
+    try:
+        base = importlib.import_module(SAFE_IMPORT_BASE)
+        for modinfo in Path(base.__file__).parent.rglob("*.py"):
+            module_name = f"{SAFE_IMPORT_BASE}." + ".".join(
+                modinfo.relative_to(Path(base.__file__).parent).with_suffix("").parts
+            )
+            try:
+                importlib.import_module(module_name)
+            except Exception:
+                # Ignore modules that fail to import (e.g., service-dependent)
+                continue
+    except Exception as e:
+        print(f"Warning: Could not import tool modules: {e}")
+        # Continue anyway - may have some tools registered
 
 
 def docstring_summary(obj) -> str:
