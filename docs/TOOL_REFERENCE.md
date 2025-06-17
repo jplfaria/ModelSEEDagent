@@ -2,16 +2,14 @@
 
 ## Overview
 
-ModelSEEDagent provides **30 specialized metabolic modeling tools** organized into six main categories, enhanced with the **Smart Summarization Framework** for optimal LLM performance. Each tool is designed for specific analysis tasks and integrates seamlessly with the AI reasoning system.
+ModelSEEDagent provides **25 specialized metabolic modeling tools** organized into six main categories, enhanced with the **Smart Summarization Framework** for optimal LLM performance. Each tool is designed for specific analysis tasks and integrates seamlessly with the AI reasoning system.
 
 ## Tool Categories
 
 1. [AI Media Tools (6 tools)](#ai-media-tools) - Intelligent media management and optimization
 2. [COBRApy Tools (12 tools)](#cobrapy-tools) - Comprehensive metabolic modeling analysis
-3. [ModelSEED Tools (3 tools)](#modelseed-tools) - Genome annotation and model building
-4. [Biochemistry Tools (2 tools)](#biochemistry-tools) - Universal compound and reaction resolution
-5. [RAST Tools (2 tools)](#rast-tools) - Genome annotation and analysis
-6. [System Tools (5 tools)](#system-tools) - AI auditing and verification
+3. [Biochemistry Tools (3 tools)](#biochemistry-tools) - Enhanced compound/reaction resolution and cross-database translation
+4. [System Tools (4 tools)](#system-tools) - AI auditing and verification
 
 For detailed technical implementation information, see the [API Tool Implementation Reference](api/tools.md).
 
@@ -154,17 +152,22 @@ Core metabolic modeling analysis capabilities:
 
 ## Biochemistry Tools
 
-Universal compound and reaction information tools:
+Enhanced universal compound and reaction information tools with pure ModelSEEDpy integration:
 
-### 1. Biochemistry Resolver (`resolve_biochemistry`)
-**Purpose**: Look up chemical information for metabolites and reactions
+### 1. Biochemistry Resolver (`resolve_biochem_entity`) ✨ ENHANCED
+**Purpose**: Look up chemical information for metabolites and reactions using official ModelSEED database
 **Usage**: `"what is cpd00027?"` or `"resolve this compound ID"`
-**What it does**: Provides names, formulas, and database cross-references
+**What it does**: Provides names, formulas, chemical properties, and comprehensive database cross-references from 45,706+ compounds and 56,009+ reactions
 
-### 2. Standalone Resolver (`standalone_resolve_biochemistry`)
-**Purpose**: Offline biochemistry lookup without network dependencies
-**Usage**: Automatically used when network database is unavailable
-**What it does**: Local resolution of common metabolite and reaction IDs
+### 2. Biochemistry Search (`search_biochem`) ✨ ENHANCED
+**Purpose**: Advanced search across the complete ModelSEED biochemistry database
+**Usage**: `"search for glucose compounds"` or `"find reactions containing ATP"`
+**What it does**: Intelligent search with match scoring across 45,706+ compounds and 56,009+ reactions by name, formula, aliases, and chemical properties
+
+### 3. Cross-Database ID Translator (`translate_database_ids`) ✨ NEW
+**Purpose**: Universal ID translation between biochemical databases using official ModelSEED mappings
+**Usage**: `"convert BiGG IDs to ModelSEED format"` or `"translate C00002 to other databases"`
+**What it does**: Converts IDs between ModelSEED ↔ BiGG ↔ KEGG ↔ MetaCyc ↔ ChEBI across 55+ databases with automatic compartment handling
 
 ---
 
@@ -268,4 +271,4 @@ AI auditing and verification tools for transparency and quality assurance:
 
 ## Summary
 
-ModelSEEDagent's 30 tools provide comprehensive metabolic modeling capabilities through an intuitive AI interface enhanced with Smart Summarization. Each tool is designed to work seamlessly with the AI reasoning system, allowing for complex multi-step analyses through simple natural language commands.
+ModelSEEDagent's 25 tools provide comprehensive metabolic modeling capabilities through an intuitive AI interface enhanced with Smart Summarization. Each tool is designed to work seamlessly with the AI reasoning system, allowing for complex multi-step analyses through simple natural language commands.

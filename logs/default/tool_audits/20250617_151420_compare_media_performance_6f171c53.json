@@ -1,0 +1,135 @@
+{
+  "audit_id": "6f171c53-ad07-4452-8821-6ac7b4a91882",
+  "session_id": null,
+  "tool_name": "compare_media_performance",
+  "timestamp": "2025-06-17T15:14:20.505592",
+  "input": {
+    "model_path": "data/examples/iML1515.xml",
+    "media_list": [
+      "GMM",
+      "AuxoMedia",
+      "PyruvateMinimalMedia"
+    ]
+  },
+  "output": {
+    "structured": {
+      "success": true,
+      "message": "Media comparison completed for 5 conditions",
+      "error": null,
+      "full_data_path": null,
+      "summary_dict": null,
+      "key_findings": null,
+      "schema_version": "1.0",
+      "tool_name": null,
+      "model_stats": null,
+      "data": {
+        "model_info": {
+          "model_id": "iML1515",
+          "reactions": 2712,
+          "metabolites": 1877
+        },
+        "comparison_results": {
+          "GMM": {
+            "growth_rate": 0.383569444684738,
+            "status": "optimal",
+            "feasible": true,
+            "media_description": "Glucose Minimal Media - minimal components for growth with glucose",
+            "compound_count": 20,
+            "conditions": {
+              "aerobic": true,
+              "carbon_source": "glucose"
+            }
+          },
+          "GMM_anaerobic": {
+            "growth_rate": 0.04894248949460335,
+            "status": "optimal",
+            "feasible": true,
+            "media_description": "Glucose Minimal Media without O2 - anaerobic growth with alternative electron acceptors",
+            "compound_count": 20,
+            "conditions": {
+              "aerobic": false,
+              "carbon_source": "glucose"
+            }
+          },
+          "AuxoMedia": {
+            "growth_rate": 1.6039118605948407e-30,
+            "status": "optimal",
+            "feasible": false,
+            "media_description": "Rich media with glucose, amino acids, and vitamins",
+            "compound_count": 52,
+            "conditions": {
+              "aerobic": true,
+              "carbon_source": "glucose",
+              "rich": true
+            }
+          },
+          "PyruvateMinimalMedia": {
+            "growth_rate": 0,
+            "status": "infeasible",
+            "feasible": false,
+            "media_description": "Minimal media with pyruvate as carbon source",
+            "compound_count": 20,
+            "conditions": {
+              "aerobic": true,
+              "carbon_source": "pyruvate"
+            }
+          },
+          "PyruvateMinimalMedia_anaerobic": {
+            "growth_rate": 0,
+            "status": "infeasible",
+            "feasible": false,
+            "media_description": "Minimal media with pyruvate as carbon source - anaerobic",
+            "compound_count": 20,
+            "conditions": {
+              "aerobic": false,
+              "carbon_source": "pyruvate"
+            }
+          }
+        },
+        "summary": {
+          "feasible_count": 2,
+          "best_media": "GMM",
+          "best_growth_rate": 0.383569444684738,
+          "rankings": [
+            [
+              "GMM",
+              0.383569444684738
+            ],
+            [
+              "GMM_anaerobic",
+              0.04894248949460335
+            ]
+          ],
+          "insights": [
+            "Best performance: GMM (0.384 h\u207b\u00b9)"
+          ]
+        }
+      },
+      "metadata": {
+        "total_conditions_tested": 5,
+        "feasible_conditions": 2,
+        "best_growth_rate": 0.383569444684738,
+        "best_media": "GMM"
+      },
+      "smart_summarization_metrics": {
+        "enabled": false
+      }
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 3.574054002761841,
+    "success": true,
+    "error": null,
+    "timestamp_end": "2025-06-17T15:14:20.505734"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

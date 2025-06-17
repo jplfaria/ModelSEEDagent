@@ -2,7 +2,7 @@
 
 **AI-Powered Metabolic Modeling Platform**
 
-ModelSEEDagent combines large-language-model reasoning with **30 specialised metabolic-modeling tools** and **Smart Summarization Framework**.  The **interactive interface is production-ready and fully tested**; the Typer-based CLI is available in **beta** while we finish import cleanup and help-formatting fixes.
+ModelSEEDagent combines large-language-model reasoning with **25 specialised metabolic-modeling tools** and **Smart Summarization Framework**.  The **interactive interface is production-ready and fully tested**; the Typer-based CLI is available in **beta** while we finish import cleanup and help-formatting fixes.
 
 ## 📚 **Documentation**
 
@@ -44,7 +44,7 @@ modelseed-agent analyze data/examples/e_coli_core.xml --query "Find essential ge
 - **AI Transparency** - Advanced hallucination detection and audit system
 - **Smart Summarization Framework** - 95-99.9% size reduction with three-tier information hierarchy
 - **Natural Language Interface** - Conversational AI for complex metabolic analysis
-- **AI Media Intelligence** - 29 specialized tools for intelligent media management and optimization
+- **AI Media Intelligence** - Specialized tools for intelligent media management and optimization
 
 ## Advanced AI Features
 

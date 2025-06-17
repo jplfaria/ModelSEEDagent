@@ -1,0 +1,45 @@
+{
+  "audit_id": "bf181a47-4df6-4847-a34f-f9fdac1e67f2",
+  "session_id": null,
+  "tool_name": "analyze_pathway",
+  "timestamp": "2025-06-17T15:18:21.310345",
+  "input": {
+    "model_path": "data/examples/B_aphidicola.xml",
+    "pathway_name": "core_pathways",
+    "allow_partial_annotation": true
+  },
+  "output": {
+    "structured": {
+      "success": false,
+      "message": "Error analyzing pathway",
+      "error": "pathway parameter required when using model_path",
+      "full_data_path": null,
+      "summary_dict": null,
+      "key_findings": null,
+      "schema_version": "1.0",
+      "tool_name": null,
+      "model_stats": null,
+      "data": null,
+      "metadata": {},
+      "smart_summarization_metrics": {
+        "enabled": false
+      }
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 1.7362561225891113,
+    "success": false,
+    "error": null,
+    "timestamp_end": "2025-06-17T15:18:21.310412"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

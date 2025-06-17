@@ -1,0 +1,196 @@
+{
+  "audit_id": "9b397d97-cb01-47d7-80fe-322865352d80",
+  "session_id": null,
+  "tool_name": "analyze_media_compatibility",
+  "timestamp": "2025-06-17T15:09:49.633752",
+  "input": {
+    "model_path": "data/examples/e_coli_core.xml",
+    "media_names": [
+      "GMM",
+      "AuxoMedia"
+    ]
+  },
+  "output": {
+    "structured": {
+      "success": true,
+      "message": "Compatibility analysis completed for 2 media types",
+      "error": null,
+      "full_data_path": null,
+      "summary_dict": null,
+      "key_findings": null,
+      "schema_version": "1.0",
+      "tool_name": null,
+      "model_stats": null,
+      "data": {
+        "model_analysis": {
+          "model_id": "e_coli_core",
+          "total_reactions": 95,
+          "exchange_reactions": 20,
+          "model_format": "bigg"
+        },
+        "compatibility_results": {
+          "GMM": {
+            "model_format": "bigg",
+            "media_format": "modelseed",
+            "total_compounds": 20,
+            "mapped_compounds": 20,
+            "unmapped_compounds": [],
+            "compatibility_score": 1.0,
+            "recommended_action": "Direct application",
+            "actual_growth": 0.3735079703295303,
+            "growth_feasible": true
+          },
+          "AuxoMedia": {
+            "model_format": "bigg",
+            "media_format": "modelseed",
+            "total_compounds": 52,
+            "mapped_compounds": 18,
+            "unmapped_compounds": [
+              "cpd00020",
+              "cpd00011",
+              "cpd00060",
+              "cpd00084",
+              "cpd00035",
+              "cpd00161",
+              "cpd00156",
+              "cpd00066",
+              "cpd00065",
+              "cpd00069",
+              "cpd00322",
+              "cpd00129",
+              "cpd00107",
+              "cpd00041",
+              "cpd00051",
+              "cpd00119",
+              "cpd00039",
+              "cpd00033",
+              "cpd00054",
+              "cpd00053",
+              "cpd00023",
+              "cpd00132",
+              "cpd00215",
+              "cpd00104",
+              "cpd00305",
+              "cpd00393",
+              "cpd00644",
+              "cpd00220",
+              "cpd00218",
+              "cpd00635",
+              "cpd00557",
+              "cpd00028",
+              "cpd00264",
+              "cpd00118"
+            ],
+            "compatibility_score": 0.34615384615384615,
+            "recommended_action": "Poor compatibility - consider alternative media",
+            "actual_growth": 0.4155977750929063,
+            "growth_feasible": true
+          }
+        },
+        "overall_issues": {
+          "missing_transporters": [
+            "cpd00065",
+            "cpd00060",
+            "cpd00322",
+            "cpd00132",
+            "cpd00215",
+            "cpd00644",
+            "cpd00035",
+            "cpd00107",
+            "cpd00011",
+            "cpd00051",
+            "cpd00118",
+            "cpd00119",
+            "cpd00023",
+            "cpd00069",
+            "cpd00161",
+            "cpd00020",
+            "cpd00218",
+            "cpd00028",
+            "cpd00156",
+            "cpd00033",
+            "cpd00039",
+            "cpd00084",
+            "cpd00066",
+            "cpd00393",
+            "cpd00053",
+            "cpd00054",
+            "cpd00129",
+            "cpd00557",
+            "cpd00104",
+            "cpd00220",
+            "cpd00305",
+            "cpd00635",
+            "cpd00264",
+            "cpd00041"
+          ],
+          "format_mismatches": [
+            "GMM",
+            "AuxoMedia"
+          ]
+        },
+        "suggestions": [
+          {
+            "type": "model_limitation",
+            "priority": "high",
+            "suggestion": "Model lacks many nutrient transporters",
+            "action": "Focus on minimal media like GMM or consider model gap-filling",
+            "compounds": [
+              "cpd00065",
+              "cpd00060",
+              "cpd00322",
+              "cpd00132",
+              "cpd00215",
+              "cpd00644",
+              "cpd00035",
+              "cpd00107",
+              "cpd00011",
+              "cpd00051"
+            ]
+          },
+          {
+            "type": "format_mismatch",
+            "priority": "medium",
+            "suggestion": "Media format doesn't match model format",
+            "action": "Use compound mapping or convert media format",
+            "affected_media": [
+              "GMM",
+              "AuxoMedia"
+            ]
+          },
+          {
+            "type": "partial_compatibility",
+            "priority": "low",
+            "suggestion": "AuxoMedia works but has mapping issues",
+            "action": "Consider removing unmapped compounds: ['cpd00020', 'cpd00011', 'cpd00060', 'cpd00084', 'cpd00035']",
+            "media": "AuxoMedia"
+          }
+        ]
+      },
+      "metadata": {
+        "total_media_analyzed": 2,
+        "compatible_media": 2,
+        "avg_compatibility": 0.6730769230769231
+      },
+      "smart_summarization_metrics": {
+        "enabled": false
+      }
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 1.8443918228149414,
+    "success": true,
+    "error": null,
+    "timestamp_end": "2025-06-17T15:09:49.633823"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

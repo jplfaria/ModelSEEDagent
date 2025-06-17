@@ -374,7 +374,7 @@ modelseed-agent download-examples
 ls -la data/biochem.db
 
 # Rebuild database
-python scripts/build_biochem_db.py
+python scripts/setup_biochem_database.py
 
 # Use remote database
 export MODELSEED_USE_REMOTE_BIOCHEM=true

@@ -9,7 +9,7 @@ against multiple models with detailed biological knowledge validation and struct
 This is the main tool validation system for ModelSEEDagent, providing:
 
 **Validation Levels:**
-- **Comprehensive Validation**: Full 23 tools × 4 models (92 test combinations)
+- **Comprehensive Validation**: Full 25 tools × 4 models (100 test combinations)
 - **CI Validation**: Essential subset (FBA on e_coli_core) for continuous integration
 - **System Tools Validation**: Functional validation for audit and verification tools
 
@@ -19,11 +19,11 @@ This is the main tool validation system for ModelSEEDagent, providing:
 - data/examples/EcoliMG1655.xml (ModelSEED E. coli model)
 - data/examples/B_aphidicola.xml (ModelSEED minimal organism)
 
-**Tools validated (23 total):**
+**Tools validated (25 total):**
 - 12 COBRA tools (FBA, ModelAnalysis, FluxVariability, etc.)
 - 6 AI Media tools (MediaSelector, MediaManipulator, etc.)
-- 2 Biochemistry tools (BiochemEntityResolver, BiochemSearch)
-- 3 System tools (ToolAudit, AIAudit, RealtimeVerification)
+- 3 Biochemistry tools (BiochemEntityResolver, BiochemSearch, CrossDatabaseIDTranslator)
+- 4 System tools (ToolAudit, AIAudit, RealtimeVerification, FetchArtifact)
 
 **Enhanced Output Structure:**
 data/validation_results/
@@ -70,7 +70,11 @@ warnings.filterwarnings("ignore")
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from src.tools.biochem import BiochemEntityResolverTool, BiochemSearchTool
+from src.tools.biochem import (
+    BiochemEntityResolverTool,
+    BiochemSearchTool,
+    CrossDatabaseIDTranslator,
+)
 
 # Import all tools
 from src.tools.cobra import (  # AI Media Tools
@@ -97,6 +101,9 @@ from src.tools.cobra.advanced_media_ai import (
     AuxotrophyPredictionTool,
     MediaOptimizationTool,
 )
+
+# Import fetch artifact tool
+from src.tools.fetch_artifact import FetchArtifactTool
 
 # Import system tools
 from src.tools.system.audit_tools import (
@@ -412,6 +419,40 @@ class BiologicalValidator:
                     validation["warnings"].append("Search returned no results")
                     validation["scores"]["search_coverage"] = 0.0
 
+        elif test_type == "translation":
+            # Cross-database ID translation validation
+            if "total_translations" in data:
+                translation_count = data["total_translations"]
+                if translation_count > 0:
+                    validation["biological_insights"].append(
+                        f"Successfully translated {translation_count} IDs across databases"
+                    )
+                    validation["scores"]["translation_success"] = min(
+                        1.0, translation_count / 5
+                    )
+                else:
+                    validation["warnings"].append("No successful translations found")
+                    validation["scores"]["translation_success"] = 0.0
+
+            if "failed_translations" in data:
+                failed_count = len(data["failed_translations"])
+                if failed_count == 0:
+                    validation["biological_insights"].append(
+                        "All IDs translated successfully"
+                    )
+                    validation["scores"]["translation_accuracy"] = 1.0
+                else:
+                    validation["warnings"].append(
+                        f"{failed_count} IDs failed to translate"
+                    )
+                    validation["scores"]["translation_accuracy"] = 0.5
+
+            if "database_stats" in data:
+                stats = data["database_stats"]
+                validation["biological_insights"].append(
+                    f"Using ModelSEED database with {stats.get('compounds', 0):,} compounds, {stats.get('reactions', 0):,} reactions"
+                )
+
         return validation
 
     def validate_system_results(self, results: Dict, tool_name: str) -> Dict[str, Any]:
@@ -518,17 +559,19 @@ class ModelSEEDToolValidationSuite:
             "AuxotrophyPrediction": AuxotrophyPredictionTool(basic_config),
         }
 
-        # Biochemistry tools (2 tools)
+        # Biochemistry tools (3 tools)
         self.biochem_tools = {
             "BiochemEntityResolver": BiochemEntityResolverTool(basic_config),
             "BiochemSearch": BiochemSearchTool(basic_config),
+            "CrossDatabaseIDTranslator": CrossDatabaseIDTranslator(basic_config),
         }
 
-        # System tools (3 tools)
+        # System tools (4 tools)
         self.system_tools = {
             "ToolAudit": ToolAuditTool(basic_config),
             "AIAudit": AIAuditTool(basic_config),
             "RealtimeVerification": RealtimeVerificationTool(basic_config),
+            "FetchArtifact": FetchArtifactTool(basic_config),
         }
 
         # Combine all tools
@@ -608,6 +651,7 @@ class ModelSEEDToolValidationSuite:
                 "entity_type": "compound",
                 "max_results": 10,
             },
+            "CrossDatabaseIDTranslator": self._get_translator_test_params(model_name),
         }
 
         # System tool parameters (model-independent)
@@ -618,6 +662,7 @@ class ModelSEEDToolValidationSuite:
                 "test_type": "validation",
                 "model_context": model_name,
             },
+            "FetchArtifact": self._get_fetch_artifact_test_params(),
         }
 
         all_params = {**cobra_params, **media_params, **biochem_params, **system_params}
@@ -711,6 +756,33 @@ class ModelSEEDToolValidationSuite:
                 "include_aliases": True,
             }
 
+    def _get_translator_test_params(self, model_name: str) -> Dict[str, Any]:
+        """Get cross-database ID translator test parameters"""
+        if "aphidicola" in model_name.lower() or "ecolimg" in model_name.lower():
+            # Test ModelSEED → BiGG/KEGG translation for ModelSEED models
+            return {
+                "entity_ids": ["cpd00027", "cpd00001", "cpd00002"],
+                "target_databases": ["BiGG", "KEGG", "MetaCyc"],
+                "entity_type": "compound",
+                "include_variants": True,
+            }
+        else:
+            # Test BiGG → ModelSEED/KEGG translation for BiGG models
+            return {
+                "entity_ids": ["glc__D", "h2o", "atp"],
+                "target_databases": ["ModelSEED", "KEGG", "MetaCyc"],
+                "entity_type": "compound",
+                "include_variants": True,
+            }
+
+    def _get_fetch_artifact_test_params(self) -> Dict[str, Any]:
+        """Get fetch artifact tool test parameters"""
+        # Create a test artifact for validation
+        return {
+            "artifact_path": "test_validation_artifact.json",
+            "format": "json",
+        }
+
     def test_tool_on_model(
         self, tool_name: str, tool: Any, model_name: str, model_path: str
     ) -> Dict[str, Any]:
@@ -743,7 +815,49 @@ class ModelSEEDToolValidationSuite:
                 # System tools don't need model inputs, just the test parameters
                 system_test_params = {**tool_params}
                 system_test_params.pop("model_path", None)  # Remove model_path
-                result = tool._run(system_test_params)
+
+                if tool_name == "FetchArtifact":
+                    # FetchArtifact needs a test artifact - create one if needed
+                    try:
+                        import json
+                        import os
+                        import tempfile
+
+                        # Create a temporary test artifact
+                        test_data = {
+                            "test": "validation",
+                            "model": model_name,
+                            "timestamp": str(datetime.now()),
+                        }
+                        with tempfile.NamedTemporaryFile(
+                            mode="w", suffix=".json", delete=False
+                        ) as f:
+                            json.dump(test_data, f)
+                            temp_artifact_path = f.name
+
+                        # Update params with real artifact path
+                        fetch_params = {
+                            "artifact_path": temp_artifact_path,
+                            "format": "json",
+                        }
+                        result = tool._run(fetch_params)
+
+                        # Clean up
+                        os.unlink(temp_artifact_path)
+                    except Exception as e:
+                        # Create a mock result for testing
+                        result = type(
+                            "Result",
+                            (),
+                            {
+                                "success": False,
+                                "message": f"FetchArtifact test setup failed: {str(e)}",
+                                "data": {"test_mode": True},
+                                "error": None,
+                            },
+                        )()
+                else:
+                    result = tool._run(system_test_params)
             elif tool_name in self.biochem_tools:
                 # Biochemistry tools use different parameter structure
                 result = tool._run(tool_params)
@@ -857,6 +971,8 @@ class ModelSEEDToolValidationSuite:
             return self.validator.validate_biochem_results(output, "resolution")
         elif tool_name == "BiochemSearch":
             return self.validator.validate_biochem_results(output, "search")
+        elif tool_name == "CrossDatabaseIDTranslator":
+            return self.validator.validate_biochem_results(output, "translation")
         elif tool_name in self.system_tools:
             return self.validator.validate_system_results(output, tool_name)
         else:

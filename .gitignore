@@ -120,6 +120,9 @@ logs/temp_*/
 db.sqlite3
 db.sqlite3-journal
 
+# ModelSEED Database (locally cloned, not committed)
+data/ModelSEEDDatabase/
+
 # =====================
 # Configuration & Secrets
 # =====================
