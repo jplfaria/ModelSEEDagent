@@ -1,0 +1,36 @@
+name: Docs Autogen
+
+on:
+  push:
+    branches: [dev]
+
+jobs:
+  generate-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install package (minimal)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+      - name: Run doc generators
+        run: |
+          python scripts/generate_cli_reference.py
+          python scripts/generate_tool_pages.py
+      - name: Commit changes
+        run: |
+          if [[ $(git status --porcelain) ]]; then
+            git config --global user.name 'docs-bot'
+            git config --global user.email 'bot@example.com'
+            git add docs/user-guide/cli-reference.md docs/tool-reference scripts/*.py mkdocs.yml
+            git commit -m '[autogen] Update CLI and tool reference docs'
+            git push
+          else
+            echo 'No doc changes to commit.'
+          fi
