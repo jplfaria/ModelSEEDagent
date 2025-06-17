@@ -1,8 +1,13 @@
 import importlib
 import inspect
+import sys
 from pathlib import Path
 from textwrap import dedent
 from typing import List
+
+# Add project root to path
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
 
 from src.tools.base import ToolRegistry
 
