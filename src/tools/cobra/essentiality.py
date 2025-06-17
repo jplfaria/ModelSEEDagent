@@ -187,45 +187,57 @@ class EssentialityAnalysisTool(BaseTool):
         threshold: float,
     ) -> Dict[str, Any]:
         """Streamlined analysis of essential genes (no data duplication)"""
-        
+
         functional_categories = {}
         subsystem_counts = {}
         reaction_counts = []
-        
+
         # Single pass analysis to avoid data duplication
         for gene in essential_genes:
             # Get associated reactions
             associated_reactions = [rxn for rxn in model.reactions if gene in rxn.genes]
             num_reactions = len(associated_reactions)
             reaction_counts.append(num_reactions)
-            
+
             # Categorize by subsystems (count only, no gene lists)
             subsystems = set()
             for rxn in associated_reactions:
                 if rxn.subsystem:
                     subsystems.add(rxn.subsystem)
-            
+
             # Count functional categories (no gene details stored)
             func_cat = self._categorize_gene_function(list(subsystems))
             functional_categories[func_cat] = functional_categories.get(func_cat, 0) + 1
-            
+
             # Count subsystems (no gene lists stored)
             for subsystem in subsystems:
                 subsystem_counts[subsystem] = subsystem_counts.get(subsystem, 0) + 1
-        
+
         return {
             "summary": {
                 "total_essential_genes": len(essential_genes),
                 "functional_categories": functional_categories,
                 "subsystems_affected": len(subsystem_counts),
-                "top_subsystems": sorted(subsystem_counts.items(), key=lambda x: x[1], reverse=True)[:5],
+                "top_subsystems": sorted(
+                    subsystem_counts.items(), key=lambda x: x[1], reverse=True
+                )[:5],
             },
             "connectivity": {
-                "single_reaction_genes": sum(1 for count in reaction_counts if count == 1),
-                "multi_reaction_genes": sum(1 for count in reaction_counts if count > 1),
-                "max_reactions_per_gene": max(reaction_counts) if reaction_counts else 0,
-                "avg_reactions_per_gene": sum(reaction_counts) / len(reaction_counts) if reaction_counts else 0,
-            }
+                "single_reaction_genes": sum(
+                    1 for count in reaction_counts if count == 1
+                ),
+                "multi_reaction_genes": sum(
+                    1 for count in reaction_counts if count > 1
+                ),
+                "max_reactions_per_gene": (
+                    max(reaction_counts) if reaction_counts else 0
+                ),
+                "avg_reactions_per_gene": (
+                    sum(reaction_counts) / len(reaction_counts)
+                    if reaction_counts
+                    else 0
+                ),
+            },
         }
 
     def _detailed_reaction_analysis(
@@ -236,18 +248,24 @@ class EssentialityAnalysisTool(BaseTool):
         threshold: float,
     ) -> Dict[str, Any]:
         """Streamlined analysis of essential reactions (no data duplication)"""
-        
+
         subsystem_counts = {}
-        network_counts = {"exchange": 0, "transport": 0, "metabolic": 0, "gene_associated": 0, "spontaneous": 0}
+        network_counts = {
+            "exchange": 0,
+            "transport": 0,
+            "metabolic": 0,
+            "gene_associated": 0,
+            "spontaneous": 0,
+        }
         gene_counts = []
-        
+
         # Single pass analysis to avoid data duplication
         for rxn in essential_reactions:
             # Network classification
             is_exchange = rxn.id.startswith(("EX_", "DM_", "SK_"))
             is_transport = "transport" in rxn.name.lower() if rxn.name else False
             num_genes = len(rxn.genes)
-            
+
             # Count network types
             if is_exchange:
                 network_counts["exchange"] += 1
@@ -255,30 +273,34 @@ class EssentialityAnalysisTool(BaseTool):
                 network_counts["transport"] += 1
             else:
                 network_counts["metabolic"] += 1
-                
+
             if num_genes > 0:
                 network_counts["gene_associated"] += 1
             else:
                 network_counts["spontaneous"] += 1
-            
+
             gene_counts.append(num_genes)
-            
+
             # Count subsystems (no reaction lists stored)
             subsystem = rxn.subsystem or "Unknown"
             subsystem_counts[subsystem] = subsystem_counts.get(subsystem, 0) + 1
-        
+
         return {
             "summary": {
                 "total_essential_reactions": len(essential_reactions),
                 "subsystems_affected": len(subsystem_counts),
-                "top_subsystems": sorted(subsystem_counts.items(), key=lambda x: x[1], reverse=True)[:5],
+                "top_subsystems": sorted(
+                    subsystem_counts.items(), key=lambda x: x[1], reverse=True
+                )[:5],
             },
             "network_analysis": network_counts,
             "gene_association": {
                 "max_genes_per_reaction": max(gene_counts) if gene_counts else 0,
-                "avg_genes_per_reaction": sum(gene_counts) / len(gene_counts) if gene_counts else 0,
+                "avg_genes_per_reaction": (
+                    sum(gene_counts) / len(gene_counts) if gene_counts else 0
+                ),
                 "reactions_with_genes": sum(1 for count in gene_counts if count > 0),
-            }
+            },
         }
 
     def _categorize_gene_function(self, subsystems: List[str]) -> str:
@@ -336,7 +358,9 @@ class EssentialityAnalysisTool(BaseTool):
                 ),
                 "top_functional_categories": (
                     sorted(
-                        gene_analysis.get("summary", {}).get("functional_categories", {}).items(),
+                        gene_analysis.get("summary", {})
+                        .get("functional_categories", {})
+                        .items(),
                         key=lambda x: x[1],
                         reverse=True,
                     )[:5]

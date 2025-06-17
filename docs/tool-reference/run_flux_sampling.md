@@ -97,7 +97,7 @@ result = metabolic_agent.run_tool(
                     "correlation": 0.987
                 },
                 {
-                    "reaction_pair": "R_ACKr <-> R_PTAr", 
+                    "reaction_pair": "R_ACKr <-> R_PTAr",
                     "correlation": 0.965
                 },
                 {
@@ -181,7 +181,7 @@ import pandas as pd
 
 with open(result["full_data_path"], 'r') as f:
     full_sampling_data = json.load(f)
-    
+
 # Convert to DataFrame for analysis
 samples_df = pd.DataFrame(full_sampling_data)
 

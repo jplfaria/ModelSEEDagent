@@ -237,6 +237,97 @@ python examples/complete_workflow_example.py
 
 ---
 
+## 🔮 **Future Development Initiatives**
+
+### 🧠 **Smart Summarization Framework** (PLANNED)
+
+**Status**: Planning Phase  
+**Priority**: High - Critical for scaling to large models  
+**Target**: Q1 2025
+
+#### **Problem Statement**
+Current tool outputs consume excessive prompt space with large models (iML1515: ~2700 reactions, EcoliMG1655: ~2400 reactions), leading to:
+- Context window bloat with large scientific datasets
+- Loss of critical "negative evidence" (blocked reactions, missing nutrients)
+- Degraded LLM reasoning due to information overload
+
+#### **Solution Architecture: Three-Tier Information Hierarchy**
+
+```python
+ToolResult = TypedDict(
+    full_data_path=str,       # Raw artifact on disk (e.g., FVA CSV)
+    summary_dict=dict,        # Compressed stats (≤5KB)
+    key_findings=list[str],   # Critical bullets for LLM (≤2KB)
+    schema_version=str
+)
+```
+
+#### **Implementation Phases**
+
+**Phase 0: Real-World Assessment** (1 week)
+- **Critical**: Test with large models (iML1515, EcoliMG1655) not e_coli_core
+- Measure actual output sizes for FVA, FluxSampling, GeneDeletion
+- Establish size thresholds for summarization priority
+- Document which tools need summarization vs. those already small
+
+**Phase A: Framework Infrastructure** (1 week)
+- Add ToolResult dataclass with three-tier structure
+- Implement summarizer registry with passthrough default
+- Add artifact storage utilities with deterministic paths
+- Update BaseTool to use new framework (zero cost for existing tools)
+
+**Phase B: High-Priority Summarizers** (2-3 weeks)
+Priority based on real measurements from Phase 0:
+1. **FluxVariabilityAnalysis** - Smart bucketing (variable/fixed/blocked)
+2. **FluxSampling** - Statistical summaries with outlier detection  
+3. **GeneDeletion** - Essential/non-essential/conditional categorization
+4. **ProductionEnvelope** - 2D phenotype data compression
+
+**Phase C: Agent Integration** (1 week)
+- Add FetchArtifact tool for on-demand drill-down
+- Modify prompt templates to use key_findings by default
+- Add self-reflection rules for when agent should fetch full data
+
+#### **Documentation Standards**
+
+For each tool with summarization, document:
+
+```markdown
+## Tool: FluxVariabilityAnalysis
+### Raw Output Size (iML1515): ~800KB DataFrame  
+### Tier 1 - key_findings (≤2KB):
+• Variable: 234/2712 reactions (8.6%) - genuine flux ranges
+• Fixed: 2380/2712 reactions (87.8%) - carry flux but no variability  
+• Blocked: 98/2712 reactions (3.6%) - no flux allowed
+• Critical blocked: PFL, ACALD (expected active pathways)
+
+### Tier 2 - summary_dict (≤5KB):
+{
+  "counts": {"variable": 234, "fixed": 2380, "blocked": 98},
+  "top_variable": [{"reaction": "SUCDi", "min": -45.2, "max": 0, "range": 45.2}],
+  "critical_blocked": ["PFL", "ACALD", "EDD"],
+  "statistics": {"mean_range": 0.12, "median_range": 0.0}
+}
+
+### Tier 3 - full_data_path:
+/data/artifacts/fva_iML1515_20250617_143022.csv
+```
+
+#### **Success Metrics**
+- **Prompt size reduction**: 90% for large model outputs
+- **Information preservation**: No critical findings lost (validate with test cases)  
+- **Response latency**: <100ms for summary generation
+- **Agent accuracy**: No degradation in reasoning quality
+
+#### **Key Principles**
+- **Preserve negative evidence**: Report blocked reactions, missing nutrients
+- **Smart domain compression**: Not just "top N" but semantic bucketing
+- **Progressive disclosure**: LLM sees bullets, can drill down when needed
+- **Zero-cost abstraction**: Existing tools unaffected by framework
+
+---
+
 🧬 **ModelSEEDagent: Production Ready - All Features Working!** 🤖
 
-**Final Status**: ✅ Complete Success - Ready for Production Use
+**Current Status**: ✅ Production Ready  
+**Next Milestone**: Smart Summarization for Large Model Scalability

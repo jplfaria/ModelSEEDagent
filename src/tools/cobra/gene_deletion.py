@@ -150,16 +150,29 @@ class GeneDeletionTool(BaseTool):
             for idx, row in deletion_results.iterrows():
                 growth = row["growth"]
                 gene_set = row["ids"]
-                
+
                 # Extract clean gene IDs from set
                 if deletion_type == "single":
-                    gene_id = list(gene_set)[0] if hasattr(gene_set, "__iter__") and not isinstance(gene_set, str) else str(gene_set)
+                    gene_id = (
+                        list(gene_set)[0]
+                        if hasattr(gene_set, "__iter__")
+                        and not isinstance(gene_set, str)
+                        else str(gene_set)
+                    )
                 else:
-                    gene_id = "-".join(sorted(gene_set)) if hasattr(gene_set, "__iter__") else str(gene_set)
-                
+                    gene_id = (
+                        "-".join(sorted(gene_set))
+                        if hasattr(gene_set, "__iter__")
+                        else str(gene_set)
+                    )
+
                 simplified_results[gene_id] = {
                     "growth": float(growth) if growth is not None else 0.0,
-                    "growth_ratio": float(growth / wild_type_growth) if growth is not None and wild_type_growth > 0 else 0.0
+                    "growth_ratio": (
+                        float(growth / wild_type_growth)
+                        if growth is not None and wild_type_growth > 0
+                        else 0.0
+                    ),
                 }
 
             return ToolResult(
@@ -213,9 +226,17 @@ class GeneDeletionTool(BaseTool):
 
             # Extract clean gene ID
             if deletion_type == "single":
-                gene_id = list(gene_set)[0] if hasattr(gene_set, "__iter__") and not isinstance(gene_set, str) else str(gene_set)
+                gene_id = (
+                    list(gene_set)[0]
+                    if hasattr(gene_set, "__iter__") and not isinstance(gene_set, str)
+                    else str(gene_set)
+                )
             else:
-                gene_id = "-".join(sorted(gene_set)) if hasattr(gene_set, "__iter__") else str(gene_set)
+                gene_id = (
+                    "-".join(sorted(gene_set))
+                    if hasattr(gene_set, "__iter__")
+                    else str(gene_set)
+                )
 
             # Categorize based on growth impact (store only gene IDs to avoid duplication)
             if growth is None or growth < essential_threshold:

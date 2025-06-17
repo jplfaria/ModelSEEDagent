@@ -174,7 +174,7 @@ class ProductionEnvelopeTool(BaseTool):
 
             # Create lightweight envelope summary instead of full DataFrame
             envelope_summary = self._create_envelope_summary(envelope_data, reactions)
-            
+
             return ToolResult(
                 success=True,
                 message=f"Production envelope calculated for {len(reactions)} reaction(s) with {points} points",
@@ -280,51 +280,57 @@ class ProductionEnvelopeTool(BaseTool):
         """Streamlined envelope analysis focusing on key insights"""
         # Find objective column (usually flux_maximum or similar)
         objective_col = None
-        for col in ['flux_maximum', 'flux_minimum', 'biomass', 'growth']:
+        for col in ["flux_maximum", "flux_minimum", "biomass", "growth"]:
             if col in envelope_data.columns:
                 objective_col = col
                 break
-        
+
         if objective_col is None:
             # Fallback to first numeric column
-            numeric_cols = envelope_data.select_dtypes(include=['float64', 'int64']).columns
-            objective_col = numeric_cols[0] if len(numeric_cols) > 0 else envelope_data.columns[0]
-        
+            numeric_cols = envelope_data.select_dtypes(
+                include=["float64", "int64"]
+            ).columns
+            objective_col = (
+                numeric_cols[0] if len(numeric_cols) > 0 else envelope_data.columns[0]
+            )
+
         # Find reaction columns (columns that match our requested reactions)
         reaction_names = [rxn.id for rxn in reactions]
         reaction_cols = [col for col in envelope_data.columns if col in reaction_names]
-        
+
         analysis = {
             "summary": {
                 "total_points": len(envelope_data),
                 "reactions_analyzed": len(reaction_cols),
                 "objective_column": objective_col,
             },
-            "key_insights": []
+            "key_insights": [],
         }
-        
+
         # Add objective max if numeric
         try:
-            analysis["summary"]["objective_max"] = float(envelope_data[objective_col].max())
+            analysis["summary"]["objective_max"] = float(
+                envelope_data[objective_col].max()
+            )
         except (ValueError, TypeError):
             analysis["summary"]["objective_max"] = "N/A"
-        
+
         # Generate key insights for each reaction
         for col in reaction_cols:
             production_values = envelope_data[col]
             max_production = float(production_values.max())
             min_production = float(production_values.min())
-            
+
             # Try correlation if objective is numeric
             try:
                 correlation = envelope_data[objective_col].corr(production_values)
-                
+
                 # Classify trade-off relationship
                 if correlation > 0.1:
                     trade_off = "synergistic"
                     insight = f"Production increases with {objective_col} (r={correlation:.2f})"
                 elif correlation < -0.1:
-                    trade_off = "competitive" 
+                    trade_off = "competitive"
                     insight = f"Production competes with {objective_col} (r={correlation:.2f})"
                 else:
                     trade_off = "independent"
@@ -332,40 +338,45 @@ class ProductionEnvelopeTool(BaseTool):
             except (ValueError, TypeError):
                 trade_off = "unknown"
                 insight = f"Production analysis limited due to non-numeric objective"
-            
-            analysis["key_insights"].append({
-                "reaction": col,
-                "trade_off_type": trade_off,
-                "max_production": max_production,
-                "min_production": min_production,
-                "insight": insight
-            })
-        
+
+            analysis["key_insights"].append(
+                {
+                    "reaction": col,
+                    "trade_off_type": trade_off,
+                    "max_production": max_production,
+                    "min_production": min_production,
+                    "insight": insight,
+                }
+            )
+
         return analysis
 
     def _create_envelope_summary(self, envelope_data, reactions):
         """Create lightweight summary of envelope data instead of full DataFrame"""
         # Find objective column
         objective_col = None
-        for col in ['flux_maximum', 'flux_minimum', 'biomass', 'growth']:
+        for col in ["flux_maximum", "flux_minimum", "biomass", "growth"]:
             if col in envelope_data.columns:
                 objective_col = col
                 break
-        
+
         if objective_col is None:
-            numeric_cols = envelope_data.select_dtypes(include=['float64', 'int64']).columns
-            objective_col = numeric_cols[0] if len(numeric_cols) > 0 else envelope_data.columns[0]
-        
+            numeric_cols = envelope_data.select_dtypes(
+                include=["float64", "int64"]
+            ).columns
+            objective_col = (
+                numeric_cols[0] if len(numeric_cols) > 0 else envelope_data.columns[0]
+            )
+
         # Find reaction columns from our requested reactions
-        reaction_names = [r for r in reactions]  # reactions is already a list of strings
+        reaction_names = [
+            r for r in reactions
+        ]  # reactions is already a list of strings
         reaction_cols = [col for col in envelope_data.columns if col in reaction_names]
-        
+
         # Basic envelope statistics
-        envelope_summary = {
-            "total_points": len(envelope_data),
-            "reactions": {}
-        }
-        
+        envelope_summary = {"total_points": len(envelope_data), "reactions": {}}
+
         # Add objective statistics if numeric
         try:
             envelope_summary["objective"] = {
@@ -375,12 +386,15 @@ class ProductionEnvelopeTool(BaseTool):
                 "mean": float(envelope_data[objective_col].mean()),
             }
         except (ValueError, TypeError):
-            envelope_summary["objective"] = {"column": objective_col, "type": "non-numeric"}
-        
-        # Reaction-specific statistics  
+            envelope_summary["objective"] = {
+                "column": objective_col,
+                "type": "non-numeric",
+            }
+
+        # Reaction-specific statistics
         for col in reaction_cols:
             production_values = envelope_data[col]
-            
+
             envelope_summary["reactions"][col] = {
                 "production_range": {
                     "min": float(production_values.min()),
@@ -388,13 +402,15 @@ class ProductionEnvelopeTool(BaseTool):
                     "mean": float(production_values.mean()),
                 }
             }
-            
+
             # Add correlation if objective is numeric
             try:
                 objective_values = envelope_data[objective_col]
                 correlation = float(objective_values.corr(production_values))
-                envelope_summary["reactions"][col]["correlation_with_objective"] = correlation
+                envelope_summary["reactions"][col][
+                    "correlation_with_objective"
+                ] = correlation
             except (ValueError, TypeError):
                 envelope_summary["reactions"][col]["correlation_with_objective"] = "N/A"
-        
+
         return envelope_summary

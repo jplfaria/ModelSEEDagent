@@ -2,7 +2,7 @@
 
 This document provides comprehensive patterns and guidelines for implementing summarizers in the Smart Summarization Framework. Use these patterns to create effective summarizers for new tools.
 
-## 🎯 Framework Overview
+## Framework Overview
 
 The Smart Summarization Framework implements a three-tier information hierarchy:
 
@@ -12,10 +12,10 @@ The Smart Summarization Framework implements a three-tier information hierarchy:
 
 **Target Results**: 95-99.9% size reduction while preserving critical scientific insights.
 
-## 📊 Proven Patterns
+## Proven Patterns
 
 ### Pattern 1: Statistical Tool Summarization (FluxSampling)
-**Use Case**: Tools generating massive datasets with statistical distributions  
+**Use Case**: Tools generating massive datasets with statistical distributions
 **Example**: FluxSampling (39MB → 2KB, 99.99% reduction)
 
 ```python
@@ -25,14 +25,14 @@ def _generate_key_findings(self, n_samples, n_reactions, analysis, model_id):
         f"Tool analysis of {model_id}: {n_samples} samples across {n_reactions} items",
         f"Distribution characteristics and key patterns identified"
     ]
-    
+
     # Extract critical patterns from analysis
     if 'patterns' in analysis:
         patterns = analysis['patterns']
         # Summarize top patterns with percentages
         # Include variability insights
         # Highlight optimization opportunities
-    
+
     return key_findings
 
 def _generate_summary_dict(self, analysis_data, model_stats):
@@ -60,7 +60,7 @@ def _generate_summary_dict(self, analysis_data, model_stats):
 ```
 
 ### Pattern 2: Categorical Analysis (GeneDeletion)
-**Use Case**: Tools categorizing items by functional impact  
+**Use Case**: Tools categorizing items by functional impact
 **Example**: GeneDeletion (130KB → 3KB, 97.6% reduction)
 
 ```python
@@ -69,7 +69,7 @@ def _generate_key_findings(self, total_items, analysis, model_id):
     key_findings = [
         f"Analysis of {model_id}: {total_items} items tested"
     ]
-    
+
     # Extract category statistics
     summary = analysis.get('summary', {})
     if summary:
@@ -77,7 +77,7 @@ def _generate_key_findings(self, total_items, analysis, model_id):
         # Highlight critical categories (essential, impaired, etc.)
         # Include rate assessments and warnings
         # Show examples of critical items
-    
+
     return key_findings
 
 def _generate_summary_dict(self, analysis, model_stats):
@@ -105,7 +105,7 @@ def _generate_summary_dict(self, analysis, model_stats):
 ```
 
 ### Pattern 3: Variability Analysis (FluxVariability + Smart Bucketing)
-**Use Case**: Tools analyzing ranges and variability  
+**Use Case**: Tools analyzing ranges and variability
 **Example**: FluxVariability (170KB → 2KB, 98.6% reduction)
 
 ```python
@@ -114,12 +114,12 @@ def _generate_key_findings(self, total_items, categories, model_id):
     key_findings = [
         f"Variability analysis of {model_id}: {total_items} items analyzed"
     ]
-    
+
     # Categorize by variability levels
     # Calculate percentages and network properties
     # Include flexibility assessments
     # Add optimization insights from smart bucketing
-    
+
     return key_findings
 
 def _smart_bucketing(self, data, variable_items):
@@ -128,7 +128,7 @@ def _smart_bucketing(self, data, variable_items):
     # Categorize into high/medium/low/minimal variability
     # Provide optimization potential metrics
     # Include distribution insights
-    
+
     return {
         "bucketing_thresholds": thresholds,
         "variability_categories": categories,
@@ -136,21 +136,21 @@ def _smart_bucketing(self, data, variable_items):
     }
 ```
 
-## 🏗️ Implementation Guidelines
+## Implementation Guidelines
 
 ### 1. Summarizer Class Structure
 
 ```python
 class NewToolSummarizer(BaseSummarizer):
     """Smart summarizer for NewTool
-    
+
     Brief description of what the tool does and the summarization approach.
     Target reduction: X% (original_size → target_size)
     """
-    
+
     def get_tool_name(self) -> str:
         return "tool_name_here"
-    
+
     def summarize(self, raw_output, artifact_path, model_stats=None):
         """Main summarization method"""
         # Extract data from raw_output
@@ -158,14 +158,14 @@ class NewToolSummarizer(BaseSummarizer):
         # Generate summary_dict (≤5KB)
         # Validate size limits
         # Return ToolResult
-    
+
     def _generate_key_findings(self, ...):
         """Generate LLM-optimized insights"""
         # Focus on actionable insights
         # Include percentages and critical numbers
         # Add warnings and optimization opportunities
         # Keep language concise and scientific
-    
+
     def _generate_summary_dict(self, ...):
         """Generate structured analysis data"""
         # Organize data hierarchically
@@ -180,7 +180,7 @@ class NewToolSummarizer(BaseSummarizer):
 - Start with tool and model identification
 - Include critical percentages and counts
 - Use scientific terminology
-- Add warning symbols (⚠️) for critical issues
+- Add warning indicators (WARNING:) for critical issues
 - Include optimization opportunities
 - Show top examples (3-5 items max)
 
@@ -195,10 +195,10 @@ class NewToolSummarizer(BaseSummarizer):
 ```python
 key_findings = [
     f"Tool analysis of {model_id}: {total_count} items processed",
-    f"Critical category: {count} ({percentage:.1f}%) - impact description", 
+    f"Critical category: {count} ({percentage:.1f}%) - impact description",
     f"Secondary category: {count} ({percentage:.1f}%) - brief description",
-    f"⚠️  Warning condition if applicable",
-    f"✓ Positive insight if applicable",
+    f"WARNING: Warning condition if applicable",
+    f"Success: Positive insight if applicable",
     f"Top examples: {', '.join(examples[:3])}"
 ]
 ```
@@ -230,7 +230,7 @@ summary_dict = {
 }
 ```
 
-## 🎯 Size Optimization Strategies
+## Size Optimization Strategies
 
 ### 1. Data Reduction Techniques
 
@@ -263,7 +263,7 @@ summary_dict = {
 - Verbose descriptions
 - Full correlation matrices
 
-## 🧪 Testing Guidelines
+## Testing Guidelines
 
 ### 1. Size Validation
 
@@ -271,21 +271,21 @@ summary_dict = {
 def test_new_tool_summarizer():
     # Create realistic mock data at scale
     mock_output = create_large_mock_output(realistic_size=True)
-    
+
     # Test summarization
     result = summarizer.summarize(mock_output, artifact_path, model_stats)
-    
+
     # Validate size limits
     key_findings_size = len(json.dumps(result.key_findings))
     summary_dict_size = len(json.dumps(result.summary_dict))
-    
+
     assert key_findings_size <= 2000
     assert summary_dict_size <= 5000
-    
+
     # Calculate reduction
     original_size = len(json.dumps(mock_output))
     reduction_percentage = (1 - total_summary_size / original_size) * 100
-    
+
     # Validate target achievement (tool-specific)
     assert reduction_percentage >= target_reduction
 ```
@@ -297,17 +297,17 @@ def validate_information_preservation():
     # Ensure critical information is preserved
     assert "essential_category" in result.summary_dict
     assert len(result.key_findings) >= minimum_insights
-    
+
     # Check for key scientific insights
     findings_text = " ".join(result.key_findings)
     assert "critical_keyword" in findings_text
-    
+
     # Validate examples are included
     if original_has_examples:
         assert "examples" in result.summary_dict["primary_analysis"]
 ```
 
-## 📈 Target Reduction Rates by Tool Type
+## Target Reduction Rates by Tool Type
 
 | Tool Type | Original Size | Target Reduction | Rationale |
 |-----------|---------------|------------------|-----------|
@@ -317,7 +317,7 @@ def validate_information_preservation():
 | Network Analysis | 500KB+ | 90-95% | Complex graph structures |
 | Optimization Results | 50KB+ | 90-95% | Solution details |
 
-## 🔄 Registration and Integration
+## Registration and Integration
 
 ### 1. Summarizer Registration
 
@@ -350,7 +350,7 @@ class NewTool(BaseTool):
         super().__init__(config)
 ```
 
-## 🚀 Future Enhancement Opportunities
+## Future Enhancement Opportunities
 
 ### 1. Advanced Bucketing
 - Implement adaptive thresholds based on data distribution
@@ -367,10 +367,10 @@ class NewTool(BaseTool):
 - Context-aware insight generation
 - User-customizable detail levels
 
-## 📚 References and Examples
+## References and Examples
 
 - **FluxSamplingSummarizer**: Statistical pattern for massive datasets
-- **GeneDeletionSummarizer**: Categorical pattern for functional analysis  
+- **GeneDeletionSummarizer**: Categorical pattern for functional analysis
 - **FluxVariabilitySummarizer**: Variability pattern with smart bucketing
 - **Smart Summarization Framework**: Core framework documentation
 - **Validation Suite**: Comprehensive testing examples

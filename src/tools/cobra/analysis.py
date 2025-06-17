@@ -98,16 +98,16 @@ class ModelAnalysisTool(BaseTool):
         isolated_count = 0
         choke_point_count = 0
         total_connections = 0
-        
+
         # Single pass analysis to avoid storing full metabolite objects
         for metabolite in model.metabolites:
             num_reactions = len(metabolite.reactions)
             producing = [r for r in metabolite.reactions if metabolite in r.products]
             consuming = [r for r in metabolite.reactions if metabolite in r.reactants]
-            
+
             connectivity_counts.append(num_reactions)
             total_connections += num_reactions
-            
+
             # Count categories without storing objects
             if num_reactions > 10:
                 highly_connected_count += 1
@@ -115,21 +115,31 @@ class ModelAnalysisTool(BaseTool):
                 isolated_count += 1
             if len(producing) == 1 or len(consuming) == 1:
                 choke_point_count += 1
-        
+
         network_stats = {
             "connectivity_summary": {
                 "total_metabolites": len(model.metabolites),
                 "total_connections": total_connections,
-                "avg_connections_per_metabolite": total_connections / len(model.metabolites) if model.metabolites else 0,
-                "max_connections": max(connectivity_counts) if connectivity_counts else 0,
-                "min_connections": min(connectivity_counts) if connectivity_counts else 0,
+                "avg_connections_per_metabolite": (
+                    total_connections / len(model.metabolites)
+                    if model.metabolites
+                    else 0
+                ),
+                "max_connections": (
+                    max(connectivity_counts) if connectivity_counts else 0
+                ),
+                "min_connections": (
+                    min(connectivity_counts) if connectivity_counts else 0
+                ),
             },
             "network_categories": {
                 "highly_connected": highly_connected_count,  # >10 reactions
                 "isolated": isolated_count,  # ≤1 reaction
                 "choke_points": choke_point_count,  # single producer/consumer
-                "well_connected": len(model.metabolites) - highly_connected_count - isolated_count,
-            }
+                "well_connected": len(model.metabolites)
+                - highly_connected_count
+                - isolated_count,
+            },
         }
 
         return network_stats
@@ -190,7 +200,7 @@ class ModelAnalysisTool(BaseTool):
         disconnected_reactions = []
         missing_genes = []
         boundary_count = 0
-        
+
         # Count dead-end metabolites without storing objects
         for metabolite in model.metabolites:
             if len(metabolite.reactions) <= 1:
@@ -227,7 +237,7 @@ class ModelAnalysisTool(BaseTool):
             "critical_issues": {
                 "disconnected_reactions": disconnected_reactions[:5],  # Top 5 only
                 "reactions_missing_genes": missing_genes[:10],  # Top 10 only
-            }
+            },
         }
 
 
@@ -252,7 +262,7 @@ class PathwayAnalysisTool(BaseTool):
                 model_path = input_data.get("model_path")
                 model_object = input_data.get("model_object")
                 pathway = input_data.get("pathway")
-                
+
                 # Load model from path or use provided object
                 if model_object is not None:
                     model = model_object
@@ -261,9 +271,13 @@ class PathwayAnalysisTool(BaseTool):
                 elif model_path:
                     model = self._utils.load_model(model_path)
                     if not pathway:
-                        raise ValueError("pathway parameter required when using model_path")
+                        raise ValueError(
+                            "pathway parameter required when using model_path"
+                        )
                 else:
-                    raise ValueError("Either model_path or model_object must be provided")
+                    raise ValueError(
+                        "Either model_path or model_object must be provided"
+                    )
             else:
                 # For string input, we can't determine pathway, so raise an error
                 raise ValueError(
@@ -366,17 +380,21 @@ class PathwayAnalysisTool(BaseTool):
                 )
 
             # Streamlined pathway analysis - avoid redundant data storage
-            total_genes = len(set(gene for rxn in pathway_reactions for gene in rxn.genes))
-            total_metabolites = len(set(met for rxn in pathway_reactions for met in rxn.metabolites))
+            total_genes = len(
+                set(gene for rxn in pathway_reactions for gene in rxn.genes)
+            )
+            total_metabolites = len(
+                set(met for rxn in pathway_reactions for met in rxn.metabolites)
+            )
             reversible_count = sum(1 for rxn in pathway_reactions if rxn.reversibility)
-            
+
             # Calculate connectivity counts without storing full lists
             all_reactants = set()
             all_products = set()
             for rxn in pathway_reactions:
                 all_reactants.update(met.id for met in rxn.reactants)
                 all_products.update(met.id for met in rxn.products)
-            
+
             pathway_analysis = {
                 "summary": {
                     "pathway_name": pathway,
@@ -386,7 +404,9 @@ class PathwayAnalysisTool(BaseTool):
                     "reversible_reactions": reversible_count,
                     "irreversible_reactions": len(pathway_reactions) - reversible_count,
                 },
-                "reaction_list": [rxn.id for rxn in pathway_reactions],  # IDs only, no full details
+                "reaction_list": [
+                    rxn.id for rxn in pathway_reactions
+                ],  # IDs only, no full details
                 "connectivity": {
                     "input_metabolites": len(all_reactants - all_products),
                     "output_metabolites": len(all_products - all_reactants),
@@ -401,8 +421,12 @@ class PathwayAnalysisTool(BaseTool):
                         "metabolite_count": len(rxn.metabolites),
                         "reversible": rxn.reversibility,
                     }
-                    for rxn in sorted(pathway_reactions, key=lambda x: len(x.genes), reverse=True)[:5]  # Top 5 by gene count
-                ]
+                    for rxn in sorted(
+                        pathway_reactions, key=lambda x: len(x.genes), reverse=True
+                    )[
+                        :5
+                    ]  # Top 5 by gene count
+                ],
             }
 
             return ToolResult(

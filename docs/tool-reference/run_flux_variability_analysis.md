@@ -57,7 +57,7 @@ result = metabolic_agent.run_tool(
         "Variable reactions: 542 (20.0%) - flux can vary",
         "Fixed reactions: 1492 (55.0%) - carry fixed flux",
         "Essential reactions: 389 (14.3%) - required for growth",
-        "✓ High flux variability - significant metabolic flexibility",
+        "Success: High flux variability - significant metabolic flexibility",
         "Top variable reactions: ACALD, ACALDt, ACKr",
         "High optimization potential: 282 highly variable reactions"
     ],
@@ -153,7 +153,7 @@ import json
 
 with open(result["full_data_path"], 'r') as f:
     full_fva_data = json.load(f)
-    
+
 # Full data structure:
 {
     "minimum": {

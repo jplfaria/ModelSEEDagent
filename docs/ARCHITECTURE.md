@@ -308,7 +308,7 @@ The Smart Summarization Layer transforms massive tool outputs into LLM-optimized
 │  1. KEY FINDINGS (≤2KB)                                            │
 │     • Critical insights for immediate LLM understanding            │
 │     • Bullet-point format with percentages and key metrics         │
-│     • Warnings (⚠️) and success indicators (✓)                      │
+│     • Warnings (WARNING:) and success indicators (Success:)           │
 │     • Top examples (3-5 items maximum)                            │
 │                                                                    │
 │  2. SUMMARY DICT (≤5KB)                                           │
@@ -333,12 +333,12 @@ class ToolResult:
     # Core result fields
     success: bool
     message: str
-    
+
     # Smart Summarization fields
     key_findings: List[str]        # ≤2KB critical insights
     summary_dict: Dict[str, Any]   # ≤5KB structured data
     full_data_path: str            # Path to complete raw data
-    
+
     # Metadata
     tool_name: str
     model_stats: Dict[str, int]    # reactions, genes, metabolites
@@ -380,7 +380,7 @@ result = agent.run_tool("run_flux_sampling", {"model_path": "iML1515.xml"})
 import json
 with open(result["full_data_path"], 'r') as f:
     full_data = json.load(f)
-    
+
 # Perform detailed analysis
 import pandas as pd
 df = pd.DataFrame(full_data)
@@ -483,36 +483,36 @@ correlations = df.corr()
 │                        TOOL EXECUTION PIPELINE                        │
 ├────────────────────────────────────────────────────────────────────────┤
 │  1. INVOCATION                                                         │
-│     │ ✓ Agent selects appropriate tool                                  │
-│     │ ✓ Passes context and parameters                                   │
+│     │ • Agent selects appropriate tool                                  │
+│     │ • Passes context and parameters                                   │
 │     └─→ 2. VALIDATION                                                  │
-│           │ ✓ Schema validation (Pydantic)                             │
-│           │ ✓ Type checking and constraints                            │
-│           │ ✓ Model/file existence verification                        │
+│           │ • Schema validation (Pydantic)                             │
+│           │ • Type checking and constraints                            │
+│           │ • Model/file existence verification                        │
 │           └─→ 3. PRE-EXECUTION AUDIT                                   │
-│                 │ ✓ Log tool call with inputs                          │
-│                 │ ✓ Create unique audit ID                             │
-│                 │ ✓ Record timestamp and context                       │
+│                 │ • Log tool call with inputs                          │
+│                 │ • Create unique audit ID                             │
+│                 │ • Record timestamp and context                       │
 │                 └─→ 4. EXECUTION                                        │
-│                       │ ✓ Run tool with validated inputs               │
-│                       │ ✓ Handle errors gracefully                     │
-│                       │ ✓ Capture all outputs                          │
+│                       │ • Run tool with validated inputs               │
+│                       │ • Handle errors gracefully                     │
+│                       │ • Capture all outputs                          │
 │                       └─→ 5. RESULT PROCESSING                         │
-│                             │ ✓ Structure output data                   │
-│                             │ ✓ Apply biochemistry enrichment           │
-│                             │ ✓ Generate human-readable summaries       │
+│                             │ • Structure output data                   │
+│                             │ • Apply biochemistry enrichment           │
+│                             │ • Generate human-readable summaries       │
 │                             └─→ 6. POST-EXECUTION AUDIT                │
-│                                   │ ✓ Log results and performance       │
-│                                   │ ✓ Record any errors or warnings     │
-│                                   │ ✓ Update tool usage statistics      │
+│                                   │ • Log results and performance       │
+│                                   │ • Record any errors or warnings     │
+│                                   │ • Update tool usage statistics      │
 │                                   └─→ 7. VERIFICATION                  │
-│                                         │ ✓ Hallucination detection      │
-│                                         │ ✓ Result consistency checks    │
-│                                         │ ✓ Confidence scoring           │
+│                                         │ • Hallucination detection      │
+│                                         │ • Result consistency checks    │
+│                                         │ • Confidence scoring           │
 │                                         └─→ 8. CACHING & RETURN        │
-│                                               ✓ Store in cache if applicable │
-│                                               ✓ Return structured result     │
-│                                               ✓ Update session state         │
+│                                               • Store in cache if applicable │
+│                                               • Return structured result     │
+│                                               • Update session state         │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 

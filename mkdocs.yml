@@ -96,6 +96,7 @@ nav:
     - Testing: developer/testing.md
     - Style Guide: developer/style-guide.md
     - Development Roadmap: development/DEVELOPMENT_ROADMAP.md
+    - Smart Summarization: development/smart-summarization-assessment.md
     - 12-Factor Agents: development/12-factor-agents-roadmap.md
 
   - Operations:

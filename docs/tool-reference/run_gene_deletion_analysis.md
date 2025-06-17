@@ -62,7 +62,7 @@ result = metabolic_agent.run_tool(
         "Essential genes: 148 (9.8%) - lethal when deleted",
         "Growth-impaired genes: 289 (19.1%) - reduce growth",
         "Non-essential genes: 1067 (70.4%) - minimal impact",
-        "✓ Normal essentiality rate for metabolic model",
+        "Normal essentiality rate for metabolic model",
         "Growth-improving deletions: 12 (0.8%)",
         "Key essential genes: b0025, b0114, b0115, b0116, b0118",
         "Severely impaired genes: 67 (growth 1-10%)",
@@ -178,7 +178,7 @@ import json
 
 with open(result["full_data_path"], 'r') as f:
     full_deletion_data = json.load(f)
-    
+
 # Full data structure:
 {
     "b0001": {
