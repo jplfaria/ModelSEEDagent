@@ -1,5 +1,7 @@
 # Tool Implementation vs Testing Status
 
+> **NOTE:** This file reflects the last comprehensive validation run (2025-06-14). Tool count and success metrics have since changed (current tool count: 28). It will be auto-regenerated on the next validation run.
+
 **Last Updated**: 2025-06-14 (Auto-updated from latest validation results)
 **Validation Success Rate**: 92/92 tests passing (100% success rate)
 **Models Tested**: 4 (e_coli_core, iML1515, EcoliMG1655, B_aphidicola)
