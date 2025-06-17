@@ -6,7 +6,7 @@ ModelSEEDagent is an **LLM-powered metabolic-modeling toolkit** that currently s
 
 ## Quick Start
 
-For installation instructions, see the [Installation Guide](installation.md).
+For installation instructions, see the [Installation Guide](getting-started/installation.md).
 
 ```bash
 # Basic metabolic model analysis
@@ -129,10 +129,10 @@ For detailed architecture information, see the [Architecture Guide](ARCHITECTURE
 ## Getting Started
 
 ### 1. Installation
-See the [Installation Guide](installation.md) for detailed setup instructions.
+See the [Installation Guide](getting-started/installation.md) for detailed setup instructions.
 
 ### 2. User Guide
-Check out the [Getting Started Guide](user/README.md) and [Interactive Guide](user/INTERACTIVE_GUIDE.md) for comprehensive usage instructions.
+Check out the [Quick Start](getting-started/quickstart-cli.md) and [Interactive Guide](getting-started/interactive-guide.md) for comprehensive usage instructions.
 
 ### 3. API Documentation
 Explore the [API Documentation](api/overview.md) for programmatic usage.
@@ -163,4 +163,4 @@ This comprehensive documentation was developed with the assistance of AI technol
 
 ---
 
-**Ready to start metabolic modeling with AI?** Begin with the [Installation Guide](installation.md).
+**Ready to start metabolic modeling with AI?** Begin with the [Installation Guide](getting-started/installation.md).
