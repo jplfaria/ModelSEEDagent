@@ -1,3 +1,7 @@
+---
+draft: true
+---
+
 # Repository Cleanup Plan
 
 **Date**: June 9, 2025

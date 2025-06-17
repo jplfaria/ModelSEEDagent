@@ -1,3 +1,7 @@
+---
+draft: true
+---
+
 # Contributing to ModelSEEDagent
 
 Thank you for your interest in contributing to ModelSEEDagent! This guide will help you get started with contributing to the project.
@@ -601,7 +605,7 @@ For maintainers:
 
 ## Resources
 
-- **Project Documentation**: [User Guide](../../user/README.md)
+- **Project Documentation**: [User Guide](../../getting-started/quickstart-cli.md)
 - **API Reference**: [API Documentation](../../api/overview.md)
 - **Examples**: See examples/ directory in the repository
 - **GitHub Repository**: https://github.com/ModelSEED/ModelSEEDagent

@@ -1,3 +1,7 @@
+---
+draft: true
+---
+
 # 📁 Documentation Archive
 
 This directory contains outdated documentation files that have been archived because they contained inaccurate information compared to the actual current state of the repository.

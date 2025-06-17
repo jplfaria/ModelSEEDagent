@@ -1,3 +1,7 @@
+---
+draft: true
+---
+
 # 12-Factor Agents Implementation Roadmap
 
 **Status**: Planning Phase

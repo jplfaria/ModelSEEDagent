@@ -1,3 +1,7 @@
+---
+draft: true
+---
+
 # CLI Debug Capture Implementation Roadmap
 
 ## Overview

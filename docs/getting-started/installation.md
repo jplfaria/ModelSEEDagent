@@ -289,7 +289,7 @@ pip install --no-cache-dir -e .
 
 After installation:
 
-1. **[User Guide](user/README.md)**: Learn basic usage
+1. **[Interactive Guide](interactive-guide.md)**: Learn basic usage
 2. **[API Documentation](api/overview.md)**: Explore programmatic access
 3. **[Architecture Guide](ARCHITECTURE.md)**: Understand system design
 4. **[Tool Reference](TOOL_REFERENCE.md)**: Detailed tool documentation

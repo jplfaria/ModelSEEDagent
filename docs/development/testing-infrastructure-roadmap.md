@@ -1,3 +1,7 @@
+---
+draft: true
+---
+
 # Testing Infrastructure Optimization Roadmap
 
 **Status**: Implementation Phase

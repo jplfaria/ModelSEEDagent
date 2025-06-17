@@ -1,3 +1,7 @@
+---
+draft: true
+---
+
 # Dynamic AI Agent Transformation Roadmap
 
 ## 🎯 Vision Statement

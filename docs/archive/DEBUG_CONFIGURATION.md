@@ -1,3 +1,7 @@
+---
+draft: true
+---
+
 # Debug Configuration System
 
 This document describes the comprehensive debug configuration system that allows fine-grained control over logging verbosity for different components of ModelSEEDagent.

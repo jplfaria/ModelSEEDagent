@@ -414,7 +414,7 @@ modelseed-agent show-config --sources
 
 ## Next Steps
 
-- **[User Guide](user/README.md)**: Learn how to use ModelSEEDagent
+- **[Interactive Guide](getting-started/interactive-guide.md)**: Learn how to use ModelSEEDagent
 - **[API Documentation](api/overview.md)**: Explore programmatic usage
 - **[Troubleshooting](troubleshooting.md)**: Solve common issues
 - **[Development](archive/development/DEVELOPMENT_ROADMAP.md)**: Contribute to the project

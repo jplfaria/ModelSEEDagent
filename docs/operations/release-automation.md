@@ -326,7 +326,7 @@ pytest tests/
 safety check -r requirements.txt
 
 # Test package build
-poetry build
+python -m build
 ```
 
 ## Configuration Options
@@ -515,7 +515,7 @@ gh run view <run-id> --log-failed
 gh secret list | grep PYPI
 
 # Check package build
-poetry build
+python -m build
 poetry publish --dry-run
 
 # Common issues:

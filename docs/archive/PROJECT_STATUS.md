@@ -1,3 +1,7 @@
+---
+draft: true
+---
+
 # ModelSEEDagent - Project Status
 
 ## Overview
@@ -118,4 +122,4 @@ modelseed-agent phase8
 modelseed-agent --help
 ```
 
-For detailed usage instructions, see the [User Guide](../user/README.md) and [Phase 8 Advanced Features Guide](PHASE8_USER_GUIDE.md).
+For detailed usage instructions, see the [User Guide](../getting-started/quickstart-cli.md) and [Phase 8 Advanced Features Guide](PHASE8_USER_GUIDE.md).

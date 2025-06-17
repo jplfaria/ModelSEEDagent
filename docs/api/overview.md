@@ -322,8 +322,8 @@ For detailed technical implementation information including parameters, precisio
 
 ## Documentation Links
 
-- **[Getting Started](../user/README.md)** - Installation and basic usage
-- **[User Guide](../user/INTERACTIVE_GUIDE.md)** - Interactive interface guide
+- **[Getting Started](../getting-started/quickstart-cli.md)** - Installation and basic usage
+- **[Interactive Guide](../getting-started/interactive-guide.md)** - Natural-language interface
 - **[Architecture](../ARCHITECTURE.md)** - System design and components
 - **[Tool Reference](../TOOL_REFERENCE.md)** - User-friendly tool descriptions
 - **[Tool Implementation Reference](tools.md)** - Technical implementation details

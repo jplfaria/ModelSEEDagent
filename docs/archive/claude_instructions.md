@@ -1,3 +1,7 @@
+---
+draft: true
+---
+
 # CLAUDE.md - ModelSEEDagent Enhancement Plan
 
 ## Project Status: Advanced Production System

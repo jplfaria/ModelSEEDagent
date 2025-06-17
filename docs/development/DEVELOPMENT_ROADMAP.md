@@ -1,3 +1,7 @@
+---
+draft: true
+---
+
 # ModelSEEDagent – Development Roadmap (June 2025)
 
 > This concise roadmap supersedes older planning files that have been moved to `docs/archive/`.  It only tracks verifiable facts and the **next concrete steps**.
