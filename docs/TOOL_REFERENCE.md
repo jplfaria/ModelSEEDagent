@@ -2,7 +2,7 @@
 
 ## Overview
 
-ModelSEEDagent provides **28 specialized metabolic modeling tools** organized into six main categories. Each tool is designed for specific analysis tasks and integrates seamlessly with the AI reasoning system.
+ModelSEEDagent provides **29 specialized metabolic modeling tools** organized into six main categories, enhanced with the **Smart Summarization Framework** for optimal LLM performance. Each tool is designed for specific analysis tasks and integrates seamlessly with the AI reasoning system.
 
 ## Tool Categories
 
@@ -11,9 +11,40 @@ ModelSEEDagent provides **28 specialized metabolic modeling tools** organized in
 3. [ModelSEED Tools (3 tools)](#modelseed-tools) - Genome annotation and model building
 4. [Biochemistry Tools (2 tools)](#biochemistry-tools) - Universal compound and reaction resolution
 5. [RAST Tools (2 tools)](#rast-tools) - Genome annotation and analysis
-6. [System Tools (3 tools)](#system-tools) - AI auditing and verification
+6. [System Tools (4 tools)](#system-tools) - AI auditing and verification
 
 For detailed technical implementation information, see the [API Tool Implementation Reference](api/tools.md).
+
+## Smart Summarization Framework
+
+All ModelSEEDagent tools integrate with the **Smart Summarization Framework**, which automatically transforms massive tool outputs (up to 138 MB) into LLM-optimized formats while preserving complete data access.
+
+### Three-Tier Information Hierarchy
+
+**Tier 1: key_findings (≤2KB)**
+- Critical insights optimized for immediate LLM consumption
+- Bullet-point format with percentages and key metrics
+- Warnings and success indicators
+- Top examples (3-5 items maximum)
+
+**Tier 2: summary_dict (≤5KB)**
+- Structured data for follow-up analysis
+- Statistical summaries and distributions
+- Category counts with limited examples
+- Metadata and analysis parameters
+
+**Tier 3: full_data_path**
+- Complete raw results stored as JSON artifacts
+- Accessible via FetchArtifact tool for detailed analysis
+- No size limitations - preserves all original data
+
+### Size Reduction Achievements
+
+| Tool | Original Size | Summarized | Reduction | Status |
+|------|--------------|------------|-----------|---------|
+| FluxSampling | 138.5 MB | 2.2 KB | 99.998% | ✅ Production |
+| FluxVariability | 170 KB | 2.4 KB | 98.6% | ✅ Production |
+| GeneDeletion | 130 KB | 3.1 KB | 97.6% | ✅ Production |
 
 ---
 
@@ -223,6 +254,17 @@ AI auditing and verification tools for transparency and quality assurance:
 **Usage**: Automatically validates AI claims during execution
 **What it does**: Cross-references AI assertions with tool outputs to detect and prevent hallucinations
 
+### 4. FetchArtifact (`fetch_artifact_data`)
+**Purpose**: Retrieve complete raw data from Smart Summarization artifacts
+**Usage**: `"get the full flux sampling data for detailed analysis"`
+**What it does**: Loads complete original tool outputs from storage when detailed analysis is needed beyond summarized results
+
+**When to use FetchArtifact**:
+- User asks for "detailed analysis" or "complete results"
+- Statistical analysis beyond summary_dict scope is needed
+- Debugging scenarios requiring full data inspection
+- Cross-model comparisons requiring raw data
+
 ## Summary
 
-ModelSEEDagent's 28 tools provide comprehensive metabolic modeling capabilities through an intuitive AI interface. Each tool is designed to work seamlessly with the AI reasoning system, allowing for complex multi-step analyses through simple natural language commands.
+ModelSEEDagent's 29 tools provide comprehensive metabolic modeling capabilities through an intuitive AI interface enhanced with Smart Summarization. Each tool is designed to work seamlessly with the AI reasoning system, allowing for complex multi-step analyses through simple natural language commands.

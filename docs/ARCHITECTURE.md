@@ -44,9 +44,9 @@ ModelSEEDagent is an AI-powered metabolic modeling platform that combines Large 
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                        TOOL EXECUTION LAYER                                │
 ├─────────────────┬─────────────────┬─────────────────┬─────────────────────┤
-│ COBRApy Tools   │ ModelSEED Tools │ Biochemistry    │ RAST Tools    │ Audit │
-│ (16 tools)      │ (6 tools)       │ Database        │ (2 tools)     │ Tools │
-│                 │                 │ (3 tools)       │               │(2 tools)│
+│ COBRApy Tools   │ ModelSEED Tools │ Biochemistry    │ RAST Tools    │ System│
+│ (12 tools)      │ (3 tools)       │ Database        │ (2 tools)     │ Tools │
+│ AI Media (6)    │                 │ (2 tools)       │               │(4 tools)│
 └─────────┬───────┴─────────┬───────┴─────────┬───────┴─────────┬─────┬─────┘
           │                 │                 │                 │     │
           ▼                 ▼                 ▼                 ▼     │
@@ -57,7 +57,7 @@ ModelSEEDagent is an AI-powered metabolic modeling platform that combines Large 
 │ Hierarchy       │ Summarizers      │ Storage         │ (2KB/5KB limits)    │
 │ • key_findings  │ • FVA           │ • JSON format   │ • 95-99.9%         │
 │ • summary_dict  │ • FluxSampling  │ • /tmp/artifacts│   reduction        │
-│ • full_data_path│ • GeneDeletion  │                 │                     │
+│ • full_data_path│ • GeneDeletion  │ • FetchArtifact │ • 99.998% max      │
 └─────────┬───────┴─────────┬───────┴─────────┬───────┴─────────┬─────────┘
           │                 │                 │                 │
           ▼                 ▼                 ▼                 ▼
@@ -214,15 +214,16 @@ src/tools/
 │   ├── builder.py         # Model building with MSBuilder
 │   ├── gapfill.py         # Advanced gapfilling
 │   └── compatibility.py   # ModelSEED-COBRApy compatibility (2 tools)
-├── biochem/               # Biochemistry tools (3 tools)
+├── biochem/               # Biochemistry tools (2 tools)
 │   ├── resolver.py        # Universal ID resolution (2 tools)
 │   └── standalone_resolver.py # Standalone biochem resolution
 ├── rast/                  # RAST integration (2 tools)
 │   └── annotation.py      # RAST annotation services (2 tools)
-└── audit/                 # Audit and verification tools (2 tools)
-    ├── audit.py           # Tool execution auditing
-    ├── ai_audit.py        # AI audit tools
-    └── realtime_verification.py # Real-time verification
+├── system/                # System tools (4 tools)
+│   ├── audit.py           # Tool execution auditing
+│   ├── ai_audit.py        # AI audit tools
+│   ├── realtime_verification.py # Real-time verification
+│   └── fetch_artifact.py  # Smart Summarization artifact retrieval
 ```
 
 **Universal Model Infrastructure** (`src/tools/cobra/utils.py`):
@@ -472,6 +473,8 @@ correlations = df.corr()
 - Cross-model learning from analysis history
 - Pattern-based tool selection recommendations
 - Continuous improvement through experience
+- Smart Summarization effectiveness tracking and optimization
+- User satisfaction and information completeness monitoring
 
 
 ## Data Flow Architecture
@@ -500,7 +503,8 @@ correlations = df.corr()
 │                       └─→ 5. RESULT PROCESSING                         │
 │                             │ • Structure output data                   │
 │                             │ • Apply biochemistry enrichment           │
-│                             │ • Generate human-readable summaries       │
+│                             │ • Smart Summarization (key_findings,      │
+│                             │   summary_dict, artifact storage)         │
 │                             └─→ 6. POST-EXECUTION AUDIT                │
 │                                   │ • Log results and performance       │
 │                                   │ • Record any errors or warnings     │

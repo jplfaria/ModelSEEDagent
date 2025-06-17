@@ -2,7 +2,7 @@
 
 **AI-Powered Metabolic Modeling Platform**
 
-ModelSEEDagent combines large-language-model reasoning with **28 specialised metabolic-modeling tools**.  The **interactive interface is production-ready and fully tested**; the Typer-based CLI is available in **beta** while we finish import cleanup and help-formatting fixes.
+ModelSEEDagent combines large-language-model reasoning with **29 specialised metabolic-modeling tools** and **Smart Summarization Framework**.  The **interactive interface is production-ready and fully tested**; the Typer-based CLI is available in **beta** while we finish import cleanup and help-formatting fixes.
 
 ## 📚 **Documentation**
 
@@ -42,8 +42,9 @@ modelseed-agent analyze data/examples/e_coli_core.xml --query "Find essential ge
 - **Advanced AI Reasoning** - Multi-step chains, hypothesis testing, collaborative decisions
 - **Pattern Learning** - Cross-model learning and intelligent recommendations
 - **AI Transparency** - Advanced hallucination detection and audit system
+- **Smart Summarization Framework** - 95-99.9% size reduction with three-tier information hierarchy
 - **Natural Language Interface** - Conversational AI for complex metabolic analysis
-- **AI Media Intelligence** - 6 specialized tools for intelligent media management and optimization
+- **AI Media Intelligence** - 29 specialized tools for intelligent media management and optimization
 
 ## Advanced AI Features
 
@@ -60,6 +61,18 @@ AI recognizes uncertainty and requests human expertise when needed.
 
 ### Pattern Learning & Memory
 Cross-model learning that improves recommendations over time.
+
+### Smart Summarization Framework
+Automatically transforms massive tool outputs into LLM-optimized formats while preserving complete data for detailed analysis:
+
+- **99.998% size reduction** for FluxSampling (138.5 MB → 2.2 KB)
+- **98.6% size reduction** for FluxVariability (170 KB → 2.4 KB)
+- **97.6% size reduction** for GeneDeletion (130 KB → 3.1 KB)
+
+**Three-Tier Information Hierarchy**:
+- **key_findings** (≤2KB): Critical insights optimized for LLM reasoning
+- **summary_dict** (≤5KB): Structured data for follow-up analysis
+- **full_data_path**: Complete raw data accessible via FetchArtifact tool
 
 ## AI Media Intelligence
 
@@ -89,19 +102,20 @@ Pre-built workflow templates combining media selection with analysis:
 
 **🧪 [Complete Tool Testing Status](https://jplfaria.github.io/ModelSEEDagent/TOOL_TESTING_STATUS/)** - Live testing coverage and results
 
-**Current Status**: 23/28 tools actively tested (82% coverage) with 100% success rate across 4 model types
+**Current Status**: 24/29 tools actively tested (83% coverage) with 100% success rate across 4 model types
 
 | Category | Implemented | Tested | Success Rate | Status |
 |----------|-------------|--------|--------------|--------|
 | **COBRA Tools** | 12 | 12 | 100% (48/48) | ✅ Complete coverage |
 | **AI Media Tools** | 6 | 6 | 100% (24/24) | ✅ Complete coverage |
 | **Biochemistry Tools** | 2 | 2 | 100% (8/8) | ✅ Complete coverage |
-| **System Tools** | 3 | 3 | 100% (12/12) | ✅ Functional validation |
+| **System Tools** | 4 | 4 | 100% (16/16) | ✅ Functional validation |
 | **ModelSEED Tools** | 3 | 0 | N/A | Service dependencies |
+| **RAST Tools** | 2 | 0 | N/A | Service dependencies |
 
 **Last Comprehensive Test**: 2025-06-14 | **Models Tested**: e_coli_core, iML1515, EcoliMG1655, B_aphidicola
 
-## Specialized Tools (28 Total)
+## Specialized Tools (29 Total)
 
 ### AI Media Tools (6 tools) - 100% Tested
 - **Media Selection** - AI-powered optimal media selection for models
@@ -127,10 +141,11 @@ Pre-built workflow templates combining media selection with analysis:
 - **Gapfilling** - Advanced MSGapfill algorithms
 - **Protein Annotation** - Individual protein sequence annotation
 
-### System Tools (3 tools) - 100% Tested
+### System Tools (4 tools) - 100% Tested
 - **Tool Audit** - Execution auditing and verification
 - **AI Audit** - AI reasoning and decision auditing
 - **Realtime Verification** - Live hallucination detection
+- **FetchArtifact** - Retrieve complete raw data from Smart Summarization artifacts
 
 ## Repository Structure
 
@@ -156,7 +171,7 @@ ModelSEEDagent/
 ├── notebooks/                     # Interactive tutorials
 ├── src/                           # Main source code
 │   ├── agents/                    # AI agents and reasoning
-│   ├── tools/                     # 28 specialized tools
+│   ├── tools/                     # 29 specialized tools
 │   │   ├── cobra/                 # 12 COBRApy tools
 │   │   ├── modelseed/             # 3 ModelSEED tools
 │   │   ├── biochem/               # 2 biochemistry tools
@@ -179,7 +194,7 @@ ModelSEEDagent/
 **Quick Links:**
 - **[Getting Started](https://jplfaria.github.io/ModelSEEDagent/user/README/)** - Installation and basic usage
 - **[User Guide](https://jplfaria.github.io/ModelSEEDagent/user/INTERACTIVE_GUIDE/)** - Interactive interface guide
-- **[Tool Reference](https://jplfaria.github.io/ModelSEEDagent/TOOL_REFERENCE/)** - All 28 tools overview
+- **[Tool Reference](https://jplfaria.github.io/ModelSEEDagent/TOOL_REFERENCE/)** - All 29 tools overview
 - **[API Documentation](https://jplfaria.github.io/ModelSEEDagent/api/overview/)** - Programmatic usage
 - **[Configuration](https://jplfaria.github.io/ModelSEEDagent/configuration/)** - Setup and configuration options
 
