@@ -3,7 +3,7 @@
 ## Major Changes Implemented
 
 ### 1. Tool Count Standardization ✅
-- **Fixed inconsistency**: All documentation now consistently references **28 tools**
+- **Fixed inconsistency**: All documentation now consistently references **30 tools**
 - **Updated files**: index.md, TOOL_TESTING_STATUS.md, README.md, TOOL_REFERENCE.md, and 8 other files
 - **Tool breakdown standardized**:
   - COBRA Tools: 12
@@ -12,7 +12,7 @@
   - Biochemistry Tools: 2
   - RAST Tools: 2
   - System Tools: 3
-  - **Total: 28 tools**
+  - **Total: 30 tools**
 
 ### 2. CLI Reference Complete Rewrite ✅
 - **Replaced broken auto-generated CLI reference** with comprehensive manual documentation
@@ -86,7 +86,7 @@
 - **Up-to-date testing information** for reliability assessment
 
 ### Technical Accuracy
-- **All tool counts now accurate** (28 tools)
+- **All tool counts now accurate** (30 tools)
 - **Current test results reflected** (84/92 passing, 91.3%)
 - **Failing tools identified** with specific error types
 - **Performance optimizations documented**

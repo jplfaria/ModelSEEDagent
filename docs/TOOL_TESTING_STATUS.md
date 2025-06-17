@@ -8,7 +8,7 @@
 
 ### Run Comprehensive Validation
 ```bash
-# Full validation suite: 28 tools × 4 models = 112 tests
+# Full validation suite: 30 tools × 4 models = 112 tests
 python scripts/tool_validation_suite.py
 ```
 
@@ -143,7 +143,7 @@ python scripts/tool_validation_suite.py
 This tool testing status integrates with the broader testing infrastructure:
 
 - **CI Testing**: Essential FBA validation on e_coli_core (< 3 minutes)
-- **Comprehensive Testing**: Full 28 tools × 4 models validation suite
+- **Comprehensive Testing**: Full 30 tools × 4 models validation suite
 - **Unit Testing**: Individual tool functionality via pytest
 - **Integration Testing**: Tool interaction and workflow testing
 

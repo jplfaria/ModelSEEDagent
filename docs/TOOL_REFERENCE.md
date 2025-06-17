@@ -2,7 +2,7 @@
 
 ## Overview
 
-ModelSEEDagent provides **29 specialized metabolic modeling tools** organized into six main categories, enhanced with the **Smart Summarization Framework** for optimal LLM performance. Each tool is designed for specific analysis tasks and integrates seamlessly with the AI reasoning system.
+ModelSEEDagent provides **30 specialized metabolic modeling tools** organized into six main categories, enhanced with the **Smart Summarization Framework** for optimal LLM performance. Each tool is designed for specific analysis tasks and integrates seamlessly with the AI reasoning system.
 
 ## Tool Categories
 
@@ -11,7 +11,7 @@ ModelSEEDagent provides **29 specialized metabolic modeling tools** organized in
 3. [ModelSEED Tools (3 tools)](#modelseed-tools) - Genome annotation and model building
 4. [Biochemistry Tools (2 tools)](#biochemistry-tools) - Universal compound and reaction resolution
 5. [RAST Tools (2 tools)](#rast-tools) - Genome annotation and analysis
-6. [System Tools (4 tools)](#system-tools) - AI auditing and verification
+6. [System Tools (5 tools)](#system-tools) - AI auditing and verification
 
 For detailed technical implementation information, see the [API Tool Implementation Reference](api/tools.md).
 
@@ -42,9 +42,10 @@ All ModelSEEDagent tools integrate with the **Smart Summarization Framework**, w
 
 | Tool | Original Size | Summarized | Reduction | Status |
 |------|--------------|------------|-----------|---------|
-| FluxSampling | 138.5 MB | 2.2 KB | 99.998% | ✅ Production |
-| FluxVariability | 170 KB | 2.4 KB | 98.6% | ✅ Production |
-| GeneDeletion | 130 KB | 3.1 KB | 97.6% | ✅ Production |
+| FluxSampling | 138.5 MB | 2.2 KB | 99.998% | Production |
+| FluxVariability | 170 KB | 2.4 KB | 98.6% | Production |
+| GeneDeletion | 130 KB | 3.1 KB | 97.6% | Production |
+| FBA | 48 KB | 1.8 KB | 96.3% | Production |
 
 ---
 
@@ -267,4 +268,4 @@ AI auditing and verification tools for transparency and quality assurance:
 
 ## Summary
 
-ModelSEEDagent's 29 tools provide comprehensive metabolic modeling capabilities through an intuitive AI interface enhanced with Smart Summarization. Each tool is designed to work seamlessly with the AI reasoning system, allowing for complex multi-step analyses through simple natural language commands.
+ModelSEEDagent's 30 tools provide comprehensive metabolic modeling capabilities through an intuitive AI interface enhanced with Smart Summarization. Each tool is designed to work seamlessly with the AI reasoning system, allowing for complex multi-step analyses through simple natural language commands.

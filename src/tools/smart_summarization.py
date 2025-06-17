@@ -16,6 +16,19 @@ from typing import Any, Callable, Dict, List, Optional, Union
 
 from .base import ToolResult
 
+# Import summarizers to register them automatically
+try:
+    from . import summarizers  # This will trigger registration
+
+    # Force import of all summarizers to ensure registration
+    from .summarizers.fba_summarizer import fba_summarizer
+    from .summarizers.flux_sampling_summarizer import flux_sampling_summarizer
+    from .summarizers.flux_variability_summarizer import flux_variability_summarizer
+    from .summarizers.gene_deletion_summarizer import gene_deletion_summarizer
+except ImportError:
+    # Summarizers not available, will fall back to no summarization
+    pass
+
 
 class BaseSummarizer(ABC):
     """Base class for tool-specific summarizers"""
@@ -197,6 +210,34 @@ class ArtifactStorage:
 artifact_storage = ArtifactStorage()
 
 
+def _ensure_summarizers_loaded():
+    """Ensure all summarizers are loaded and registered (lazy loading)"""
+    # Check if summarizers are already loaded
+    if summarizer_registry.list_tools():
+        return  # Already loaded
+
+    # Load summarizers individually to avoid circular imports
+    try:
+        from .summarizers.fba_summarizer import fba_summarizer
+    except ImportError:
+        pass
+
+    try:
+        from .summarizers.flux_variability_summarizer import flux_variability_summarizer
+    except ImportError:
+        pass
+
+    try:
+        from .summarizers.flux_sampling_summarizer import flux_sampling_summarizer
+    except ImportError:
+        pass
+
+    try:
+        from .summarizers.gene_deletion_summarizer import gene_deletion_summarizer
+    except ImportError:
+        pass
+
+
 def enable_smart_summarization(
     tool_result: ToolResult,
     tool_name: str,
@@ -214,6 +255,9 @@ def enable_smart_summarization(
     Returns:
         Enhanced ToolResult with smart summarization
     """
+    # Ensure summarizers are loaded (lazy loading to avoid circular imports)
+    _ensure_summarizers_loaded()
+
     summarizer = summarizer_registry.get_summarizer(tool_name)
 
     if summarizer is None:

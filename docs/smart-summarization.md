@@ -249,6 +249,59 @@ class MyToolSummarizer(BaseSummarizer):
         )
 ```
 
+## Agent Integration Features
+
+### Query-Aware Stopping Criteria
+
+The Smart Summarization Framework includes intelligent query analysis to prevent premature tool chain termination. The real-time agent analyzes query intent to determine appropriate analysis depth:
+
+#### Query Depth Indicators
+
+**Comprehensive Analysis** (3+ tools recommended):
+- Keywords: `comprehensive`, `complete`, `full`, `extensive`, `systematic`, `all`
+- Example: *"Run a comprehensive analysis of this model"*
+
+**Detailed Analysis** (2-3 tools):
+- Keywords: `detailed`, `detail`, `more detail`, `thorough`, `deep`, `in-depth`
+- Example: *"Explore the predicted growth rate in more detail"*
+
+**Minimal Analysis** (1-2 tools):
+- Keywords: `quick`, `simple`, `basic`, `just`, `only`
+- Example: *"Just run a quick FBA"*
+
+**Standard Analysis** (2 tools default):
+- Default behavior for general queries
+- Keywords: `analyze`, `check`, `run`, `test`
+
+#### Implementation
+
+The agent's `_analyze_query_intent()` method examines the user's query and includes stopping criteria in decision prompts:
+
+```python
+def _analyze_query_intent(self, query: str) -> Dict[str, Any]:
+    """Analyze query intent to determine appropriate analysis depth"""
+    query_lower = query.lower()
+
+    # Detect depth indicators
+    for depth, keywords in depth_indicators:
+        if any(keyword in query_lower for keyword in keywords):
+            return {
+                "depth": depth,
+                "min_tools": min_tools_map[depth],
+                "stopping_criteria": f"Query indicates {depth} analysis required"
+            }
+
+    return {"depth": "standard", "min_tools": 2}
+```
+
+#### Benefits
+
+- **Prevents Premature Stopping**: Ensures complex queries get adequate analysis
+- **Adapts to User Intent**: Lightweight queries get quick responses
+- **Maintains Quality**: Deep analyses continue until sufficient insights are gathered
+- **User Control**: Clear language indicators let users guide analysis depth
+```
+
 ## Best Practices
 
 ### For Tool Developers

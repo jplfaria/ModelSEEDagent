@@ -76,7 +76,7 @@
 **Users can now:**
 1. **Start with**: `comprehensive_working_tutorial.ipynb`
 2. **Use the automated setup**: `setup_kernel.sh`
-3. **Access all 28 tools** for metabolic modeling
+3. **Access all 30 tools** for metabolic modeling
 4. **Run real analyses** with provided examples
 5. **Inspect organized results** in output directories
 

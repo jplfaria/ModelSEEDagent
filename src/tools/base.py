@@ -113,9 +113,9 @@ class BaseTool(LangChainBaseTool):
         self._audit_enabled = config.get("audit_enabled", True)
         self._audit_watch_dirs = config.get("audit_watch_dirs", ["."])
 
-        # Smart Summarization Framework configuration
+        # Smart Summarization Framework configuration - enabled by default
         self._smart_summarization_enabled = config.get(
-            "smart_summarization_enabled", False
+            "smart_summarization_enabled", True
         )
         self._force_summarization = config.get("force_summarization", False)
 
@@ -138,7 +138,13 @@ class BaseTool(LangChainBaseTool):
         """
         if not self._audit_enabled:
             # Direct execution without auditing
-            return self._run_tool(input_data)
+            result = self._run_tool(input_data)
+
+            # Apply smart summarization if enabled (even without auditing)
+            if self._smart_summarization_enabled and isinstance(result, ToolResult):
+                result = self._apply_smart_summarization(result, input_data)
+
+            return result
 
         # Import here to avoid circular imports
         from .audit import get_auditor
@@ -180,10 +186,10 @@ class BaseTool(LangChainBaseTool):
             # Import here to avoid circular imports
             from .smart_summarization import enable_smart_summarization
 
-            # Extract model stats if available
+            # Extract model stats from metadata and input
             model_stats = self._extract_model_stats(result, input_data)
 
-            # Enable smart summarization
+            # Enable smart summarization with original result data
             enhanced_result = enable_smart_summarization(
                 tool_result=result,
                 tool_name=self.tool_name,
@@ -191,12 +197,33 @@ class BaseTool(LangChainBaseTool):
                 model_stats=model_stats,
             )
 
-            # Preserve original metadata and add summarization info
+            # Preserve original success status and error info
+            enhanced_result.success = result.success
+            enhanced_result.error = result.error
+
+            # Preserve and enhance metadata
             if enhanced_result.metadata is None:
                 enhanced_result.metadata = {}
             enhanced_result.metadata.update(result.metadata or {})
             enhanced_result.metadata["smart_summarization_enabled"] = True
-            enhanced_result.metadata["schema_version"] = enhanced_result.schema_version
+            enhanced_result.metadata["original_data_size"] = (
+                len(str(result.data)) if result.data else 0
+            )
+
+            # Calculate summarization metrics
+            if enhanced_result.has_smart_summarization():
+                summarized_size = len(str(enhanced_result.key_findings or [])) + len(
+                    str(enhanced_result.summary_dict or {})
+                )
+                original_size = enhanced_result.metadata["original_data_size"]
+                if original_size > 0:
+                    reduction_pct = (
+                        (original_size - summarized_size) / original_size
+                    ) * 100
+                    enhanced_result.metadata["summarization_reduction_pct"] = round(
+                        reduction_pct, 2
+                    )
+                    enhanced_result.metadata["summarized_size_bytes"] = summarized_size
 
             return enhanced_result
 
@@ -241,6 +268,19 @@ class BaseTool(LangChainBaseTool):
             for key in ["model_id", "num_reactions", "num_genes", "num_metabolites"]:
                 if key in result.metadata:
                     model_stats[key] = result.metadata[key]
+
+        # Try to extract statistics from data for FVA results
+        if result.data and isinstance(result.data, dict):
+            if "statistics" in result.data:
+                stats = result.data["statistics"]
+                if "total_reactions" in stats:
+                    model_stats["num_reactions"] = stats["total_reactions"]
+
+            # For FVA results, extract from fva_results length
+            if "fva_results" in result.data:
+                fva_data = result.data["fva_results"]
+                if isinstance(fva_data, dict) and "minimum" in fva_data:
+                    model_stats["num_reactions"] = len(fva_data["minimum"])
 
         return model_stats if model_stats else None
 

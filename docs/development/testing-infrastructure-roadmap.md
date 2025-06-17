@@ -19,7 +19,7 @@ This roadmap addresses the optimization and rationalization of ModelSEEDagent's 
 
 **1. ModelSEED Tool Validation Suite** (`scripts/tool_validation_suite.py`, `testbed_results/`)
 - **Purpose**: Comprehensive tool validation with biological validation
-- **Scope**: 4 real metabolic models × 28 tools = 112 test combinations
+- **Scope**: 4 real metabolic models × 30 tools = 112 test combinations
 - **Levels**:
   - **Comprehensive Validation**: Full tool suite testing
   - **CI Validation**: Essential subset for continuous integration
@@ -39,7 +39,7 @@ This roadmap addresses the optimization and rationalization of ModelSEEDagent's 
 
 ### Key Statistics
 - **Testbed Results**: 133 output files with biological validation
-- **Test Coverage**: 28 tools tested across multiple model types
+- **Test Coverage**: 30 tools tested across multiple model types
 - **Success Rate**: 100% (76/76 tests passing)
 - **Manual Tests**: 25+ scattered debug/validation scripts
 

@@ -21,7 +21,7 @@ Scores range from 0 (not started) to 10 (fully satisfied).
 
 | Principle | Score | Evidence | Key gaps |
 |-----------|------:|----------|----------|
-| 1. Natural-Language → Tool Calls | 8 | LangGraph agent converts free-text into structured calls for 28 tools. | Tool-selector logic lives in a large module and is not unit-tested. |
+| 1. Natural-Language → Tool Calls | 8 | LangGraph agent converts free-text into structured calls for 30 tools. | Tool-selector logic lives in a large module and is not unit-tested. |
 | 2. Own Your Prompts | 3 | Prompts are hard-coded across multiple Python files and YAML configs. | No central template store, versioning or automated tests. |
 | 3. Own Your Context Window | 4 | Agent trims old history but does not prioritise or compress content. | No explicit token budgeting or context manager. |
 | 4. Tools Return Structured Output | 8 | All tools emit a Pydantic `ToolResult`; FBA exports JSON/CSV. | Error payloads are not standardised. |

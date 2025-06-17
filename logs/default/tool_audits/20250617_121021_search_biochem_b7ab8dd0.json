@@ -1,0 +1,122 @@
+{
+  "audit_id": "b7ab8dd0-93df-4678-8ccd-de70dc06b959",
+  "session_id": null,
+  "tool_name": "search_biochem",
+  "timestamp": "2025-06-17T12:10:21.546345",
+  "input": {
+    "model_path": "data/examples/e_coli_core.xml",
+    "query": "glucose",
+    "entity_type": "compound",
+    "max_results": 10
+  },
+  "output": {
+    "structured": {
+      "success": true,
+      "message": "Found 10 matches for 'glucose'",
+      "error": null,
+      "full_data_path": null,
+      "summary_dict": null,
+      "key_findings": null,
+      "schema_version": "1.0",
+      "tool_name": null,
+      "model_stats": null,
+      "data": {
+        "query": "glucose",
+        "total_results": 10,
+        "compounds": [
+          {
+            "modelseed_id": "cpd14694",
+            "primary_name": "(+)-(S)-ABA-beta-GE",
+            "match_name": "(+)-<i>A</i>-ABA glucose ester",
+            "source": "name",
+            "match_type": "name"
+          },
+          {
+            "modelseed_id": "cpd14694",
+            "primary_name": "(+)-(S)-ABA-beta-GE",
+            "match_name": "(+)-A-ABA glucose ester",
+            "source": "name",
+            "match_type": "name"
+          },
+          {
+            "modelseed_id": "cpd14694",
+            "primary_name": "(+)-(S)-ABA-beta-GE",
+            "match_name": "(+)-ABA glucose ester",
+            "source": "name",
+            "match_type": "name"
+          },
+          {
+            "modelseed_id": "cpd02785",
+            "primary_name": "1,2,3,4,6-Pentakis-O-galloyl-beta-D-glucose",
+            "match_name": "1,2,3,4,6-Pentakis-O-galloyl-beta-D-glucose",
+            "source": "name",
+            "match_type": "name"
+          },
+          {
+            "modelseed_id": "cpd02785",
+            "primary_name": "1,2,3,4,6-Pentakis-O-galloyl-beta-D-glucose",
+            "match_name": "1,2,3,4,6-pentagalloylglucose",
+            "source": "name",
+            "match_type": "name"
+          },
+          {
+            "modelseed_id": "cpd02785",
+            "primary_name": "1,2,3,4,6-Pentakis-O-galloyl-beta-D-glucose",
+            "match_name": "1,2,3,4,6-pentakis-O-galloyl-beta-D-glucose",
+            "source": "name",
+            "match_type": "name"
+          },
+          {
+            "modelseed_id": "cpd07132",
+            "primary_name": "1,2,3,4-Tetragalloyl-alpha-D-glucose",
+            "match_name": "1,2,3,4-Tetragalloyl-alpha-D-glucose",
+            "source": "name",
+            "match_type": "name"
+          },
+          {
+            "modelseed_id": "cpd02748",
+            "primary_name": "1,2,3,6-Tetra-O-galloyl-beta-D-glucose",
+            "match_name": "1,2,3,6-Tetra-O-galloyl-beta-D-glucose",
+            "source": "name",
+            "match_type": "name"
+          },
+          {
+            "modelseed_id": "cpd02748",
+            "primary_name": "1,2,3,6-Tetra-O-galloyl-beta-D-glucose",
+            "match_name": "1,2,3,6-Tetrakis-O-galloyl-beta-D-glucose",
+            "source": "name",
+            "match_type": "name"
+          },
+          {
+            "modelseed_id": "cpd02748",
+            "primary_name": "1,2,3,6-Tetra-O-galloyl-beta-D-glucose",
+            "match_name": "1,2,3,6-tetrakis-O-galloyl-beta-D-glucose",
+            "source": "name",
+            "match_type": "name"
+          }
+        ],
+        "reactions": []
+      },
+      "metadata": {},
+      "smart_summarization_metrics": {
+        "enabled": false
+      }
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 2.022564172744751,
+    "success": true,
+    "error": null,
+    "timestamp_end": "2025-06-17T12:10:21.546409"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

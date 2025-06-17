@@ -2,7 +2,7 @@
 
 **AI-Powered Metabolic Modeling Platform**
 
-ModelSEEDagent combines large-language-model reasoning with **29 specialised metabolic-modeling tools** and **Smart Summarization Framework**.  The **interactive interface is production-ready and fully tested**; the Typer-based CLI is available in **beta** while we finish import cleanup and help-formatting fixes.
+ModelSEEDagent combines large-language-model reasoning with **30 specialised metabolic-modeling tools** and **Smart Summarization Framework**.  The **interactive interface is production-ready and fully tested**; the Typer-based CLI is available in **beta** while we finish import cleanup and help-formatting fixes.
 
 ## 📚 **Documentation**
 
@@ -44,7 +44,7 @@ modelseed-agent analyze data/examples/e_coli_core.xml --query "Find essential ge
 - **AI Transparency** - Advanced hallucination detection and audit system
 - **Smart Summarization Framework** - 95-99.9% size reduction with three-tier information hierarchy
 - **Natural Language Interface** - Conversational AI for complex metabolic analysis
-- **AI Media Intelligence** - 29 specialized tools for intelligent media management and optimization
+- **AI Media Intelligence** - 30 specialized tools for intelligent media management and optimization
 
 ## Advanced AI Features
 
@@ -102,7 +102,7 @@ Pre-built workflow templates combining media selection with analysis:
 
 **🧪 [Complete Tool Testing Status](https://jplfaria.github.io/ModelSEEDagent/TOOL_TESTING_STATUS/)** - Live testing coverage and results
 
-**Current Status**: 24/29 tools actively tested (83% coverage) with 100% success rate across 4 model types
+**Current Status**: 24/30 tools actively tested (80% coverage) with 100% success rate across 4 model types
 
 | Category | Implemented | Tested | Success Rate | Status |
 |----------|-------------|--------|--------------|--------|
@@ -171,7 +171,7 @@ ModelSEEDagent/
 ├── notebooks/                     # Interactive tutorials
 ├── src/                           # Main source code
 │   ├── agents/                    # AI agents and reasoning
-│   ├── tools/                     # 29 specialized tools
+│   ├── tools/                     # 30 specialized tools
 │   │   ├── cobra/                 # 12 COBRApy tools
 │   │   ├── modelseed/             # 3 ModelSEED tools
 │   │   ├── biochem/               # 2 biochemistry tools
@@ -194,7 +194,7 @@ ModelSEEDagent/
 **Quick Links:**
 - **[Getting Started](https://jplfaria.github.io/ModelSEEDagent/user/README/)** - Installation and basic usage
 - **[User Guide](https://jplfaria.github.io/ModelSEEDagent/user/INTERACTIVE_GUIDE/)** - Interactive interface guide
-- **[Tool Reference](https://jplfaria.github.io/ModelSEEDagent/TOOL_REFERENCE/)** - All 29 tools overview
+- **[Tool Reference](https://jplfaria.github.io/ModelSEEDagent/TOOL_REFERENCE/)** - All 30 tools overview
 - **[API Documentation](https://jplfaria.github.io/ModelSEEDagent/api/overview/)** - Programmatic usage
 - **[Configuration](https://jplfaria.github.io/ModelSEEDagent/configuration/)** - Setup and configuration options
 

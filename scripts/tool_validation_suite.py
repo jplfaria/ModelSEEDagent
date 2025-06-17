@@ -743,17 +743,17 @@ class ModelSEEDToolValidationSuite:
                 # System tools don't need model inputs, just the test parameters
                 system_test_params = {**tool_params}
                 system_test_params.pop("model_path", None)  # Remove model_path
-                result = tool._run_tool(system_test_params)
+                result = tool._run(system_test_params)
             elif tool_name in self.biochem_tools:
                 # Biochemistry tools use different parameter structure
-                result = tool._run_tool(tool_params)
+                result = tool._run(tool_params)
             elif tool_name == "ModelAnalysis":
                 # ModelAnalysis expects just the model_path string
-                result = tool._run_tool(model_path)
+                result = tool._run(model_path)
             elif tool_name == "PathwayAnalysis":
                 # PathwayAnalysis may fail due to missing annotations - handle gracefully
                 try:
-                    result = tool._run_tool(tool_params)
+                    result = tool._run(tool_params)
                 except Exception as e:
                     if (
                         "pathway" in str(e).lower()
@@ -783,7 +783,7 @@ class ModelSEEDToolValidationSuite:
             elif tool_name in ["MediaOptimization", "AuxotrophyPrediction"]:
                 # AI Media tools may also fail due to missing dependencies - handle gracefully
                 try:
-                    result = tool._run_tool(tool_params)
+                    result = tool._run(tool_params)
                 except Exception as e:
                     if "NoneType" in str(e) or "iterable" in str(e):
                         # Create a result indicating dependency issues
@@ -807,7 +807,7 @@ class ModelSEEDToolValidationSuite:
                         raise  # Re-raise if it's a different error
             else:
                 # COBRA and Media tools
-                result = tool._run_tool(tool_params)
+                result = tool._run(tool_params)
 
             # Store raw output
             if hasattr(result, "model_dump"):

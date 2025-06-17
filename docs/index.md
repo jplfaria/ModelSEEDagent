@@ -8,9 +8,9 @@ ModelSEEDagent is an **LLM-powered metabolic-modeling toolkit** that currently s
 
 **Latest Updates:**
 - **Perfect Testing**: 92/92 validation tests passing (100% success rate)
-- **Enhanced CLI**: Complete command reference with examples and troubleshooting  
+- **Enhanced CLI**: Complete command reference with examples and troubleshooting
 - **Performance Optimizations**: Connection pooling, model caching, biological validation
-- **Tool Status**: 28 tools validated across 4 model formats (BiGG + ModelSEED)
+- **Tool Status**: 30 tools validated across 4 model formats (BiGG + ModelSEED)
 
 ## Quick Start
 

@@ -1,6 +1,32 @@
 {
   "updates": [
     {
+      "commit": "c7209e81",
+      "timestamp": "2025-06-17 11:24:37",
+      "automated_updates": [
+        {
+          "file": "README.md",
+          "type": "content_update",
+          "summary": "Updated README.md with latest tool information"
+        }
+      ],
+      "files_modified": [
+        "README.md"
+      ],
+      "tool_count_updates": {
+        "current_total": 29,
+        "categories": {
+          "cobra": 16,
+          "modelseed": 6,
+          "biochem": 3,
+          "rast": 2,
+          "audit": 2
+        }
+      },
+      "link_fixes": [],
+      "new_files_created": []
+    },
+    {
       "commit": "c39f2052",
       "timestamp": "2025-06-14 01:57:10",
       "automated_updates": [

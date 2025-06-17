@@ -362,6 +362,8 @@ class RealTimeMetabolicAgent(BaseAgent):
             "manipulate_media_composition",
             "analyze_media_compatibility",
             "compare_media_performance",
+            # Phase C Smart Summarization Tool
+            "fetch_artifact_data",
         ]
 
         build_tools = ["build_metabolic_model", "annotate_genome_rast", "gapfill_model"]
@@ -545,13 +547,78 @@ Think step by step about the query requirements and tool capabilities."""
                 f"Error in AI selection: {str(e)}",
             )
 
+    def _analyze_query_intent(self, query: str) -> Dict[str, Any]:
+        """Analyze query intent to determine appropriate analysis depth and stopping criteria"""
+        query_lower = query.lower()
+
+        # Depth indicators - check in order of specificity (most specific first)
+        depth_indicators = [
+            (
+                "comprehensive",
+                ["comprehensive", "complete", "full", "extensive", "systematic", "all"],
+            ),
+            (
+                "detailed",
+                ["detailed", "detail", "more detail", "thorough", "deep", "in-depth"],
+            ),
+            ("minimal", ["quick", "simple", "basic", "just", "only"]),
+            ("standard", ["analyze", "check", "run", "test"]),
+        ]
+
+        # Determine query depth by checking most specific indicators first
+        query_depth = "standard"  # default
+        matched_indicators = []
+        for depth, indicators in depth_indicators:
+            matched = [ind for ind in indicators if ind in query_lower]
+            if matched:
+                query_depth = depth
+                matched_indicators = matched
+                break
+
+        # Set analysis expectations based on query depth
+        analysis_expectations = {
+            "minimal": {
+                "min_tools": 1,
+                "max_tools": 2,
+                "confidence_threshold": 0.7,
+                "information_density_threshold": 0.6,
+            },
+            "standard": {
+                "min_tools": 1,
+                "max_tools": 3,
+                "confidence_threshold": 0.8,
+                "information_density_threshold": 0.7,
+            },
+            "detailed": {
+                "min_tools": 2,
+                "max_tools": 5,
+                "confidence_threshold": 0.85,
+                "information_density_threshold": 0.8,
+            },
+            "comprehensive": {
+                "min_tools": 3,
+                "max_tools": 6,
+                "confidence_threshold": 0.9,
+                "information_density_threshold": 0.85,
+            },
+        }
+
+        return {
+            "query_depth": query_depth,
+            "expectations": analysis_expectations[query_depth],
+            "query_indicators": matched_indicators,
+        }
+
     def _ai_analyze_results_and_decide_next_step(
         self, query: str, knowledge_base: Dict[str, Any]
     ) -> tuple[Optional[str], bool, str]:
         """
         AI analyzes accumulated results and decides the next step.
-        This is the core of dynamic decision-making.
+        This is the core of dynamic decision-making with query-aware stopping criteria.
         """
+        # Analyze query intent for appropriate stopping criteria
+        query_intent = self._analyze_query_intent(query)
+
         # Prepare context of what we've learned so far
         results_context = self._format_knowledge_base_for_ai(knowledge_base)
         step_number = len(knowledge_base)
@@ -572,6 +639,8 @@ Think step by step about the query requirements and tool capabilities."""
             "manipulate_media_composition",
             "analyze_media_compatibility",
             "compare_media_performance",
+            # Phase C Smart Summarization Tool
+            "fetch_artifact_data",
         ]
 
         build_tools = ["build_metabolic_model", "annotate_genome_rast", "gapfill_model"]
@@ -605,12 +674,38 @@ IMPORTANT GUIDELINES:
 - Each tool provides different insights: FBA (growth), minimal media (nutritional requirements), essentiality (critical genes), AI media tools (intelligent media management), etc.
 - BUILD TOOLS require genome annotation files and are not appropriate for analyzing existing models
 
-Based on the ACTUAL DATA you've collected, analyze:
+PHASE C SMART SUMMARIZATION - SELF-REFLECTION RULES:
+- When you see "[Full data available at: ...]" in results, you have access to complete detailed data
+- Use fetch_artifact_data when you need to:
+  * Perform statistical analysis beyond the summary (e.g., flux distributions, quantile analysis)
+  * Debug unexpected results or troubleshoot model behavior
+  * Make detailed cross-model comparisons requiring raw data
+  * Answer specific quantitative questions that require full datasets
+- The KEY FINDINGS and SUMMARY DATA should be sufficient for most high-level analysis
+- Only fetch full data when detailed analysis is explicitly needed for the query
+
+QUERY-AWARE STOPPING CRITERIA:
+- Query intent detected: "{query_intent['query_depth'].upper()}" analysis requested
+- Query indicators found: {query_intent['query_indicators']}
+- Expected analysis depth: {query_intent['expectations']['min_tools']}-{query_intent['expectations']['max_tools']} tools
+- Current tools executed: {step_number}
+- Confidence threshold for completion: {query_intent['expectations']['confidence_threshold']}
+
+STOPPING DECISION GUIDELINES:
+- For MINIMAL queries ("quick", "simple"): 1-2 tools usually sufficient
+- For STANDARD queries: 1-3 tools appropriate
+- For DETAILED queries ("detailed", "in more detail"): 2-5 tools recommended
+- For COMPREHENSIVE queries ("comprehensive", "complete"): 3-6 tools expected
+- Don't stop prematurely if query explicitly asks for detailed exploration
+- Don't continue unnecessarily if simple information was requested
+
+Based on the ACTUAL DATA you've collected and the QUERY INTENT ANALYSIS, analyze:
 
 1. What specific information have you learned?
 2. What questions remain unanswered from the original query?
-3. What ANALYSIS tool would provide the most valuable ADDITIONAL insight?
-4. Do you have enough information to provide a comprehensive answer?
+3. Does your current analysis depth match the query intent ({query_intent['query_depth']})?
+4. If you're below the expected tool range, what ANALYSIS tool would provide the most valuable ADDITIONAL insight?
+5. If you're within or above the expected range, do you have sufficient information to address the original query's depth requirements?
 
 Decide your next action:
 
@@ -794,14 +889,47 @@ Make your decision based on the ACTUAL DATA PATTERNS you see, not generic workfl
         try:
             logger.info(f"🔧 Executing tool: {tool_name}")
 
-            # Execute tool
+            # Execute tool with Smart Summarization
             start_time = time.time()
-            result = tool._run_tool(tool_input)
+            result = tool._run(tool_input)
             execution_time = time.time() - start_time
 
             if result.success:
-                # Store successful result
-                self.knowledge_base[tool_name] = result.data
+                # Store successful result - Phase C: Store full ToolResult for Smart Summarization
+                self.knowledge_base[tool_name] = result
+
+                # Phase C: Track Smart Summarization effectiveness
+                if hasattr(result, "metadata") and result.metadata:
+                    original_size = result.metadata.get("original_data_size", 0)
+                    summarized_size = result.metadata.get("summarized_size_bytes", 0)
+                    reduction_pct = result.metadata.get(
+                        "summarization_reduction_pct", 0
+                    )
+
+                    if original_size > 0 and reduction_pct > 0:
+                        # Record effectiveness in learning memory
+                        self.learning_memory.record_summarization_effectiveness(
+                            tool_name=tool_name,
+                            original_size_bytes=original_size,
+                            summarized_size_bytes=summarized_size,
+                            reduction_percentage=reduction_pct,
+                            # Use reduction rate as proxy for effectiveness (90%+ is highly effective)
+                            user_satisfaction_score=(
+                                min(reduction_pct / 100.0, 1.0)
+                                if reduction_pct >= 50
+                                else 0.5
+                            ),
+                            information_completeness_score=(
+                                0.95
+                                if hasattr(result, "key_findings")
+                                and result.key_findings
+                                else 0.8
+                            ),
+                            context_window_savings=max(
+                                0, original_size - summarized_size
+                            )
+                            // 4,  # Rough token estimation
+                        )
 
                 # Create audit record
                 audit_record = {
@@ -825,8 +953,8 @@ Make your decision based on the ACTUAL DATA PATTERNS you see, not generic workfl
                         tool_name, result.metadata["audit_file"]
                     )
 
-                # Log success
-                summary = self._create_execution_summary(tool_name, result.data)
+                # Log success - Phase C: Pass full result for Smart Summarization
+                summary = self._create_execution_summary(tool_name, result)
                 logger.info(f"   ✅ {summary}")
 
                 return result
@@ -1231,7 +1359,7 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
         return "\n".join(insights) if insights else "Analysis completed successfully"
 
     def _format_knowledge_base_for_ai(self, knowledge_base: Dict[str, Any]) -> str:
-        """Format accumulated knowledge for AI analysis with content filtering protection"""
+        """Format accumulated knowledge for AI analysis with Smart Summarization support"""
         if not knowledge_base:
             return "No results collected yet."
 
@@ -1239,8 +1367,29 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
         for tool_name, data in knowledge_base.items():
             formatted += f"\n{tool_name.upper()} RESULTS:\n"
 
-            if isinstance(data, dict):
-                # Smart data extraction to avoid content filtering
+            # Phase C: Smart Summarization Integration
+            # Check if data is a ToolResult with Smart Summarization fields
+            if hasattr(data, "key_findings") and data.key_findings:
+                # Use key_findings for optimal LLM consumption
+                formatted += "  KEY FINDINGS:\n"
+                for finding in data.key_findings:
+                    formatted += f"    • {finding}\n"
+
+                # Include summary_dict if available for structured data
+                if hasattr(data, "summary_dict") and data.summary_dict:
+                    formatted += "  SUMMARY DATA:\n"
+                    for key, value in data.summary_dict.items():
+                        formatted += f"    {key}: {value}\n"
+
+                # Add hint about detailed analysis capability
+                if hasattr(data, "full_data_path") and data.full_data_path:
+                    formatted += (
+                        f"    [Full data available at: {data.full_data_path}]\n"
+                    )
+                    formatted += "    [Use fetch_artifact_data tool for detailed analysis if needed]\n"
+
+            elif isinstance(data, dict):
+                # Legacy: Smart data extraction to avoid content filtering
                 formatted += self._extract_safe_insights(tool_name, data)
             else:
                 formatted += f"  {str(data)[:200]}...\n"
@@ -1355,6 +1504,8 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
             "manipulate_media_composition",
             "analyze_media_compatibility",
             "compare_media_performance",
+            # Phase C Smart Summarization Tool
+            "fetch_artifact_data",
         ]:
             # Ensure model_path is always a string
             model_path = (
@@ -1395,8 +1546,19 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
         logger.debug(f"🔍 TOOL INPUT PREPARED: {tool_name} -> {result}")
         return result
 
-    def _create_execution_summary(self, tool_name: str, data: Any) -> str:
-        """Create summary of tool execution results"""
+    def _create_execution_summary(self, tool_name: str, result: Any) -> str:
+        """Create summary of tool execution results - Phase C: Smart Summarization support"""
+        # Handle ToolResult objects with Smart Summarization
+        if hasattr(result, "key_findings") and result.key_findings:
+            # Use first key finding for summary
+            return f"Key insight: {result.key_findings[0]}"
+
+        # Handle legacy ToolResult objects
+        if hasattr(result, "data"):
+            data = result.data
+        else:
+            data = result
+
         if not isinstance(data, dict):
             return "Analysis completed"
 
@@ -2024,7 +2186,8 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
         if not result.success:
             return self._create_error_result(f"First tool failed: {result.error}")
 
-        self.knowledge_base[first_tool] = result.data
+        # Phase C: Store full ToolResult for Smart Summarization
+        self.knowledge_base[first_tool] = result
         self.tool_execution_history.append(
             {"tool": first_tool, "reasoning": reasoning, "success": result.success}
         )
@@ -2049,7 +2212,8 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
 
                 result = await self._execute_tool_with_audit(next_tool, query)
 
-                self.knowledge_base[next_tool] = result.data
+                # Phase C: Store full ToolResult for Smart Summarization
+                self.knowledge_base[next_tool] = result
                 self.tool_execution_history.append(
                     {
                         "tool": next_tool,

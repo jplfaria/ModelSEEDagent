@@ -367,9 +367,33 @@ class ToolResult:
    - Highlights network flexibility
 
 3. **GeneDeletion Summarizer**:
-   - Focuses on essential genes and growth impacts
-   - Categorizes genes by deletion effects
-   - Preserves critical safety information
+   - Categorizes genes by knockout impact severity
+   - Prioritizes essential vs. non-essential genes
+   - Groups by growth impact thresholds
+
+4. **FBA Summarizer**:
+   - Optimizes growth rate and flux analysis results
+   - Categorizes reactions by flux magnitude
+   - Highlights metabolic subsystem activity
+   - Identifies high-flux reactions and pathways
+
+### Tool Execution Requirements
+
+**Critical Implementation Note**: For Smart Summarization to function properly, tools must be executed through the correct interface:
+
+```python
+# CORRECT: Uses Smart Summarization
+result = tool._run(input_data)      # Calls BaseTool._run()
+
+# INCORRECT: Bypasses Smart Summarization
+result = tool._run_tool(input_data) # Calls implementation directly
+```
+
+**Why This Matters**:
+- `BaseTool._run()` applies Smart Summarization automatically
+- `tool._run_tool()` executes raw implementation without framework integration
+- Real-time agents and validation suites must use the proper interface
+- Direct calls bypass audit trails and size reduction benefits
 
 **Accessing Full Data**:
 

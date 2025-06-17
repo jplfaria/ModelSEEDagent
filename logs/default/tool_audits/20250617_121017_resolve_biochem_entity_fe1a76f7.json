@@ -1,0 +1,177 @@
+{
+  "audit_id": "fe1a76f7-7000-4b79-88c3-360bf99f66e4",
+  "session_id": null,
+  "tool_name": "resolve_biochem_entity",
+  "timestamp": "2025-06-17T12:10:17.481841",
+  "input": {
+    "model_path": "data/examples/e_coli_core.xml",
+    "entity_id": "glc__D",
+    "entity_type": "compound",
+    "include_aliases": true
+  },
+  "output": {
+    "structured": {
+      "success": true,
+      "message": "Resolved glc__D as compound",
+      "error": null,
+      "full_data_path": null,
+      "summary_dict": null,
+      "key_findings": null,
+      "schema_version": "1.0",
+      "tool_name": null,
+      "model_stats": null,
+      "data": {
+        "entity_id": "glc__D",
+        "entity_type": "compound",
+        "resolved": true,
+        "primary_id": "cpd00027",
+        "primary_name": "D-(+)-Glucose",
+        "aliases": [
+          {
+            "external_id": "S_D_45_Glucose_c",
+            "source": "AlgaGEM"
+          },
+          {
+            "external_id": "S_Glucose_c",
+            "source": "AlgaGEM"
+          },
+          {
+            "external_id": "S_Glucose_ext_b",
+            "source": "AlgaGEM"
+          },
+          {
+            "external_id": "S_Glucose_p",
+            "source": "AlgaGEM"
+          },
+          {
+            "external_id": "S_D_45_Glucose_c",
+            "source": "AraGEM"
+          },
+          {
+            "external_id": "glc__D",
+            "source": "BiGG"
+          },
+          {
+            "external_id": "glc-D",
+            "source": "BiGG1"
+          },
+          {
+            "external_id": "glc_D",
+            "source": "BiGG1"
+          },
+          {
+            "external_id": "4167",
+            "source": "ChEBI"
+          },
+          {
+            "external_id": "GLC",
+            "source": "JM_Creinhardtii"
+          },
+          {
+            "external_id": "M_glc_D_c",
+            "source": "JP_Creinhardtii_NMeth"
+          },
+          {
+            "external_id": "M_glc_D_h",
+            "source": "JP_Creinhardtii_NMeth"
+          },
+          {
+            "external_id": "C00031",
+            "source": "KEGG"
+          },
+          {
+            "external_id": "C00293",
+            "source": "KEGG"
+          },
+          {
+            "external_id": "S_D_45_Glucose_c",
+            "source": "Maize_C4GEM"
+          },
+          {
+            "external_id": "S_Glucose_ext",
+            "source": "Maize_C4GEM"
+          },
+          {
+            "external_id": "Glucopyranose",
+            "source": "MetaCyc"
+          },
+          {
+            "external_id": "met735_c",
+            "source": "TS_Athaliana"
+          },
+          {
+            "external_id": "met735_p",
+            "source": "TS_Athaliana"
+          },
+          {
+            "external_id": "met735_r",
+            "source": "TS_Athaliana"
+          }
+        ],
+        "names": [
+          {
+            "name": "D-(+)-Glucose",
+            "source": "name"
+          },
+          {
+            "name": "D-Glc",
+            "source": "name"
+          },
+          {
+            "name": "D-Glucopyranose",
+            "source": "name"
+          },
+          {
+            "name": "D-Glucose",
+            "source": "name"
+          },
+          {
+            "name": "D-glucopyranose",
+            "source": "name"
+          },
+          {
+            "name": "Dextrose",
+            "source": "name"
+          },
+          {
+            "name": "Glc-OH",
+            "source": "name"
+          },
+          {
+            "name": "Glucopyranose",
+            "source": "name"
+          },
+          {
+            "name": "Glucose",
+            "source": "name"
+          },
+          {
+            "name": "Grape sugar",
+            "source": "name"
+          }
+        ],
+        "suggestions": []
+      },
+      "metadata": {},
+      "smart_summarization_metrics": {
+        "enabled": false
+      }
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 2.029939889907837,
+    "success": true,
+    "error": null,
+    "timestamp_end": "2025-06-17T12:10:17.481929"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}
