@@ -2,7 +2,7 @@
 
 **Advanced AI-Powered Metabolic Modeling Platform**
 
-ModelSEEDagent is a production-ready AI-powered metabolic modeling platform that combines large language models with **27 specialized bioinformatics tools** and **advanced AI reasoning capabilities**. Built on LangGraph for intelligent workflow orchestration, it provides comprehensive metabolic modeling AI assistance for research and analysis.
+ModelSEEDagent is an **LLM-powered metabolic-modeling toolkit** that currently ships with **28 production-grade analysis tools**.  The **interactive interface is stable**; the Typer-based CLI is in beta while remaining import issues are fixed.
 
 ## Quick Start
 
@@ -25,8 +25,8 @@ modelseed-agent setup --backend argo
 - **Advanced COBRA Analysis** - 12 tools covering comprehensive COBRApy capabilities
 - **Universal Model Compatibility** - Seamless ModelSEED ↔ COBRApy integration
 - **Biochemistry Intelligence** - Universal ID resolution across 45K+ compounds and 56K+ reactions
-- **Advanced AI Reasoning** - Multi-step analysis chains, hypothesis testing, collaborative decisions
-- **Pattern Learning** - Cross-model learning and intelligent recommendations
+- **Advanced AI Reasoning** - Multi-step analysis chains, hypothesis testing (beta)
+- **Pattern Learning** - In-session learning (cross-model learning planned)
 - **AI Transparency** - Comprehensive hallucination detection and audit system
 - **Natural Language Interface** - Conversational AI for complex metabolic analysis
 - **Intelligent Media Management** - 6 specialized tools for media optimization and analysis
@@ -53,20 +53,24 @@ Multiple AI agents collaborate on complex analysis decisions:
 modelseed-agent analyze model.xml --query "Use collaborative reasoning"
 ```
 
+### Collaborative AI Decision Making *(roadmap)*
+
 ### Cross-Model Pattern Learning
 AI learns from analysis patterns across different models:
 ```bash
 modelseed-agent analyze model.xml --query "Learn from analysis patterns"
 ```
 
-## Complete Tool Suite (27 Tools)
+### Cross-Model Pattern Learning *(roadmap)*
 
-### ModelSEED Tools (5 tools)
+## Complete Tool Suite (28 Tools)
+
+### ModelSEED Tools (3 tools – service-dependent)
 - **Genome Annotation** - RAST-based automated annotation
 - **Model Building** - MSBuilder with template-based reconstruction
 - **Gapfilling** - Advanced pathway completion algorithms
-- **Protein Annotation** - Sequence-based functional annotation
-- **Model Compatibility** - ModelSEED ↔ COBRApy compatibility testing
+- **Protein Annotation (planned)** - Sequence-based functional annotation
+- **Model Compatibility testing (planned)** - ModelSEED ↔ COBRApy compatibility testing
 
 ### COBRApy Tools (12 tools)
 - **FBA & pFBA** - Flux balance analysis with parsimonious variants
@@ -144,7 +148,7 @@ Visit the [Troubleshooting Guide](troubleshooting.md) for common issues and solu
 
 ## Project Status
 
-ModelSEEDagent is **production-ready** and actively maintained. For detailed project information, see the [Architecture Guide](ARCHITECTURE.md).
+ModelSEEDagent is **under active development** – the interactive interface is production-ready; the CLI and a few advanced features are marked experimental. For detailed project information, see the [Architecture Guide](ARCHITECTURE.md).
 
 ## Support
 
