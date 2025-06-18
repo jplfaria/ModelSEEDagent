@@ -1004,5 +1004,233 @@
     "ineffective_strategies": [],
     "missed_opportunities": [],
     "summarization_metrics": null
+  },
+  {
+    "experience_id": "1750257728.397911",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-18T09:42:08.397918",
+    "user_query": "Model: data/examples/e_coli_core.xml\n  Query: \"explore the predicted growth rate in more detail and give me a summary\"",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "unknown",
+      "query_type": "growth_analysis",
+      "complexity": "medium"
+    },
+    "tools_used": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "find_minimal_media"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "find_minimal_media"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": [],
+    "summarization_metrics": null
+  },
+  {
+    "experience_id": "1750257728.397911",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-18T09:42:08.397918",
+    "user_query": "Model: data/examples/e_coli_core.xml\n  Query: \"explore the predicted growth rate in more detail and give me a summary\"",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "unknown",
+      "query_type": "growth_analysis",
+      "complexity": "medium"
+    },
+    "tools_used": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "find_minimal_media"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "find_minimal_media"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": [],
+    "summarization_metrics": {
+      "run_flux_variability_analysis": {
+        "original_size_bytes": 6626,
+        "summarized_size_bytes": 2132,
+        "reduction_percentage": 67.82,
+        "user_satisfaction_score": 0.6781999999999999,
+        "information_completeness_score": 0.95,
+        "context_window_savings": 1123,
+        "timestamp": "2025-06-18T09:43:45.119538"
+      }
+    }
+  },
+  {
+    "experience_id": "1750257901.416933",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-18T09:45:01.416942",
+    "user_query": "Model: data/examples/iML1515.xml (genome-scale for richer analysis)\n  Query: \"analyze the metabolic flexibility of this model and identify key bottlenecks\"",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "unknown",
+      "query_type": "general",
+      "complexity": "medium"
+    },
+    "tools_used": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "find_minimal_media",
+      "run_flux_variability_analysis"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "find_minimal_media",
+      "run_flux_variability_analysis"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": [],
+    "summarization_metrics": null
+  },
+  {
+    "experience_id": "1750258144.754441",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-18T09:49:04.754452",
+    "user_query": "Model: data/examples/e_coli_core.xml\n  Query: \"what are the essential genes and reactions in this model and why are they critical?\"",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "unknown",
+      "query_type": "essentiality",
+      "complexity": "medium"
+    },
+    "tools_used": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "find_minimal_media",
+      "run_flux_variability_analysis",
+      "analyze_essentiality",
+      "analyze_essentiality",
+      "analyze_essentiality"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "find_minimal_media",
+      "run_flux_variability_analysis",
+      "analyze_essentiality",
+      "analyze_essentiality",
+      "analyze_essentiality"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": [],
+    "summarization_metrics": null
+  },
+  {
+    "experience_id": "1750258144.754441",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-18T09:49:04.754452",
+    "user_query": "Model: data/examples/e_coli_core.xml\n  Query: \"what are the essential genes and reactions in this model and why are they critical?\"",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "unknown",
+      "query_type": "essentiality",
+      "complexity": "medium"
+    },
+    "tools_used": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "find_minimal_media",
+      "run_flux_variability_analysis",
+      "analyze_essentiality",
+      "analyze_essentiality",
+      "analyze_essentiality"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "find_minimal_media",
+      "run_flux_variability_analysis",
+      "analyze_essentiality",
+      "analyze_essentiality",
+      "analyze_essentiality"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": [],
+    "summarization_metrics": {
+      "run_metabolic_fba": {
+        "original_size_bytes": 2926,
+        "summarized_size_bytes": 590,
+        "reduction_percentage": 79.84,
+        "user_satisfaction_score": 0.7984,
+        "information_completeness_score": 0.95,
+        "context_window_savings": 584,
+        "timestamp": "2025-06-18T09:53:11.099081"
+      }
+    }
+  },
+  {
+    "experience_id": "1750258843.735668",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-18T10:00:43.735678",
+    "user_query": "Model: data/examples/e_coli_core.xml\n  Query: \"optimize the growth media for this model and explain the nutritional requirements\"",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "unknown",
+      "query_type": "growth_analysis",
+      "complexity": "medium"
+    },
+    "tools_used": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "find_minimal_media",
+      "run_flux_variability_analysis",
+      "analyze_essentiality",
+      "analyze_essentiality",
+      "analyze_essentiality",
+      "run_metabolic_fba"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "find_minimal_media",
+      "run_flux_variability_analysis",
+      "analyze_essentiality",
+      "analyze_essentiality",
+      "analyze_essentiality",
+      "run_metabolic_fba"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": [],
+    "summarization_metrics": null
   }
 ]

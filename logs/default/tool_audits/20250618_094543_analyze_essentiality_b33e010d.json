@@ -1,0 +1,160 @@
+{
+  "audit_id": "b33e010d-fb74-421a-b637-1d8b6a6c5d47",
+  "session_id": null,
+  "tool_name": "analyze_essentiality",
+  "timestamp": "2025-06-18T09:45:43.349150",
+  "input": {
+    "model_path": "/Users/jplfaria/repos/ModelSEEDagent/data/examples/e_coli_core.xml"
+  },
+  "output": {
+    "structured": {
+      "success": true,
+      "message": "Essentiality analysis completed. Found 7 essential genes and 18 essential reactions",
+      "error": null,
+      "full_data_path": null,
+      "summary_dict": null,
+      "key_findings": null,
+      "schema_version": "1.0",
+      "tool_name": null,
+      "model_stats": null,
+      "data": {
+        "wild_type_growth": 0.8739215069684305,
+        "threshold": 0.01,
+        "essential_genes": [
+          "b2779",
+          "b2926",
+          "b1779",
+          "b2415",
+          "b1136",
+          "b0720",
+          "b2416"
+        ],
+        "essential_reactions": [
+          "ACONTa",
+          "GLNS",
+          "GAPD",
+          "BIOMASS_Ecoli_core_w_GAM",
+          "EX_nh4_e",
+          "RPI",
+          "CS",
+          "EX_glc__D_e",
+          "NH4t",
+          "PGK",
+          "EX_h_e",
+          "GLCpts",
+          "PIt2r",
+          "EX_pi_e",
+          "ENO",
+          "ACONTb",
+          "ICDHyr",
+          "PGM"
+        ],
+        "gene_analysis": {
+          "summary": {
+            "total_essential_genes": 7,
+            "functional_categories": {
+              "Unknown": 7
+            },
+            "subsystems_affected": 0,
+            "top_subsystems": []
+          },
+          "connectivity": {
+            "single_reaction_genes": 5,
+            "multi_reaction_genes": 2,
+            "max_reactions_per_gene": 2,
+            "avg_reactions_per_gene": 1.2857142857142858
+          }
+        },
+        "reaction_analysis": {
+          "summary": {
+            "total_essential_reactions": 18,
+            "subsystems_affected": 1,
+            "top_subsystems": [
+              [
+                "Unknown",
+                18
+              ]
+            ]
+          },
+          "network_analysis": {
+            "exchange": 4,
+            "transport": 3,
+            "metabolic": 11,
+            "gene_associated": 13,
+            "spontaneous": 5
+          },
+          "gene_association": {
+            "max_genes_per_reaction": 8,
+            "avg_genes_per_reaction": 1.5555555555555556,
+            "reactions_with_genes": 13
+          }
+        },
+        "summary": {
+          "model_overview": {
+            "total_genes": 137,
+            "total_reactions": 95,
+            "total_metabolites": 72
+          },
+          "gene_essentiality": {
+            "essential_count": 7,
+            "essentiality_rate": 0.051094890510948905,
+            "top_functional_categories": [
+              [
+                "Unknown",
+                7
+              ]
+            ],
+            "connectivity_stats": {
+              "single_reaction_genes": 5,
+              "multi_reaction_genes": 2,
+              "max_reactions_per_gene": 2,
+              "avg_reactions_per_gene": 1.2857142857142858
+            }
+          },
+          "reaction_essentiality": {
+            "essential_count": 18,
+            "essentiality_rate": 0.18947368421052632,
+            "network_breakdown": {
+              "exchange": 4,
+              "transport": 3,
+              "metabolic": 11,
+              "gene_associated": 13,
+              "spontaneous": 5
+            },
+            "gene_association_stats": {
+              "max_genes_per_reaction": 8,
+              "avg_genes_per_reaction": 1.5555555555555556,
+              "reactions_with_genes": 13
+            }
+          }
+        }
+      },
+      "metadata": {
+        "model_id": "e_coli_core",
+        "wild_type_growth": 0.8739215069684305,
+        "threshold": 0.01,
+        "total_genes": 137,
+        "total_reactions": 95
+      },
+      "smart_summarization_metrics": {
+        "enabled": false
+      }
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 2.071829080581665,
+    "success": true,
+    "error": null,
+    "timestamp_end": "2025-06-18T09:45:43.349245"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

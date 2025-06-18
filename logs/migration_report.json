@@ -1,0 +1,785 @@
+{
+  "total_prompts": 28,
+  "successful_migrations": 28,
+  "failed_migrations": 0,
+  "success_rate": 1.0,
+  "migration_details": [
+    {
+      "prompt_id": "metabolic_agent_system",
+      "source_location": "config/prompts/metabolic.yaml",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    },
+    {
+      "prompt_id": "metabolic_agent_format",
+      "source_location": "config/prompts/metabolic.yaml",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    },
+    {
+      "prompt_id": "initial_tool_selection",
+      "source_location": "src/agents/real_time_metabolic.py:377-397",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    },
+    {
+      "prompt_id": "next_tool_selection",
+      "source_location": "src/agents/real_time_metabolic.py:589-609",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    },
+    {
+      "prompt_id": "final_analysis_generation",
+      "source_location": "src/agents/real_time_metabolic.py:922-942",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    },
+    {
+      "prompt_id": "uncertainty_assessment",
+      "source_location": "src/agents/collaborative_reasoning.py:116-131",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    },
+    {
+      "prompt_id": "option_recommendation",
+      "source_location": "src/agents/collaborative_reasoning.py:454-460",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    },
+    {
+      "prompt_id": "autonomous_decision_selection",
+      "source_location": "src/agents/collaborative_reasoning.py:514-521",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    },
+    {
+      "prompt_id": "analysis_goal_determination",
+      "source_location": "src/agents/reasoning_chains.py:173-185",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    },
+    {
+      "prompt_id": "multi_step_plan_generation",
+      "source_location": "src/agents/reasoning_chains.py:198-213",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    },
+    {
+      "prompt_id": "insight_extraction",
+      "source_location": "src/agents/reasoning_chains.py:432-443",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    },
+    {
+      "prompt_id": "question_identification",
+      "source_location": "src/agents/reasoning_chains.py:459-469",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    },
+    {
+      "prompt_id": "plan_adaptation",
+      "source_location": "src/agents/reasoning_chains.py:486-501",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    },
+    {
+      "prompt_id": "results_synthesis",
+      "source_location": "src/agents/reasoning_chains.py:535-550",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    },
+    {
+      "prompt_id": "hypothesis_generation_from_observation",
+      "source_location": "src/agents/hypothesis_system.py:120-135",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    },
+    {
+      "prompt_id": "hypothesis_generation_from_results",
+      "source_location": "src/agents/hypothesis_system.py:172-186",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    },
+    {
+      "prompt_id": "hypothesis_testing_planning",
+      "source_location": "src/agents/hypothesis_system.py:356-371",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    },
+    {
+      "prompt_id": "hypothesis_tool_input_determination",
+      "source_location": "src/agents/hypothesis_system.py:389-402",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    },
+    {
+      "prompt_id": "hypothesis_evidence_interpretation",
+      "source_location": "src/agents/hypothesis_system.py:418-433",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    },
+    {
+      "prompt_id": "pattern_analysis_from_experiences",
+      "source_location": "src/agents/pattern_memory.py:184-206",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    },
+    {
+      "prompt_id": "langgraph_query_analysis",
+      "source_location": "src/agents/langgraph_metabolic.py:879-899",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    },
+    {
+      "prompt_id": "langgraph_results_analysis",
+      "source_location": "src/agents/langgraph_metabolic.py:973-985",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    },
+    {
+      "prompt_id": "local_llm_system_template",
+      "source_location": "src/llm/local_llm.py:185",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    },
+    {
+      "prompt_id": "performance_optimized_prompt",
+      "source_location": "src/agents/performance_optimizer.py:233-250",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    },
+    {
+      "prompt_id": "tool_results_summarization",
+      "source_location": "src/agents/metabolic.py:256",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    },
+    {
+      "prompt_id": "error_handling_analysis",
+      "source_location": "general_error_handling",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    },
+    {
+      "prompt_id": "result_quality_validation",
+      "source_location": "quality_validation_system",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    },
+    {
+      "prompt_id": "biochemical_context_enrichment",
+      "source_location": "context_enrichment_system",
+      "status": "SUCCESS",
+      "timestamp": "src.prompts.migration_script"
+    }
+  ],
+  "registry_stats": {
+    "export_timestamp": "2025-06-18T15:01:06.073152",
+    "prompt_count": 28,
+    "prompts": [
+      {
+        "prompt_id": "metabolic_agent_system",
+        "category": "PromptCategory.SYSTEM_CONFIGURATION",
+        "version": "1.0",
+        "description": "System prompt for metabolic modeling agents",
+        "template": "You are an AI assistant specialized in metabolic modeling. Your expertise includes:\n- Flux Balance Analysis (FBA)\n- Metabolic network analysis\n- Pathway analysis\n- Model validation and improvement\n- Integration of genomic and metabolic data\n\nContext: {context}\nCurrent Task: {task}",
+        "variables": [
+          "context",
+          "task"
+        ],
+        "validation_rules": {
+          "min_length": 50
+        },
+        "created_at": "2025-06-18 15:01:06.059055",
+        "updated_at": "2025-06-18 15:01:06.059056",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      },
+      {
+        "prompt_id": "metabolic_agent_format",
+        "category": "PromptCategory.SYSTEM_CONFIGURATION",
+        "version": "1.0",
+        "description": "Format instructions and workflow for metabolic agents",
+        "template": "You are a metabolic modeling expert. Analyze metabolic models using the available tools.\nIMPORTANT: Follow these rules exactly:\n1. Only provide ONE response type at a time - either an Action or a Final Answer, never both.\n2. Use \"Action\" when you need to call a tool.\n3. Use \"Final Answer\" only when you have all necessary information and are done.\n\nPrevious Results:\n{tool_results}\n\nAvailable Tools:\n{available_tools}\n\nUse this EXACT format - do not deviate from it:\n\nWhen using a tool:\n  Thought: [your reasoning]\n  Action: tool_name\n  Action Input: [input for the tool]\n  Observation: [result from the tool]\n  ... (repeat as needed)\n\nWhen providing final answer:\n  Thought: [summarize findings]\n  Final Answer: [final summary]\n\nQuery: {query}",
+        "variables": [
+          "tool_results",
+          "available_tools",
+          "query"
+        ],
+        "validation_rules": {
+          "min_length": 100,
+          "must_contain": "Action"
+        },
+        "created_at": "2025-06-18 15:01:06.059290",
+        "updated_at": "2025-06-18 15:01:06.059291",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      },
+      {
+        "prompt_id": "initial_tool_selection",
+        "category": "PromptCategory.TOOL_SELECTION",
+        "version": "1.0",
+        "description": "Initial tool selection for real-time metabolic agent",
+        "template": "You are an expert metabolic modeling AI agent. Analyze this query and select the BEST first tool to start with.\n\nQuery: \"{query}\"\n\nAvailable tools are categorized as follows:\n\nANALYSIS TOOLS (for analyzing existing models): {available_analysis_tools}\nBUILD TOOLS (for creating new models from genome data): {available_build_tools}\nBIOCHEMISTRY TOOLS (for biochemistry database queries): {available_biochem_tools}\n\nIMPORTANT GUIDELINES:\n- If the query asks for \"analysis\", \"comprehensive analysis\", \"characterization\", or mentions analyzing an existing model, START with ANALYSIS TOOLS\n- BUILD TOOLS should only be used when the query explicitly mentions building a new model from genome/annotation data\n- For E. coli analysis queries, \"run_metabolic_fba\" is usually the best starting point as it provides foundational growth and flux information\n- ANALYSIS TOOLS work with existing model files and don't require genome annotation data\n- BUILD TOOLS require genome annotation files and are not appropriate for analyzing pre-built models\n\nBased on the query, what tool should you start with and why? Consider:\n1. What type of analysis is being requested?\n2. Do you have an existing model to analyze, or do you need to build one from genome data?\n3. Which tool provides the most informative starting point for THIS specific query?\n\nRespond with:\nSELECTED_TOOL: [tool_name]\nREASONING: [detailed explanation of why this tool is the best choice]",
+        "variables": [
+          "query",
+          "available_analysis_tools",
+          "available_build_tools",
+          "available_biochem_tools"
+        ],
+        "validation_rules": {
+          "min_length": 200,
+          "must_contain": "SELECTED_TOOL"
+        },
+        "created_at": "2025-06-18 15:01:06.059488",
+        "updated_at": "2025-06-18 15:01:06.059489",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      },
+      {
+        "prompt_id": "next_tool_selection",
+        "category": "PromptCategory.TOOL_SELECTION",
+        "version": "1.0",
+        "description": "Next tool selection based on previous results",
+        "template": "You are an expert metabolic modeling AI agent. You have executed some tools and now need to decide what to do next based on the ACTUAL RESULTS you've obtained.\n\nORIGINAL QUERY: \"{query}\"\n\nCURRENT STEP: {step_number}\n\nRESULTS OBTAINED SO FAR:\n{results_context}\n\nAvailable tools are categorized as follows:\n\nANALYSIS TOOLS (for analyzing existing models): {available_analysis_tools}\nBUILD TOOLS (for creating new models from genome data): {available_build_tools}\nBIOCHEMISTRY TOOLS (for biochemistry database queries): {available_biochem_tools}\n\nIMPORTANT GUIDELINES:\n- Continue using ANALYSIS TOOLS to explore different aspects of the metabolic model\n- BUILD TOOLS should only be used if you need to create a new model from genome data (rare in analysis workflows)\n- For comprehensive analysis, consider tools like: minimal media, essentiality, flux variability, auxotrophy analysis\n- NEW AI MEDIA TOOLS: Use select_optimal_media for intelligent media selection, manipulate_media_composition for natural language media modifications, analyze_media_compatibility for compatibility analysis, compare_media_performance for cross-media comparisons\n- Each tool provides different insights: FBA (growth), minimal media (nutritional requirements), essentiality (critical genes), AI media tools (intelligent media management), etc.\n\nBased on your results so far, what should you do next?\n\nRespond with:\nNEXT_ACTION: [CONTINUE_ANALYSIS | TOOL_SELECTION | ANALYSIS_COMPLETE]\nSELECTED_TOOL: [tool_name if TOOL_SELECTION]\nREASONING: [detailed explanation based on actual results obtained]",
+        "variables": [
+          "query",
+          "step_number",
+          "results_context",
+          "available_analysis_tools",
+          "available_build_tools",
+          "available_biochem_tools"
+        ],
+        "validation_rules": {
+          "min_length": 150,
+          "must_contain": "NEXT_ACTION"
+        },
+        "created_at": "2025-06-18 15:01:06.059757",
+        "updated_at": "2025-06-18 15:01:06.059757",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      },
+      {
+        "prompt_id": "final_analysis_generation",
+        "category": "PromptCategory.RESULT_ANALYSIS",
+        "version": "1.0",
+        "description": "Final comprehensive analysis generation",
+        "template": "You are an expert metabolic modeling AI agent. Provide a comprehensive analysis based on the ACTUAL RESULTS you've collected.\n\nORIGINAL QUERY: \"{query}\"\n\nACTUAL RESULTS COLLECTED:\n{results_context}\n\nBased on the REAL DATA you've gathered, provide:\n\n1. KEY QUANTITATIVE FINDINGS: Extract specific numbers, rates, counts from your results\n2. BIOLOGICAL INSIGHTS: What do these results tell us about the organism's metabolism?\n3. DIRECT ANSWERS: Answer the specific questions posed in the original query\n4. CONFIDENCE ASSESSMENT: Rate your confidence (0.0-1.0) in these conclusions\n\nFormat your response as:\nQUANTITATIVE_FINDINGS: [specific numbers and metrics you discovered]\nBIOLOGICAL_INSIGHTS: [metabolic insights from the data]\nDIRECT_ANSWERS: [answers to the original query]\nCONFIDENCE_SCORE: [0.0-1.0]\nSUMMARY: [concise overall conclusion]",
+        "variables": [
+          "query",
+          "results_context"
+        ],
+        "validation_rules": {
+          "min_length": 100,
+          "must_contain": "QUANTITATIVE_FINDINGS"
+        },
+        "created_at": "2025-06-18 15:01:06.060054",
+        "updated_at": "2025-06-18 15:01:06.060054",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      },
+      {
+        "prompt_id": "uncertainty_assessment",
+        "category": "PromptCategory.QUALITY_ASSESSMENT",
+        "version": "1.0",
+        "description": "Assess uncertainty and need for human collaboration",
+        "template": "Analyze this reasoning situation and determine if human collaboration would be beneficial:\n\nCurrent Reasoning: {ai_reasoning}\nAvailable Options: {available_options}\nContext: {context}\n\nAssess:\n1. How confident are you in the best next step? (0.0 = very uncertain, 1.0 = very confident)\n2. Are there multiple equally valid approaches?\n3. Would domain expertise improve the decision?\n4. Is the analysis at a critical decision point?\n\nRespond with JSON:\n{{\n    \"confidence\": 0.8,\n    \"requires_collaboration\": false,\n    \"collaboration_type\": \"none\",\n    \"reasoning\": \"explanation of assessment\"\n}}",
+        "variables": [
+          "ai_reasoning",
+          "available_options",
+          "context"
+        ],
+        "validation_rules": {
+          "min_length": 50,
+          "must_contain": "confidence"
+        },
+        "created_at": "2025-06-18 15:01:06.060338",
+        "updated_at": "2025-06-18 15:01:06.060339",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      },
+      {
+        "prompt_id": "option_recommendation",
+        "category": "PromptCategory.QUALITY_ASSESSMENT",
+        "version": "1.0",
+        "description": "Recommend best option from available choices",
+        "template": "Analyze these options and provide your recommendation:\n\nOptions: {options}\n\nWhich option do you think is best and why? Provide a brief rationale.\n\nConsider:\n- Potential outcomes of each option\n- Alignment with analysis goals\n- Risk vs benefit assessment\n- Resource requirements\n\nRespond with:\nRECOMMENDED_OPTION: [chosen option]\nRATIONALE: [detailed reasoning for the choice]\nCONFIDENCE: [0.0-1.0]\nALTERNATIVE_CONSIDERATIONS: [brief notes on other viable options]",
+        "variables": [
+          "options"
+        ],
+        "validation_rules": {
+          "min_length": 30,
+          "must_contain": "RECOMMENDED_OPTION"
+        },
+        "created_at": "2025-06-18 15:01:06.060660",
+        "updated_at": "2025-06-18 15:01:06.060661",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      },
+      {
+        "prompt_id": "autonomous_decision_selection",
+        "category": "PromptCategory.WORKFLOW_PLANNING",
+        "version": "1.0",
+        "description": "Autonomous selection of best analysis option",
+        "template": "Select the best option for this analysis situation:\n\nContext: {reasoning_context}\nOptions: {available_options}\n\nWhich option is most appropriate and why?\n\nConsider the analysis context and select the option that:\n- Best advances the analysis objectives\n- Makes optimal use of available information\n- Balances thoroughness with efficiency\n- Minimizes risk of analysis errors\n\nRespond with:\nSELECTED_OPTION: [chosen option]\nJUSTIFICATION: [reasoning for selection]\nEXPECTED_OUTCOME: [what you expect this choice to achieve]",
+        "variables": [
+          "reasoning_context",
+          "available_options"
+        ],
+        "validation_rules": {
+          "min_length": 40,
+          "must_contain": "SELECTED_OPTION"
+        },
+        "created_at": "2025-06-18 15:01:06.061168",
+        "updated_at": "2025-06-18 15:01:06.061168",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      },
+      {
+        "prompt_id": "analysis_goal_determination",
+        "category": "PromptCategory.WORKFLOW_PLANNING",
+        "version": "1.0",
+        "description": "Determine high-level analysis objectives from user queries",
+        "template": "Analyze this user query and determine the high-level analysis objective:\n\nUser Query: \"{user_query}\"\nContext: {context}\n\nProvide a clear, specific analysis goal that captures what the user wants to achieve.\nExamples:\n- \"Comprehensive characterization of metabolic capabilities\"\n- \"Investigation of growth limitations and bottlenecks\"\n- \"Optimization of metabolic efficiency and resource utilization\"\n\nThe goal should be:\n- Specific and measurable\n- Achievable with available tools\n- Aligned with the user's intent\n- Scientifically meaningful\n\nAnalysis Goal: [Clear, specific objective statement]",
+        "variables": [
+          "user_query",
+          "context"
+        ],
+        "validation_rules": {
+          "min_length": 30,
+          "must_contain": "Analysis Goal"
+        },
+        "created_at": "2025-06-18 15:01:06.061736",
+        "updated_at": "2025-06-18 15:01:06.061736",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      },
+      {
+        "prompt_id": "multi_step_plan_generation",
+        "category": "PromptCategory.WORKFLOW_PLANNING",
+        "version": "1.0",
+        "description": "Generate detailed multi-step analysis plans",
+        "template": "Create a detailed multi-step reasoning plan for this metabolic modeling analysis:\n\nUser Query: \"{query}\"\nAnalysis Goal: \"{goal}\"\nAvailable Tools: {available_tools}\n\nPlan 5-8 steps that will systematically achieve the analysis goal. For each step:\n1. Specify the reasoning/purpose\n2. Select the most appropriate tool\n3. Explain why this step is necessary\n4. Describe what insights you expect to gain\n5. Note how this step enables subsequent steps\n\nFormat as a JSON array with this structure for each step:\n{{\n    \"step_number\": 1,\n    \"reasoning\": \"Purpose of this step\",\n    \"tool\": \"tool_name\",\n    \"justification\": \"Why this tool at this time\",\n    \"expected_insights\": \"What we expect to learn\",\n    \"enables_next\": \"How this enables subsequent steps\"\n}}\n\nThe plan should be:\n- Logically sequenced\n- Comprehensive yet efficient\n- Adaptable based on results\n- Scientifically sound",
+        "variables": [
+          "query",
+          "goal",
+          "available_tools"
+        ],
+        "validation_rules": {
+          "min_length": 100,
+          "must_contain": "step_number"
+        },
+        "created_at": "2025-06-18 15:01:06.062169",
+        "updated_at": "2025-06-18 15:01:06.062170",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      },
+      {
+        "prompt_id": "insight_extraction",
+        "category": "PromptCategory.RESULT_ANALYSIS",
+        "version": "1.0",
+        "description": "Extract key insights from tool results",
+        "template": "Analyze this tool result and extract the key insights relevant to our analysis goal:\n\nAnalysis Goal: {goal}\nStep Reasoning: {reasoning}\nTool Result: {result}\n\nExtract 2-4 key insights that are most relevant to the analysis goal.\nFocus on actionable findings that inform next steps.\n\nEach insight should be:\n- Specific and quantitative when possible\n- Biologically meaningful\n- Connected to the analysis objective\n- Useful for subsequent analysis steps\n\nFormat as a JSON array of strings:\n[\"insight 1\", \"insight 2\", \"insight 3\"]\n\nInsights should go beyond obvious observations to provide scientific understanding.",
+        "variables": [
+          "goal",
+          "reasoning",
+          "result"
+        ],
+        "validation_rules": {
+          "min_length": 50,
+          "must_contain": "insight"
+        },
+        "created_at": "2025-06-18 15:01:06.062583",
+        "updated_at": "2025-06-18 15:01:06.062583",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      },
+      {
+        "prompt_id": "question_identification",
+        "category": "PromptCategory.WORKFLOW_PLANNING",
+        "version": "1.0",
+        "description": "Identify new questions emerging from results",
+        "template": "Based on this tool result, what new questions emerge that could guide further analysis?\n\nOriginal Query: {original_query}\nTool Result: {result}\n\nIdentify 1-3 specific questions that arise from these results.\nFocus on questions that could lead to deeper understanding.\n\nQuestions should be:\n- Specific and answerable with available tools\n- Scientifically meaningful\n- Building on current findings\n- Advancing toward the analysis goal\n\nFormat as a JSON array of strings:\n[\"question 1\", \"question 2\"]\n\nGood questions drive scientific discovery and reveal new analysis directions.",
+        "variables": [
+          "original_query",
+          "result"
+        ],
+        "validation_rules": {
+          "min_length": 30,
+          "must_contain": "question"
+        },
+        "created_at": "2025-06-18 15:01:06.063012",
+        "updated_at": "2025-06-18 15:01:06.063013",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      },
+      {
+        "prompt_id": "plan_adaptation",
+        "category": "PromptCategory.WORKFLOW_PLANNING",
+        "version": "1.0",
+        "description": "Adapt analysis plans based on discovered results",
+        "template": "Analyze this completed step and determine if we should adapt our analysis plan:\n\nOriginal Goal: {analysis_goal}\nCompleted Step: {completed_step_reasoning}\nTool Used: {tool_used}\nKey Insights: {insights_gained}\nQuestions Raised: {questions_raised}\n\nRemaining Planned Steps: {remaining_steps}\n\nShould we modify our plan based on what we discovered? Consider:\n1. Do the insights suggest a different analytical direction?\n2. Are there urgent questions that should be addressed immediately?\n3. Should we add, remove, or reorder remaining steps?\n\nRespond with JSON:\n{{\n    \"modify_plan\": true/false,\n    \"modifications\": [list of changes],\n    \"reasoning\": \"explanation of why changes are needed\",\n    \"priority_adjustments\": \"any priority changes needed\"\n}}",
+        "variables": [
+          "analysis_goal",
+          "completed_step_reasoning",
+          "tool_used",
+          "insights_gained",
+          "questions_raised",
+          "remaining_steps"
+        ],
+        "validation_rules": {
+          "min_length": 50,
+          "must_contain": "modify_plan"
+        },
+        "created_at": "2025-06-18 15:01:06.063434",
+        "updated_at": "2025-06-18 15:01:06.063435",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      },
+      {
+        "prompt_id": "results_synthesis",
+        "category": "PromptCategory.SYNTHESIS",
+        "version": "1.0",
+        "description": "Synthesize multi-step analysis results into comprehensive conclusions",
+        "template": "Synthesize the results of this multi-step analysis into a comprehensive conclusion:\n\nOriginal Query: {user_query}\nAnalysis Goal: {analysis_goal}\n\nKey Insights Discovered:\n{all_insights}\n\nTool Results Summary:\n{results_summary}\n\nProvide a comprehensive conclusion that:\n1. Directly answers the original user query\n2. Highlights the most important findings\n3. Explains how the different analysis steps connected\n4. Identifies any limitations or areas for further investigation\n5. Provides actionable recommendations\n\nStructure your response with clear sections:\nMAIN_FINDINGS: [key discoveries]\nBIOLOGICAL_SIGNIFICANCE: [what this means scientifically]\nQUERY_ANSWERS: [direct responses to user questions]\nLIMITATIONS: [analysis constraints or uncertainties]\nRECOMMENDATIONS: [suggested next steps or applications]\n\nThe synthesis should demonstrate deep understanding of the metabolic system.",
+        "variables": [
+          "user_query",
+          "analysis_goal",
+          "all_insights",
+          "results_summary"
+        ],
+        "validation_rules": {
+          "min_length": 100,
+          "must_contain": "MAIN_FINDINGS"
+        },
+        "created_at": "2025-06-18 15:01:06.063869",
+        "updated_at": "2025-06-18 15:01:06.063869",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      },
+      {
+        "prompt_id": "hypothesis_generation_from_observation",
+        "category": "PromptCategory.HYPOTHESIS_GENERATION",
+        "version": "1.0",
+        "description": "Generate testable hypotheses from metabolic observations",
+        "template": "Based on this metabolic modeling observation, generate 2-4 testable scientific hypotheses:\n\nObservation: {observation}\nAnalysis Context: {context}\nAvailable Testing Tools: {available_tools}\n\nFor each hypothesis, provide:\n1. A clear, specific, testable statement\n2. The scientific rationale for why this hypothesis is plausible\n3. Specific predictions that can be tested\n4. Which tools could be used to test it\n5. The type of hypothesis (growth_limitation, nutritional_gap, etc.)\n\nFormat as JSON array:\n[\n    {{\n        \"statement\": \"Clear hypothesis statement\",\n        \"rationale\": \"Scientific reasoning\",\n        \"predictions\": [\"prediction 1\", \"prediction 2\"],\n        \"testable_with\": [\"tool1\", \"tool2\"],\n        \"hypothesis_type\": \"category\"\n    }}\n]\n\nHypotheses should be scientifically sound and lead to actionable testing strategies.",
+        "variables": [
+          "observation",
+          "context",
+          "available_tools"
+        ],
+        "validation_rules": {
+          "min_length": 100,
+          "must_contain": "hypothesis"
+        },
+        "created_at": "2025-06-18 15:01:06.064300",
+        "updated_at": "2025-06-18 15:01:06.064301",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      },
+      {
+        "prompt_id": "hypothesis_generation_from_results",
+        "category": "PromptCategory.HYPOTHESIS_GENERATION",
+        "version": "1.0",
+        "description": "Generate hypotheses from patterns in analysis results",
+        "template": "Analyze these metabolic modeling results and identify patterns that suggest testable hypotheses:\n\nOriginal Query Context: {query_context}\nTool Results: {tool_results}\n\nLook for patterns such as:\n- Unexpected growth rates (very high/low)\n- Unusual nutrient requirements\n- Essential gene patterns\n- Pathway utilization anomalies\n- Biomass composition issues\n\nFor each interesting pattern, formulate a hypothesis that could explain it.\nFocus on hypotheses that would deepen understanding of the metabolic system.\n\nUse the same JSON format as the observation-based hypothesis generation.\n\nPatterns should lead to mechanistic explanations and testable predictions.",
+        "variables": [
+          "query_context",
+          "tool_results"
+        ],
+        "validation_rules": {
+          "min_length": 80,
+          "must_contain": "pattern"
+        },
+        "created_at": "2025-06-18 15:01:06.064761",
+        "updated_at": "2025-06-18 15:01:06.064762",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      },
+      {
+        "prompt_id": "hypothesis_testing_planning",
+        "category": "PromptCategory.HYPOTHESIS_GENERATION",
+        "version": "1.0",
+        "description": "Plan systematic testing of scientific hypotheses",
+        "template": "Plan how to test this scientific hypothesis using available tools:\n\nHypothesis: {hypothesis_statement}\nRationale: {hypothesis_rationale}\nPredictions: {predictions}\nAvailable Tools: {testable_with_tools}\n\nSelect 1-3 tools that would provide the most relevant evidence for or against this hypothesis.\nConsider:\n- Which tools directly test the predictions\n- What evidence would be most convincing\n- Logical order of testing\n\nReturn as JSON array of tool names:\n[\"tool1\", \"tool2\", \"tool3\"]\n\nTesting plan should be efficient and provide strong evidence for hypothesis validation.",
+        "variables": [
+          "hypothesis_statement",
+          "hypothesis_rationale",
+          "predictions",
+          "testable_with_tools"
+        ],
+        "validation_rules": {
+          "min_length": 30,
+          "must_contain": "tool"
+        },
+        "created_at": "2025-06-18 15:01:06.065264",
+        "updated_at": "2025-06-18 15:01:06.065264",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      },
+      {
+        "prompt_id": "hypothesis_tool_input_determination",
+        "category": "PromptCategory.HYPOTHESIS_GENERATION",
+        "version": "1.0",
+        "description": "Determine optimal tool parameters for hypothesis testing",
+        "template": "Determine the appropriate input parameters for testing this hypothesis:\n\nHypothesis: {hypothesis_statement}\nTool to Use: {tool_name}\n\nWhat parameters should be passed to this tool to best test the hypothesis?\nConsider the specific predictions and what evidence would be most relevant.\n\nReturn as JSON object with parameter names and values:\n{{\"parameter1\": \"value1\", \"parameter2\": \"value2\"}}\n\nIf no special parameters are needed, return an empty object: {{}}\n\nParameters should be chosen to maximize the strength of evidence obtained.",
+        "variables": [
+          "hypothesis_statement",
+          "tool_name"
+        ],
+        "validation_rules": {
+          "min_length": 20,
+          "must_contain": "parameter"
+        },
+        "created_at": "2025-06-18 15:01:06.065809",
+        "updated_at": "2025-06-18 15:01:06.065810",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      },
+      {
+        "prompt_id": "hypothesis_evidence_interpretation",
+        "category": "PromptCategory.HYPOTHESIS_GENERATION",
+        "version": "1.0",
+        "description": "Interpret experimental results as evidence for hypotheses",
+        "template": "Interpret this tool result as evidence for or against the hypothesis:\n\nHypothesis: {hypothesis_statement}\nPredictions: {predictions}\nTool Used: {tool_name}\nTool Result: {result_data}\n\nAnalyze:\n1. Does this result support or contradict the hypothesis?\n2. How strong is this evidence (0.0 = no relevance, 1.0 = definitive)?\n3. How confident are you in this interpretation (0.0 = very uncertain, 1.0 = very certain)?\n4. What specific aspects of the result are most relevant?\n\nFormat as JSON:\n{{\n    \"supports_hypothesis\": true/false,\n    \"evidence_strength\": 0.8,\n    \"confidence\": 0.9,\n    \"relevant_findings\": [\"finding 1\", \"finding 2\"],\n    \"interpretation\": \"Detailed explanation\"\n}}\n\nInterpretation should be objective and scientifically rigorous.",
+        "variables": [
+          "hypothesis_statement",
+          "predictions",
+          "tool_name",
+          "result_data"
+        ],
+        "validation_rules": {
+          "min_length": 50,
+          "must_contain": "supports_hypothesis"
+        },
+        "created_at": "2025-06-18 15:01:06.066350",
+        "updated_at": "2025-06-18 15:01:06.066350",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      },
+      {
+        "prompt_id": "pattern_analysis_from_experiences",
+        "category": "PromptCategory.QUALITY_ASSESSMENT",
+        "version": "1.0",
+        "description": "Analyze successful tool sequences to identify effective patterns",
+        "template": "Analyze these successful analysis tool sequences to identify common patterns:\n\nSuccessful Analyses:\n{analysis_data}\n\nIdentify 2-3 common tool sequence patterns that appear in successful analyses.\nFor each pattern:\n1. Describe the sequence and when it's effective\n2. Estimate its success rate\n3. Identify conditions where it applies\n\nFormat as JSON:\n[\n    {{\n        \"description\": \"Pattern description\",\n        \"tool_sequence\": [\"tool1\", \"tool2\", \"tool3\"],\n        \"conditions\": [\"condition1\", \"condition2\"],\n        \"success_rate\": 0.85,\n        \"rationale\": \"Why this pattern works\"\n    }}\n]\n\nPatterns should be actionable for improving future analysis workflows.",
+        "variables": [
+          "analysis_data"
+        ],
+        "validation_rules": {
+          "min_length": 80,
+          "must_contain": "pattern"
+        },
+        "created_at": "2025-06-18 15:01:06.066928",
+        "updated_at": "2025-06-18 15:01:06.066928",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      },
+      {
+        "prompt_id": "langgraph_query_analysis",
+        "category": "PromptCategory.TOOL_SELECTION",
+        "version": "1.0",
+        "description": "LangGraph agent query analysis and action determination",
+        "template": "You are an expert metabolic modeling agent. Analyze the query and determine the best approach.\n\nQuery: {query}\n\n{context}Available tools: {available_tools}\n\nCurrent iteration: {iteration}/{max_iterations}\nTools already called: {tools_called}\n\nBased on the query and context, determine your next action:\n\n1. SINGLE_TOOL: If you need to call one specific tool\n   Format: ACTION: SINGLE_TOOL\n   TOOL: [tool_name]\n   REASON: [why this tool]\n\n2. PARALLEL_TOOLS: If you can call multiple tools simultaneously\n   Format: ACTION: PARALLEL_TOOLS\n   TOOLS: [tool1, tool2, tool3]\n   REASON: [why these tools together]\n\n3. ANALYSIS_COMPLETE: If you have sufficient information\n   Format: ACTION: ANALYSIS_COMPLETE\n   REASON: [why analysis is complete]\n\nChoose the most appropriate action based on the query requirements and available information.",
+        "variables": [
+          "query",
+          "context",
+          "available_tools",
+          "iteration",
+          "max_iterations",
+          "tools_called"
+        ],
+        "validation_rules": {
+          "min_length": 50,
+          "must_contain": "ACTION"
+        },
+        "created_at": "2025-06-18 15:01:06.067514",
+        "updated_at": "2025-06-18 15:01:06.067514",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      },
+      {
+        "prompt_id": "langgraph_results_analysis",
+        "category": "PromptCategory.RESULT_ANALYSIS",
+        "version": "1.0",
+        "description": "LangGraph agent results analysis and next steps determination",
+        "template": "You are analyzing metabolic modeling results. Based on the tool execution results, provide insights and determine next steps.\n\nOriginal query: {query}\n\nDetailed tool results:{results_summary}\n\nPlease provide:\n1. Key metabolic insights discovered so far\n2. Whether you have sufficient information for a comprehensive answer\n3. What additional analysis might enhance the results\n4. A brief summary of the most important findings\n\nRespond with actionable metabolic insights, not just procedural information.\n\nFocus on biological significance and scientific understanding.",
+        "variables": [
+          "query",
+          "results_summary"
+        ],
+        "validation_rules": {
+          "min_length": 40,
+          "must_contain": "insights"
+        },
+        "created_at": "2025-06-18 15:01:06.068150",
+        "updated_at": "2025-06-18 15:01:06.068151",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      },
+      {
+        "prompt_id": "local_llm_system_template",
+        "category": "PromptCategory.SYSTEM_CONFIGURATION",
+        "version": "1.0",
+        "description": "Template for local LLM system interactions",
+        "template": "<|system|>\n{system_content}\n<|user|>\n{prompt}\n<|assistant|>",
+        "variables": [
+          "system_content",
+          "prompt"
+        ],
+        "validation_rules": {
+          "min_length": 10,
+          "must_contain": "system"
+        },
+        "created_at": "2025-06-18 15:01:06.068781",
+        "updated_at": "2025-06-18 15:01:06.068781",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      },
+      {
+        "prompt_id": "performance_optimized_prompt",
+        "category": "PromptCategory.QUALITY_ASSESSMENT",
+        "version": "1.0",
+        "description": "Performance-optimized prompt with compression and JSON formatting",
+        "template": "{base_prompt}\n\nRespond in JSON format with keys: reasoning, tool_selection, confidence\n\n{optimization_instructions}",
+        "variables": [
+          "base_prompt",
+          "optimization_instructions"
+        ],
+        "validation_rules": {
+          "min_length": 20,
+          "must_contain": "JSON"
+        },
+        "created_at": "2025-06-18 15:01:06.069443",
+        "updated_at": "2025-06-18 15:01:06.069444",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      },
+      {
+        "prompt_id": "tool_results_summarization",
+        "category": "PromptCategory.RESULT_ANALYSIS",
+        "version": "1.0",
+        "description": "Summarize tool results for workflow integration",
+        "template": "Summarize the results from this tool execution for integration into the analysis workflow:\n\nTool Name: {tool_name}\nExecution Time: {execution_time}\nTool Results: {tool_results}\nAnalysis Context: {analysis_context}\n\nProvide a concise summary that:\n1. Highlights key quantitative findings\n2. Explains biological significance\n3. Identifies implications for subsequent analysis\n4. Notes any limitations or uncertainties\n\nKeep the summary focused and actionable for workflow integration.\n\nSUMMARY: [concise results summary]\nKEY_METRICS: [important quantitative findings]\nBIOLOGICAL_MEANING: [scientific interpretation]\nNEXT_STEPS: [suggested follow-up actions]",
+        "variables": [
+          "tool_name",
+          "execution_time",
+          "tool_results",
+          "analysis_context"
+        ],
+        "validation_rules": {
+          "min_length": 50,
+          "must_contain": "SUMMARY"
+        },
+        "created_at": "2025-06-18 15:01:06.070128",
+        "updated_at": "2025-06-18 15:01:06.070128",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      },
+      {
+        "prompt_id": "error_handling_analysis",
+        "category": "PromptCategory.QUALITY_ASSESSMENT",
+        "version": "1.0",
+        "description": "Analyze errors and determine recovery strategies",
+        "template": "An error occurred during tool execution. Analyze the error and determine the best recovery strategy:\n\nTool Name: {tool_name}\nError Message: {error_message}\nExecution Context: {context}\nAvailable Recovery Options: {recovery_options}\n\nDetermine:\n1. Is this error recoverable?\n2. What caused the error?\n3. What's the best recovery strategy?\n4. Should the analysis continue or terminate?\n\nRespond with:\nRECOVERABLE: [true/false]\nCAUSE: [error analysis]\nRECOVERY_STRATEGY: [recommended action]\nCONTINUE_ANALYSIS: [true/false]",
+        "variables": [
+          "tool_name",
+          "error_message",
+          "context",
+          "recovery_options"
+        ],
+        "validation_rules": {
+          "min_length": 30,
+          "must_contain": "RECOVERABLE"
+        },
+        "created_at": "2025-06-18 15:01:06.070834",
+        "updated_at": "2025-06-18 15:01:06.070835",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      },
+      {
+        "prompt_id": "result_quality_validation",
+        "category": "PromptCategory.QUALITY_ASSESSMENT",
+        "version": "1.0",
+        "description": "Validate quality and scientific validity of analysis results",
+        "template": "Validate the quality of this analysis result:\n\nAnalysis Type: {analysis_type}\nResult Data: {result_data}\nExpected Ranges: {expected_ranges}\nQuality Criteria: {quality_criteria}\n\nCheck:\n1. Are the results within expected biological ranges?\n2. Do the results make scientific sense?\n3. Are there any obvious errors or inconsistencies?\n4. Is additional validation needed?\n\nRespond with:\nQUALITY_SCORE: [0.0-1.0]\nISSUES_FOUND: [list of problems if any]\nVALIDATION_STATUS: [PASS/FAIL/REQUIRES_REVIEW]\nRECOMMENDATIONS: [suggested actions]",
+        "variables": [
+          "analysis_type",
+          "result_data",
+          "expected_ranges",
+          "quality_criteria"
+        ],
+        "validation_rules": {
+          "min_length": 40,
+          "must_contain": "QUALITY_SCORE"
+        },
+        "created_at": "2025-06-18 15:01:06.071582",
+        "updated_at": "2025-06-18 15:01:06.071583",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      },
+      {
+        "prompt_id": "biochemical_context_enrichment",
+        "category": "PromptCategory.SYNTHESIS",
+        "version": "1.0",
+        "description": "Enrich analysis with relevant biochemical context",
+        "template": "Enrich this analysis with relevant biochemical context:\n\nPrimary Analysis: {primary_analysis}\nAvailable Context Sources: {context_sources}\nDomain Focus: {domain_focus}\n\nProvide enriched context including:\n1. Relevant biochemical pathways\n2. Known biological mechanisms\n3. Literature connections\n4. Comparative information\n\nThe enrichment should enhance understanding without biasing conclusions.\n\nENRICHED_CONTEXT: [relevant biochemical information]\nPATHWAY_CONNECTIONS: [related metabolic pathways]\nMECHANISTIC_INSIGHTS: [biological mechanisms involved]\nLITERATURE_NOTES: [relevant research connections]",
+        "variables": [
+          "primary_analysis",
+          "context_sources",
+          "domain_focus"
+        ],
+        "validation_rules": {
+          "min_length": 50,
+          "must_contain": "ENRICHED_CONTEXT"
+        },
+        "created_at": "2025-06-18 15:01:06.072338",
+        "updated_at": "2025-06-18 15:01:06.072338",
+        "usage_count": 0,
+        "success_rate": 0.0,
+        "avg_response_time": 0.0
+      }
+    ],
+    "ab_tests": [],
+    "usage_summary": {
+      "total_usage_records": 0,
+      "categories": [
+        "tool_selection",
+        "result_analysis",
+        "workflow_planning",
+        "hypothesis_generation",
+        "synthesis",
+        "quality_assessment",
+        "system_configuration",
+        "interaction"
+      ]
+    }
+  }
+}

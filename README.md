@@ -170,7 +170,7 @@ ModelSEEDagent/
 ├── notebooks/                     # Interactive tutorials
 ├── src/                           # Main source code
 │   ├── agents/                    # AI agents and reasoning
-│   ├── tools/                     # 30 specialized tools
+│   ├── tools/                     # 29 specialized tools
 │   │   ├── cobra/                 # 13 COBRApy tools
 │   │   ├── modelseed/             # 3 ModelSEED tools
 │   │   ├── biochem/               # 2 biochemistry tools
@@ -193,7 +193,7 @@ ModelSEEDagent/
 **Quick Links:**
 - **[Getting Started](https://jplfaria.github.io/ModelSEEDagent/user/README/)** - Installation and basic usage
 - **[User Guide](https://jplfaria.github.io/ModelSEEDagent/user/INTERACTIVE_GUIDE/)** - Interactive interface guide
-- **[Tool Reference](https://jplfaria.github.io/ModelSEEDagent/TOOL_REFERENCE/)** - All 30 tools overview
+- **[Tool Reference](https://jplfaria.github.io/ModelSEEDagent/TOOL_REFERENCE/)** - All 29 tools overview
 - **[API Documentation](https://jplfaria.github.io/ModelSEEDagent/api/overview/)** - Programmatic usage
 - **[Configuration](https://jplfaria.github.io/ModelSEEDagent/configuration/)** - Setup and configuration options
 

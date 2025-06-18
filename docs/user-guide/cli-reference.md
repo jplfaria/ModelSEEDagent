@@ -36,7 +36,7 @@ This page is auto-generated from the Typer app; do not edit manually.
 
 ### `list`
 
-📋 List recent tool executions
+ List recent tool executions
 
     Shows recent tool audit records with execution details and success status.
 
@@ -50,7 +50,7 @@ This page is auto-generated from the Typer app; do not edit manually.
 
 ### `session`
 
-📊 Show all tool executions for a specific session
+ Show all tool executions for a specific session
 
     Displays comprehensive session-level audit information for workflow analysis
     and hallucination pattern detection.
@@ -64,7 +64,7 @@ This page is auto-generated from the Typer app; do not edit manually.
 
 ### `show`
 
-🔍 Show detailed audit information for a specific tool execution
+ Show detailed audit information for a specific tool execution
 
     Displays comprehensive execution details including inputs, outputs, console logs,
     and file artifacts for hallucination detection analysis.
@@ -79,7 +79,7 @@ This page is auto-generated from the Typer app; do not edit manually.
 
 ### `verify`
 
-🔍 Verify tool execution for potential hallucinations
+ Verify tool execution for potential hallucinations
 
     Performs automated checks to detect discrepancies between tool claims
     and actual execution results, helping identify AI hallucinations.
