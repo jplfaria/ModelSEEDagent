@@ -1685,8 +1685,12 @@ class ModelSEEDToolValidationSuite:
             return None
 
         # Get all validation run directories
-        run_dirs = [d for d in self.output_base_dir.iterdir() if d.is_dir() and d.name.endswith("_validation_run")]
-        
+        run_dirs = [
+            d
+            for d in self.output_base_dir.iterdir()
+            if d.is_dir() and d.name.endswith("_validation_run")
+        ]
+
         if not run_dirs:
             return None
 
@@ -1699,7 +1703,7 @@ class ModelSEEDToolValidationSuite:
             if individual_dir.exists():
                 model_dirs = [d for d in individual_dir.iterdir() if d.is_dir()]
                 model_names = set(d.name for d in model_dirs)
-                
+
                 # Check if all expected models are present and have results
                 expected_models = set(self.models.keys())
                 if model_names >= expected_models:
@@ -1712,13 +1716,15 @@ class ModelSEEDToolValidationSuite:
                             break
                         # Check if directory has tool result files
                         result_files = list(model_dir.glob("*_results.json"))
-                        if len(result_files) < 20:  # Should have at least 20+ tool results
+                        if (
+                            len(result_files) < 20
+                        ):  # Should have at least 20+ tool results
                             all_complete = False
                             break
-                    
+
                     if all_complete:
                         return run_dir
-        
+
         return None
 
     def load_previous_performance_data(self, previous_run_dir: Path) -> Dict[str, Any]:
@@ -1729,17 +1735,19 @@ class ModelSEEDToolValidationSuite:
             "model_execution_times": {},
             "success_rates": {},
             "run_timestamp": None,
-            "run_dir": str(previous_run_dir.name)
+            "run_dir": str(previous_run_dir.name),
         }
 
         try:
             # Load incremental results for each model
             for model_name in self.models.keys():
-                incremental_file = previous_run_dir / f"incremental_{model_name}_results.json"
+                incremental_file = (
+                    previous_run_dir / f"incremental_{model_name}_results.json"
+                )
                 if incremental_file.exists():
                     with open(incremental_file, "r") as f:
                         data = json.load(f)
-                    
+
                     if "results" in data and model_name in data["results"]:
                         model_results = data["results"][model_name]
                         model_total_time = 0
@@ -1749,9 +1757,14 @@ class ModelSEEDToolValidationSuite:
                         for tool_name, result in model_results.items():
                             # Track execution times
                             exec_time = result.get("execution_time", 0)
-                            if tool_name not in performance_data["tool_execution_times"]:
+                            if (
+                                tool_name
+                                not in performance_data["tool_execution_times"]
+                            ):
                                 performance_data["tool_execution_times"][tool_name] = {}
-                            performance_data["tool_execution_times"][tool_name][model_name] = exec_time
+                            performance_data["tool_execution_times"][tool_name][
+                                model_name
+                            ] = exec_time
                             model_total_time += exec_time
 
                             # Track success rates
@@ -1760,11 +1773,17 @@ class ModelSEEDToolValidationSuite:
                                 model_success_count += 1
                             model_total_count += 1
 
-                        performance_data["model_execution_times"][model_name] = model_total_time
+                        performance_data["model_execution_times"][
+                            model_name
+                        ] = model_total_time
                         performance_data["success_rates"][model_name] = {
                             "successful": model_success_count,
                             "total": model_total_count,
-                            "rate": model_success_count / model_total_count if model_total_count > 0 else 0
+                            "rate": (
+                                model_success_count / model_total_count
+                                if model_total_count > 0
+                                else 0
+                            ),
                         }
 
             # Get metadata
@@ -1773,15 +1792,23 @@ class ModelSEEDToolValidationSuite:
                 with open(metadata_files[0], "r") as f:
                     data = json.load(f)
                     if "metadata" in data:
-                        performance_data["total_tools"] = data["metadata"].get("tools_tested", {}).get("total_count", 0)
-                        performance_data["run_timestamp"] = data["metadata"].get("timestamp")
+                        performance_data["total_tools"] = (
+                            data["metadata"]
+                            .get("tools_tested", {})
+                            .get("total_count", 0)
+                        )
+                        performance_data["run_timestamp"] = data["metadata"].get(
+                            "timestamp"
+                        )
 
         except Exception as e:
             print(f"Warning: Could not load previous performance data: {e}")
 
         return performance_data
 
-    def generate_performance_comparison(self, previous_data: Dict[str, Any]) -> Dict[str, Any]:
+    def generate_performance_comparison(
+        self, previous_data: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Generate performance comparison between current and previous runs"""
         comparison = {
             "metadata": {
@@ -1794,7 +1821,7 @@ class ModelSEEDToolValidationSuite:
                 "current": len(self.all_tools),
                 "difference": len(self.all_tools) - previous_data.get("total_tools", 0),
                 "new_tools": [],
-                "removed_tools": []
+                "removed_tools": [],
             },
             "execution_time_comparison": {},
             "success_rate_comparison": {},
@@ -1803,8 +1830,8 @@ class ModelSEEDToolValidationSuite:
                 "slower_tools": [],
                 "performance_regressions": [],
                 "new_failures": [],
-                "improvements": []
-            }
+                "improvements": [],
+            },
         }
 
         # Calculate current performance data
@@ -1833,7 +1860,11 @@ class ModelSEEDToolValidationSuite:
             current_success_rates[model_name] = {
                 "successful": model_success_count,
                 "total": model_total_count,
-                "rate": model_success_count / model_total_count if model_total_count > 0 else 0
+                "rate": (
+                    model_success_count / model_total_count
+                    if model_total_count > 0
+                    else 0
+                ),
             }
 
         # Compare tool execution times
@@ -1843,9 +1874,13 @@ class ModelSEEDToolValidationSuite:
                 comparison["tool_count_changes"]["new_tools"].append(tool_name)
             else:
                 # Calculate average execution time across models
-                current_avg = sum(current_tool_times[tool_name].values()) / len(current_tool_times[tool_name])
-                prev_avg = sum(prev_tool_times[tool_name].values()) / len(prev_tool_times[tool_name])
-                
+                current_avg = sum(current_tool_times[tool_name].values()) / len(
+                    current_tool_times[tool_name]
+                )
+                prev_avg = sum(prev_tool_times[tool_name].values()) / len(
+                    prev_tool_times[tool_name]
+                )
+
                 time_diff = current_avg - prev_avg
                 percent_change = (time_diff / prev_avg * 100) if prev_avg > 0 else 0
 
@@ -1853,21 +1888,25 @@ class ModelSEEDToolValidationSuite:
                     "previous_avg": prev_avg,
                     "current_avg": current_avg,
                     "time_difference": time_diff,
-                    "percent_change": percent_change
+                    "percent_change": percent_change,
                 }
 
                 if percent_change > 50:  # More than 50% slower
-                    comparison["performance_summary"]["performance_regressions"].append({
-                        "tool": tool_name,
-                        "percent_slower": percent_change,
-                        "time_increase": time_diff
-                    })
+                    comparison["performance_summary"]["performance_regressions"].append(
+                        {
+                            "tool": tool_name,
+                            "percent_slower": percent_change,
+                            "time_increase": time_diff,
+                        }
+                    )
                 elif percent_change < -20:  # More than 20% faster
-                    comparison["performance_summary"]["improvements"].append({
-                        "tool": tool_name,
-                        "percent_faster": -percent_change,
-                        "time_decrease": -time_diff
-                    })
+                    comparison["performance_summary"]["improvements"].append(
+                        {
+                            "tool": tool_name,
+                            "percent_faster": -percent_change,
+                            "time_decrease": -time_diff,
+                        }
+                    )
 
         # Find removed tools
         for tool_name in prev_tool_times:
@@ -1887,25 +1926,30 @@ class ModelSEEDToolValidationSuite:
                     "current_rate": current_rate,
                     "rate_change": rate_change,
                     "previous_successful": prev_success_rates[model_name]["successful"],
-                    "current_successful": current_success_rates[model_name]["successful"]
+                    "current_successful": current_success_rates[model_name][
+                        "successful"
+                    ],
                 }
 
                 if rate_change < -0.1:  # 10% or more drop in success rate
-                    comparison["performance_summary"]["new_failures"].append({
-                        "model": model_name,
-                        "rate_drop": rate_change,
-                        "tools_lost": prev_success_rates[model_name]["successful"] - current_success_rates[model_name]["successful"]
-                    })
+                    comparison["performance_summary"]["new_failures"].append(
+                        {
+                            "model": model_name,
+                            "rate_drop": rate_change,
+                            "tools_lost": prev_success_rates[model_name]["successful"]
+                            - current_success_rates[model_name]["successful"],
+                        }
+                    )
 
         return comparison
 
     def save_performance_comparison(self, comparison: Dict[str, Any]):
         """Save performance comparison results"""
         comparison_file = self.run_dir / "comprehensive" / "performance_comparison.json"
-        
+
         with open(comparison_file, "w") as f:
             json.dump(comparison, f, indent=2, default=str)
-        
+
         print(f"📊 Performance comparison saved to: {comparison_file}")
 
     def print_performance_summary(self, comparison: Dict[str, Any]):
@@ -1931,21 +1975,27 @@ class ModelSEEDToolValidationSuite:
         if regressions:
             print(f"\n⚠️  Performance Regressions (>50% slower):")
             for reg in regressions:
-                print(f"   🐌 {reg['tool']}: {reg['percent_slower']:.1f}% slower (+{reg['time_increase']:.2f}s)")
+                print(
+                    f"   🐌 {reg['tool']}: {reg['percent_slower']:.1f}% slower (+{reg['time_increase']:.2f}s)"
+                )
 
         # Improvements
         improvements = comparison["performance_summary"]["improvements"]
         if improvements:
             print(f"\n✅ Performance Improvements (>20% faster):")
             for imp in improvements:
-                print(f"   🚀 {imp['tool']}: {imp['percent_faster']:.1f}% faster (-{imp['time_decrease']:.2f}s)")
+                print(
+                    f"   🚀 {imp['tool']}: {imp['percent_faster']:.1f}% faster (-{imp['time_decrease']:.2f}s)"
+                )
 
         # Success rate changes
         failures = comparison["performance_summary"]["new_failures"]
         if failures:
             print(f"\n❌ Success Rate Regressions:")
             for fail in failures:
-                print(f"   📉 {fail['model']}: {fail['rate_drop']:.1%} drop ({fail['tools_lost']} tools failed)")
+                print(
+                    f"   📉 {fail['model']}: {fail['rate_drop']:.1%} drop ({fail['tools_lost']} tools failed)"
+                )
 
         if not regressions and not failures:
             print(f"\n🎉 No significant performance regressions detected!")
@@ -1966,15 +2016,19 @@ def main():
     # Check for previous complete run for performance comparison
     previous_run_dir = validation_suite.find_latest_complete_run()
     previous_data = None
-    
+
     if previous_run_dir:
         print(f"📊 Found previous complete run: {previous_run_dir.name}")
         print("🔄 Loading performance data for comparison...")
-        previous_data = validation_suite.load_previous_performance_data(previous_run_dir)
+        previous_data = validation_suite.load_previous_performance_data(
+            previous_run_dir
+        )
         print(f"   Previous run had {previous_data.get('total_tools', 0)} tools")
         print(f"   Current run has {len(validation_suite.all_tools)} tools")
-        if len(validation_suite.all_tools) > previous_data.get('total_tools', 0):
-            print(f"   🆕 {len(validation_suite.all_tools) - previous_data.get('total_tools', 0)} new tools detected!")
+        if len(validation_suite.all_tools) > previous_data.get("total_tools", 0):
+            print(
+                f"   🆕 {len(validation_suite.all_tools) - previous_data.get('total_tools', 0)} new tools detected!"
+            )
     else:
         print("📊 No previous complete run found - this will be the baseline")
 
@@ -2007,11 +2061,15 @@ def main():
         )
 
         if previous_data:
-            print(f"📈 Performance comparison available in: {validation_suite.run_dir / 'comprehensive' / 'performance_comparison.json'}")
+            print(
+                f"📈 Performance comparison available in: {validation_suite.run_dir / 'comprehensive' / 'performance_comparison.json'}"
+            )
 
     except KeyboardInterrupt:
         print("\n⚠️  Validation suite interrupted by user")
-        print("💡 Note: Use 'nohup python scripts/tool_validation_suite.py &' for long runs")
+        print(
+            "💡 Note: Use 'nohup python scripts/tool_validation_suite.py &' for long runs"
+        )
     except Exception as e:
         print(f"\n💥 Validation suite failed with error: {e}")
         traceback.print_exc()

@@ -55,7 +55,7 @@ class ModelBuildTool(BaseTool):
 
             # Lazy import modelseedpy only when needed
             import modelseedpy
-            from modelseedpy import MSGenome, MSBuilder
+            from modelseedpy import MSBuilder, MSGenome
 
             # Handle genome input - either file path or MSGenome object
             genome = None
@@ -70,9 +70,11 @@ class ModelBuildTool(BaseTool):
                     )
                 # Create MSGenome from protein FASTA file
                 genome = MSGenome.from_fasta(str(annotation_file))
-                
+
                 # Optional RAST annotation if requested
-                if input_data.get("annotate_with_rast", self._build_config.annotate_with_rast):
+                if input_data.get(
+                    "annotate_with_rast", self._build_config.annotate_with_rast
+                ):
                     rast_client = modelseedpy.RastClient()
                     rast_client.annotate_genome(genome)
             else:
@@ -94,18 +96,18 @@ class ModelBuildTool(BaseTool):
             if input_data.get("gapfill_on_build", self._build_config.gapfill_on_build):
                 try:
                     gapfiller = modelseedpy.MSGapfill(model)
-                    
+
                     # Convert media condition to MSMedia object
                     media_condition = input_data.get(
                         "media_condition", self._build_config.media_condition
                     )
                     try:
                         media_obj = modelseedpy.MSMedia()
-                        if hasattr(media_obj, 'id'):
+                        if hasattr(media_obj, "id"):
                             media_obj.id = media_condition
                     except Exception:
                         media_obj = None
-                    
+
                     gapfill_solutions = gapfiller.run_gapfilling(media=media_obj)
                     if gapfill_solutions:
                         gapfiller.integrate_gapfill_solution(gapfill_solutions[0])
@@ -118,21 +120,23 @@ class ModelBuildTool(BaseTool):
             output_files = {}
             base_path = Path(output_path)
             base_path.parent.mkdir(parents=True, exist_ok=True)
-            
+
             # Remove extension from base path if present
             base_name = base_path.stem if base_path.suffix else base_path.name
             base_dir = base_path.parent if base_path.suffix else base_path.parent
-            
+
             # Export to SBML
             if input_data.get("export_sbml", self._build_config.export_sbml):
                 from cobra.io import write_sbml_model
+
                 sbml_path = base_dir / f"{base_name}.xml"
                 write_sbml_model(model, str(sbml_path))
                 output_files["sbml"] = str(sbml_path)
-            
+
             # Export to JSON
             if input_data.get("export_json", self._build_config.export_json):
                 from cobra.io import save_json_model
+
                 json_path = base_dir / f"{base_name}.json"
                 save_json_model(model, str(json_path))
                 output_files["json"] = str(json_path)
@@ -143,10 +147,12 @@ class ModelBuildTool(BaseTool):
                 "num_reactions": len(model.reactions),
                 "num_metabolites": len(model.metabolites),
                 "num_genes": len(model.genes),
-                "num_groups": len(getattr(model, 'groups', [])),
+                "num_groups": len(getattr(model, "groups", [])),
                 "objective_expression": str(model.objective.expression),
                 "compartments": list(model.compartments.keys()),
-                "template_used": getattr(getattr(builder, 'template', None), 'id', 'default'),
+                "template_used": getattr(
+                    getattr(builder, "template", None), "id", "default"
+                ),
                 "gapfilled": gapfill_applied,
                 "annotate_with_rast": annotate_with_rast,
             }

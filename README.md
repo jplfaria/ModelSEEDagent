@@ -114,7 +114,7 @@ Pre-built workflow templates combining media selection with analysis:
 
 **Last Comprehensive Test**: 2025-06-14 | **Models Tested**: e_coli_core, iML1515, EcoliMG1655, B_aphidicola
 
-## Specialized Tools (24 Total)
+## Specialized Tools (29 Total)
 
 ### AI Media Tools (6 tools) - 100% Tested
 - **Media Selection** - AI-powered optimal media selection for models
@@ -170,7 +170,7 @@ ModelSEEDagent/
 ├── notebooks/                     # Interactive tutorials
 ├── src/                           # Main source code
 │   ├── agents/                    # AI agents and reasoning
-│   ├── tools/                     # 28 specialized tools
+│   ├── tools/                     # 29 specialized tools
 │   │   ├── cobra/                 # 12 COBRApy tools
 │   │   ├── modelseed/             # 3 ModelSEED tools
 │   │   ├── biochem/               # 2 biochemistry tools

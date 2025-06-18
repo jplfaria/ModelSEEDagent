@@ -70,7 +70,7 @@ class GapFillTool(BaseTool):
 
             # Initialize MSGapfill (simplified constructor)
             gapfiller = modelseedpy.MSGapfill(model)
-            
+
             # Handle blacklisted reactions after initialization if needed
             blacklisted_reactions = input_data.get(
                 "blacklist_reactions", self._gapfill_config.blacklist_reactions
@@ -80,7 +80,9 @@ class GapFillTool(BaseTool):
                 try:
                     gapfiller.blacklisted_reactions = blacklisted_reactions
                 except AttributeError:
-                    print(f"Warning: Cannot set blacklisted reactions: {blacklisted_reactions}")
+                    print(
+                        f"Warning: Cannot set blacklisted reactions: {blacklisted_reactions}"
+                    )
 
             # Configure allowed reactions if specified
             if (
@@ -99,10 +101,10 @@ class GapFillTool(BaseTool):
                 # Try to create MSMedia object or use string directly
                 try:
                     # Try different ways to get media
-                    if hasattr(modelseedpy, 'MSMedia'):
+                    if hasattr(modelseedpy, "MSMedia"):
                         media_obj = modelseedpy.MSMedia()
                         # Set media type if possible
-                        if hasattr(media_obj, 'id'):
+                        if hasattr(media_obj, "id"):
                             media_obj.id = media_condition
                     else:
                         # Use string directly if MSMedia not available or use None for default
@@ -111,12 +113,11 @@ class GapFillTool(BaseTool):
                     # Fallback: use None for default media
                     media_obj = None
             else:
-                media_obj = media_condition  # Assume it's already an MSMedia object or None
+                media_obj = (
+                    media_condition  # Assume it's already an MSMedia object or None
+                )
 
             # Run gapfilling with media passed to the method (correct API)
-            max_solutions = input_data.get(
-                "max_solutions", self._gapfill_config.max_solutions
-            )
             # Try different parameter combinations based on the API
             try:
                 solutions = gapfiller.run_gapfilling(media=media_obj)
@@ -125,7 +126,9 @@ class GapFillTool(BaseTool):
                 try:
                     solutions = gapfiller.run_gapfilling()
                 except Exception as e2:
-                    raise Exception(f"Gapfilling failed with media ({e}) and without media ({e2})")
+                    raise Exception(
+                        f"Gapfilling failed with media ({e}) and without media ({e2})"
+                    )
 
             if not solutions:
                 return ToolResult(
@@ -144,28 +147,31 @@ class GapFillTool(BaseTool):
             if output_path:
                 output_file = Path(output_path)
                 output_file.parent.mkdir(parents=True, exist_ok=True)
-                
+
                 # Use cobra.io for SBML export
                 from cobra.io import write_sbml_model
+
                 write_sbml_model(model, str(output_file))
 
             # Gather solution statistics (handle different solution data structures)
             added_reactions = []
             objective_value = 0
-            
+
             # Handle different solution formats from MSGapfill
-            if hasattr(best_solution, 'added_reactions'):
+            if hasattr(best_solution, "added_reactions"):
                 added_reactions = [r.id for r in best_solution.added_reactions]
             elif isinstance(best_solution, dict):
                 added_reactions = [
-                    r.id if hasattr(r, 'id') else str(r) 
+                    r.id if hasattr(r, "id") else str(r)
                     for r in best_solution.get("added_reactions", [])
                 ]
                 objective_value = best_solution.get("objective_value", 0)
-            elif hasattr(best_solution, '__iter__'):
+            elif hasattr(best_solution, "__iter__"):
                 # If solution is a list/set of reaction objects
-                added_reactions = [r.id if hasattr(r, 'id') else str(r) for r in best_solution]
-            
+                added_reactions = [
+                    r.id if hasattr(r, "id") else str(r) for r in best_solution
+                ]
+
             solution_stats = {
                 "num_solutions": len(solutions),
                 "added_reactions": added_reactions,

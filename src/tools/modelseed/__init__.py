@@ -5,7 +5,7 @@ from .gapfill import GapFillTool
 
 __all__ = [
     "ModelBuildTool",
-    "GapFillTool", 
+    "GapFillTool",
     "RastAnnotationTool",
     "ModelCompatibilityTool",
 ]
