@@ -1058,5 +1058,8 @@ class QualityAwarePromptProvider:
         return recommendations
 
 
+# Export main class with alternative name for Phase 4 integration
+IntegratedQualitySystem = QualityAwarePromptProvider
+
 # Helper imports
 from collections import Counter, defaultdict

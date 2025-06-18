@@ -214,6 +214,21 @@ class PromptRegistry:
             logger.error(f"Failed to get prompt {prompt_id}: {e}")
             raise
 
+    def generate_prompt(
+        self,
+        prompt_id: str,
+        variables: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+    ) -> str:
+        """
+        Generate a formatted prompt (wrapper around get_prompt for compatibility)
+
+        Returns:
+            The formatted prompt string
+        """
+        prompt, version = self.get_prompt(prompt_id, variables, context)
+        return prompt
+
     def track_prompt_outcome(
         self,
         prompt_id: str,

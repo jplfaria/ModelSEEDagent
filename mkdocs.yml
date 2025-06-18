@@ -99,6 +99,21 @@ nav:
     - Smart Summarization: development/smart-summarization-assessment.md
     - 12-Factor Agents: development/12-factor-agents-roadmap.md
 
+  - Intelligence Enhancement:
+    - Overview: development/intelligence-enhancement/README.md
+    - Baseline Measurements: development/intelligence-enhancement/baseline-measurements.md
+    - Implementation Reports:
+      - Phase 1 - Prompt Management: development/intelligence-enhancement/phase-1-completion-report.md
+      - Phase 2 - Context Enhancement: development/intelligence-enhancement/phase-2-completion-report.md
+      - Phase 3 - Quality Validation: development/intelligence-enhancement/phase-3-completion-report.md
+      - Phase 4 - Artifact Intelligence: development/intelligence-enhancement/phase-4-completion-report.md
+      - Phase 5 - Integration Validation: development/intelligence-enhancement/phase-5-completion-report.md
+    - Complete Framework Report: development/intelligence-enhancement-complete.md
+
+  - Enhanced Features:
+    - Reasoning Features Guide: user-guide/enhanced-reasoning-features.md
+    - Reasoning Framework API: api/reasoning-framework.md
+
   - Operations:
     - Deployment: operations/deployment.md
     - Monitoring: operations/monitoring.md
