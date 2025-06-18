@@ -159,53 +159,40 @@ jobs:
           breaking=$(echo "$commits" | grep -E "BREAKING CHANGE|!:" || true)
           if [ -n "$breaking" ]; then
             changelog="$changelog### 💥 Breaking Changes\n"
-            echo "$breaking" | while read -r line; do
-              changelog="$changelog- $line\n"
-            done
-            changelog="$changelog\n"
+            formatted_breaking=$(echo "$breaking" | sed 's/^/- /' | sed ':a;N;$!ba;s/\n/\\n/g')
+            changelog="$changelog$formatted_breaking\n\n"
           fi
 
           # Features
           features=$(echo "$commits" | grep "^feat" || true)
           if [ -n "$features" ]; then
             changelog="$changelog### ✨ New Features\n"
-            echo "$features" | while read -r line; do
-              clean_line=$(echo "$line" | sed 's/^feat: //')
-              changelog="$changelog- $clean_line\n"
-            done
-            changelog="$changelog\n"
+            formatted_features=$(echo "$features" | sed 's/^feat: /- /' | sed ':a;N;$!ba;s/\n/\\n/g')
+            changelog="$changelog$formatted_features\n\n"
           fi
 
           # Bug fixes
           fixes=$(echo "$commits" | grep "^fix" || true)
           if [ -n "$fixes" ]; then
             changelog="$changelog### 🐛 Bug Fixes\n"
-            echo "$fixes" | while read -r line; do
-              clean_line=$(echo "$line" | sed 's/^fix: //')
-              changelog="$changelog- $clean_line\n"
-            done
-            changelog="$changelog\n"
+            formatted_fixes=$(echo "$fixes" | sed 's/^fix: /- /' | sed ':a;N;$!ba;s/\n/\\n/g')
+            changelog="$changelog$formatted_fixes\n\n"
           fi
 
           # Documentation
           docs=$(echo "$commits" | grep "^docs" || true)
           if [ -n "$docs" ]; then
             changelog="$changelog### 📚 Documentation\n"
-            echo "$docs" | while read -r line; do
-              clean_line=$(echo "$line" | sed 's/^docs: //')
-              changelog="$changelog- $clean_line\n"
-            done
-            changelog="$changelog\n"
+            formatted_docs=$(echo "$docs" | sed 's/^docs: /- /' | sed ':a;N;$!ba;s/\n/\\n/g')
+            changelog="$changelog$formatted_docs\n\n"
           fi
 
           # Other changes
           others=$(echo "$commits" | grep -v -E "^(feat|fix|docs|BREAKING)" || true)
           if [ -n "$others" ]; then
             changelog="$changelog### 🔧 Other Changes\n"
-            echo "$others" | while read -r line; do
-              changelog="$changelog- $line\n"
-            done
-            changelog="$changelog\n"
+            formatted_others=$(echo "$others" | sed 's/^/- /' | sed ':a;N;$!ba;s/\n/\\n/g')
+            changelog="$changelog$formatted_others\n\n"
           fi
 
           changelog="$changelog\n**Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ steps.latest_release.outputs.tag }}...v${{ steps.version.outputs.new_version }}"
