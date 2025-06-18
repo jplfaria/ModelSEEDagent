@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "timestamp": "2025-06-16T23:50:28.425991",
+    "purpose": "Assess real-world need for smart summarization",
+    "models_tested": [
+      "iML1515",
+      "EcoliMG1655"
+    ],
+    "tools_tested": [
+      "FluxVariabilityAnalysis",
+      "GeneDeletion"
+    ]
+  },
+  "results": {
+    "iML1515": {
+      "model_path": "data/examples/iML1515.xml",
+      "model_stats": {
+        "error": "'ToolResult' object has no attribute 'get'"
+      },
+      "fva": {
+        "success": false,
+        "error": "'ToolResult' object has no attribute 'get'",
+        "traceback": "Traceback (most recent call last):\n  File \"/Users/jplfaria/repos/ModelSEEDagent/output_size_assessment.py\", line 110, in measure_fva_output_size\n    flux_ranges = result.get(\"flux_ranges\", {})\n                  ^^^^^^^^^^\n  File \"/Users/jplfaria/miniconda3/lib/python3.11/site-packages/pydantic/main.py\", line 856, in __getattr__\n    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')\nAttributeError: 'ToolResult' object has no attribute 'get'\n"
+      },
+      "gene_deletion": {
+        "success": false,
+        "error": "'ToolResult' object has no attribute 'get'",
+        "traceback": "Traceback (most recent call last):\n  File \"/Users/jplfaria/repos/ModelSEEDagent/output_size_assessment.py\", line 191, in measure_gene_deletion_output_size\n    deletion_results = result.get(\"deletion_results\", {})\n                       ^^^^^^^^^^\n  File \"/Users/jplfaria/miniconda3/lib/python3.11/site-packages/pydantic/main.py\", line 856, in __getattr__\n    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')\nAttributeError: 'ToolResult' object has no attribute 'get'\n"
+      }
+    },
+    "EcoliMG1655": {
+      "model_path": "data/examples/EcoliMG1655.xml",
+      "model_stats": {
+        "error": "'ToolResult' object has no attribute 'get'"
+      },
+      "fva": {
+        "success": false,
+        "error": "'ToolResult' object has no attribute 'get'",
+        "traceback": "Traceback (most recent call last):\n  File \"/Users/jplfaria/repos/ModelSEEDagent/output_size_assessment.py\", line 110, in measure_fva_output_size\n    flux_ranges = result.get(\"flux_ranges\", {})\n                  ^^^^^^^^^^\n  File \"/Users/jplfaria/miniconda3/lib/python3.11/site-packages/pydantic/main.py\", line 856, in __getattr__\n    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')\nAttributeError: 'ToolResult' object has no attribute 'get'\n"
+      }
+    }
+  }
+}

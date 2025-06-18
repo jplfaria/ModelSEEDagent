@@ -75,7 +75,8 @@ Flexible configuration system:
 
 ### Production Ready
 
-- **27 Total Tools** - Complete metabolic modeling toolkit
+- **29 Total Tools** - Complete metabolic modeling toolkit including FetchArtifact
+- **Smart Summarization Framework** - 95-99.9% size reduction with three-tier hierarchy
 - **Multi-LLM Support** - Choose your preferred language model
 - **Professional CLI** - Rich, interactive command-line interface
 - **Comprehensive Audit** - Full execution tracking and verification
@@ -89,6 +90,7 @@ Flexible configuration system:
 
 ### High Performance
 
+- **Smart Summarization** - 99.998% reduction in LLM context usage (138MB → 2KB)
 - **Intelligent Caching** - Significant speedup for repeated operations
 - **Parallel Execution** - Multi-threaded tool execution
 - **Lazy Loading** - Efficient resource utilization
@@ -322,8 +324,8 @@ For detailed technical implementation information including parameters, precisio
 
 ## Documentation Links
 
-- **[Getting Started](../user/README.md)** - Installation and basic usage
-- **[User Guide](../user/INTERACTIVE_GUIDE.md)** - Interactive interface guide
+- **[Getting Started](../getting-started/quickstart-cli.md)** - Installation and basic usage
+- **[Interactive Guide](../getting-started/interactive-guide.md)** - Natural-language interface
 - **[Architecture](../ARCHITECTURE.md)** - System design and components
 - **[Tool Reference](../TOOL_REFERENCE.md)** - User-friendly tool descriptions
 - **[Tool Implementation Reference](tools.md)** - Technical implementation details

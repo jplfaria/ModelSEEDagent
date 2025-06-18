@@ -1,0 +1,48 @@
+{
+  "audit_id": "b52ae2c4-9d81-4430-90b3-cbb959cf9abd",
+  "session_id": null,
+  "tool_name": "predict_auxotrophies",
+  "timestamp": "2025-06-17T15:52:55.601920",
+  "input": {
+    "model_path": "data/examples/iML1515.xml",
+    "test_media": "AuxoMedia",
+    "compound_categories": [
+      "amino_acids",
+      "vitamins"
+    ]
+  },
+  "output": {
+    "structured": {
+      "success": false,
+      "message": "Auxotrophy prediction failed: 'cpd00020'",
+      "error": "'cpd00020'",
+      "full_data_path": null,
+      "summary_dict": null,
+      "key_findings": null,
+      "schema_version": "1.0",
+      "tool_name": null,
+      "model_stats": null,
+      "data": null,
+      "metadata": {},
+      "smart_summarization_metrics": {
+        "enabled": false
+      }
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 1.8253419399261475,
+    "success": false,
+    "error": null,
+    "timestamp_end": "2025-06-17T15:52:55.602029"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

@@ -1,0 +1,172 @@
+name: Testbed Essential Validation
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [dev]
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+  essential-testbed:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Install dependencies
+        run: |
+          poetry install --with dev
+
+      - name: Download test models
+        run: |
+          echo "Ensuring test models are available..."
+
+          # Create data/examples directory if it doesn't exist
+          mkdir -p data/examples
+
+          # Check if e_coli_core.xml exists, if not download it
+          if [ ! -f "data/examples/e_coli_core.xml" ]; then
+            echo " Downloading e_coli_core.xml..."
+            curl -o data/examples/e_coli_core.xml \
+              "http://bigg.ucsd.edu/static/models/e_coli_core.xml"
+          else
+            echo " e_coli_core.xml already exists"
+          fi
+
+      - name: Run essential testbed validation
+        id: validation
+        run: |
+          echo " Running essential biological validation..."
+          echo "Model: e_coli_core"
+          echo "Tool: FBA (Flux Balance Analysis)"
+          echo "Expected: Growth rate 0.1-1.0 h⁻¹"
+          echo "=" * 50
+
+          # Run FBA on e_coli_core model
+          poetry run python -c "
+          import sys
+          import os
+          import traceback
+
+          sys.path.insert(0, '.')
+
+          try:
+              # Check environment
+              print('=== Environment Check ===')
+              print(f'Python: {sys.version}')
+              print(f'Working directory: {os.getcwd()}')
+              print(f'Model file exists: {os.path.exists(\"data/examples/e_coli_core.xml\")}')
+
+              # Check imports
+              try:
+                  import cobra
+                  print(f'COBRApy version: {cobra.__version__}')
+              except ImportError as e:
+                  print(f'ERROR: Failed to import cobra: {e}')
+                  sys.exit(1)
+
+              from src.tools.cobra.fba import FBATool
+              from src.tools.cobra.utils import ModelUtils
+
+              print('\\n=== Running FBA Validation ===')
+              print('Loading e_coli_core model...')
+              model = ModelUtils.load_model('data/examples/e_coli_core.xml')
+              print(f'Model loaded: {len(model.reactions)} reactions, {len(model.metabolites)} metabolites')
+
+              print('\\nRunning FBA analysis...')
+              # Create minimal config for FBATool
+              config = {'fba_config': {'solver': 'glpk'}}
+              fba_tool = FBATool(config)
+              result = fba_tool.run('data/examples/e_coli_core.xml')
+
+              print('\\nAnalyzing results...')
+
+              # Extract growth rate from FBA result (objective_value = growth rate)
+              growth_rate = result.data.get('objective_value', 0.0)
+              objective_value = growth_rate
+
+              print(f'FBA Status: {result.data.get(\"status\", \"unknown\")}')
+              print(f'Significant fluxes found: {len(result.data.get(\"significant_fluxes\", {}))} reactions')
+
+              print(f'Growth Rate: {growth_rate:.4f} h⁻¹')
+              print(f'Objective Value: {objective_value:.4f}')
+
+              # Biological validation
+              exit_code = 0
+              if 0.1 <= growth_rate <= 1.0:
+                  print('PASSED: Growth rate within expected biological range (0.1-1.0 h⁻¹)')
+              else:
+                  print(f'FAILED: Growth rate {growth_rate:.4f} outside expected range (0.1-1.0 h⁻¹)')
+                  exit_code = 1
+
+              # Additional validation
+              if objective_value > 0:
+                  print('PASSED: Positive objective value indicates feasible solution')
+              else:
+                  print('FAILED: Non-positive objective value indicates infeasible solution')
+                  exit_code = 1
+
+              print('\\n' + '=' * 50)
+              if exit_code == 0:
+                  print('Essential testbed validation PASSED')
+                  print('Core biological functionality verified')
+              else:
+                  print('Essential testbed validation FAILED')
+                  print('Core biological functionality compromised')
+
+              sys.exit(exit_code)
+
+          except Exception as e:
+              print(f'\\nERROR: {str(e)}')
+              print('\\nFull traceback:')
+              traceback.print_exc()
+              sys.exit(1)
+          "
+
+      - name: Validation summary
+        if: always()
+        run: |
+          echo "##  Essential Testbed Validation Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Component | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----------|--------|" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ steps.validation.outcome }}" = "success" ]; then
+            echo "| **Model**: e_coli_core |  Loaded successfully |" >> $GITHUB_STEP_SUMMARY
+            echo "| **Tool**: FBA |  Executed successfully |" >> $GITHUB_STEP_SUMMARY
+            echo "| **Biological Validation** |  Growth rate in valid range |" >> $GITHUB_STEP_SUMMARY
+            echo "| **Overall Result** |  **PASSED** |" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo " **Essential biological functionality validated!**" >> $GITHUB_STEP_SUMMARY
+            echo "The core FBA tool produces biologically meaningful results on the standard e_coli_core model." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| **Overall Result** |  **FAILED** |" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo " **Essential validation failed!**" >> $GITHUB_STEP_SUMMARY
+            echo "The core biological functionality may be compromised. Review the test output above." >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Next Steps**: For comprehensive validation, run the full testbed suite locally:" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
+          echo "python scripts/comprehensive_tool_testbed.py" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY

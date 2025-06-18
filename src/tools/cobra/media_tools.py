@@ -15,7 +15,7 @@ from pydantic import BaseModel, Field
 from ..base import BaseTool, ToolRegistry, ToolResult
 from .media_library import MediaLibrary, get_media_library
 from .modelseedpy_integration import ModelSEEDpyEnhancement, get_modelseedpy_enhancement
-from .utils import ModelUtils
+from .utils_optimized import OptimizedModelUtils
 
 
 class MediaConfig(BaseModel):
@@ -39,7 +39,7 @@ class MediaSelectorTool(BaseTool):
         super().model_post_init(__context)
         self._media_library = get_media_library()
         self._enhancement = get_modelseedpy_enhancement()
-        self._model_utils = ModelUtils()
+        self._model_utils = OptimizedModelUtils(use_cache=True)
 
     def _run_tool(self, input_data: Dict[str, Any]) -> ToolResult:
         """Select optimal media for a model"""
@@ -304,7 +304,7 @@ class MediaManipulatorTool(BaseTool):
             if model_object:
                 model = model_object
             elif model_path:
-                model_utils = ModelUtils()
+                model_utils = OptimizedModelUtils(use_cache=True)
                 model = model_utils.load_model(model_path)
             else:
                 return {"error": "No model provided"}
@@ -371,7 +371,7 @@ class MediaCompatibilityTool(BaseTool):
             if model_object:
                 model = model_object
             elif model_path:
-                model_utils = ModelUtils()
+                model_utils = OptimizedModelUtils(use_cache=True)
                 model = model_utils.load_model(model_path)
             else:
                 raise ValueError("Either model_path or model_object required")
@@ -546,7 +546,7 @@ class MediaComparatorTool(BaseTool):
             if model_object:
                 model = model_object
             elif model_path:
-                model_utils = ModelUtils()
+                model_utils = OptimizedModelUtils(use_cache=True)
                 model = model_utils.load_model(model_path)
             else:
                 raise ValueError("Either model_path or model_object required")

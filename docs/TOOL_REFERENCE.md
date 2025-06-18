@@ -2,17 +2,48 @@
 
 ## Overview
 
-ModelSEEDagent provides **29 specialized metabolic modeling tools** organized into five main categories. Each tool is designed for specific analysis tasks and integrates seamlessly with the AI reasoning system.
+ModelSEEDagent provides **24 specialized metabolic modeling tools** organized into six main categories, enhanced with the **Smart Summarization Framework** for optimal LLM performance. Each tool is designed for specific analysis tasks and integrates seamlessly with the AI reasoning system.
 
 ## Tool Categories
 
 1. [AI Media Tools (6 tools)](#ai-media-tools) - Intelligent media management and optimization
 2. [COBRApy Tools (12 tools)](#cobrapy-tools) - Comprehensive metabolic modeling analysis
-3. [ModelSEED Tools (5 tools)](#modelseed-tools) - Genome annotation and model building
-4. [Biochemistry Tools (2 tools)](#biochemistry-tools) - Universal compound and reaction resolution
-5. [RAST Tools (2 tools)](#rast-tools) - Genome annotation and analysis
+3. [Biochemistry Tools (3 tools)](#biochemistry-tools) - Enhanced compound/reaction resolution and cross-database translation
+4. [System Tools (4 tools)](#system-tools) - AI auditing and verification
 
 For detailed technical implementation information, see the [API Tool Implementation Reference](api/tools.md).
+
+## Smart Summarization Framework
+
+All ModelSEEDagent tools integrate with the **Smart Summarization Framework**, which automatically transforms massive tool outputs (up to 138 MB) into LLM-optimized formats while preserving complete data access.
+
+### Three-Tier Information Hierarchy
+
+**Tier 1: key_findings (≤2KB)**
+- Critical insights optimized for immediate LLM consumption
+- Bullet-point format with percentages and key metrics
+- Warnings and success indicators
+- Top examples (3-5 items maximum)
+
+**Tier 2: summary_dict (≤5KB)**
+- Structured data for follow-up analysis
+- Statistical summaries and distributions
+- Category counts with limited examples
+- Metadata and analysis parameters
+
+**Tier 3: full_data_path**
+- Complete raw results stored as JSON artifacts
+- Accessible via FetchArtifact tool for detailed analysis
+- No size limitations - preserves all original data
+
+### Size Reduction Achievements
+
+| Tool | Original Size | Summarized | Reduction | Status |
+|------|--------------|------------|-----------|---------|
+| FluxSampling | 138.5 MB | 2.2 KB | 99.998% | Production |
+| FluxVariability | 170 KB | 2.4 KB | 98.6% | Production |
+| GeneDeletion | 130 KB | 3.1 KB | 97.6% | Production |
+| FBA | 48 KB | 1.8 KB | 96.3% | Production |
 
 ---
 
@@ -121,17 +152,22 @@ Core metabolic modeling analysis capabilities:
 
 ## Biochemistry Tools
 
-Universal compound and reaction information tools:
+Enhanced universal compound and reaction information tools with pure ModelSEEDpy integration:
 
-### 1. Biochemistry Resolver (`resolve_biochemistry`)
-**Purpose**: Look up chemical information for metabolites and reactions
+### 1. Biochemistry Resolver (`resolve_biochem_entity`) ✨ ENHANCED
+**Purpose**: Look up chemical information for metabolites and reactions using official ModelSEED database
 **Usage**: `"what is cpd00027?"` or `"resolve this compound ID"`
-**What it does**: Provides names, formulas, and database cross-references
+**What it does**: Provides names, formulas, chemical properties, and comprehensive database cross-references from 45,706+ compounds and 56,009+ reactions
 
-### 2. Standalone Resolver (`standalone_resolve_biochemistry`)
-**Purpose**: Offline biochemistry lookup without network dependencies
-**Usage**: Automatically used when network database is unavailable
-**What it does**: Local resolution of common metabolite and reaction IDs
+### 2. Biochemistry Search (`search_biochem`) ✨ ENHANCED
+**Purpose**: Advanced search across the complete ModelSEED biochemistry database
+**Usage**: `"search for glucose compounds"` or `"find reactions containing ATP"`
+**What it does**: Intelligent search with match scoring across 45,706+ compounds and 56,009+ reactions by name, formula, aliases, and chemical properties
+
+### 3. Cross-Database ID Translator (`translate_database_ids`) ✨ NEW
+**Purpose**: Universal ID translation between biochemical databases using official ModelSEED mappings
+**Usage**: `"convert BiGG IDs to ModelSEED format"` or `"translate C00002 to other databases"`
+**What it does**: Converts IDs between ModelSEED ↔ BiGG ↔ KEGG ↔ MetaCyc ↔ ChEBI across 55+ databases with automatic compartment handling
 
 ---
 
@@ -139,46 +175,20 @@ Universal compound and reaction information tools:
 
 Genome-scale model construction and annotation tools:
 
-### 1. Model Builder (`build_modelseed_model`) (in development - currently not functional)
-**Purpose**: Build metabolic models from genome annotations
-**Usage**: `"build a model from this genome"`
-**What it does**: Creates draft metabolic models from gene annotations
+### 1. RAST Annotator (`annotate_genome_rast`)
+**Purpose**: Genome and protein FASTA annotation using RAST server with MSGenome integration
+**Usage**: `"annotate this genome with RAST"` or `"annotate this protein FASTA"`
+**What it does**: Automated genome/protein annotation using MSGenome.from_fasta() and modelseedpy.RastClient()
 
-### 2. Model Gapfiller (`gapfill_modelseed_model`) (in development - currently not functional)
+### 2. Model Builder (`build_metabolic_model`)
+**Purpose**: Build metabolic models from genome annotations or MSGenome objects
+**Usage**: `"build a model from this genome"` or `"build a model from this annotation"`
+**What it does**: Creates draft metabolic models from MSGenome objects with SBML/JSON export capabilities
+
+### 3. Model Gapfiller (`gapfill_model`)
 **Purpose**: Fill gaps in metabolic networks to enable growth
 **Usage**: `"gapfill this model"`
-**What it does**: Adds missing reactions needed for biomass production
-
-### 3. Annotation Tool (`annotate_with_modelseed`) (in development - currently not functional)
-**Purpose**: Annotate models with ModelSEED database information
-**Usage**: Automatically applied during model analysis
-**What it does**: Adds standardized biochemistry annotations
-
-### 4. Compatibility Checker (`check_modelseed_compatibility`) (in development - currently not functional)
-**Purpose**: Check ModelSEED-COBRApy compatibility
-**Usage**: `"check model compatibility"`
-**What it does**: Validates model format and suggests conversions
-
-### 5. Protein Annotator (`annotate_proteins_rast`) (in development - currently not functional)
-**Purpose**: Functional annotation of protein sequences
-**Usage**: `"annotate protein functions"`
-**What it does**: Assigns enzyme functions and metabolic roles
-
----
-
-## RAST Tools
-
-Genome annotation and analysis tools:
-
-### 1. RAST Annotator (`annotate_with_rast`) (in development - currently not functional)
-**Purpose**: Genome annotation using RAST server
-**Usage**: `"annotate this genome with RAST"`
-**What it does**: Automated genome annotation and functional assignment
-
-### 2. Annotation Analyzer (`analyze_rast_annotations`) (in development - currently not functional)
-**Purpose**: Quality assessment of genome annotations
-**Usage**: `"analyze annotation quality"`
-**What it does**: Evaluates completeness and accuracy of genome annotations
+**What it does**: Adds missing reactions needed for biomass production with improved MSGapfill API
 
 ---
 
@@ -201,6 +211,38 @@ modelseed-agent interactive
 
 For detailed technical implementation information including parameters, precision configurations, and advanced usage patterns, see the [API Tool Implementation Reference](api/tools.md).
 
+---
+
+## System Tools
+
+AI auditing and verification tools for transparency and quality assurance:
+
+### 1. Tool Audit (`tool_audit`)
+**Purpose**: Audit and verify tool execution with detailed tracking
+**Usage**: Automatically tracks all tool executions during workflows
+**What it does**: Records tool inputs, outputs, execution times, and success/failure status
+
+### 2. AI Audit (`ai_audit`)
+**Purpose**: Audit AI reasoning and decision-making processes
+**Usage**: Monitors AI agent decisions and reasoning chains
+**What it does**: Tracks AI model responses, reasoning steps, and decision paths for transparency
+
+### 3. Realtime Verification (`realtime_verification`)
+**Purpose**: Live verification of AI statements against actual results
+**Usage**: Automatically validates AI claims during execution
+**What it does**: Cross-references AI assertions with tool outputs to detect and prevent hallucinations
+
+### 4. FetchArtifact (`fetch_artifact_data`)
+**Purpose**: Retrieve complete raw data from Smart Summarization artifacts
+**Usage**: `"get the full flux sampling data for detailed analysis"`
+**What it does**: Loads complete original tool outputs from storage when detailed analysis is needed beyond summarized results
+
+**When to use FetchArtifact**:
+- User asks for "detailed analysis" or "complete results"
+- Statistical analysis beyond summary_dict scope is needed
+- Debugging scenarios requiring full data inspection
+- Cross-model comparisons requiring raw data
+
 ## Summary
 
-ModelSEEDagent's 27 tools provide comprehensive metabolic modeling capabilities through an intuitive AI interface. Each tool is designed to work seamlessly with the AI reasoning system, allowing for complex multi-step analyses through simple natural language commands.
+ModelSEEDagent's 24 tools provide comprehensive metabolic modeling capabilities through an intuitive AI interface enhanced with Smart Summarization. Each tool is designed to work seamlessly with the AI reasoning system, allowing for complex multi-step analyses through simple natural language commands.

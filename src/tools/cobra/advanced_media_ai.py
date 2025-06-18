@@ -22,7 +22,7 @@ from pydantic import BaseModel, Field
 from ..base import BaseTool, ToolRegistry, ToolResult
 from .media_library import MediaLibrary, get_media_library
 from .modelseedpy_integration import ModelSEEDpyEnhancement, get_modelseedpy_enhancement
-from .utils import ModelUtils
+from .utils_optimized import OptimizedModelUtils
 
 logger = logging.getLogger(__name__)
 
@@ -72,11 +72,15 @@ class MediaOptimizationTool(BaseTool):
         super().model_post_init(__context)
         self._media_library = get_media_library()
         self._enhancement = get_modelseedpy_enhancement()
-        self._model_utils = ModelUtils()
+        self._model_utils = OptimizedModelUtils(use_cache=True)
 
     def _run_tool(self, input_data: Dict[str, Any]) -> ToolResult:
         """Optimize media composition for specific targets"""
         try:
+            # Handle None input_data
+            if input_data is None:
+                raise ValueError("input_data cannot be None")
+            
             model_path = input_data.get("model_path")
             model_object = input_data.get("model_object")
             target_growth = input_data.get("target_growth_rate", 0.5)
@@ -99,8 +103,8 @@ class MediaOptimizationTool(BaseTool):
             if not media_composition:
                 raise ValueError(f"Base media '{base_media}' not found")
 
-            # Convert MediaComposition to dictionary
-            media_dict = dict(media_composition)
+            # Get compounds dictionary from MediaComposition
+            media_dict = media_composition.compounds
 
             # Run optimization based on strategy
             optimization_result = self._optimize_media(
@@ -128,7 +132,7 @@ class MediaOptimizationTool(BaseTool):
                     ),
                 },
                 metadata={
-                    "model_id": model.id,
+                    "model_id": getattr(model, 'id', None) or getattr(model, 'name', None) or 'unknown_model',
                     "target_growth": target_growth,
                     "achieved_growth": optimization_result["final_growth"],
                     "optimization_strategy": optimization_strategy,
@@ -534,11 +538,15 @@ class AuxotrophyPredictionTool(BaseTool):
         super().model_post_init(__context)
         self._media_library = get_media_library()
         self._enhancement = get_modelseedpy_enhancement()
-        self._model_utils = ModelUtils()
+        self._model_utils = OptimizedModelUtils(use_cache=True)
 
     def _run_tool(self, input_data: Dict[str, Any]) -> ToolResult:
         """Predict auxotrophies for a model"""
         try:
+            # Handle None input_data
+            if input_data is None:
+                raise ValueError("input_data cannot be None")
+            
             model_path = input_data.get("model_path")
             model_object = input_data.get("model_object")
             test_media = input_data.get("test_media", "AuxoMedia")
@@ -560,8 +568,8 @@ class AuxotrophyPredictionTool(BaseTool):
             if not media_composition:
                 raise ValueError(f"Test media '{test_media}' not found")
 
-            # Convert MediaComposition to dictionary
-            media_dict = dict(media_composition)
+            # Get compounds dictionary from MediaComposition
+            media_dict = media_composition.compounds
 
             # Perform auxotrophy analysis
             auxotrophy_results = self._analyze_auxotrophies(
@@ -585,7 +593,7 @@ class AuxotrophyPredictionTool(BaseTool):
                     "essential_compounds": auxotrophy_results["essential_compounds"],
                 },
                 metadata={
-                    "model_id": model.id,
+                    "model_id": getattr(model, 'id', None) or getattr(model, 'name', None) or 'unknown_model',
                     "test_media": test_media,
                     "growth_threshold": growth_threshold,
                     "auxotrophy_count": len(

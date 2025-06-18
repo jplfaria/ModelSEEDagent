@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+# Claude Code CLI Wrapper
+#
+# This script provides a simple interface for documentation management.
+#
+# Usage:
+#     ./claude-code review-docs          # Review and update documentation
+#     ./claude-code review-docs --check  # Check what needs updating
+#     ./claude-code reminder             # Show reminder status
+#
+
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Execute the Python CLI script with all arguments
+python3 "$SCRIPT_DIR/scripts/claude_code_cli.py" "$@"

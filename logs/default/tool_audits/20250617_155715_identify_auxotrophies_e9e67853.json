@@ -1,0 +1,47 @@
+{
+  "audit_id": "e9e67853-ec7d-46e4-9f95-80f6b2eb2512",
+  "session_id": null,
+  "tool_name": "identify_auxotrophies",
+  "timestamp": "2025-06-17T15:57:15.977666",
+  "input": {
+    "model_path": "data/examples/B_aphidicola.xml"
+  },
+  "output": {
+    "structured": {
+      "success": true,
+      "message": "Auxotrophy analysis completed.",
+      "error": null,
+      "full_data_path": null,
+      "summary_dict": null,
+      "key_findings": null,
+      "schema_version": "1.0",
+      "tool_name": null,
+      "model_stats": null,
+      "data": {
+        "complete_growth_rate": 19.70189209985999,
+        "auxotrophies": [],
+        "result_file": null
+      },
+      "metadata": {},
+      "smart_summarization_metrics": {
+        "enabled": false
+      }
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 3.6064209938049316,
+    "success": true,
+    "error": null,
+    "timestamp_end": "2025-06-17T15:57:15.977756"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

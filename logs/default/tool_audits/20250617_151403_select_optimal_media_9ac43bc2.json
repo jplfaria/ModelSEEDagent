@@ -1,0 +1,116 @@
+{
+  "audit_id": "9ac43bc2-4a32-4dcd-bd53-c301ea592a35",
+  "session_id": null,
+  "tool_name": "select_optimal_media",
+  "timestamp": "2025-06-17T15:14:03.902902",
+  "input": {
+    "model_path": "data/examples/iML1515.xml",
+    "target_growth": 0.1
+  },
+  "output": {
+    "structured": {
+      "success": true,
+      "message": "Analyzed 5 media types. Best: GMM",
+      "error": null,
+      "full_data_path": null,
+      "summary_dict": null,
+      "key_findings": null,
+      "schema_version": "1.0",
+      "tool_name": null,
+      "model_stats": null,
+      "data": {
+        "model_analysis": {
+          "is_modelseedpy": false,
+          "model_id": "iML1515",
+          "biomass_reaction": "BIOMASS_Ec_iML1515_core_75p37M",
+          "total_reactions": 2712,
+          "total_metabolites": 1877,
+          "exchange_reactions": 331,
+          "cobrakbase_available": false
+        },
+        "media_results": {
+          "GMM": {
+            "growth_rate": 0.383569444684738,
+            "status": "optimal",
+            "feasible": true,
+            "compatibility_score": 1.0,
+            "media_description": "Glucose Minimal Media - minimal components for growth with glucose"
+          },
+          "GMM_anaerobic": {
+            "growth_rate": 0.04894248949460335,
+            "status": "optimal",
+            "feasible": true,
+            "compatibility_score": 0.95,
+            "media_description": "Glucose Minimal Media without O2 - anaerobic growth with alternative electron acceptors"
+          },
+          "AuxoMedia": {
+            "growth_rate": 1.6039118605948407e-30,
+            "status": "optimal",
+            "feasible": false,
+            "compatibility_score": 0.34615384615384615,
+            "media_description": "Rich media with glucose, amino acids, and vitamins"
+          },
+          "PyruvateMinimalMedia": {
+            "growth_rate": 0.0,
+            "status": "infeasible",
+            "feasible": false,
+            "compatibility_score": 0.95,
+            "media_description": "Minimal media with pyruvate as carbon source"
+          },
+          "PyruvateMinimalMedia_anaerobic": {
+            "growth_rate": 0.0,
+            "status": "infeasible",
+            "feasible": false,
+            "compatibility_score": 0.9,
+            "media_description": "Minimal media with pyruvate as carbon source - anaerobic"
+          }
+        },
+        "recommendations": [
+          {
+            "media_name": "GMM",
+            "growth_rate": 0.383569444684738,
+            "compatibility": 1.0,
+            "recommendation_score": 0.383569444684738
+          },
+          {
+            "media_name": "GMM_anaerobic",
+            "growth_rate": 0.04894248949460335,
+            "compatibility": 0.95,
+            "recommendation_score": 0.04649536501987318
+          }
+        ],
+        "best_media": "GMM",
+        "ai_suggestion": {
+          "suggestion": "Recommended: GMM",
+          "reason": "Best compatibility with BIGG models: 0.384 h\u207b\u00b9",
+          "action": "Use GMM with possible compound mapping"
+        }
+      },
+      "metadata": {
+        "model_id": "iML1515",
+        "total_media_tested": 5,
+        "feasible_media_count": 2,
+        "best_growth_rate": 0.383569444684738
+      },
+      "smart_summarization_metrics": {
+        "enabled": false
+      }
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 3.4057776927948,
+    "success": true,
+    "error": null,
+    "timestamp_end": "2025-06-17T15:14:03.903028"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

@@ -1,16 +1,82 @@
-from typing import Any, ClassVar, Dict, List, Optional
+import json
+import os
+from pathlib import Path
+from typing import Any, ClassVar, Dict, List, Optional, Union
 
 from langchain_core.tools import BaseTool as LangChainBaseTool
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 class ToolResult(BaseModel):
+    """Enhanced ToolResult with Smart Summarization Framework support
+
+    Three-tier information hierarchy:
+    1. key_findings: Critical insights for LLM (≤2KB)
+    2. summary_dict: Structured data for analysis (≤5KB)
+    3. full_data_path: Complete raw data on disk (unlimited)
+    """
+
     model_config = {"protected_namespaces": ()}
+
+    # Core result fields
     success: bool
     message: str
+    error: Optional[str] = None
+
+    # Smart Summarization Framework fields
+    full_data_path: Optional[str] = None  # Path to raw artifact on disk
+    summary_dict: Optional[Dict[str, Any]] = None  # Compressed stats (≤5KB)
+    key_findings: Optional[List[str]] = None  # Critical bullets (≤2KB)
+    schema_version: str = "1.0"  # Framework version
+    tool_name: Optional[str] = None  # For summarizer registry
+    model_stats: Optional[Dict[str, Union[str, int]]] = (
+        None  # Model metadata (id, reactions, genes, etc.)
+    )
+
+    # Legacy compatibility
     data: Optional[Dict[str, Any]] = None
     metadata: Dict[str, Any] = Field(default_factory=dict)
-    error: Optional[str] = None
+
+    @field_validator("key_findings")
+    @classmethod
+    def validate_key_findings_size(cls, v):
+        """Ensure key_findings ≤ 2KB for LLM efficiency"""
+        if v is not None:
+            size = len(json.dumps(v))
+            if size > 2000:
+                raise ValueError(f"key_findings too large: {size}B > 2KB limit")
+        return v
+
+    @field_validator("summary_dict")
+    @classmethod
+    def validate_summary_dict_size(cls, v):
+        """Ensure summary_dict ≤ 5KB for structured analysis"""
+        if v is not None:
+            size = len(json.dumps(v))
+            if size > 5000:
+                raise ValueError(f"summary_dict too large: {size}B > 5KB limit")
+        return v
+
+    def get_llm_summary(self) -> str:
+        """Get LLM-optimized summary for agent consumption"""
+        if self.key_findings:
+            return "\n".join(f"• {finding}" for finding in self.key_findings)
+        elif self.summary_dict:
+            # Fallback to summary_dict if no key_findings
+            return f"Analysis completed: {self.message}"
+        else:
+            # Legacy fallback
+            return self.message
+
+    def has_smart_summarization(self) -> bool:
+        """Check if result uses smart summarization framework"""
+        return self.key_findings is not None or self.summary_dict is not None
+
+    def get_artifact_size(self) -> Optional[int]:
+        """Get size of stored artifact in bytes"""
+        if self.full_data_path and os.path.exists(self.full_data_path):
+            return os.path.getsize(self.full_data_path)
+        return None
 
 
 class ToolConfig(BaseModel):
@@ -47,6 +113,12 @@ class BaseTool(LangChainBaseTool):
         self._audit_enabled = config.get("audit_enabled", True)
         self._audit_watch_dirs = config.get("audit_watch_dirs", ["."])
 
+        # Smart Summarization Framework configuration - enabled by default
+        self._smart_summarization_enabled = config.get(
+            "smart_summarization_enabled", True
+        )
+        self._force_summarization = config.get("force_summarization", False)
+
     @property
     def config(self) -> ToolConfig:
         """Get the tool configuration object for test compatibility"""
@@ -66,7 +138,13 @@ class BaseTool(LangChainBaseTool):
         """
         if not self._audit_enabled:
             # Direct execution without auditing
-            return self._run_tool(input_data)
+            result = self._run_tool(input_data)
+
+            # Apply smart summarization if enabled (even without auditing)
+            if self._smart_summarization_enabled and isinstance(result, ToolResult):
+                result = self._apply_smart_summarization(result, input_data)
+
+            return result
 
         # Import here to avoid circular imports
         from .audit import get_auditor
@@ -86,7 +164,125 @@ class BaseTool(LangChainBaseTool):
             result.metadata["audit_file"] = str(audit_file)
             result.metadata["audit_enabled"] = True
 
+        # Apply smart summarization if enabled
+        if self._smart_summarization_enabled and isinstance(result, ToolResult):
+            result = self._apply_smart_summarization(result, input_data)
+
         return result
+
+    def _apply_smart_summarization(
+        self, result: ToolResult, input_data: Any
+    ) -> ToolResult:
+        """Apply smart summarization framework to tool result
+
+        Args:
+            result: Original tool result
+            input_data: Original input to extract model information
+
+        Returns:
+            Enhanced result with smart summarization
+        """
+        try:
+            # Import here to avoid circular imports
+            from .smart_summarization import enable_smart_summarization
+
+            # Extract model stats from metadata and input
+            model_stats = self._extract_model_stats(result, input_data)
+
+            # Enable smart summarization with original result data
+            enhanced_result = enable_smart_summarization(
+                tool_result=result,
+                tool_name=self.tool_name,
+                raw_data=result.data,
+                model_stats=model_stats,
+            )
+
+            # Preserve original success status and error info
+            enhanced_result.success = result.success
+            enhanced_result.error = result.error
+
+            # Preserve and enhance metadata
+            if enhanced_result.metadata is None:
+                enhanced_result.metadata = {}
+            enhanced_result.metadata.update(result.metadata or {})
+            enhanced_result.metadata["smart_summarization_enabled"] = True
+            enhanced_result.metadata["original_data_size"] = (
+                len(str(result.data)) if result.data else 0
+            )
+
+            # Calculate summarization metrics
+            if enhanced_result.has_smart_summarization():
+                summarized_size = len(str(enhanced_result.key_findings or [])) + len(
+                    str(enhanced_result.summary_dict or {})
+                )
+                original_size = enhanced_result.metadata["original_data_size"]
+                if original_size > 0:
+                    reduction_pct = (
+                        (original_size - summarized_size) / original_size
+                    ) * 100
+                    enhanced_result.metadata["summarization_reduction_pct"] = round(
+                        reduction_pct, 2
+                    )
+                    enhanced_result.metadata["summarized_size_bytes"] = summarized_size
+
+            return enhanced_result
+
+        except Exception as e:
+            # If summarization fails, return original result with error info
+            if result.metadata is None:
+                result.metadata = {}
+            result.metadata["smart_summarization_error"] = str(e)
+            result.metadata["smart_summarization_enabled"] = False
+            return result
+
+    def _extract_model_stats(
+        self, result: ToolResult, input_data: Any
+    ) -> Optional[Dict[str, Union[str, int]]]:
+        """Extract model statistics from input or result for summarization context
+
+        Args:
+            result: Tool result
+            input_data: Original input data
+
+        Returns:
+            Dictionary with model statistics or None
+        """
+        model_stats = {}
+
+        # Try to extract model_id from input
+        if isinstance(input_data, dict):
+            model_path = input_data.get("model_path")
+            if model_path:
+                # Extract model name from path
+                model_id = Path(model_path).stem
+                model_stats["model_id"] = model_id
+        elif isinstance(input_data, str) and input_data.endswith(
+            (".xml", ".json", ".sbml")
+        ):
+            # Input is a model path
+            model_id = Path(input_data).stem
+            model_stats["model_id"] = model_id
+
+        # Try to extract model statistics from result metadata
+        if result.metadata:
+            for key in ["model_id", "num_reactions", "num_genes", "num_metabolites"]:
+                if key in result.metadata:
+                    model_stats[key] = result.metadata[key]
+
+        # Try to extract statistics from data for FVA results
+        if result.data and isinstance(result.data, dict):
+            if "statistics" in result.data:
+                stats = result.data["statistics"]
+                if "total_reactions" in stats:
+                    model_stats["num_reactions"] = stats["total_reactions"]
+
+            # For FVA results, extract from fva_results length
+            if "fva_results" in result.data:
+                fva_data = result.data["fva_results"]
+                if isinstance(fva_data, dict) and "minimum" in fva_data:
+                    model_stats["num_reactions"] = len(fva_data["minimum"])
+
+        return model_stats if model_stats else None
 
     def _run_tool(self, input_data: Any) -> Any:
         """

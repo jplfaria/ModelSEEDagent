@@ -15,7 +15,7 @@ from .error_handling import (
 )
 from .fba import SimulationResultsStore  # Import the results store
 from .simulation_wrapper import run_simulation
-from .utils import ModelUtils
+from .utils_optimized import OptimizedModelUtils
 
 
 class MissingMediaConfig(BaseModel):
@@ -49,7 +49,7 @@ class MissingMediaTool(BaseTool):
         super().__init__(config)
         config_dict = config.get("missing_media_config", {})
         self._config = MissingMediaConfig(**config_dict)
-        self._utils = ModelUtils()
+        self._utils = OptimizedModelUtils(use_cache=True)
 
     def _run_tool(self, input_data: Any) -> ToolResult:
         try:

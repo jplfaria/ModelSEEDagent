@@ -63,7 +63,9 @@ def launch_interactive():
 
         # Initialize LLM with Argo
         print("🤖 Initializing GPT-4o Latest via Argo...")
-        llm = ArgoLLM(config)
+        from src.llm.factory import LLMFactory
+
+        llm = LLMFactory.create("argo", config)
         print(f"✅ LLM ready: {llm.config.model_name}")
 
         # Initialize tools

@@ -1,0 +1,154 @@
+{
+  "iML1515": {
+    "model_stats": {
+      "reactions": 2712,
+      "genes": 1516,
+      "metabolites": 1877,
+      "compartments": 3,
+      "objective": "Maximize\n1.0*BIOMASS_Ec_iML1515_core_75p37M - 1.0*BIOMASS_Ec_iML1515_core_75p37M_reverse_35685",
+      "model_id": "iML1515",
+      "model_name": "Unknown"
+    },
+    "fva": {
+      "success": true,
+      "execution_time": 31.969176,
+      "reactions_analyzed": 2712,
+      "json_size_kb": 96.412109375,
+      "csv_size_kb": 75.5615234375,
+      "sample_results": [
+        {
+          "minimum": 0.0,
+          "maximum": 23.314000000001027
+        },
+        {
+          "minimum": 0.0,
+          "maximum": 11.656999999999021
+        },
+        {
+          "minimum": 0.0,
+          "maximum": 11.656999999999147
+        },
+        {
+          "minimum": -12.68386549532256,
+          "maximum": 11.675658894071159
+        },
+        {
+          "minimum": 0.30081627122867305,
+          "maximum": 0.8729389706151385
+        }
+      ]
+    },
+    "gene_deletion": {
+      "success": true,
+      "execution_time": 14.618853,
+      "genes_tested": 50,
+      "total_genes": 1516,
+      "essential_genes": 11,
+      "json_size_kb": 2.83984375,
+      "csv_size_kb": 1.9873046875,
+      "sample_results": [
+        {
+          "ids": "{'b3426'}",
+          "growth": 0.8769972144269725,
+          "status": "optimal"
+        },
+        {
+          "ids": "{'b1692'}",
+          "growth": 0.8769972144269725,
+          "status": "optimal"
+        },
+        {
+          "ids": "{'b2378'}",
+          "growth": 0.8769972144269725,
+          "status": "optimal"
+        },
+        {
+          "ids": "{'b1587'}",
+          "growth": 0.8769972144269725,
+          "status": "optimal"
+        },
+        {
+          "ids": "{'b2242'}",
+          "growth": 0.8769972144269725,
+          "status": "optimal"
+        }
+      ]
+    }
+  },
+  "EcoliMG1655": {
+    "model_stats": {
+      "reactions": 1867,
+      "genes": 1345,
+      "metabolites": 1514,
+      "compartments": 2,
+      "objective": "Maximize\n1.0*bio1 - 1.0*bio1_reverse_b18f7",
+      "model_id": "",
+      "model_name": "Escherichia coli str. K-12 substr. MG1655"
+    },
+    "fva": {
+      "success": true,
+      "execution_time": 29.491203,
+      "reactions_analyzed": 1867,
+      "json_size_kb": 65.4599609375,
+      "csv_size_kb": 57.1962890625,
+      "sample_results": [
+        {
+          "minimum": 0.0,
+          "maximum": 849.999999999986
+        },
+        {
+          "minimum": 0.0,
+          "maximum": 424.99999999999335
+        },
+        {
+          "minimum": -424.9999999999929,
+          "maximum": 0.0
+        },
+        {
+          "minimum": -1000.0,
+          "maximum": 1000.0
+        },
+        {
+          "minimum": -1000.0,
+          "maximum": 1000.0
+        }
+      ]
+    },
+    "gene_deletion": {
+      "success": true,
+      "execution_time": 13.714948,
+      "genes_tested": 50,
+      "total_genes": 1345,
+      "essential_genes": 5,
+      "json_size_kb": 2.927734375,
+      "csv_size_kb": 1.96875,
+      "sample_results": [
+        {
+          "ids": "{'b1136'}",
+          "growth": 135.61239069441865,
+          "status": "optimal"
+        },
+        {
+          "ids": "{'b0596'}",
+          "growth": 135.61239069441865,
+          "status": "optimal"
+        },
+        {
+          "ids": "{'b0621'}",
+          "growth": 135.61239069441865,
+          "status": "optimal"
+        },
+        {
+          "ids": "{'b0125'}",
+          "growth": 135.61239069441865,
+          "status": "optimal"
+        },
+        {
+          "ids": "{'b1092'}",
+          "growth": 135.61239069441865,
+          "status": "optimal"
+        }
+      ]
+    }
+  }
+}

@@ -123,6 +123,11 @@ class AnalysisExperience(BaseModel):
         description="Potential improvements identified"
     )
 
+    # Smart Summarization Effectiveness - Phase C Enhancement
+    summarization_metrics: Optional[Dict[str, Any]] = Field(
+        default=None, description="Smart Summarization effectiveness metrics"
+    )
+
 
 class PatternExtractor:
     """Extracts patterns from analysis history"""
@@ -523,6 +528,183 @@ class LearningMemory:
 
             logger = logging.getLogger(__name__)
             logger.warning(f"Could not record analysis experience: {e}")
+
+    def record_summarization_effectiveness(
+        self,
+        tool_name: str,
+        original_size_bytes: int,
+        summarized_size_bytes: int,
+        reduction_percentage: float,
+        user_satisfaction_score: Optional[float] = None,
+        information_completeness_score: Optional[float] = None,
+        context_window_savings: Optional[int] = None,
+    ) -> None:
+        """Record Smart Summarization effectiveness metrics for learning
+
+        Args:
+            tool_name: Name of the tool that was summarized
+            original_size_bytes: Size of original tool output
+            summarized_size_bytes: Size of summarized output
+            reduction_percentage: Percentage reduction achieved
+            user_satisfaction_score: User satisfaction with summarized results (0.0-1.0)
+            information_completeness_score: How much information was retained (0.0-1.0)
+            context_window_savings: Token savings in LLM context window
+        """
+        try:
+            # Find recent experiences to attach summarization metrics to
+            if self.experiences:
+                latest_experience = self.experiences[-1]
+
+                # Initialize summarization metrics if not present
+                if latest_experience.summarization_metrics is None:
+                    latest_experience.summarization_metrics = {}
+
+                # Add summarization effectiveness data
+                tool_metrics = {
+                    "original_size_bytes": original_size_bytes,
+                    "summarized_size_bytes": summarized_size_bytes,
+                    "reduction_percentage": reduction_percentage,
+                    "user_satisfaction_score": user_satisfaction_score,
+                    "information_completeness_score": information_completeness_score,
+                    "context_window_savings": context_window_savings,
+                    "timestamp": str(datetime.now().isoformat()),
+                }
+
+                latest_experience.summarization_metrics[tool_name] = tool_metrics
+
+                # Update effective/ineffective strategies based on performance
+                if reduction_percentage > 90 and (user_satisfaction_score or 0.8) > 0.7:
+                    strategy = f"Smart Summarization for {tool_name} (≥90% reduction, high satisfaction)"
+                    if strategy not in latest_experience.effective_strategies:
+                        latest_experience.effective_strategies.append(strategy)
+
+                elif (
+                    reduction_percentage < 50 or (user_satisfaction_score or 0.3) < 0.5
+                ):
+                    strategy = f"Smart Summarization for {tool_name} (low effectiveness or satisfaction)"
+                    if strategy not in latest_experience.ineffective_strategies:
+                        latest_experience.ineffective_strategies.append(strategy)
+
+                # Save updated experience
+                self._save_experience(latest_experience)
+
+        except Exception as e:
+            import logging
+
+            logger = logging.getLogger(__name__)
+            logger.warning(f"Could not record summarization effectiveness: {e}")
+
+    def get_summarization_insights(self) -> Dict[str, Any]:
+        """Analyze Smart Summarization effectiveness across all experiences
+
+        Returns:
+            Dict containing insights about which tools benefit most from summarization,
+            average reduction rates, user satisfaction patterns, etc.
+        """
+        try:
+            from datetime import datetime
+
+            tool_effectiveness = {}
+            total_metrics = {
+                "total_tools_summarized": 0,
+                "average_reduction_percentage": 0.0,
+                "average_user_satisfaction": 0.0,
+                "total_context_savings": 0,
+                "most_effective_tools": [],
+                "least_effective_tools": [],
+            }
+
+            # Analyze all experiences with summarization metrics
+            for experience in self.experiences:
+                if experience.summarization_metrics:
+                    for tool_name, metrics in experience.summarization_metrics.items():
+                        if tool_name not in tool_effectiveness:
+                            tool_effectiveness[tool_name] = {
+                                "count": 0,
+                                "total_reduction": 0.0,
+                                "total_satisfaction": 0.0,
+                                "total_context_savings": 0,
+                                "satisfaction_scores": [],
+                            }
+
+                        stats = tool_effectiveness[tool_name]
+                        stats["count"] += 1
+                        stats["total_reduction"] += metrics.get(
+                            "reduction_percentage", 0
+                        )
+
+                        if metrics.get("user_satisfaction_score"):
+                            stats["total_satisfaction"] += metrics[
+                                "user_satisfaction_score"
+                            ]
+                            stats["satisfaction_scores"].append(
+                                metrics["user_satisfaction_score"]
+                            )
+
+                        if metrics.get("context_window_savings"):
+                            stats["total_context_savings"] += metrics[
+                                "context_window_savings"
+                            ]
+
+            # Calculate averages and insights
+            if tool_effectiveness:
+                for tool_name, stats in tool_effectiveness.items():
+                    stats["average_reduction"] = (
+                        stats["total_reduction"] / stats["count"]
+                    )
+                    stats["average_satisfaction"] = (
+                        stats["total_satisfaction"] / len(stats["satisfaction_scores"])
+                        if stats["satisfaction_scores"]
+                        else 0.0
+                    )
+
+                # Identify most/least effective tools
+                sorted_by_effectiveness = sorted(
+                    tool_effectiveness.items(),
+                    key=lambda x: x[1]["average_reduction"]
+                    * (x[1]["average_satisfaction"] or 0.8),
+                    reverse=True,
+                )
+
+                total_metrics["most_effective_tools"] = sorted_by_effectiveness[:3]
+                total_metrics["least_effective_tools"] = sorted_by_effectiveness[-3:]
+
+                # Calculate overall averages
+                all_reductions = [
+                    stats["average_reduction"] for stats in tool_effectiveness.values()
+                ]
+                all_satisfactions = [
+                    stats["average_satisfaction"]
+                    for stats in tool_effectiveness.values()
+                    if stats["average_satisfaction"] > 0
+                ]
+
+                total_metrics["total_tools_summarized"] = len(tool_effectiveness)
+                total_metrics["average_reduction_percentage"] = (
+                    sum(all_reductions) / len(all_reductions) if all_reductions else 0.0
+                )
+                total_metrics["average_user_satisfaction"] = (
+                    sum(all_satisfactions) / len(all_satisfactions)
+                    if all_satisfactions
+                    else 0.0
+                )
+                total_metrics["total_context_savings"] = sum(
+                    stats["total_context_savings"]
+                    for stats in tool_effectiveness.values()
+                )
+
+            return {
+                "tool_effectiveness": tool_effectiveness,
+                "overall_metrics": total_metrics,
+                "insights_generated": datetime.now().isoformat(),
+            }
+
+        except Exception as e:
+            import logging
+
+            logger = logging.getLogger(__name__)
+            logger.warning(f"Could not generate summarization insights: {e}")
+            return {"error": str(e)}
 
     def get_recommended_approach(
         self, query: str, model_characteristics: Dict[str, Any]

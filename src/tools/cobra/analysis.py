@@ -4,7 +4,7 @@ import cobra
 from pydantic import BaseModel, Field, PrivateAttr
 
 from ..base import BaseTool, ToolRegistry, ToolResult
-from .utils import ModelUtils
+from .utils_optimized import OptimizedModelUtils
 
 
 class ModelAnalysisConfig(BaseModel):
@@ -26,7 +26,7 @@ class ModelAnalysisTool(BaseTool):
     reaction connectivity, pathway completeness, and potential gaps."""
 
     _analysis_config: ModelAnalysisConfig = PrivateAttr()
-    _utils: ModelUtils = PrivateAttr()
+    _utils: OptimizedModelUtils = PrivateAttr()
 
     def __init__(self, config: Dict[str, Any]):
         super().__init__(config)
@@ -48,7 +48,7 @@ class ModelAnalysisTool(BaseTool):
                     analysis_config_dict, "track_metabolites", True
                 ),
             )
-        self._utils = ModelUtils()
+        self._utils = OptimizedModelUtils(use_cache=True)
 
     @property
     def analysis_config(self) -> ModelAnalysisConfig:
@@ -92,83 +92,55 @@ class ModelAnalysisTool(BaseTool):
     def _analyze_network_properties(self, model: cobra.Model) -> Dict[str, Any]:
         """Analyze network properties with improved metrics"""
         # Initialize statistics
-        network_stats = {
-            "connectivity_summary": {
-                "total_connections": 0,
-                "avg_connections_per_metabolite": 0,
-                "max_connections": 0,
-                "min_connections": float("inf"),
-            },
-            "highly_connected_metabolites": [],
-            "isolated_metabolites": [],
-            "choke_points": [],  # Metabolites that are sole producers/consumers
-        }
+        # Lightweight network analysis - counts only, no full objects
+        connectivity_counts = []
+        highly_connected_count = 0
+        isolated_count = 0
+        choke_point_count = 0
+        total_connections = 0
 
-        # Analyze each metabolite
+        # Single pass analysis to avoid storing full metabolite objects
         for metabolite in model.metabolites:
             num_reactions = len(metabolite.reactions)
             producing = [r for r in metabolite.reactions if metabolite in r.products]
             consuming = [r for r in metabolite.reactions if metabolite in r.reactants]
 
-            # Update summary statistics
-            network_stats["connectivity_summary"]["total_connections"] += num_reactions
-            network_stats["connectivity_summary"]["max_connections"] = max(
-                network_stats["connectivity_summary"]["max_connections"], num_reactions
-            )
-            network_stats["connectivity_summary"]["min_connections"] = min(
-                network_stats["connectivity_summary"]["min_connections"], num_reactions
-            )
+            connectivity_counts.append(num_reactions)
+            total_connections += num_reactions
 
-            # Track highly connected metabolites (hub metabolites)
+            # Count categories without storing objects
             if num_reactions > 10:
-                network_stats["highly_connected_metabolites"].append(
-                    {
-                        "id": metabolite.id,
-                        "name": metabolite.name,
-                        "num_reactions": num_reactions,
-                        "num_producing": len(producing),
-                        "num_consuming": len(consuming),
-                    }
-                )
-
-            # Track isolated metabolites
+                highly_connected_count += 1
             if num_reactions <= 1:
-                network_stats["isolated_metabolites"].append(
-                    {
-                        "id": metabolite.id,
-                        "name": metabolite.name,
-                        "num_reactions": num_reactions,
-                    }
-                )
-
-            # Identify choke points
+                isolated_count += 1
             if len(producing) == 1 or len(consuming) == 1:
-                network_stats["choke_points"].append(
-                    {
-                        "id": metabolite.id,
-                        "name": metabolite.name,
-                        "single_producer": len(producing) == 1,
-                        "single_consumer": len(consuming) == 1,
-                    }
-                )
+                choke_point_count += 1
 
-        # Calculate average connectivity
-        num_metabolites = len(model.metabolites)
-        if num_metabolites > 0:
-            network_stats["connectivity_summary"]["avg_connections_per_metabolite"] = (
-                network_stats["connectivity_summary"]["total_connections"]
-                / num_metabolites
-            )
-
-        # Sort and limit lists
-        network_stats["highly_connected_metabolites"].sort(
-            key=lambda x: x["num_reactions"], reverse=True
-        )
-        network_stats["highly_connected_metabolites"] = network_stats[
-            "highly_connected_metabolites"
-        ][
-            :10
-        ]  # Top 10 most connected
+        network_stats = {
+            "connectivity_summary": {
+                "total_metabolites": len(model.metabolites),
+                "total_connections": total_connections,
+                "avg_connections_per_metabolite": (
+                    total_connections / len(model.metabolites)
+                    if model.metabolites
+                    else 0
+                ),
+                "max_connections": (
+                    max(connectivity_counts) if connectivity_counts else 0
+                ),
+                "min_connections": (
+                    min(connectivity_counts) if connectivity_counts else 0
+                ),
+            },
+            "network_categories": {
+                "highly_connected": highly_connected_count,  # >10 reactions
+                "isolated": isolated_count,  # ≤1 reaction
+                "choke_points": choke_point_count,  # single producer/consumer
+                "well_connected": len(model.metabolites)
+                - highly_connected_count
+                - isolated_count,
+            },
+        }
 
         return network_stats
 
@@ -223,28 +195,21 @@ class ModelAnalysisTool(BaseTool):
 
     def _identify_model_issues(self, model: cobra.Model) -> Dict[str, Any]:
         """Identify potential issues in the model"""
-        issues = {
-            "dead_end_metabolites": [],
-            "disconnected_reactions": [],
-            "missing_genes": [],
-            "boundary_issues": [],
-        }
+        # Lightweight issue analysis - counts only
+        dead_end_count = 0
+        disconnected_reactions = []
+        missing_genes = []
+        boundary_count = 0
 
-        # Find dead-end metabolites
+        # Count dead-end metabolites without storing objects
         for metabolite in model.metabolites:
             if len(metabolite.reactions) <= 1:
-                issues["dead_end_metabolites"].append(
-                    {
-                        "id": metabolite.id,
-                        "name": metabolite.name,
-                        "connected_reactions": [r.id for r in metabolite.reactions],
-                    }
-                )
+                dead_end_count += 1
 
         # Find disconnected reactions
         for reaction in model.reactions:
             if len(reaction.metabolites) == 0:
-                issues["disconnected_reactions"].append(reaction.id)
+                disconnected_reactions.append(reaction.id)
 
         # Check for reactions without genes (excluding exchanges/demands)
         for reaction in model.reactions:
@@ -253,19 +218,27 @@ class ModelAnalysisTool(BaseTool):
                 or reaction.id.startswith("DM_")
                 or reaction.id.startswith("SK_")
             ):
-                issues["missing_genes"].append(reaction.id)
+                missing_genes.append(reaction.id)
 
-        # Check boundary conditions
+        # Count boundary metabolites
         boundary_metabolites = set()
         for reaction in model.reactions:
             if len(reaction.metabolites) == 1:
                 boundary_metabolites.update(reaction.metabolites)
+        boundary_count = len(boundary_metabolites)
 
-        issues["boundary_issues"] = [
-            {"metabolite": met.id, "name": met.name} for met in boundary_metabolites
-        ]
-
-        return issues
+        return {
+            "issue_summary": {
+                "dead_end_metabolites": dead_end_count,
+                "disconnected_reactions": len(disconnected_reactions),
+                "missing_genes": len(missing_genes),
+                "boundary_metabolites": boundary_count,
+            },
+            "critical_issues": {
+                "disconnected_reactions": disconnected_reactions[:5],  # Top 5 only
+                "reactions_missing_genes": missing_genes[:10],  # Top 10 only
+            },
+        }
 
 
 @ToolRegistry.register
@@ -276,27 +249,40 @@ class PathwayAnalysisTool(BaseTool):
     tool_description = """Analyze specific metabolic pathways including flux distributions,
     gene associations, and regulatory features."""
 
-    _utils: ModelUtils = PrivateAttr()
+    _utils: OptimizedModelUtils = PrivateAttr()
 
     def __init__(self, config: Dict[str, Any]):
         super().__init__(config)
-        self._utils = ModelUtils()
+        self._utils = OptimizedModelUtils(use_cache=True)
 
     def _run_tool(self, input_data: Any) -> ToolResult:
         try:
             # Support both dict and string inputs (for consistency with other tools)
             if isinstance(input_data, dict):
                 model_path = input_data.get("model_path")
+                model_object = input_data.get("model_object")
                 pathway = input_data.get("pathway")
-                if not model_path or not pathway:
-                    raise ValueError("Both model_path and pathway must be provided")
+
+                # Load model from path or use provided object
+                if model_object is not None:
+                    model = model_object
+                    # For pathway analysis with model objects, use default pathway analysis
+                    pathway = pathway or "all_subsystems"
+                elif model_path:
+                    model = self._utils.load_model(model_path)
+                    if not pathway:
+                        raise ValueError(
+                            "pathway parameter required when using model_path"
+                        )
+                else:
+                    raise ValueError(
+                        "Either model_path or model_object must be provided"
+                    )
             else:
                 # For string input, we can't determine pathway, so raise an error
                 raise ValueError(
-                    "PathwayAnalysisTool requires dictionary input with model_path and pathway keys"
+                    "PathwayAnalysisTool requires dictionary input with model_path/model_object and pathway keys"
                 )
-
-            model = self._utils.load_model(model_path)
 
             # Handle models with empty subsystems by using alternative grouping methods
             pathway_reactions = []
@@ -393,52 +379,54 @@ class PathwayAnalysisTool(BaseTool):
                     error="Pathway not found",
                 )
 
+            # Streamlined pathway analysis - avoid redundant data storage
+            total_genes = len(
+                set(gene for rxn in pathway_reactions for gene in rxn.genes)
+            )
+            total_metabolites = len(
+                set(met for rxn in pathway_reactions for met in rxn.metabolites)
+            )
+            reversible_count = sum(1 for rxn in pathway_reactions if rxn.reversibility)
+
+            # Calculate connectivity counts without storing full lists
+            all_reactants = set()
+            all_products = set()
+            for rxn in pathway_reactions:
+                all_reactants.update(met.id for met in rxn.reactants)
+                all_products.update(met.id for met in rxn.products)
+
             pathway_analysis = {
                 "summary": {
+                    "pathway_name": pathway,
                     "reaction_count": len(pathway_reactions),
-                    "gene_coverage": len(
-                        set(gene for rxn in pathway_reactions for gene in rxn.genes)
-                    ),
-                    "metabolite_count": len(
-                        set(met for rxn in pathway_reactions for met in rxn.metabolites)
-                    ),
-                    "reversible_reactions": sum(
-                        1 for rxn in pathway_reactions if rxn.reversibility
-                    ),
+                    "gene_coverage": total_genes,
+                    "metabolite_count": total_metabolites,
+                    "reversible_reactions": reversible_count,
+                    "irreversible_reactions": len(pathway_reactions) - reversible_count,
                 },
-                "reactions": [
+                "reaction_list": [
+                    rxn.id for rxn in pathway_reactions
+                ],  # IDs only, no full details
+                "connectivity": {
+                    "input_metabolites": len(all_reactants - all_products),
+                    "output_metabolites": len(all_products - all_reactants),
+                    "internal_metabolites": len(all_reactants & all_products),
+                    "total_unique_metabolites": len(all_reactants | all_products),
+                },
+                "top_reactions": [
                     {
                         "id": rxn.id,
-                        "name": rxn.name,
-                        "reaction": rxn.build_reaction_string(),
-                        "genes": [gene.id for gene in rxn.genes],
-                        "metabolites": [met.id for met in rxn.metabolites],
-                        "bounds": rxn.bounds,
+                        "name": rxn.name or rxn.id,
+                        "gene_count": len(rxn.genes),
+                        "metabolite_count": len(rxn.metabolites),
+                        "reversible": rxn.reversibility,
                     }
-                    for rxn in pathway_reactions
+                    for rxn in sorted(
+                        pathway_reactions, key=lambda x: len(x.genes), reverse=True
+                    )[
+                        :5
+                    ]  # Top 5 by gene count
                 ],
-                "connectivity": {
-                    "input_metabolites": list(
-                        set(
-                            met.id
-                            for rxn in pathway_reactions
-                            for met in rxn.reactants
-                            if met
-                            not in set(m for r in pathway_reactions for m in r.products)
-                        )
-                    ),
-                    "output_metabolites": list(
-                        set(
-                            met.id
-                            for rxn in pathway_reactions
-                            for met in rxn.products
-                            if met
-                            not in set(
-                                m for r in pathway_reactions for m in r.reactants
-                            )
-                        )
-                    ),
-                },
             }
 
             return ToolResult(

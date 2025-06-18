@@ -1,3 +1,7 @@
+---
+draft: true
+---
+
 # Phase 8 Advanced Agentic Capabilities - User Guide
 
 Welcome to the most sophisticated AI-powered metabolic modeling platform available. Phase 8 transforms ModelSEEDagent into a true AI research partner with advanced reasoning capabilities that rival human expert analysis.

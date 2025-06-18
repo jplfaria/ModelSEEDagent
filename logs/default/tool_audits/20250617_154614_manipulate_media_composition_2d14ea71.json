@@ -1,0 +1,95 @@
+{
+  "audit_id": "2d14ea71-3177-4b40-963c-985e924b519a",
+  "session_id": null,
+  "tool_name": "manipulate_media_composition",
+  "timestamp": "2025-06-17T15:46:14.122681",
+  "input": {
+    "model_path": "data/examples/e_coli_core.xml",
+    "base_media": "GMM",
+    "ai_command": "make anaerobic",
+    "test_growth": true
+  },
+  "output": {
+    "structured": {
+      "success": true,
+      "message": "Media manipulation completed: make anaerobic",
+      "error": null,
+      "full_data_path": null,
+      "summary_dict": null,
+      "key_findings": null,
+      "schema_version": "1.0",
+      "tool_name": null,
+      "model_stats": null,
+      "data": {
+        "original_media": {
+          "name": "GMM",
+          "compounds": 20,
+          "description": "Glucose Minimal Media - minimal components for growth with glucose"
+        },
+        "modified_media": {
+          "name": "GMM_make_anaerobic",
+          "compounds": 20,
+          "description": "Glucose Minimal Media - minimal components for growth with glucose (Modified: make anaerobic)"
+        },
+        "changes": {
+          "added_compounds": [
+            "cpd00209"
+          ],
+          "removed_compounds": [
+            "cpd00007"
+          ],
+          "modified_compounds": [
+            {
+              "compound": "cpd00149",
+              "original_rate": -100.0,
+              "modified_rate": -5.0
+            },
+            {
+              "compound": "cpd00058",
+              "original_rate": -100.0,
+              "modified_rate": -5.0
+            },
+            {
+              "compound": "cpd00048",
+              "original_rate": -100.0,
+              "modified_rate": -10.0
+            }
+          ],
+          "added_count": 1,
+          "removed_count": 1,
+          "modified_count": 3
+        },
+        "ai_command": "make anaerobic",
+        "growth_comparison": {
+          "error": "Media 'GMM_make_anaerobic' not found. Available: ['GMM', 'GMM_anaerobic', 'AuxoMedia', 'PyruvateMinimalMedia', 'PyruvateMinimalMedia_anaerobic']"
+        }
+      },
+      "metadata": {
+        "base_media": "GMM",
+        "command_applied": "make anaerobic",
+        "compounds_added": 1,
+        "compounds_removed": 1,
+        "compounds_modified": 3
+      },
+      "smart_summarization_metrics": {
+        "enabled": false
+      }
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 1.9232261180877686,
+    "success": true,
+    "error": null,
+    "timestamp_end": "2025-06-17T15:46:14.122745"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

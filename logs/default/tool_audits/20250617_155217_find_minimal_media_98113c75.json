@@ -1,0 +1,250 @@
+{
+  "audit_id": "98113c75-5926-48ba-b549-a73880855db6",
+  "session_id": null,
+  "tool_name": "find_minimal_media",
+  "timestamp": "2025-06-17T15:52:17.025010",
+  "input": {
+    "model_path": "data/examples/iML1515.xml"
+  },
+  "output": {
+    "structured": {
+      "success": true,
+      "message": "Minimal media determination completed. Found 14 essential nutrients.",
+      "error": null,
+      "full_data_path": null,
+      "summary_dict": null,
+      "key_findings": null,
+      "schema_version": "1.0",
+      "tool_name": null,
+      "model_stats": null,
+      "data": {
+        "minimal_media": {
+          "EX_pi_e": [
+            -1000.0,
+            1000.0
+          ],
+          "EX_co2_e": [
+            0,
+            1000.0
+          ],
+          "EX_fe3_e": [
+            0,
+            1000.0
+          ],
+          "EX_h_e": [
+            0,
+            1000.0
+          ],
+          "EX_mn2_e": [
+            -1000.0,
+            1000.0
+          ],
+          "EX_fe2_e": [
+            0,
+            1000.0
+          ],
+          "EX_glc__D_e": [
+            -10.0,
+            1000.0
+          ],
+          "EX_zn2_e": [
+            -1000.0,
+            1000.0
+          ],
+          "EX_mg2_e": [
+            -1000.0,
+            1000.0
+          ],
+          "EX_ca2_e": [
+            -1000.0,
+            1000.0
+          ],
+          "EX_ni2_e": [
+            -1000.0,
+            1000.0
+          ],
+          "EX_cu2_e": [
+            -1000.0,
+            1000.0
+          ],
+          "EX_sel_e": [
+            0,
+            1000.0
+          ],
+          "EX_cobalt2_e": [
+            -1000.0,
+            1000.0
+          ],
+          "EX_h2o_e": [
+            0,
+            1000.0
+          ],
+          "EX_mobd_e": [
+            -1000.0,
+            1000.0
+          ],
+          "EX_so4_e": [
+            -1000.0,
+            1000.0
+          ],
+          "EX_nh4_e": [
+            -1000.0,
+            1000.0
+          ],
+          "EX_k_e": [
+            -1000.0,
+            1000.0
+          ],
+          "EX_na1_e": [
+            0,
+            1000.0
+          ],
+          "EX_cl_e": [
+            -1000.0,
+            1000.0
+          ],
+          "EX_o2_e": [
+            0,
+            1000.0
+          ],
+          "EX_tungs_e": [
+            0,
+            1000.0
+          ],
+          "EX_slnt_e": [
+            0,
+            1000.0
+          ]
+        },
+        "essential_nutrients": {
+          "EX_pi_e": [
+            -1000.0,
+            1000.0
+          ],
+          "EX_mn2_e": [
+            -1000.0,
+            1000.0
+          ],
+          "EX_glc__D_e": [
+            -10.0,
+            1000.0
+          ],
+          "EX_zn2_e": [
+            -1000.0,
+            1000.0
+          ],
+          "EX_mg2_e": [
+            -1000.0,
+            1000.0
+          ],
+          "EX_ca2_e": [
+            -1000.0,
+            1000.0
+          ],
+          "EX_ni2_e": [
+            -1000.0,
+            1000.0
+          ],
+          "EX_cu2_e": [
+            -1000.0,
+            1000.0
+          ],
+          "EX_cobalt2_e": [
+            -1000.0,
+            1000.0
+          ],
+          "EX_mobd_e": [
+            -1000.0,
+            1000.0
+          ],
+          "EX_so4_e": [
+            -1000.0,
+            1000.0
+          ],
+          "EX_nh4_e": [
+            -1000.0,
+            1000.0
+          ],
+          "EX_k_e": [
+            -1000.0,
+            1000.0
+          ],
+          "EX_cl_e": [
+            -1000.0,
+            1000.0
+          ]
+        },
+        "non_essential_nutrients": {
+          "EX_co2_e": [
+            0,
+            1000.0
+          ],
+          "EX_fe3_e": [
+            0,
+            1000.0
+          ],
+          "EX_h_e": [
+            0,
+            1000.0
+          ],
+          "EX_fe2_e": [
+            0,
+            1000.0
+          ],
+          "EX_sel_e": [
+            0,
+            1000.0
+          ],
+          "EX_h2o_e": [
+            0,
+            1000.0
+          ],
+          "EX_na1_e": [
+            0,
+            1000.0
+          ],
+          "EX_o2_e": [
+            0,
+            1000.0
+          ],
+          "EX_tungs_e": [
+            0,
+            1000.0
+          ],
+          "EX_slnt_e": [
+            0,
+            1000.0
+          ]
+        },
+        "complete_solution": 0.8769972144269702,
+        "result_file": null
+      },
+      "metadata": {
+        "model_id": "iML1515",
+        "num_exchange_reactions": 24,
+        "num_essential_nutrients": 14,
+        "num_non_essential_nutrients": 10,
+        "growth_threshold": 1e-06
+      },
+      "smart_summarization_metrics": {
+        "enabled": false
+      }
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 2.764443874359131,
+    "success": true,
+    "error": null,
+    "timestamp_end": "2025-06-17T15:52:17.025116"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

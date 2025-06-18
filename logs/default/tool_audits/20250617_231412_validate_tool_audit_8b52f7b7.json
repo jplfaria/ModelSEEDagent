@@ -1,0 +1,79 @@
+{
+  "audit_id": "8b52f7b7-d9ed-4380-a513-d21f28ab6474",
+  "session_id": null,
+  "tool_name": "validate_tool_audit",
+  "timestamp": "2025-06-17T23:14:12.252630",
+  "input": {
+    "test_type": "validation",
+    "model_context": "e_coli_core"
+  },
+  "output": {
+    "structured": {
+      "success": false,
+      "message": "Tool audit validation completed. 1/3 tests passed (33.3%)",
+      "error": null,
+      "full_data_path": null,
+      "summary_dict": null,
+      "key_findings": null,
+      "schema_version": "1.0",
+      "tool_name": null,
+      "model_stats": null,
+      "data": {
+        "overall_success": false,
+        "success_rate": 0.3333333333333333,
+        "successful_tests": 1,
+        "total_tests": 3,
+        "detailed_results": {
+          "test_id": "93a9e2bd",
+          "timestamp": "2025-06-17T23:14:12.251378",
+          "tests_performed": [
+            "console_capture"
+          ],
+          "validation_results": {
+            "audit_record_creation": {
+              "success": false,
+              "error": "'ToolAuditor' object has no attribute 'start_audit'"
+            },
+            "console_capture": {
+              "success": true,
+              "stdout_length": 43,
+              "stderr_length": 0,
+              "message": "Console capture working"
+            },
+            "file_tracking": {
+              "success": false,
+              "error": "'FileTracker' object has no attribute 'track_file_creation'"
+            }
+          }
+        },
+        "functionality_validated": [
+          "console_capture"
+        ]
+      },
+      "metadata": {
+        "test_type": "system_audit_validation",
+        "test_id": "93a9e2bd",
+        "validation_approach": "functional_testing"
+      },
+      "smart_summarization_metrics": {
+        "enabled": false
+      }
+    },
+    "console": {
+      "stdout": "Test console output\nAdditional output line\n",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 1.8471949100494385,
+    "success": false,
+    "error": null,
+    "timestamp_end": "2025-06-17T23:14:12.252715"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

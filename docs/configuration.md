@@ -25,6 +25,11 @@ MODELSEED_DEBUG_TOOLS=true
 MODELSEED_DEBUG_LLM=false
 MODELSEED_LOG_LLM_INPUTS=false
 
+# Console Output Capture (Phase 1 CLI Debug Capture)
+MODELSEED_CAPTURE_CONSOLE_DEBUG=false      # Capture console debug output
+MODELSEED_CAPTURE_AI_REASONING_FLOW=false  # Capture AI reasoning steps
+MODELSEED_CAPTURE_FORMATTED_RESULTS=false  # Capture final formatted results
+
 # Directory Configuration
 MODELSEED_DATA_DIR=/path/to/data
 MODELSEED_LOG_DIR=/path/to/logs
@@ -409,7 +414,90 @@ modelseed-agent show-config --sources
 
 ## Next Steps
 
-- **[User Guide](user/README.md)**: Learn how to use ModelSEEDagent
+- **[Interactive Guide](getting-started/interactive-guide.md)**: Learn how to use ModelSEEDagent
 - **[API Documentation](api/overview.md)**: Explore programmatic usage
 - **[Troubleshooting](troubleshooting.md)**: Solve common issues
 - **[Development](archive/development/DEVELOPMENT_ROADMAP.md)**: Contribute to the project
+
+
+### Connection Pooling Configuration
+
+ModelSEEDagent automatically manages HTTP connection pooling for optimal performance.
+
+#### LLM Connection Pooling
+
+**Automatic Configuration**:
+- HTTP clients are pooled per configuration key
+- Connections are reused across tool executions
+- Timeout and connection limits are automatically managed
+
+**Benefits**:
+- Eliminates redundant connection setup overhead
+- Reduces memory usage for LLM communications
+- Improves overall session performance
+
+**Monitoring**:
+Connection pool statistics are logged at DEBUG level:
+```
+LLM Connection Pool initialized
+Created new HTTP client for config: dev_120.0
+Reusing existing LLM instance: argo|gpto1|prod|jplfaria|30.0
+```
+
+*Configuration is automatic and requires no user intervention.*
+
+*Last updated: 3003b76c - Connection pooling implementation detected*
+
+
+### COBRA Multiprocessing Configuration
+
+COBRA tools support both single-process and multiprocess execution modes.
+
+#### Default Behavior
+
+**Single Process Mode** (Default):
+- All COBRA tools default to `processes=1`
+- Prevents connection pool fragmentation
+- Recommended for most use cases
+
+#### Multiprocessing Control
+
+**Global Environment Variables**:
+```bash
+# Disable multiprocessing for all COBRA tools
+export COBRA_DISABLE_MULTIPROCESSING=1
+
+# Set process count for all COBRA tools
+export COBRA_PROCESSES=4
+```
+
+**Tool-Specific Environment Variables**:
+```bash
+# Flux Variability Analysis
+export COBRA_FVA_PROCESSES=8
+
+# Flux Sampling
+export COBRA_SAMPLING_PROCESSES=4
+
+# Gene Deletion Analysis
+export COBRA_GENE_DELETION_PROCESSES=2
+
+# Essentiality Analysis
+export COBRA_ESSENTIALITY_PROCESSES=2
+```
+
+#### Performance Considerations
+
+**Single Process (Default)**:
+- No connection pool fragmentation
+- Lower memory usage
+- Simpler debugging
+- Slower for large analyses
+
+**Multiprocess**:
+- Faster for large-scale analyses
+- Higher memory usage
+- Connection pool overhead
+- Complex error handling
+
+*Last updated: 3003b76c - COBRA multiprocessing changes detected*

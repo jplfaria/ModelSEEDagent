@@ -7,7 +7,7 @@ from ..base import BaseTool, ToolRegistry, ToolResult
 from .fba import SimulationResultsStore  # Import the results store
 from .precision_config import PrecisionConfig, is_significant_growth
 from .simulation_wrapper import run_simulation
-from .utils import ModelUtils
+from .utils_optimized import OptimizedModelUtils
 
 
 class MinimalMediaConfig(BaseModel):
@@ -33,7 +33,7 @@ class MinimalMediaTool(BaseTool):
             self._config = MinimalMediaConfig(**config_dict)
         else:
             self._config = MinimalMediaConfig(precision=PrecisionConfig())
-        self._utils = ModelUtils()
+        self._utils = OptimizedModelUtils(use_cache=True)
 
     def _run_tool(self, input_data: Any) -> ToolResult:
         try:

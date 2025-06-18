@@ -44,13 +44,24 @@ ModelSEEDagent is an AI-powered metabolic modeling platform that combines Large 
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                        TOOL EXECUTION LAYER                                │
 ├─────────────────┬─────────────────┬─────────────────┬─────────────────────┤
-│ COBRApy Tools   │ ModelSEED Tools │ Biochemistry    │ RAST Tools    │ Audit │
-│ (16 tools)      │ (6 tools)       │ Database        │ (2 tools)     │ Tools │
-│                 │                 │ (3 tools)       │               │(2 tools)│
+│ COBRApy Tools   │ ModelSEED Tools │ Biochemistry    │ RAST Tools    │ System│
+│ (12 tools)      │ (3 tools)       │ Database        │ (2 tools)     │ Tools │
+│ AI Media (6)    │                 │ (2 tools)       │               │(4 tools)│
 └─────────┬───────┴─────────┬───────┴─────────┬───────┴─────────┬─────┬─────┘
           │                 │                 │                 │     │
           ▼                 ▼                 ▼                 ▼     │
 ┌─────────────────────────────────────────────────────────────────────┘────┐
+│                    SMART SUMMARIZATION LAYER                            │
+├─────────────────┬─────────────────┬─────────────────┬─────────────────────┤
+│ Three-Tier      │ Tool-Specific   │ Artifact        │ Size Validation     │
+│ Hierarchy       │ Summarizers      │ Storage         │ (2KB/5KB limits)    │
+│ • key_findings  │ • FVA           │ • JSON format   │ • 95-99.9%         │
+│ • summary_dict  │ • FluxSampling  │ • /tmp/artifacts│   reduction        │
+│ • full_data_path│ • GeneDeletion  │ • FetchArtifact │ • 99.998% max      │
+└─────────┬───────┴─────────┬───────┴─────────┬───────┴─────────┬─────────┘
+          │                 │                 │                 │
+          ▼                 ▼                 ▼                 ▼
+┌─────────────────────────────────────────────────────────────────────────┐
 │                     DATA & PERSISTENCE LAYER                            │
 ├─────────────────┬─────────────────┬─────────────────┬─────────────────────┤
 │ Biochemistry    │ Session State   │ Audit Trails    │ Model Cache &       │
@@ -64,45 +75,51 @@ ModelSEEDagent is an AI-powered metabolic modeling platform that combines Large 
 
 ```
 ┌─────────────────┐
-│  User Request   │
+│  User Request   │ (Natural language query)
 └─────────┬───────┘
           │
           ▼
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│ Query Processor │────│ Parse Intent    │────│ Route to Agent  │
-└─────────┬───────┘    └─────────────────┘    └─────────┬───────┘
-          │                                            │
-          ▼                                            ▼
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│Agent Orchestr.  │────│ Select Strategy │────│ Plan Workflow   │
-└─────────┬───────┘    └─────────────────┘    └─────────┬───────┘
-          │                                            │
-          ▼                                            ▼
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│  LLM Backend    │────│Process Context  │────│ Generate Plan   │
-└─────────┬───────┘    └─────────────────┘    └─────────┬───────┘
-          │                                            │
-          ▼                                            ▼
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│ Tool Executor   │────│Validate Inputs  │────│ Execute Tools   │
-└─────────┬───────┘    └─────────────────┘    └─────────┬───────┘
-          │                                            │
-          ▼                                            ▼
-┌─────────────────┐                          ┌─────────────────┐
-│ Audit Results   │                          │Result Processor │
-└─────────┬───────┘                          └─────────┬───────┘
-          │                                            │
-          └────────────────────┬───────────────────────┘
-                               ▼
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│ Format Output   │────│  Update State   │────│Generate Response│
-└─────────┬───────┘    └─────────────────┘    └─────────┬───────┘
-          │                                            │
-          ▼                                            ▼
-                         ┌─────────────────┐
-                         │ User Response   │
-                         └─────────────────┘
+┌─────────────────┐
+│ Query Processor │ (Parse intent and route to appropriate agent)
+└─────────┬───────┘
+          │
+          ▼
+┌─────────────────┐
+│Agent Orchestr.  │ (Select strategy and plan workflow)
+└─────────┬───────┘
+          │
+          ▼
+┌─────────────────┐
+│  LLM Backend    │ (Process context and generate execution plan)
+└─────────┬───────┘
+          │
+          ▼
+┌─────────────────┐
+│ Tool Executor   │ (Validate inputs and execute selected tools)
+└─────────┬───────┘
+          │
+          ▼
+┌─────────────────┐
+│Result Processor │ (Process tool outputs and audit results)
+└─────────┬───────┘
+          │
+          ▼
+┌─────────────────┐
+│ Format & State  │ (Format output, update session state)
+└─────────┬───────┘
+          │
+          ▼
+┌─────────────────┐
+│ User Response   │ (Return structured response to user)
+└─────────────────┘
 ```
+
+**Key Decision Points in Flow:**
+- **Query Processing**: Determines if request needs single tool or multi-step workflow
+- **Agent Selection**: Routes to RealTimeMetabolicAgent vs LangGraphMetabolicAgent based on complexity
+- **Tool Selection**: LLM analyzes context to choose appropriate tools and parameters
+- **Result Analysis**: AI evaluates tool outputs to determine if additional steps are needed
+- **Response Generation**: Formats final results with appropriate level of detail
 
 ## Component Architecture
 
@@ -197,15 +214,16 @@ src/tools/
 │   ├── builder.py         # Model building with MSBuilder
 │   ├── gapfill.py         # Advanced gapfilling
 │   └── compatibility.py   # ModelSEED-COBRApy compatibility (2 tools)
-├── biochem/               # Biochemistry tools (3 tools)
+├── biochem/               # Biochemistry tools (2 tools)
 │   ├── resolver.py        # Universal ID resolution (2 tools)
 │   └── standalone_resolver.py # Standalone biochem resolution
 ├── rast/                  # RAST integration (2 tools)
 │   └── annotation.py      # RAST annotation services (2 tools)
-└── audit/                 # Audit and verification tools (2 tools)
-    ├── audit.py           # Tool execution auditing
-    ├── ai_audit.py        # AI audit tools
-    └── realtime_verification.py # Real-time verification
+├── system/                # System tools (4 tools)
+│   ├── audit.py           # Tool execution auditing
+│   ├── ai_audit.py        # AI audit tools
+│   ├── realtime_verification.py # Real-time verification
+│   └── fetch_artifact.py  # Smart Summarization artifact retrieval
 ```
 
 **Universal Model Infrastructure** (`src/tools/cobra/utils.py`):
@@ -276,7 +294,123 @@ src/tools/
 - `settings.py` - Application configuration management
 - `prompts.py` - LLM prompt templates and optimization
 
-## 🚀 Advanced Features
+## Advanced Features
+
+### Smart Summarization Framework
+
+The Smart Summarization Layer transforms massive tool outputs into LLM-optimized formats while preserving complete data for detailed analysis.
+
+**Three-Tier Information Hierarchy**:
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                 SMART SUMMARIZATION FRAMEWORK                       │
+├─────────────────────────────────────────────────────────────────────┤
+│  1. KEY FINDINGS (≤2KB)                                            │
+│     • Critical insights for immediate LLM understanding            │
+│     • Bullet-point format with percentages and key metrics         │
+│     • Warnings (WARNING:) and success indicators (Success:)           │
+│     • Top examples (3-5 items maximum)                            │
+│                                                                    │
+│  2. SUMMARY DICT (≤5KB)                                           │
+│     • Structured data for follow-up analysis                      │
+│     • Statistical summaries and distributions                     │
+│     • Category counts with limited examples                       │
+│     • Metadata and analysis parameters                            │
+│                                                                    │
+│  3. FULL DATA PATH                                                │
+│     • Complete raw results stored as JSON artifacts               │
+│     • Located at: /tmp/modelseed_artifacts/                       │
+│     • Format: {tool}_{model}_{timestamp}_{uuid}.json              │
+│     • Accessible for detailed statistical analysis                 │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+**Implementation Architecture**:
+
+```python
+@dataclass
+class ToolResult:
+    # Core result fields
+    success: bool
+    message: str
+
+    # Smart Summarization fields
+    key_findings: List[str]        # ≤2KB critical insights
+    summary_dict: Dict[str, Any]   # ≤5KB structured data
+    full_data_path: str            # Path to complete raw data
+
+    # Metadata
+    tool_name: str
+    model_stats: Dict[str, int]    # reactions, genes, metabolites
+    schema_version: str = "1.0"
+```
+
+**Size Reduction Achievements**:
+
+| Tool | Original Size | Summarized | Reduction | Use Case |
+|------|--------------|------------|-----------|----------|
+| FluxSampling | 138.5 MB | 2.2 KB | 99.998% | Statistical distributions |
+| FVA | 170 KB | 2.4 KB | 98.6% | Reaction variability |
+| GeneDeletion | 130 KB | 3.1 KB | 97.6% | Essential gene analysis |
+
+**Tool-Specific Summarizers**:
+
+1. **FluxSampling Summarizer**:
+   - Compresses massive sampling DataFrames (25MB+)
+   - Preserves flux patterns, correlations, subsystem activity
+   - Identifies optimization opportunities
+
+2. **FluxVariability Summarizer**:
+   - Smart bucketing for flux ranges
+   - Categorizes reactions by variability level
+   - Highlights network flexibility
+
+3. **GeneDeletion Summarizer**:
+   - Categorizes genes by knockout impact severity
+   - Prioritizes essential vs. non-essential genes
+   - Groups by growth impact thresholds
+
+4. **FBA Summarizer**:
+   - Optimizes growth rate and flux analysis results
+   - Categorizes reactions by flux magnitude
+   - Highlights metabolic subsystem activity
+   - Identifies high-flux reactions and pathways
+
+### Tool Execution Requirements
+
+**Critical Implementation Note**: For Smart Summarization to function properly, tools must be executed through the correct interface:
+
+```python
+# CORRECT: Uses Smart Summarization
+result = tool._run(input_data)      # Calls BaseTool._run()
+
+# INCORRECT: Bypasses Smart Summarization
+result = tool._run_tool(input_data) # Calls implementation directly
+```
+
+**Why This Matters**:
+- `BaseTool._run()` applies Smart Summarization automatically
+- `tool._run_tool()` executes raw implementation without framework integration
+- Real-time agents and validation suites must use the proper interface
+- Direct calls bypass audit trails and size reduction benefits
+
+**Accessing Full Data**:
+
+```python
+# LLM receives summarized output
+result = agent.run_tool("run_flux_sampling", {"model_path": "iML1515.xml"})
+
+# Access complete raw data when needed
+import json
+with open(result["full_data_path"], 'r') as f:
+    full_data = json.load(f)
+
+# Perform detailed analysis
+import pandas as pd
+df = pd.DataFrame(full_data)
+correlations = df.corr()
+```
 
 ### Advanced AI Reasoning System
 
@@ -363,6 +497,8 @@ src/tools/
 - Cross-model learning from analysis history
 - Pattern-based tool selection recommendations
 - Continuous improvement through experience
+- Smart Summarization effectiveness tracking and optimization
+- User satisfaction and information completeness monitoring
 
 
 ## Data Flow Architecture
@@ -374,40 +510,41 @@ src/tools/
 │                        TOOL EXECUTION PIPELINE                        │
 ├────────────────────────────────────────────────────────────────────────┤
 │  1. INVOCATION                                                         │
-│     │ ✓ Agent selects appropriate tool                                  │
-│     │ ✓ Passes context and parameters                                   │
+│     │ • Agent selects appropriate tool                                  │
+│     │ • Passes context and parameters                                   │
 │     └─→ 2. VALIDATION                                                  │
-│           │ ✓ Schema validation (Pydantic)                             │
-│           │ ✓ Type checking and constraints                            │
-│           │ ✓ Model/file existence verification                        │
+│           │ • Schema validation (Pydantic)                             │
+│           │ • Type checking and constraints                            │
+│           │ • Model/file existence verification                        │
 │           └─→ 3. PRE-EXECUTION AUDIT                                   │
-│                 │ ✓ Log tool call with inputs                          │
-│                 │ ✓ Create unique audit ID                             │
-│                 │ ✓ Record timestamp and context                       │
+│                 │ • Log tool call with inputs                          │
+│                 │ • Create unique audit ID                             │
+│                 │ • Record timestamp and context                       │
 │                 └─→ 4. EXECUTION                                        │
-│                       │ ✓ Run tool with validated inputs               │
-│                       │ ✓ Handle errors gracefully                     │
-│                       │ ✓ Capture all outputs                          │
+│                       │ • Run tool with validated inputs               │
+│                       │ • Handle errors gracefully                     │
+│                       │ • Capture all outputs                          │
 │                       └─→ 5. RESULT PROCESSING                         │
-│                             │ ✓ Structure output data                   │
-│                             │ ✓ Apply biochemistry enrichment           │
-│                             │ ✓ Generate human-readable summaries       │
+│                             │ • Structure output data                   │
+│                             │ • Apply biochemistry enrichment           │
+│                             │ • Smart Summarization (key_findings,      │
+│                             │   summary_dict, artifact storage)         │
 │                             └─→ 6. POST-EXECUTION AUDIT                │
-│                                   │ ✓ Log results and performance       │
-│                                   │ ✓ Record any errors or warnings     │
-│                                   │ ✓ Update tool usage statistics      │
+│                                   │ • Log results and performance       │
+│                                   │ • Record any errors or warnings     │
+│                                   │ • Update tool usage statistics      │
 │                                   └─→ 7. VERIFICATION                  │
-│                                         │ ✓ Hallucination detection      │
-│                                         │ ✓ Result consistency checks    │
-│                                         │ ✓ Confidence scoring           │
+│                                         │ • Hallucination detection      │
+│                                         │ • Result consistency checks    │
+│                                         │ • Confidence scoring           │
 │                                         └─→ 8. CACHING & RETURN        │
-│                                               ✓ Store in cache if applicable │
-│                                               ✓ Return structured result     │
-│                                               ✓ Update session state         │
+│                                               • Store in cache if applicable │
+│                                               • Return structured result     │
+│                                               • Update session state         │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
-## 🛡️ Quality Assurance
+## Quality Assurance
 
 ### Testing Strategy
 
@@ -441,7 +578,7 @@ modelseed-agent audit verify <session_id>
 modelseed-agent audit patterns
 ```
 
-## 📊 Performance Characteristics
+## Performance Characteristics
 
 ### Scalability
 
@@ -457,35 +594,146 @@ modelseed-agent audit patterns
 - **State Recovery**: Session persistence and recovery
 - **Verification**: Real-time accuracy checking
 
-## 🔌 Integration & Extension Framework
+## Integration & Extension Framework
 
 ### Extension Framework
 
-**Adding New Tools**:
-1. Inherit from `BaseTool` class
-2. Define Pydantic input/output schemas
-3. Implement `_execute()` method
-4. Register in tool factory
-5. Add to agent tool registry
+This section provides detailed guidance for developers who want to extend ModelSEEDagent functionality.
 
-**Custom Agent Development**:
-1. Inherit from `BaseAgent` class
-2. Define tool selection logic
-3. Implement reasoning patterns
-4. Register in agent factory
-5. Configure LLM integration
+#### Adding New Tools
 
-**LLM Backend Integration**:
-1. Implement `BaseLLM` interface
-2. Add configuration parameters
-3. Register in LLM factory
-4. Test with existing workflows
+**Step-by-Step Process**:
+1. **Inherit from BaseTool**: Create your tool class extending `src/tools/base.py`
+2. **Define Schemas**: Use Pydantic for input/output validation
+3. **Implement Logic**: Add your tool's core functionality in `_execute()` method
+4. **Register Tool**: Add to appropriate tool factory
+5. **Test Integration**: Ensure compatibility with existing workflows
 
-**Database Extensions**:
-1. Extend biochemistry database schema
-2. Add custom compound/reaction data
-3. Implement new resolution algorithms
-4. Integrate with existing tools
+**Example Implementation**:
+```python
+from src.tools.base import BaseTool
+from pydantic import BaseModel, Field
+
+class MyCustomToolInput(BaseModel):
+    parameter1: str = Field(description="Description of parameter")
+    parameter2: int = Field(ge=0, description="Positive integer parameter")
+
+class MyCustomToolOutput(BaseModel):
+    result: str
+    confidence: float = Field(ge=0, le=1)
+
+class MyCustomTool(BaseTool):
+    name = "my_custom_tool"
+    description = "Brief description of what this tool does"
+    input_schema = MyCustomToolInput
+    output_schema = MyCustomToolOutput
+
+    def _execute(self, inputs: MyCustomToolInput) -> MyCustomToolOutput:
+        # Implement your tool logic here
+        result = self.process_data(inputs.parameter1, inputs.parameter2)
+        return MyCustomToolOutput(result=result, confidence=0.95)
+```
+
+#### Custom Agent Development
+
+**Key Components**:
+1. **Base Agent Class**: Inherit from `src/agents/base.py`
+2. **Tool Selection**: Implement intelligent tool choice logic
+3. **Reasoning Patterns**: Define how your agent processes information
+4. **LLM Integration**: Configure language model interactions
+
+**Agent Interface Requirements**:
+```python
+class CustomAgent(BaseAgent):
+    def __init__(self, llm_backend, tools, config):
+        super().__init__(llm_backend, tools, config)
+
+    async def process_query(self, query: str) -> AgentResult:
+        # Implement your agent's core logic
+        pass
+
+    def select_tools(self, query: str, context: dict) -> List[str]:
+        # Define tool selection strategy
+        pass
+```
+
+#### LLM Backend Integration
+
+**Implementation Steps**:
+1. **Implement Interface**: Extend `src/llm/base.py`
+2. **Add Configuration**: Define connection parameters
+3. **Register Backend**: Add to LLM factory
+4. **Test Compatibility**: Verify with existing agent workflows
+
+#### Database Extensions
+
+**Biochemistry Database Customization**:
+1. **Schema Extension**: Add new tables or columns to biochemistry.db
+2. **Data Import**: Tools for adding custom compound/reaction data
+3. **Resolution Algorithms**: Implement new ID mapping strategies
+4. **Tool Integration**: Update existing tools to use new data
+
+### Code Organization Principles
+
+**Directory Structure Guidelines**:
+- **Tools**: Group by functionality in `src/tools/[category]/`
+- **Agents**: Specialized agents in `src/agents/`
+- **LLM Backends**: New backends in `src/llm/`
+- **Tests**: Mirror source structure in `tests/`
+
+**Naming Conventions**:
+- **Classes**: PascalCase (e.g., `MyCustomTool`)
+- **Functions**: snake_case (e.g., `process_metabolic_data`)
+- **Files**: snake_case (e.g., `custom_tool.py`)
+- **Constants**: UPPER_SNAKE_CASE (e.g., `DEFAULT_TIMEOUT`)
+
+### Testing Requirements for Contributions
+
+**Test Coverage Requirements**:
+- **Unit Tests**: 100% coverage for new tool functionality
+- **Integration Tests**: Verify tool chains work correctly
+- **Agent Tests**: Validate reasoning and decision-making
+- **Performance Tests**: Ensure no regression in execution time
+
+**Test Structure**:
+```python
+class TestMyCustomTool:
+    def test_basic_functionality(self):
+        # Test core functionality
+        pass
+
+    def test_input_validation(self):
+        # Test schema validation
+        pass
+
+    def test_error_handling(self):
+        # Test graceful failure modes
+        pass
+
+    def test_integration_with_agents(self):
+        # Test tool works with existing agents
+        pass
+```
+
+### Best Practices for Contributors
+
+**Code Quality**:
+- Follow existing code style and patterns
+- Add comprehensive docstrings to all public methods
+- Include type hints for all function parameters and returns
+- Handle errors gracefully with informative messages
+
+**Documentation**:
+- Update relevant documentation when adding features
+- Include usage examples in docstrings
+- Add entries to tool reference documentation
+- Update architecture diagrams if adding new components
+
+**Performance Considerations**:
+- Implement caching where appropriate
+- Use async/await for I/O operations
+- Profile code for performance bottlenecks
+- Consider memory usage for large datasets
 
 ## Quality Assurance & Monitoring
 

@@ -1,0 +1,55 @@
+{
+  "audit_id": "2f1dcdd8-7581-4064-8bc0-60badef993ba",
+  "session_id": null,
+  "tool_name": "run_production_envelope",
+  "timestamp": "2025-06-17T15:52:08.468253",
+  "input": {
+    "model_path": "data/examples/iML1515.xml",
+    "objective_rxn": "BIOMASS_Ec_iML1515_core_75p37M",
+    "carbon_sources": [
+      "EX_glc__D_e"
+    ]
+  },
+  "output": {
+    "structured": {
+      "success": false,
+      "message": "Missing required parameters",
+      "error": "Both model_path and reactions must be provided",
+      "full_data_path": null,
+      "summary_dict": null,
+      "key_findings": null,
+      "schema_version": "1.0",
+      "tool_name": null,
+      "model_stats": null,
+      "data": {
+        "suggestions": [
+          "Provide model_path: path to SBML model file",
+          "Provide reactions: list of reaction IDs to analyze",
+          "Example: {'model_path': 'model.xml', 'reactions': ['EX_ac_e', 'EX_etoh_e']}"
+        ],
+        "context": {},
+        "error_type": "str"
+      },
+      "metadata": {},
+      "smart_summarization_metrics": {
+        "enabled": false
+      }
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 3.505702018737793,
+    "success": false,
+    "error": null,
+    "timestamp_end": "2025-06-17T15:52:08.468363"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "audit_id": "8245ebf6-32bc-4530-97a8-5f2662379476",
+  "session_id": null,
+  "tool_name": "select_optimal_media",
+  "timestamp": "2025-06-17T15:57:30.748010",
+  "input": {
+    "model_path": "data/examples/B_aphidicola.xml",
+    "target_growth": 0.1
+  },
+  "output": {
+    "structured": {
+      "success": true,
+      "message": "Analyzed 5 media types. Best: GMM",
+      "error": null,
+      "full_data_path": null,
+      "summary_dict": null,
+      "key_findings": null,
+      "schema_version": "1.0",
+      "tool_name": null,
+      "model_stats": null,
+      "data": {
+        "model_analysis": {
+          "is_modelseedpy": true,
+          "model_id": "B_aphidicolaGMM",
+          "biomass_reaction": "bio1",
+          "total_reactions": 668,
+          "total_metabolites": 694,
+          "exchange_reactions": 43,
+          "cobrakbase_available": false,
+          "modelseed_compounds": 694,
+          "modelseed_reactions": 621,
+          "compartments": [
+            "c0",
+            "e0"
+          ],
+          "genes": 315,
+          "media_compatibility_GMM": 1.0,
+          "media_compatibility_GMM_anaerobic": 0.95,
+          "media_compatibility_AuxoMedia": 0.34615384615384615,
+          "media_compatibility_PyruvateMinimalMedia": 0.95,
+          "media_compatibility_PyruvateMinimalMedia_anaerobic": 0.9
+        },
+        "media_results": {
+          "GMM": {
+            "growth_rate": 0.3605764147729695,
+            "status": "optimal",
+            "feasible": true,
+            "compatibility_score": 1.0,
+            "media_description": "Glucose Minimal Media - minimal components for growth with glucose"
+          },
+          "GMM_anaerobic": {
+            "growth_rate": 0.0,
+            "status": "optimal",
+            "feasible": false,
+            "compatibility_score": 0.95,
+            "media_description": "Glucose Minimal Media without O2 - anaerobic growth with alternative electron acceptors"
+          },
+          "AuxoMedia": {
+            "growth_rate": 0.45448851801020923,
+            "status": "optimal",
+            "feasible": true,
+            "compatibility_score": 0.34615384615384615,
+            "media_description": "Rich media with glucose, amino acids, and vitamins"
+          },
+          "PyruvateMinimalMedia": {
+            "growth_rate": 0.0,
+            "status": "optimal",
+            "feasible": false,
+            "compatibility_score": 0.95,
+            "media_description": "Minimal media with pyruvate as carbon source"
+          },
+          "PyruvateMinimalMedia_anaerobic": {
+            "growth_rate": 0.0,
+            "status": "optimal",
+            "feasible": false,
+            "compatibility_score": 0.9,
+            "media_description": "Minimal media with pyruvate as carbon source - anaerobic"
+          }
+        },
+        "recommendations": [
+          {
+            "media_name": "GMM",
+            "growth_rate": 0.3605764147729695,
+            "compatibility": 1.0,
+            "recommendation_score": 0.3605764147729695
+          },
+          {
+            "media_name": "AuxoMedia",
+            "growth_rate": 0.45448851801020923,
+            "compatibility": 0.34615384615384615,
+            "recommendation_score": 0.1573229485419955
+          }
+        ],
+        "best_media": "GMM",
+        "ai_suggestion": {
+          "suggestion": "Recommended: GMM",
+          "reason": "Optimal for ModelSEED models: 0.361 h\u207b\u00b9",
+          "action": "Apply GMM for reliable growth simulation"
+        }
+      },
+      "metadata": {
+        "model_id": "B_aphidicolaGMM",
+        "total_media_tested": 5,
+        "feasible_media_count": 2,
+        "best_growth_rate": 0.3605764147729695
+      },
+      "smart_summarization_metrics": {
+        "enabled": false
+      }
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 2.095123052597046,
+    "success": true,
+    "error": null,
+    "timestamp_end": "2025-06-17T15:57:30.748150"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

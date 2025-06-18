@@ -1,0 +1,45 @@
+{
+  "audit_id": "10afbd88-b53d-4c63-848f-83588c87c435",
+  "session_id": null,
+  "tool_name": "analyze_pathway",
+  "timestamp": "2025-06-17T12:10:48.713742",
+  "input": {
+    "model_path": "data/examples/iML1515.xml",
+    "pathway_name": "glycolysis",
+    "detailed_analysis": true
+  },
+  "output": {
+    "structured": {
+      "success": false,
+      "message": "Error analyzing pathway",
+      "error": "pathway parameter required when using model_path",
+      "full_data_path": null,
+      "summary_dict": null,
+      "key_findings": null,
+      "schema_version": "1.0",
+      "tool_name": null,
+      "model_stats": null,
+      "data": null,
+      "metadata": {},
+      "smart_summarization_metrics": {
+        "enabled": false
+      }
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 2.191054105758667,
+    "success": false,
+    "error": null,
+    "timestamp_end": "2025-06-17T12:10:48.713891"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

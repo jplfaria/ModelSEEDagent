@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field, PrivateAttr
 from ..base import BaseTool, ToolRegistry, ToolResult
 from .fba import SimulationResultsStore  # Import the results store
 from .simulation_wrapper import run_simulation
-from .utils import ModelUtils
+from .utils_optimized import OptimizedModelUtils
 
 
 class AuxotrophyConfig(BaseModel):
@@ -31,7 +31,7 @@ class AuxotrophyTool(BaseTool):
         super().__init__(config)
         config_dict = config.get("auxotrophy_config", {})
         self._config = AuxotrophyConfig(**config_dict)
-        self._utils = ModelUtils()
+        self._utils = OptimizedModelUtils(use_cache=True)
 
     def _run_tool(self, input_data: Any) -> ToolResult:
         try:

@@ -1,3 +1,7 @@
+---
+draft: true
+---
+
 # ModelSEEDagent Intelligence Enhancement Plan
 
 **Date**: June 9, 2025

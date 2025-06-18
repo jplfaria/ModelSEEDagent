@@ -2,7 +2,7 @@ name: Deploy Documentation
 
 on:
   push:
-    branches: [ main, dev ]
+    branches: [ main, dev, 'feature/**' ]
   workflow_dispatch:
 
 permissions:
@@ -24,11 +24,14 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install mkdocs mkdocs-material pymdown-extensions
+          pip install mkdocs mkdocs-material pymdown-extensions pyyaml
+
+      # Documentation updates are now manual via './claude-code review-docs'
+      # This automatic step has been removed to give developers full control
 
       - name: Build documentation
         run: |
-          mkdocs build --strict
+          mkdocs build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4

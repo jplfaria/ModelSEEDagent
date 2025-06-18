@@ -10,7 +10,8 @@ from .precision_config import (
     calculate_growth_fraction,
     is_significant_growth,
 )
-from .utils import ModelUtils
+from .utils import get_process_count_from_env, should_disable_auditing
+from .utils_optimized import OptimizedModelUtils
 
 
 class GeneDeletionConfig(BaseModel):
@@ -21,7 +22,9 @@ class GeneDeletionConfig(BaseModel):
     deletion_type: str = "single"  # "single" or "double"
     method: str = "fba"  # "fba" or "moma" or "room"
     solver: str = "glpk"
-    processes: Optional[int] = None
+    processes: Optional[int] = (
+        1  # Default to 1 to prevent multiprocessing connection pool issues
+    )
     return_solution: bool = False
 
     # Numerical precision settings
@@ -37,9 +40,13 @@ class GeneDeletionTool(BaseTool):
     on model growth and identify essential genes."""
 
     _deletion_config: GeneDeletionConfig = PrivateAttr()
-    _utils: ModelUtils = PrivateAttr()
+    _utils: OptimizedModelUtils = PrivateAttr()
 
     def __init__(self, config: Dict[str, Any]):
+        # Disable auditing in subprocess to prevent connection pool issues
+        if should_disable_auditing():
+            config = config.copy()
+            config["audit_enabled"] = False
         super().__init__(config)
         deletion_config_dict = config.get("deletion_config", {})
         if isinstance(deletion_config_dict, dict):
@@ -54,7 +61,7 @@ class GeneDeletionTool(BaseTool):
                 return_solution=getattr(deletion_config_dict, "return_solution", False),
                 precision=PrecisionConfig(),
             )
-        self._utils = ModelUtils()
+        self._utils = OptimizedModelUtils(use_cache=True)
 
     @property
     def deletion_config(self) -> GeneDeletionConfig:
@@ -99,6 +106,11 @@ class GeneDeletionTool(BaseTool):
             if gene_list is None:
                 gene_list = [gene.id for gene in model.genes]
 
+            # Get process count with environment variable override
+            processes = get_process_count_from_env(
+                self.deletion_config.processes, "COBRA_GENE_DELETION_PROCESSES"
+            )
+
             # Run deletion analysis
             if deletion_type == "single":
                 deletion_results = single_gene_deletion(
@@ -110,7 +122,7 @@ class GeneDeletionTool(BaseTool):
                         if self.deletion_config.return_solution
                         else None
                     ),
-                    processes=self.deletion_config.processes,
+                    processes=processes,
                 )
             elif deletion_type == "double":
                 deletion_results = double_gene_deletion(
@@ -123,7 +135,7 @@ class GeneDeletionTool(BaseTool):
                         if self.deletion_config.return_solution
                         else None
                     ),
-                    processes=self.deletion_config.processes,
+                    processes=processes,
                 )
             else:
                 raise ValueError(f"Unsupported deletion type: {deletion_type}")
@@ -133,11 +145,41 @@ class GeneDeletionTool(BaseTool):
                 deletion_results, wild_type_growth, deletion_type
             )
 
+            # Create lightweight results without redundant data
+            simplified_results = {}
+            for idx, row in deletion_results.iterrows():
+                growth = row["growth"]
+                gene_set = row["ids"]
+
+                # Extract clean gene IDs from set
+                if deletion_type == "single":
+                    gene_id = (
+                        list(gene_set)[0]
+                        if hasattr(gene_set, "__iter__")
+                        and not isinstance(gene_set, str)
+                        else str(gene_set)
+                    )
+                else:
+                    gene_id = (
+                        "-".join(sorted(gene_set))
+                        if hasattr(gene_set, "__iter__")
+                        else str(gene_set)
+                    )
+
+                simplified_results[gene_id] = {
+                    "growth": float(growth) if growth is not None else 0.0,
+                    "growth_ratio": (
+                        float(growth / wild_type_growth)
+                        if growth is not None and wild_type_growth > 0
+                        else 0.0
+                    ),
+                }
+
             return ToolResult(
                 success=True,
                 message=f"{deletion_type.title()} gene deletion analysis completed for {len(gene_list)} genes",
                 data={
-                    "deletion_results": deletion_results.to_dict(),
+                    "deletion_results": simplified_results,
                     "analysis": analysis,
                     "wild_type_growth": float(wild_type_growth),
                 },
@@ -146,7 +188,6 @@ class GeneDeletionTool(BaseTool):
                     "deletion_type": deletion_type,
                     "method": method,
                     "genes_tested": len(gene_list),
-                    "wild_type_growth": float(wild_type_growth),
                 },
             )
 
@@ -179,43 +220,39 @@ class GeneDeletionTool(BaseTool):
         moderate_threshold = precision.moderate_effect_fraction * wild_type_growth
         mild_threshold = precision.mild_effect_fraction * wild_type_growth
 
-        for index, row in results.iterrows():
+        for idx, row in results.iterrows():
             growth = row["growth"]
+            gene_set = row["ids"]
 
-            # Handle single vs double gene deletion indexing
+            # Extract clean gene ID
             if deletion_type == "single":
-                genes = [index] if isinstance(index, str) else index
+                gene_id = (
+                    list(gene_set)[0]
+                    if hasattr(gene_set, "__iter__") and not isinstance(gene_set, str)
+                    else str(gene_set)
+                )
             else:
-                genes = list(index) if hasattr(index, "__iter__") else [str(index)]
+                gene_id = (
+                    "-".join(sorted(gene_set))
+                    if hasattr(gene_set, "__iter__")
+                    else str(gene_set)
+                )
 
-            gene_data = {
-                "genes": genes,
-                "growth": float(growth) if growth is not None else 0.0,
-                "growth_rate_ratio": (
-                    calculate_growth_fraction(growth, wild_type_growth, tolerance)
-                    if growth is not None
-                    else 0.0
-                ),
-            }
-
-            # Categorize based on growth impact
+            # Categorize based on growth impact (store only gene IDs to avoid duplication)
             if growth is None or growth < essential_threshold:
-                analysis["essential_genes"].append(gene_data)
+                analysis["essential_genes"].append(gene_id)
             elif growth < severe_threshold:
-                analysis["severely_impaired"].append(gene_data)
+                analysis["severely_impaired"].append(gene_id)
             elif growth < moderate_threshold:
-                analysis["moderately_impaired"].append(gene_data)
+                analysis["moderately_impaired"].append(gene_id)
             elif growth < mild_threshold:
-                analysis["mildly_impaired"].append(gene_data)
+                analysis["mildly_impaired"].append(gene_id)
             elif growth > wild_type_growth + tolerance:
-                analysis["improved_growth"].append(gene_data)
+                analysis["improved_growth"].append(gene_id)
             else:
-                analysis["no_effect"].append(gene_data)
+                analysis["no_effect"].append(gene_id)
 
-        # Sort categories by growth impact
-        for category in analysis.values():
-            if isinstance(category, list):
-                category.sort(key=lambda x: x["growth"])
+        # Categories are now lists of gene IDs, no need to sort by growth
 
         # Add summary statistics
         analysis["summary"] = {

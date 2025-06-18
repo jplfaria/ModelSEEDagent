@@ -283,16 +283,55 @@ class ToolAuditor:
             return {"raw_input": str(input_data), "serialization_error": True}
 
     def _serialize_result(self, result: Any) -> Dict[str, Any]:
-        """Serialize tool result for audit storage"""
+        """Serialize tool result for audit storage with Smart Summarization metrics"""
         try:
             if hasattr(result, "dict"):
-                return result.dict()
+                result_dict = result.dict()
+
+                # Add Smart Summarization metrics if available
+                if (
+                    hasattr(result, "has_smart_summarization")
+                    and result.has_smart_summarization()
+                ):
+                    result_dict["smart_summarization_metrics"] = {
+                        "enabled": True,
+                        "has_key_findings": result.key_findings is not None,
+                        "has_summary_dict": result.summary_dict is not None,
+                        "has_full_data_path": result.full_data_path is not None,
+                        "key_findings_count": (
+                            len(result.key_findings) if result.key_findings else 0
+                        ),
+                        "schema_version": result.schema_version,
+                    }
+
+                    # Add size metrics if available in metadata
+                    if result.metadata:
+                        if "summarization_reduction_pct" in result.metadata:
+                            result_dict["smart_summarization_metrics"][
+                                "reduction_percentage"
+                            ] = result.metadata["summarization_reduction_pct"]
+                        if "original_data_size" in result.metadata:
+                            result_dict["smart_summarization_metrics"][
+                                "original_size_bytes"
+                            ] = result.metadata["original_data_size"]
+                        if "summarized_size_bytes" in result.metadata:
+                            result_dict["smart_summarization_metrics"][
+                                "summarized_size_bytes"
+                            ] = result.metadata["summarized_size_bytes"]
+                else:
+                    result_dict["smart_summarization_metrics"] = {"enabled": False}
+
+                return result_dict
             elif isinstance(result, dict):
                 return result
             else:
                 return {"raw_result": str(result), "type": type(result).__name__}
-        except Exception:
-            return {"raw_result": str(result), "serialization_error": True}
+        except Exception as e:
+            return {
+                "raw_result": str(result),
+                "serialization_error": True,
+                "error": str(e),
+            }
 
 
 # Global auditor instance

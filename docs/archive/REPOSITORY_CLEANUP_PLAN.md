@@ -1,3 +1,7 @@
+---
+draft: true
+---
+
 # Repository Cleanup Plan
 ## ModelSEEDagent - Code Organization & Redundancy Removal
 

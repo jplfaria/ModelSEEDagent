@@ -1,0 +1,86 @@
+{
+  "audit_id": "f0436de4-838f-4a26-bba3-28af9b571f6e",
+  "session_id": null,
+  "tool_name": "validate_realtime_verification",
+  "timestamp": "2025-06-17T15:18:06.514569",
+  "input": {
+    "test_type": "validation",
+    "model_context": "EcoliMG1655"
+  },
+  "output": {
+    "structured": {
+      "success": false,
+      "message": "Real-time verification validation completed. 2/3 tests passed (66.7%)",
+      "error": null,
+      "full_data_path": null,
+      "summary_dict": null,
+      "key_findings": null,
+      "schema_version": "1.0",
+      "tool_name": null,
+      "model_stats": null,
+      "data": {
+        "overall_success": false,
+        "success_rate": 0.6666666666666666,
+        "successful_tests": 2,
+        "total_tests": 3,
+        "detailed_results": {
+          "test_id": "0f0e26ea",
+          "timestamp": "2025-06-17T15:18:06.514473",
+          "tests_performed": [
+            "alert_generation",
+            "metrics_calculation",
+            "detector_initialization"
+          ],
+          "validation_results": {
+            "alert_generation": {
+              "success": true,
+              "alert_id": "alert_0f0e26ea",
+              "alert_type": "info",
+              "message": "Alert generation working"
+            },
+            "metrics_calculation": {
+              "success": true,
+              "overall_confidence": 0.85,
+              "steps_analyzed": 5,
+              "message": "Metrics calculation working"
+            },
+            "detector_initialization": {
+              "success": false,
+              "detector_type": "RealTimeHallucinationDetector",
+              "message": "Detector initialization failed"
+            }
+          }
+        },
+        "functionality_validated": [
+          "alert_generation",
+          "metrics_calculation",
+          "detector_initialization"
+        ]
+      },
+      "metadata": {
+        "test_type": "realtime_verification_validation",
+        "test_id": "0f0e26ea",
+        "validation_approach": "functional_testing"
+      },
+      "smart_summarization_metrics": {
+        "enabled": false
+      }
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 3.5262937545776367,
+    "success": false,
+    "error": null,
+    "timestamp_end": "2025-06-17T15:18:06.514659"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

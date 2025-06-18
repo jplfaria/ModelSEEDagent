@@ -41,7 +41,7 @@ class MyCustomTool(BaseTool):
 
 ### Result Structure
 
-All tools return standardized `ToolResult` objects:
+All tools return standardized `ToolResult` objects with Smart Summarization support:
 
 ```python
 class ToolResult:
@@ -50,6 +50,13 @@ class ToolResult:
     data: Dict[str, Any]   # Core analysis results
     metadata: Dict         # Tool execution metadata
     error: Optional[str]   # Error details if failed
+
+    # Smart Summarization Framework fields
+    key_findings: List[str]      # ≤2KB critical insights for LLM
+    summary_dict: Dict[str, Any] # ≤5KB structured summary data
+    full_data_path: str          # Path to complete raw data artifact
+    tool_name: str              # Tool identifier for summarization
+    model_stats: Dict[str, int] # Model characteristics (reactions, genes, etc.)
 ```
 
 ## COBRApy Tools (12 tools)
@@ -485,6 +492,90 @@ class GapfillConfig(BaseModel):
     }
 }
 ```
+
+## System Tools (4 tools)
+
+### FetchArtifact Tool
+
+#### `fetch_artifact_data`
+
+**Purpose**: Retrieve complete raw data from Smart Summarization artifacts when detailed analysis is needed beyond the summarized results
+
+**Configuration**:
+```python
+class FetchArtifactInput(BaseModel):
+    artifact_path: str  # Path to stored artifact
+    format: str = "json"  # Data format (json, csv, etc.)
+```
+
+**Input Parameters**:
+- `artifact_path` (str): Path to the Smart Summarization artifact file
+- `format` (str, optional): Format of stored data (default: "json")
+
+**Output Structure**:
+```python
+{
+    "success": bool,
+    "message": str,
+    "data": Any,  # Complete original tool output data
+    "metadata": {
+        "artifact_path": str,
+        "format": str,
+        "data_size_bytes": int,
+        "fetch_timestamp": str
+    }
+}
+```
+
+**Usage Examples**:
+```python
+from src.tools.fetch_artifact import FetchArtifactTool
+
+# Initialize tool
+fetch_tool = FetchArtifactTool()
+
+# Fetch complete flux sampling data
+result = fetch_tool.execute({
+    "artifact_path": "/tmp/modelseed_artifacts/flux_sampling_iML1515_20250617_abc123.json"
+})
+
+# Access complete raw data
+full_data = result.data
+flux_dataframe = pd.DataFrame(full_data)
+
+# Perform detailed statistical analysis
+correlations = flux_dataframe.corr()
+```
+
+**Integration with Smart Summarization**:
+```python
+# Tool returns summarized result by default
+fva_result = agent.run_tool("run_flux_variability_analysis", {"model_path": "iML1515.xml"})
+
+# Access key findings (≤2KB)
+print(fva_result.key_findings)
+# ['Variability analysis of iML1515: 2,712 reactions analyzed',
+#  'Variable: 434/2,712 reactions (16.0%)',
+#  'Fixed: 2,180/2,712 reactions (80.4%)',
+#  'Blocked: 98/2,712 reactions (3.6%)']
+
+# Access structured summary (≤5KB)
+print(fva_result.summary_dict["counts"])
+# {'variable': 434, 'fixed': 2180, 'blocked': 98}
+
+# Fetch complete raw data when needed (170 KB)
+full_result = agent.run_tool("fetch_artifact_data", {
+    "artifact_path": fva_result.full_data_path
+})
+complete_fva_data = pd.DataFrame(full_result.data)
+```
+
+**When to Use FetchArtifact**:
+- User requests "detailed analysis" or "complete results"
+- Statistical analysis beyond summary_dict scope is needed
+- Debugging scenarios requiring full data inspection
+- Cross-model comparisons requiring raw numerical data
+- Custom analysis pipelines needing complete datasets
 
 ## Error Handling and Validation
 

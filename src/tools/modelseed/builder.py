@@ -13,7 +13,10 @@ class ModelBuildConfig(BaseModel):
     template_model: Optional[str] = None
     media_condition: str = "Complete"
     genome_domain: str = "Bacteria"
-    gapfill_on_build: bool = True
+    gapfill_on_build: bool = False  # Changed default to False
+    annotate_with_rast: bool = False  # Option to skip RAST if already annotated
+    export_sbml: bool = True
+    export_json: bool = False
     additional_config: Dict[str, Any] = Field(default_factory=dict)
 
 
@@ -22,8 +25,8 @@ class ModelBuildTool(BaseTool):
     """Tool for building metabolic models using ModelSEED"""
 
     tool_name = "build_metabolic_model"
-    tool_description = """Build a metabolic model from genome annotations using ModelSEED.
-    Can use RAST annotations or other supported annotation formats."""
+    tool_description = """Build a metabolic model from genome annotations using ModelSEED MSBuilder.
+    Supports MSGenome objects from RAST annotation or annotation files. Can export to SBML/JSON formats."""
 
     def __init__(self, config: Dict[str, Any]):
         super().__init__(config)
@@ -52,13 +55,12 @@ class ModelBuildTool(BaseTool):
 
             # Lazy import modelseedpy only when needed
             import modelseedpy
-
-            # Initialize MSBuilder
-            builder = modelseedpy.MSBuilder()
+            from modelseedpy import MSBuilder, MSGenome
 
             # Handle genome input - either file path or MSGenome object
             genome = None
             if "genome_object" in input_data:
+                # Preferred: use pre-annotated MSGenome from RAST tool
                 genome = input_data["genome_object"]
             elif "annotation_file" in input_data:
                 annotation_file = Path(input_data["annotation_file"])
@@ -66,66 +68,112 @@ class ModelBuildTool(BaseTool):
                     raise FileNotFoundError(
                         f"Annotation file not found: {annotation_file}"
                     )
-                # Load genome from annotation file
-                genome = modelseedpy.MSGenome.from_fasta(str(annotation_file))
+                # Create MSGenome from protein FASTA file
+                genome = MSGenome.from_fasta(str(annotation_file))
+
+                # Optional RAST annotation if requested
+                if input_data.get(
+                    "annotate_with_rast", self._build_config.annotate_with_rast
+                ):
+                    rast_client = modelseedpy.RastClient()
+                    rast_client.annotate_genome(genome)
             else:
                 raise ValueError(
                     "Either annotation_file or genome_object must be provided"
                 )
 
-            # Configure builder
-            if "template_model" in input_data and input_data["template_model"]:
-                template_path = input_data["template_model"]
-                if Path(template_path).exists():
-                    template = ModelUtils().load_model(template_path)
-                    builder.template = template
-                else:
-                    # Use auto-select if template path doesn't exist
-                    builder.auto_select_template(genome)
-            else:
-                # Auto-select template based on genome
-                builder.auto_select_template(genome)
+            # Initialize MSBuilder with genome (modern approach)
+            builder = MSBuilder(genome)
 
-            # Build the model
-            model = builder.build(genome, model_id)
+            # Build the model with the specified approach
+            annotate_with_rast = input_data.get(
+                "annotate_with_rast", self._build_config.annotate_with_rast
+            )
+            model = builder.build(model_id, annotate_with_rast=annotate_with_rast)
 
-            # Optional gapfilling during build
-            if self._build_config.gapfill_on_build:
-                gapfiller = modelseedpy.MSGapfill(
-                    model, media=self._build_config.media_condition
-                )
-                gapfill_solutions = gapfiller.run_gapfilling()
-                if gapfill_solutions:
-                    gapfiller.integrate_gapfill_solution(gapfill_solutions[0])
+            # Optional gapfilling during build (fixed API)
+            gapfill_applied = False
+            if input_data.get("gapfill_on_build", self._build_config.gapfill_on_build):
+                try:
+                    gapfiller = modelseedpy.MSGapfill(model)
 
-            # Save model
-            output_file = Path(output_path)
-            output_file.parent.mkdir(parents=True, exist_ok=True)
-            model.write_sbml_file(str(output_file))
+                    # Convert media condition to MSMedia object
+                    media_condition = input_data.get(
+                        "media_condition", self._build_config.media_condition
+                    )
+                    try:
+                        media_obj = modelseedpy.MSMedia()
+                        if hasattr(media_obj, "id"):
+                            media_obj.id = media_condition
+                    except Exception:
+                        media_obj = None
 
-            # Gather statistics
+                    gapfill_solutions = gapfiller.run_gapfilling(media=media_obj)
+                    if gapfill_solutions:
+                        gapfiller.integrate_gapfill_solution(gapfill_solutions[0])
+                        gapfill_applied = True
+                except Exception as gf_error:
+                    # Don't fail the entire build if gapfilling fails
+                    print(f"Warning: Gapfilling failed during build: {gf_error}")
+
+            # Export model to requested formats
+            output_files = {}
+            base_path = Path(output_path)
+            base_path.parent.mkdir(parents=True, exist_ok=True)
+
+            # Remove extension from base path if present
+            base_name = base_path.stem if base_path.suffix else base_path.name
+            base_dir = base_path.parent if base_path.suffix else base_path.parent
+
+            # Export to SBML
+            if input_data.get("export_sbml", self._build_config.export_sbml):
+                from cobra.io import write_sbml_model
+
+                sbml_path = base_dir / f"{base_name}.xml"
+                write_sbml_model(model, str(sbml_path))
+                output_files["sbml"] = str(sbml_path)
+
+            # Export to JSON
+            if input_data.get("export_json", self._build_config.export_json):
+                from cobra.io import save_json_model
+
+                json_path = base_dir / f"{base_name}.json"
+                save_json_model(model, str(json_path))
+                output_files["json"] = str(json_path)
+
+            # Gather comprehensive model statistics
             stats = {
+                "model_id": model.id,
                 "num_reactions": len(model.reactions),
                 "num_metabolites": len(model.metabolites),
                 "num_genes": len(model.genes),
-                "objective_id": model.objective.direction,
-                "template_used": getattr(builder.template, "id", "auto-selected"),
-                "gapfilled": self._build_config.gapfill_on_build,
+                "num_groups": len(getattr(model, "groups", [])),
+                "objective_expression": str(model.objective.expression),
+                "compartments": list(model.compartments.keys()),
+                "template_used": getattr(
+                    getattr(builder, "template", None), "id", "default"
+                ),
+                "gapfilled": gapfill_applied,
+                "annotate_with_rast": annotate_with_rast,
             }
 
             return ToolResult(
                 success=True,
-                message=f"Model {model_id} built successfully with {stats['num_reactions']} reactions",
+                message=f"Model {model_id} built successfully: {stats['num_reactions']} reactions, {stats['num_metabolites']} metabolites, {stats['num_genes']} genes",
                 data={
                     "model_id": model_id,
-                    "model_path": str(output_file),
+                    "output_files": output_files,
                     "statistics": stats,
-                    "model_object": model,  # Include model object for downstream tools
+                    "model_object": model,  # Include model object for downstream tools (gapfilling)
+                    "genome_object": genome,  # Include genome for reference
                 },
                 metadata={
                     "tool_type": "model_building",
                     "template_used": stats["template_used"],
                     "gapfilled": stats["gapfilled"],
+                    "num_reactions": stats["num_reactions"],
+                    "num_metabolites": stats["num_metabolites"],
+                    "num_genes": stats["num_genes"],
                 },
             )
 

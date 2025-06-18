@@ -636,8 +636,51 @@ docker stats
 curl http://localhost:8001/metrics
 ```
 
+## CI/CD and Automation
+
+### GitHub Actions Integration
+
+ModelSEEDagent includes comprehensive CI/CD automation:
+
+#### Release Automation
+- **Intelligent Version Bumping** based on conventional commits
+- **Automated Changelog Generation** with categorized release notes
+- **Comprehensive Validation Pipeline** with security scanning
+- **PyPI Publishing** with configurable settings
+
+See [Release Automation Guide](operations/release-automation.md) for complete details.
+
+#### Documentation Automation
+- **Automatic Documentation Updates** on code changes
+- **Tool Count Tracking** and consistency maintenance
+- **Content Duplication Prevention** across all documentation
+- **Pre-commit Integration** for quality assurance
+
+See [Documentation Automation Guide](operations/documentation-automation.md) for implementation details.
+
+#### Deployment Pipeline Integration
+
+```yaml
+# Example: Integrate with deployment workflows
+name: Deploy after Release
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Production
+        run: |
+          # Your deployment logic here
+          kubectl apply -f k8s/
+```
+
 ## Next Steps
 
+- **[Release Automation](operations/release-automation.md)**: Set up intelligent release management
+- **[Documentation Automation](operations/documentation-automation.md)**: Configure automatic documentation updates
 - **[Monitoring Guide](monitoring.md)**: Set up comprehensive monitoring
 - **Security Best Practices**: Implement proper security measures
 - **[Troubleshooting](troubleshooting.md)**: Resolve common issues

@@ -1,4 +1,5 @@
 import logging
+import multiprocessing
 import os
 import tempfile
 from pathlib import Path
@@ -8,6 +9,89 @@ import cobra
 from cobra.io import read_sbml_model, write_sbml_model
 
 logger = logging.getLogger(__name__)
+
+
+def get_process_count_from_env(
+    config_processes: Optional[int], env_var_name: str = "COBRA_PROCESSES"
+) -> Optional[int]:
+    """
+    Get process count from configuration with environment variable override.
+
+    Args:
+        config_processes: Process count from configuration (None means use default)
+        env_var_name: Environment variable name to check for override
+
+    Returns:
+        Process count to use, or None to let COBRA use its default
+
+    Environment Variables:
+        COBRA_PROCESSES: Override process count for all COBRA tools
+        COBRA_DISABLE_MULTIPROCESSING: Set to '1' or 'true' to force single-process mode
+    """
+    # Check for global disable flag first
+    if os.getenv("COBRA_DISABLE_MULTIPROCESSING", "").lower() in ("1", "true", "yes"):
+        logger.info(
+            "Multiprocessing disabled via COBRA_DISABLE_MULTIPROCESSING environment variable"
+        )
+        return 1
+
+    # Check for specific process count override
+    env_processes = os.getenv(env_var_name)
+    if env_processes is not None:
+        try:
+            env_count = int(env_processes)
+            if env_count <= 0:
+                logger.warning(
+                    f"Invalid process count in {env_var_name}: {env_processes}, using 1"
+                )
+                return 1
+            logger.info(f"Using process count from {env_var_name}: {env_count}")
+            return env_count
+        except ValueError:
+            logger.warning(
+                f"Invalid process count in {env_var_name}: {env_processes}, using config default"
+            )
+
+    # Return configured value
+    return config_processes
+
+
+def is_subprocess() -> bool:
+    """
+    Detect if we're running in a subprocess/worker process.
+
+    Returns:
+        True if running in a subprocess, False if in main process
+    """
+    try:
+        # Check if current process is different from main process
+        current_process = multiprocessing.current_process()
+        return current_process.name != "MainProcess"
+    except Exception:
+        # If we can't determine, assume main process to be safe
+        return False
+
+
+def should_disable_auditing() -> bool:
+    """
+    Determine if auditing should be disabled (e.g., in subprocess).
+
+    Returns:
+        True if auditing should be disabled
+    """
+    # Disable auditing in subprocess to prevent LLM initialization
+    if is_subprocess():
+        logger.info(
+            "Disabling auditing in subprocess to prevent connection pool issues"
+        )
+        return True
+
+    # Check environment variable override
+    if os.getenv("COBRA_DISABLE_AUDITING", "").lower() in ("1", "true", "yes"):
+        logger.info("Auditing disabled via COBRA_DISABLE_AUDITING environment variable")
+        return True
+
+    return False
 
 
 class ModelUtils:

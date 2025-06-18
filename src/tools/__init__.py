@@ -12,10 +12,11 @@ from .cobra.missing_media import MissingMediaTool
 from .cobra.production_envelope import ProductionEnvelopeTool
 from .cobra.reaction_expression import ReactionExpressionTool
 from .cobra.utils import ModelUtils
-from .modelseed.annotation import ProteinAnnotationTool, RastAnnotationTool
+from .modelseed.annotation import RastAnnotationTool
 from .modelseed.builder import ModelBuildTool
 from .modelseed.compatibility import ModelCompatibilityTool
 from .modelseed.gapfill import GapFillTool
+from .system.audit_tools import AIAuditTool, RealtimeVerificationTool, ToolAuditTool
 
 __all__ = [
     "BaseTool",
@@ -37,8 +38,10 @@ __all__ = [
     "BiochemEntityResolverTool",
     "BiochemSearchTool",
     "RastAnnotationTool",
-    "ProteinAnnotationTool",
     "ModelBuildTool",
     "GapFillTool",
     "ModelCompatibilityTool",
+    "ToolAuditTool",
+    "AIAuditTool",
+    "RealtimeVerificationTool",
 ]

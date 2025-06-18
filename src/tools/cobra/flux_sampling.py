@@ -17,7 +17,8 @@ from .error_handling import (
     validate_solver_availability,
 )
 from .precision_config import PrecisionConfig, is_significant_flux, safe_divide
-from .utils import ModelUtils
+from .utils import get_process_count_from_env, should_disable_auditing
+from .utils_optimized import OptimizedModelUtils
 
 
 class FluxSamplingConfig(BaseModel):
@@ -27,7 +28,9 @@ class FluxSamplingConfig(BaseModel):
     n_samples: int = 1000
     method: str = "optgp"  # "optgp" or "achr"
     thinning: int = 100
-    processes: Optional[int] = None
+    processes: Optional[int] = (
+        1  # Default to 1 to prevent multiprocessing connection pool issues
+    )
     seed: Optional[int] = None
     solver: str = "glpk"
 
@@ -44,9 +47,13 @@ class FluxSamplingTool(BaseTool):
     and variability across the metabolic network."""
 
     _sampling_config: FluxSamplingConfig = PrivateAttr()
-    _utils: ModelUtils = PrivateAttr()
+    _utils: OptimizedModelUtils = PrivateAttr()
 
     def __init__(self, config: Dict[str, Any]):
+        # Disable auditing in subprocess to prevent connection pool issues
+        if should_disable_auditing():
+            config = config.copy()
+            config["audit_enabled"] = False
         super().__init__(config)
         sampling_config_dict = config.get("sampling_config", {})
         if isinstance(sampling_config_dict, dict):
@@ -61,7 +68,7 @@ class FluxSamplingTool(BaseTool):
                 solver=getattr(sampling_config_dict, "solver", "glpk"),
                 precision=PrecisionConfig(),
             )
-        self._utils = ModelUtils()
+        self._utils = OptimizedModelUtils(use_cache=True)
 
     @property
     def sampling_config(self) -> FluxSamplingConfig:
@@ -107,6 +114,11 @@ class FluxSamplingTool(BaseTool):
             if seed is not None:
                 np.random.seed(seed)
 
+            # Get process count with environment variable override
+            processes = get_process_count_from_env(
+                self.sampling_config.processes, "COBRA_SAMPLING_PROCESSES"
+            )
+
             # Run flux sampling with progress logging
             log_progress = create_progress_logger(
                 1, f"Flux sampling ({n_samples} samples)"
@@ -118,7 +130,7 @@ class FluxSamplingTool(BaseTool):
                 n=n_samples,
                 method=method,
                 thinning=thinning,
-                processes=self.sampling_config.processes,
+                processes=processes,
                 seed=seed,
             )
 

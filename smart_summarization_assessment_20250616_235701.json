@@ -1,0 +1,127 @@
+{
+  "assessment_date": "2025-06-16T23:57:01.556880",
+  "models_analyzed": {
+    "iML1515": {
+      "path": "data/examples/iML1515.xml",
+      "reactions": 2712,
+      "genes": 1516,
+      "file_size_kb": 11144.8
+    },
+    "EcoliMG1655": {
+      "path": "data/examples/EcoliMG1655.xml",
+      "reactions": 1867,
+      "genes": 1345,
+      "file_size_kb": 5355.6
+    }
+  },
+  "tool_analysis": {
+    "FluxVariabilityAnalysis": {
+      "description": "Calculates min/max flux ranges for all reactions",
+      "direct_cobrapy_sizes": {
+        "iML1515": {
+          "json_kb": 96.4,
+          "csv_kb": 75.6,
+          "reactions": 2712
+        },
+        "EcoliMG1655": {
+          "json_kb": 65.5,
+          "csv_kb": 57.2,
+          "reactions": 1867
+        }
+      },
+      "modelseed_agent_sizes": {
+        "iML1515": {
+          "json_kb": 575.4,
+          "reactions_analyzed": 0
+        },
+        "EcoliMG1655": {
+          "json_kb": 407.2,
+          "reactions_analyzed": 0
+        }
+      }
+    },
+    "GeneDeletion": {
+      "description": "Tests growth impact of deleting individual genes",
+      "direct_cobrapy_sizes": {
+        "50_genes_iML1515": {
+          "json_kb": 2.8,
+          "csv_kb": 2.0,
+          "genes": 50
+        },
+        "50_genes_EcoliMG1655": {
+          "json_kb": 2.9,
+          "csv_kb": 2.0,
+          "genes": 50
+        },
+        "estimated_full_iML1515": {
+          "json_kb": 85.0,
+          "genes": 1516
+        },
+        "estimated_full_EcoliMG1655": {
+          "json_kb": 78.0,
+          "genes": 1345
+        }
+      },
+      "modelseed_agent_sizes": {
+        "iML1515": {
+          "json_kb": 310.4,
+          "genes_tested": 3,
+          "total_genes": 0
+        }
+      }
+    },
+    "FluxSampling": {
+      "description": "Generates Monte Carlo samples of flux distributions",
+      "estimated_sizes": {
+        "1000_samples_iML1515": {
+          "json_mb": 25.0,
+          "csv_mb": 20.0
+        },
+        "1000_samples_EcoliMG1655": {
+          "json_mb": 17.0,
+          "csv_mb": 14.0
+        }
+      }
+    }
+  },
+  "recommendations": [
+    {
+      "tool": "FluxVariabilityAnalysis",
+      "priority": "Medium",
+      "reason": "Direct COBRApy output: 161.9 KB total",
+      "benefit": "Moderate - outputs are readable but could be summarized for key insights"
+    },
+    {
+      "tool": "ModelSEED Agent FVA Tool",
+      "priority": "High",
+      "reason": "Agent output: 982.6 KB total with unclear content",
+      "benefit": "High - large outputs with potentially redundant debugging info"
+    },
+    {
+      "tool": "Full GeneDeletion Analysis",
+      "priority": "Medium",
+      "reason": "Estimated full analysis: ~163 KB",
+      "benefit": "Medium - mainly tabular data that could be summarized to essential genes"
+    },
+    {
+      "tool": "FluxSampling",
+      "priority": "High",
+      "reason": "Estimated 17-25 MB for 1000 samples",
+      "benefit": "High - massive outputs that definitely need statistical summarization"
+    }
+  ],
+  "conclusion": {
+    "tools_needing_summarization": [
+      "FluxVariabilityAnalysis",
+      "ModelSEED Agent FVA Tool",
+      "Full GeneDeletion Analysis",
+      "FluxSampling"
+    ],
+    "priority_order": [
+      "FluxSampling",
+      "ModelSEED Agent FVA Tool",
+      "Full GeneDeletion Analysis"
+    ],
+    "estimated_data_reduction_percent": 95
+  }
+}

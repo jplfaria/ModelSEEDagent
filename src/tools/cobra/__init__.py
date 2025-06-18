@@ -18,7 +18,7 @@ from .missing_media import MissingMediaTool
 from .modelseedpy_integration import ModelSEEDpyEnhancement, get_modelseedpy_enhancement
 from .production_envelope import ProductionEnvelopeTool
 from .reaction_expression import ReactionExpressionTool
-from .utils import ModelUtils
+from .utils_optimized import OptimizedModelUtils
 
 __all__ = [
     "FBATool",
@@ -33,7 +33,7 @@ __all__ = [
     "MinimalMediaTool",
     "MissingMediaTool",
     "ReactionExpressionTool",
-    "ModelUtils",
+    "OptimizedModelUtils",
     "MediaLibrary",
     "get_media_library",
     "ModelSEEDpyEnhancement",

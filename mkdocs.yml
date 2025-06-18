@@ -66,23 +66,40 @@ markdown_extensions:
 nav:
   - Home: index.md
 
+  - Getting Started:
+    - Installation: getting-started/installation.md
+    - Quick Start: getting-started/quickstart-cli.md
+    - Interactive Guide: getting-started/interactive-guide.md
+
   - User Guide:
-    - Getting Started: user/README.md
-    - User Guide: user/INTERACTIVE_GUIDE.md
+    - CLI Reference: user-guide/cli-reference.md
+    - Tool Catalogue: user-guide/tool-catalogue.md
+    - FAQ: user-guide/faq.md
 
   - Technical Reference:
     - Architecture: ARCHITECTURE.md
-    - Tool Reference: TOOL_REFERENCE.md
-    - Debug Configuration: debug.md
+    - Performance: performance.md
+    - Configuration: configuration.md
     - Troubleshooting: troubleshooting.md
+    - Debug Mode: debug.md
+
+  - Testing:
+    - Tool Status: TOOL_TESTING_STATUS.md
+    - Test Infrastructure: development/testing-infrastructure-roadmap.md
 
   - API Documentation:
     - Overview: api/overview.md
     - Tool Implementation: api/tools.md
 
+  - Developer:
+    - Contributing: developer/contributing.md
+    - Testing: developer/testing.md
+    - Style Guide: developer/style-guide.md
+    - Development Roadmap: development/DEVELOPMENT_ROADMAP.md
+    - Smart Summarization: development/smart-summarization-assessment.md
+    - 12-Factor Agents: development/12-factor-agents-roadmap.md
+
   - Operations:
-    - Installation: installation.md
-    - Configuration: configuration.md
-    - Deployment: deployment.md
-    - Monitoring: monitoring.md
-    - Documentation Updates: documentation-updates.md
+    - Deployment: operations/deployment.md
+    - Monitoring: operations/monitoring.md
+    - Documentation Automation: operations/documentation-automation.md

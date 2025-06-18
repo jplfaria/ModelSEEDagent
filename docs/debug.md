@@ -49,6 +49,21 @@ Set the general verbosity level using `MODELSEED_DEBUG_LEVEL`:
 
 **Note**: When enabled, this logs all prompts sent to language models, which is useful for debugging AI decisions but may produce large log files.
 
+### Console Output Capture (Phase 1 CLI Debug Capture)
+**`MODELSEED_CAPTURE_CONSOLE_DEBUG`** - Capture console debug output to files
+- `true` - Save console debug messages to JSONL files for analysis
+- `false` - Standard console output only (default)
+
+**`MODELSEED_CAPTURE_AI_REASONING_FLOW`** - Capture AI reasoning steps
+- `true` - Save AI decision-making steps and tool selections to files
+- `false` - Standard AI reasoning logging (default)
+
+**`MODELSEED_CAPTURE_FORMATTED_RESULTS`** - Capture final formatted results
+- `true` - Save final analysis results and formatted output to files
+- `false` - Standard result display only (default)
+
+**Note**: Console capture is designed to preserve valuable CLI debug information that would otherwise be lost, enabling post-analysis of AI reasoning flows and formatted results.
+
 ## Configuration Examples
 
 ### Development Mode
@@ -58,6 +73,8 @@ export MODELSEED_DEBUG_LEVEL=verbose
 export MODELSEED_DEBUG_TOOLS=true
 export MODELSEED_DEBUG_LLM=true
 export MODELSEED_LOG_LLM_INPUTS=true
+export MODELSEED_CAPTURE_AI_REASONING_FLOW=true
+export MODELSEED_CAPTURE_FORMATTED_RESULTS=true
 ```
 
 ### Production Mode
@@ -172,6 +189,14 @@ modelseed-agent analyze model.xml --performance-metrics
 export MODELSEED_DEBUG_LLM=true
 export MODELSEED_LOG_LLM_INPUTS=true
 modelseed-agent analyze model.xml --mode advanced
+```
+
+### Console Output Capture for Post-Analysis
+```bash
+export MODELSEED_CAPTURE_CONSOLE_DEBUG=true
+export MODELSEED_CAPTURE_AI_REASONING_FLOW=true
+export MODELSEED_CAPTURE_FORMATTED_RESULTS=true
+modelseed-agent interactive
 ```
 
 This debug configuration system provides the flexibility needed for both development and production environments while maintaining system performance when debug features are disabled.

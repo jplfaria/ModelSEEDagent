@@ -117,14 +117,10 @@ def load_cli_config() -> Dict[str, Any]:
                     llm_config = config["llm_config"]
                     llm_backend = config["llm_backend"]
 
-                    if llm_backend == "argo":
-                        llm = ArgoLLM(llm_config)
-                    elif llm_backend == "openai":
-                        llm = OpenAILLM(llm_config)
-                    elif llm_backend == "local":
-                        llm = LocalLLM(llm_config)
-                    else:
-                        return config  # Return config without recreating if backend unknown
+                    # Use factory for connection pooling
+                    from src.llm.factory import LLMFactory
+
+                    llm = LLMFactory.create(llm_backend, llm_config)
 
                     # Recreate tools
                     tools = [
@@ -284,7 +280,9 @@ def load_cli_config() -> Dict[str, Any]:
                     # Don't create agent immediately to avoid initialization spam
                     config["tools"] = tools
                     config["agent"] = None  # Will be created on demand
-                    config["agent_factory"] = lambda: get_or_create_cached_agent(llm, tools)
+                    config["agent_factory"] = lambda: get_or_create_cached_agent(
+                        llm, tools
+                    )
 
                 except Exception as e:
                     # If recreation fails, just log warning and continue with basic config
@@ -339,16 +337,18 @@ def get_or_create_cached_agent(llm, tools):
     # Create cache key based on LLM type and tool count
     llm_key = f"{type(llm).__name__}_{getattr(llm, 'model_name', 'unknown')}"
     cache_key = f"{llm_key}_{len(tools)}"
-    
+
     if cache_key not in _agent_cache:
         from src.agents.langgraph_metabolic import LangGraphMetabolicAgent
+
         agent_config = {
             "name": "modelseed_langgraph_agent",
             "description": "Enhanced ModelSEED agent with LangGraph workflows",
         }
         _agent_cache[cache_key] = LangGraphMetabolicAgent(llm, tools, agent_config)
-    
+
     return _agent_cache[cache_key]
+
 
 # ASCII Art Banner
 BANNER = """
@@ -758,12 +758,10 @@ def setup(
                 }
 
             # Create LLM instance
-            if llm_backend == "argo":
-                llm = ArgoLLM(llm_config)
-            elif llm_backend == "openai":
-                llm = OpenAILLM(llm_config)
-            else:
-                llm = LocalLLM(llm_config)
+            # Use factory for connection pooling
+            from src.llm.factory import LLMFactory
+
+            llm = LLMFactory.create(llm_backend, llm_config)
 
             config_state["llm_backend"] = llm_backend
             config_state["llm_config"] = llm_config
@@ -967,7 +965,10 @@ def setup(
 
 
 def run_streaming_analysis(
-    query: str, model_file: Path, analysis_input: Dict[str, Any], log_llm_inputs: bool = False
+    query: str,
+    model_file: Path,
+    analysis_input: Dict[str, Any],
+    log_llm_inputs: bool = False,
 ):
     """Run analysis with real-time streaming interface"""
     console.print("\n[bold cyan]🚀 Starting Real-Time AI Analysis[/bold cyan]")
@@ -982,13 +983,13 @@ def run_streaming_analysis(
             print_error("LLM not configured. Run 'modelseed-agent setup' first.")
             return None
 
-        # Create LLM
-        if llm_backend == "argo":
-            llm = ArgoLLM(llm_config)
-        elif llm_backend == "openai":
-            llm = OpenAILLM(llm_config)
-        else:
-            print_error(f"Unsupported LLM backend: {llm_backend}")
+        # Create LLM using factory for connection pooling
+        try:
+            from src.llm.factory import LLMFactory
+
+            llm = LLMFactory.create(llm_backend, llm_config)
+        except Exception as e:
+            print_error(f"Failed to create LLM: {e}")
             return None
 
         # Get tools
@@ -1153,7 +1154,9 @@ def analyze(
 
     # Choose between streaming and regular analysis
     if stream:
-        result = run_streaming_analysis(query, model_file, analysis_input, log_llm_inputs)
+        result = run_streaming_analysis(
+            query, model_file, analysis_input, log_llm_inputs
+        )
     else:
         result = run_regular_analysis(analysis_input, max_iterations)
 
@@ -1356,10 +1359,10 @@ def interactive():
 def debug():
     """
     🔍 Show debug configuration and logging control
-    
+
     Display current debug settings and environment variables that control
     different levels of logging verbosity for different components.
-    
+
     Environment Variables:
     - MODELSEED_DEBUG_LEVEL: overall debug level (quiet, normal, verbose, trace)
     - MODELSEED_DEBUG_COBRAKBASE: enable cobrakbase debug messages (true/false)
@@ -1368,23 +1371,38 @@ def debug():
     - MODELSEED_DEBUG_TOOLS: enable tool execution debug (true/false)
     - MODELSEED_DEBUG_LLM: enable LLM interaction debug (true/false)
     - MODELSEED_LOG_LLM_INPUTS: enable complete LLM input logging (true/false)
+    - MODELSEED_CAPTURE_CONSOLE_DEBUG: capture console debug output (true/false)
+    - MODELSEED_CAPTURE_AI_REASONING_FLOW: capture AI reasoning steps (true/false)
+    - MODELSEED_CAPTURE_FORMATTED_RESULTS: capture final formatted results (true/false)
     """
     print_banner()
     console.print("[bold blue]🔍 Debug Configuration Status[/bold blue]\n")
-    
+
     # Print debug status using the dedicated function
     print_debug_status()
-    
+
     console.print("\n[bold green]💡 Tips for Debug Control:[/bold green]")
     console.print("   • Set MODELSEED_DEBUG_LEVEL=quiet to minimize all debug output")
     console.print("   • Set MODELSEED_DEBUG_LEVEL=trace to enable all debug messages")
     console.print("   • Use component-specific flags to control individual debug areas")
     console.print("   • Set MODELSEED_LOG_LLM_INPUTS=true for detailed LLM analysis")
-    
+
+    console.print("\n[bold cyan]💡 Console Capture Control:[/bold cyan]")
+    console.print(
+        "   • Set MODELSEED_CAPTURE_CONSOLE_DEBUG=true to capture console debug output"
+    )
+    console.print(
+        "   • Set MODELSEED_CAPTURE_AI_REASONING_FLOW=true to capture AI reasoning steps"
+    )
+    console.print(
+        "   • Set MODELSEED_CAPTURE_FORMATTED_RESULTS=true to capture final results"
+    )
+
     console.print("\n[bold yellow]📝 Example Usage:[/bold yellow]")
     console.print("   export MODELSEED_DEBUG_LEVEL=verbose")
     console.print("   export MODELSEED_DEBUG_COBRAKBASE=true")
     console.print("   export MODELSEED_DEBUG_LANGGRAPH=false")
+    console.print("   export MODELSEED_CAPTURE_AI_REASONING_FLOW=true")
     console.print("   modelseed-agent interactive")
 
 
@@ -1689,13 +1707,10 @@ def switch(
         }
 
     try:
-        # Create LLM instance
-        if backend == "argo":
-            llm = ArgoLLM(llm_config)
-        elif backend == "openai":
-            llm = OpenAILLM(llm_config)
-        else:
-            llm = LocalLLM(llm_config)
+        # Create LLM instance using factory for connection pooling
+        from src.llm.factory import LLMFactory
+
+        llm = LLMFactory.create(backend, llm_config)
 
         # Initialize tools (reuse existing if available)
         tools = config_state.get("tools") or [

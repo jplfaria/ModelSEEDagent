@@ -1,0 +1,107 @@
+{
+  "audit_id": "b9f7153e-396a-46a0-8a87-4c8c0a0d7d40",
+  "session_id": null,
+  "tool_name": "analyze_pathway",
+  "timestamp": "2025-06-17T10:43:57.758921",
+  "input": {
+    "model_path": "/Users/jplfaria/repos/ModelSEEDagent/data/examples/e_coli_core.xml",
+    "pathway": "glycolysis"
+  },
+  "output": {
+    "structured": {
+      "success": true,
+      "message": "Pathway analysis completed for: glycolysis",
+      "error": null,
+      "full_data_path": null,
+      "summary_dict": null,
+      "key_findings": null,
+      "schema_version": "1.0",
+      "tool_name": null,
+      "model_stats": null,
+      "data": {
+        "summary": {
+          "pathway_name": "glycolysis",
+          "reaction_count": 9,
+          "gene_coverage": 15,
+          "metabolite_count": 17,
+          "reversible_reactions": 7,
+          "irreversible_reactions": 2
+        },
+        "reaction_list": [
+          "PFK",
+          "PGI",
+          "PGK",
+          "PGM",
+          "PYK",
+          "ENO",
+          "TPI",
+          "FBA",
+          "GAPD"
+        ],
+        "connectivity": {
+          "input_metabolites": 4,
+          "output_metabolites": 4,
+          "internal_metabolites": 9,
+          "total_unique_metabolites": 17
+        },
+        "top_reactions": [
+          {
+            "id": "PGM",
+            "name": "Phosphoglycerate mutase",
+            "gene_count": 3,
+            "metabolite_count": 2,
+            "reversible": true
+          },
+          {
+            "id": "FBA",
+            "name": "Fructose-bisphosphate aldolase",
+            "gene_count": 3,
+            "metabolite_count": 3,
+            "reversible": true
+          },
+          {
+            "id": "PFK",
+            "name": "Phosphofructokinase",
+            "gene_count": 2,
+            "metabolite_count": 5,
+            "reversible": false
+          },
+          {
+            "id": "PYK",
+            "name": "Pyruvate kinase",
+            "gene_count": 2,
+            "metabolite_count": 5,
+            "reversible": false
+          },
+          {
+            "id": "PGI",
+            "name": "Glucose-6-phosphate isomerase",
+            "gene_count": 1,
+            "metabolite_count": 2,
+            "reversible": true
+          }
+        ]
+      },
+      "metadata": {},
+      "smart_summarization_metrics": {
+        "enabled": false
+      }
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 1.9332630634307861,
+    "success": true,
+    "error": null,
+    "timestamp_end": "2025-06-17T10:43:57.758994"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

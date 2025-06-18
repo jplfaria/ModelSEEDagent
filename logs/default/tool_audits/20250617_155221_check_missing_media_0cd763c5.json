@@ -1,0 +1,51 @@
+{
+  "audit_id": "0cd763c5-23d6-4911-8f75-b86d754b4c93",
+  "session_id": null,
+  "tool_name": "check_missing_media",
+  "timestamp": "2025-06-17T15:52:21.007271",
+  "input": {
+    "model_path": "data/examples/iML1515.xml",
+    "target_metabolites": [
+      "glc__D",
+      "h",
+      "h2o"
+    ]
+  },
+  "output": {
+    "structured": {
+      "success": true,
+      "message": "Model grows under current media. No missing components detected.",
+      "error": null,
+      "full_data_path": null,
+      "summary_dict": null,
+      "key_findings": null,
+      "schema_version": "1.0",
+      "tool_name": null,
+      "model_stats": null,
+      "data": {
+        "objective_value": 0.8769972144269702,
+        "result_file": null
+      },
+      "metadata": {},
+      "smart_summarization_metrics": {
+        "enabled": false
+      }
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 2.1573917865753174,
+    "success": true,
+    "error": null,
+    "timestamp_end": "2025-06-17T15:52:21.007381"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

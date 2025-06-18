@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field, PrivateAttr
 from ..base import BaseTool, ToolRegistry, ToolResult
 from .fba import SimulationResultsStore  # Import the results store
 from .simulation_wrapper import run_simulation
-from .utils import ModelUtils
+from .utils_optimized import OptimizedModelUtils
 
 
 class ReactionExpressionConfig(BaseModel):
@@ -28,7 +28,7 @@ class ReactionExpressionTool(BaseTool):
         super().__init__(config)
         config_dict = config.get("reaction_expression_config", {})
         self._config = ReactionExpressionConfig(**config_dict)
-        self._utils = ModelUtils()
+        self._utils = OptimizedModelUtils(use_cache=True)
 
     def _run_tool(self, input_data: Any, media: dict = None) -> ToolResult:
         try:
@@ -42,7 +42,7 @@ class ReactionExpressionTool(BaseTool):
             model = self._utils.load_model(model_path)
             if media:
                 # Apply media conditions if such a method exists in ModelUtils.
-                ModelUtils.apply_media_conditions(model, media)
+                OptimizedModelUtils.apply_media_conditions(model, media)
             solution = run_simulation(model, method="pfba")
 
             # Optionally export simulation results
