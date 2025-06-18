@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "modelseed-agent"
-version = "0.2.0"
+version = "0.3.0"
 description = "ModelSEED Agent: AI-powered metabolic modeling with LangGraph workflows"
 authors = ["ModelSEED Team <support@modelseed.org>"]
 readme = "README.md"
