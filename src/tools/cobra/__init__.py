@@ -16,6 +16,7 @@ from .media_tools import (
 from .minimal_media import MinimalMediaTool
 from .missing_media import MissingMediaTool
 from .modelseedpy_integration import ModelSEEDpyEnhancement, get_modelseedpy_enhancement
+from .moma import MOMATool
 from .production_envelope import ProductionEnvelopeTool
 from .reaction_expression import ReactionExpressionTool
 from .utils_optimized import OptimizedModelUtils
@@ -29,6 +30,7 @@ __all__ = [
     "EssentialityAnalysisTool",
     "FluxSamplingTool",
     "ProductionEnvelopeTool",
+    "MOMATool",
     "AuxotrophyTool",
     "MinimalMediaTool",
     "MissingMediaTool",

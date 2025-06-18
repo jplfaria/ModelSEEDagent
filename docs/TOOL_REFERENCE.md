@@ -2,12 +2,12 @@
 
 ## Overview
 
-ModelSEEDagent provides **24 specialized metabolic modeling tools** organized into six main categories, enhanced with the **Smart Summarization Framework** for optimal LLM performance. Each tool is designed for specific analysis tasks and integrates seamlessly with the AI reasoning system.
+ModelSEEDagent provides **25 specialized metabolic modeling tools** organized into six main categories, enhanced with the **Smart Summarization Framework** for optimal LLM performance. Each tool is designed for specific analysis tasks and integrates seamlessly with the AI reasoning system.
 
 ## Tool Categories
 
 1. [AI Media Tools (6 tools)](#ai-media-tools) - Intelligent media management and optimization
-2. [COBRApy Tools (12 tools)](#cobrapy-tools) - Comprehensive metabolic modeling analysis
+2. [COBRApy Tools (13 tools)](#cobrapy-tools) - Comprehensive metabolic modeling analysis
 3. [Biochemistry Tools (3 tools)](#biochemistry-tools) - Enhanced compound/reaction resolution and cross-database translation
 4. [System Tools (4 tools)](#system-tools) - AI auditing and verification
 
@@ -112,37 +112,42 @@ Core metabolic modeling analysis capabilities:
 **Usage**: `"perform gene knockout analysis"`
 **What it does**: Simulates gene deletions and categorizes essentiality
 
-### 6. Essentiality Analysis (`analyze_essentiality`)
+### 6. MOMA Analysis (`run_moma_analysis`)
+**Purpose**: Predict realistic metabolic adjustments after genetic perturbations
+**Usage**: `"run MOMA analysis on this knockout"` or `"predict metabolic adjustment"`
+**What it does**: Uses Minimization of Metabolic Adjustment (MOMA) to find flux distributions that minimize metabolic changes compared to wild-type, providing more realistic predictions than standard FBA
+
+### 7. Essentiality Analysis (`analyze_essentiality`)
 **Purpose**: Comprehensive analysis of essential genes and reactions
 **Usage**: `"find essential genes and reactions"`
 **What it does**: Identifies components critical for growth and survival
 
-### 7. Flux Sampling (`run_flux_sampling`)
+### 8. Flux Sampling (`run_flux_sampling`)
 **Purpose**: Statistical exploration of the metabolic solution space
 **Usage**: `"sample flux distributions"`
 **What it does**: Generates thousands of possible flux states to understand variability
 
-### 8. Production Envelope (`run_production_envelope`)
+### 9. Production Envelope (`run_production_envelope`)
 **Purpose**: Analyze trade-offs between growth and product formation
 **Usage**: `"analyze production envelope for ethanol"`
 **What it does**: Maps the relationship between growth rate and production capacity
 
-### 9. Auxotrophy Identification (`identify_auxotrophies`)
+### 10. Auxotrophy Identification (`identify_auxotrophies`)
 **Purpose**: Find nutrients the model cannot produce
 **Usage**: `"identify auxotrophies"`
 **What it does**: Tests removal of compounds to find essential nutrients
 
-### 10. Minimal Media Finder (`find_minimal_media`)
+### 11. Minimal Media Finder (`find_minimal_media`)
 **Purpose**: Find the smallest set of nutrients needed for growth
 **Usage**: `"find minimal media requirements"`
 **What it does**: Systematically removes nutrients to find the minimal viable set
 
-### 11. Missing Media Checker (`check_missing_media`)
+### 12. Missing Media Checker (`check_missing_media`)
 **Purpose**: Diagnose media gaps when growth is poor
 **Usage**: `"check for missing media components"`
 **What it does**: Tests addition of essential nutrients to improve growth
 
-### 12. Reaction Expression (`analyze_reaction_expression`)
+### 13. Reaction Expression (`analyze_reaction_expression`)
 **Purpose**: Analyze reaction activity levels across the network
 **Usage**: `"analyze reaction expression levels"`
 **What it does**: Calculates how active each reaction is under given conditions

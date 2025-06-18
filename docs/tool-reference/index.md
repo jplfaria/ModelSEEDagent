@@ -22,6 +22,7 @@ Auto-generated pages for every registered tool.
 - [run_flux_variability_analysis](run_flux_variability_analysis.md)
 - [run_gene_deletion_analysis](run_gene_deletion_analysis.md)
 - [run_metabolic_fba](run_metabolic_fba.md)
+- [run_moma_analysis](run_moma_analysis.md)
 - [run_production_envelope](run_production_envelope.md)
 - [search_biochem](search_biochem.md)
 - [select_optimal_media](select_optimal_media.md)

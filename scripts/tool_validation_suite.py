@@ -19,8 +19,8 @@ This is the main tool validation system for ModelSEEDagent, providing:
 - data/examples/EcoliMG1655.xml (ModelSEED E. coli model)
 - data/examples/B_aphidicola.xml (ModelSEED minimal organism)
 
-**Tools validated (24 total):**
-- 12 COBRA tools (FBA, ModelAnalysis, FluxVariability, etc.)
+**Tools validated (25 total):**
+- 13 COBRA tools (FBA, ModelAnalysis, FluxVariability, MOMA, etc.)
 - 6 AI Media tools (MediaSelector, MediaManipulator, etc.)
 - 3 Biochemistry tools (BiochemEntityResolver, BiochemSearch, CrossDatabaseIDTranslator)
 - 4 System tools (ToolAudit, AIAudit, RealtimeVerification, FetchArtifact)
@@ -91,6 +91,7 @@ from src.tools.cobra import (  # AI Media Tools
     MinimalMediaTool,
     MissingMediaTool,
     ModelAnalysisTool,
+    MOMATool,
     PathwayAnalysisTool,
     ProductionEnvelopeTool,
     ReactionExpressionTool,
@@ -225,6 +226,131 @@ class BiologicalValidator:
                     f"Unusual carbon balance: {carbon_ratio:.2f}"
                 )
                 validation["scores"]["carbon_balance"] = 0.5
+
+        return validation
+
+    def validate_moma_results(self, results: Dict, model_name: str) -> Dict[str, Any]:
+        """Validate MOMA results for biological feasibility"""
+        validation = {
+            "is_valid": True,
+            "warnings": [],
+            "biological_insights": [],
+            "scores": {},
+        }
+
+        if not results.get("success", False):
+            validation["is_valid"] = False
+            validation["warnings"].append("MOMA failed to complete")
+            return validation
+
+        data = results.get("data", {})
+
+        # Check required MOMA data fields
+        wt_growth = data.get("wild_type_growth", 0)
+        moma_growth = data.get("moma_growth", 0)
+        growth_fraction = data.get("growth_fraction", 0)
+        knockouts = data.get("knockouts_applied", [])
+        metabolic_adjustment = data.get("metabolic_adjustment", {})
+
+        # Validate knockouts were applied
+        if not knockouts:
+            validation["warnings"].append("No knockouts were applied")
+            validation["scores"]["knockout_application"] = 0.0
+        else:
+            validation["biological_insights"].append(
+                f"Successfully applied {len(knockouts)} knockouts: {', '.join(knockouts)}"
+            )
+            validation["scores"]["knockout_application"] = 1.0
+
+        # Wild-type growth validation
+        if wt_growth < self.validation_rules["growth_rate"]["min"]:
+            validation["warnings"].append(f"Wild-type shows no growth: {wt_growth:.4f}")
+        elif wt_growth > self.validation_rules["growth_rate"]["max"]:
+            validation["warnings"].append(
+                f"Wild-type growth unrealistically high: {wt_growth:.4f} h⁻¹"
+            )
+        else:
+            validation["scores"]["wt_growth_feasibility"] = 1.0
+
+        # MOMA growth validation
+        if moma_growth < 0:
+            validation["warnings"].append(
+                f"MOMA predicts negative growth: {moma_growth:.4f}"
+            )
+            validation["scores"]["moma_growth_feasibility"] = 0.0
+        elif moma_growth > wt_growth:
+            validation["warnings"].append(
+                f"MOMA growth exceeds wild-type (unusual): {moma_growth:.4f} > {wt_growth:.4f}"
+            )
+            validation["scores"]["moma_growth_feasibility"] = 0.5
+        else:
+            validation["scores"]["moma_growth_feasibility"] = 1.0
+
+        # Growth fraction validation (typical knockout effects)
+        if growth_fraction > 1.0:
+            validation["warnings"].append(
+                f"Growth fraction > 1.0 (unusual): {growth_fraction:.3f}"
+            )
+        elif growth_fraction > 0.8:
+            validation["biological_insights"].append(
+                f"Minimal growth impact: {growth_fraction:.1%} of wild-type (possibly non-essential knockout)"
+            )
+            validation["scores"]["knockout_impact"] = 0.8
+        elif growth_fraction > 0.1:
+            validation["biological_insights"].append(
+                f"Moderate growth impact: {growth_fraction:.1%} of wild-type (significant but viable)"
+            )
+            validation["scores"]["knockout_impact"] = 1.0
+        elif growth_fraction > 0.01:
+            validation["biological_insights"].append(
+                f"Severe growth impact: {growth_fraction:.1%} of wild-type (near-essential)"
+            )
+            validation["scores"]["knockout_impact"] = 1.0
+        else:
+            validation["biological_insights"].append(
+                f"Lethal knockout: {growth_fraction:.1%} of wild-type (essential gene/reaction)"
+            )
+            validation["scores"]["knockout_impact"] = 1.0
+
+        # Metabolic adjustment validation
+        if metabolic_adjustment:
+            reactions_changed = metabolic_adjustment.get("reactions_changed", 0)
+            total_reactions = metabolic_adjustment.get("total_reactions", 1)
+
+            change_percentage = (reactions_changed / total_reactions) * 100
+
+            if change_percentage > 50:
+                validation["warnings"].append(
+                    f"Very high metabolic adjustment: {change_percentage:.1f}% of reactions changed"
+                )
+                validation["scores"]["metabolic_adjustment"] = 0.5
+            elif change_percentage > 20:
+                validation["biological_insights"].append(
+                    f"Moderate metabolic adjustment: {change_percentage:.1f}% of reactions changed"
+                )
+                validation["scores"]["metabolic_adjustment"] = 0.8
+            else:
+                validation["biological_insights"].append(
+                    f"Minimal metabolic adjustment: {change_percentage:.1f}% of reactions changed"
+                )
+                validation["scores"]["metabolic_adjustment"] = 1.0
+
+        # Compare with FBA if available
+        fba_comparison = data.get("fba_comparison", {})
+        if fba_comparison:
+            fba_growth = fba_comparison.get("fba_growth", 0)
+            moma_more_conservative = fba_comparison.get("moma_more_conservative", False)
+
+            if moma_more_conservative:
+                validation["biological_insights"].append(
+                    f"MOMA is more conservative than FBA ({moma_growth:.4f} vs {fba_growth:.4f})"
+                )
+                validation["scores"]["fba_consistency"] = 1.0
+            else:
+                validation["biological_insights"].append(
+                    f"MOMA and FBA predictions similar ({moma_growth:.4f} vs {fba_growth:.4f})"
+                )
+                validation["scores"]["fba_consistency"] = 0.8
 
         return validation
 
@@ -531,7 +657,7 @@ class ModelSEEDToolValidationSuite:
         # Initialize all tools
         basic_config = {"fba_config": {}, "model_config": {}}
 
-        # COBRA tools (12 tools - PathwayAnalysis re-enabled with annotation awareness)
+        # COBRA tools (13 tools - PathwayAnalysis re-enabled with annotation awareness + MOMA added)
         self.cobra_tools = {
             "FBA": FBATool(basic_config),
             "ModelAnalysis": ModelAnalysisTool(basic_config),
@@ -543,6 +669,7 @@ class ModelSEEDToolValidationSuite:
             "Essentiality": EssentialityAnalysisTool(basic_config),
             "FluxSampling": FluxSamplingTool(basic_config),
             "ProductionEnvelope": ProductionEnvelopeTool(basic_config),
+            "MOMA": MOMATool(basic_config),
             "Auxotrophy": AuxotrophyTool(basic_config),
             "MinimalMedia": MinimalMediaTool(basic_config),
             "MissingMedia": MissingMediaTool(basic_config),
@@ -607,6 +734,7 @@ class ModelSEEDToolValidationSuite:
             ),  # Re-enabled with model-specific params
             "FluxVariability": {"fraction_of_optimum": 0.9},
             "GeneDeletion": self._get_gene_deletion_params(model_name),
+            "MOMA": self._get_moma_params(model_name),
             "Essentiality": {"threshold": 0.01},  # 1% of wildtype growth
             "FluxSampling": {"n_samples": 50, "method": "optgp"},  # Reduced for speed
             "ProductionEnvelope": self._get_production_envelope_params(model_name),
@@ -702,6 +830,25 @@ class ModelSEEDToolValidationSuite:
             return {"genes": ["83333.1.peg.1", "83333.1.peg.2"], "method": "single"}
         else:  # e_coli_core
             return {"genes": ["b0008", "b0009"], "method": "single"}
+
+    def _get_moma_params(self, model_name: str) -> Dict[str, Any]:
+        """Get model-specific MOMA parameters"""
+        if "iML1515" in model_name:
+            return {"knockout_genes": ["b0008"], "linear": True, "compare_to_fba": True}
+        elif "aphidicola" in model_name.lower():
+            return {
+                "knockout_genes": ["272557.1.peg.1"],
+                "linear": True,
+                "compare_to_fba": True,
+            }
+        elif "ecolimg" in model_name.lower():
+            return {
+                "knockout_genes": ["83333.1.peg.1"],
+                "linear": True,
+                "compare_to_fba": True,
+            }
+        else:  # e_coli_core
+            return {"knockout_genes": ["b0008"], "linear": True, "compare_to_fba": True}
 
     def _get_production_envelope_params(self, model_name: str) -> Dict[str, Any]:
         """Get model-specific production envelope parameters"""
@@ -963,6 +1110,8 @@ class ModelSEEDToolValidationSuite:
 
         if tool_name == "FBA":
             return self.validator.validate_fba_results(output, model_name)
+        elif tool_name == "MOMA":
+            return self.validator.validate_moma_results(output, model_name)
         elif tool_name == "Essentiality":
             return self.validator.validate_essentiality_results(output, model_name)
         elif tool_name in self.media_tools:
