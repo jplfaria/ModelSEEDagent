@@ -12,7 +12,7 @@ from .cobra.missing_media import MissingMediaTool
 from .cobra.production_envelope import ProductionEnvelopeTool
 from .cobra.reaction_expression import ReactionExpressionTool
 from .cobra.utils import ModelUtils
-from .modelseed.annotation import ProteinAnnotationTool, RastAnnotationTool
+from .modelseed.annotation import RastAnnotationTool
 from .modelseed.builder import ModelBuildTool
 from .modelseed.compatibility import ModelCompatibilityTool
 from .modelseed.gapfill import GapFillTool
@@ -38,7 +38,6 @@ __all__ = [
     "BiochemEntityResolverTool",
     "BiochemSearchTool",
     "RastAnnotationTool",
-    "ProteinAnnotationTool",
     "ModelBuildTool",
     "GapFillTool",
     "ModelCompatibilityTool",

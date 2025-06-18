@@ -1,0 +1,114 @@
+{
+  "audit_id": "eb8e3165-115f-4e92-b31c-1ea74921f77c",
+  "session_id": null,
+  "tool_name": "find_minimal_media",
+  "timestamp": "2025-06-17T23:13:09.616351",
+  "input": {
+    "model_path": "data/examples/e_coli_core.xml"
+  },
+  "output": {
+    "structured": {
+      "success": true,
+      "message": "Minimal media determination completed. Found 3 essential nutrients.",
+      "error": null,
+      "full_data_path": null,
+      "summary_dict": null,
+      "key_findings": null,
+      "schema_version": "1.0",
+      "tool_name": null,
+      "model_stats": null,
+      "data": {
+        "minimal_media": {
+          "EX_co2_e": [
+            0,
+            1000.0
+          ],
+          "EX_glc__D_e": [
+            -10.0,
+            1000.0
+          ],
+          "EX_h_e": [
+            0,
+            1000.0
+          ],
+          "EX_h2o_e": [
+            0,
+            1000.0
+          ],
+          "EX_nh4_e": [
+            -1000.0,
+            1000.0
+          ],
+          "EX_o2_e": [
+            0,
+            1000.0
+          ],
+          "EX_pi_e": [
+            -1000.0,
+            1000.0
+          ]
+        },
+        "essential_nutrients": {
+          "EX_glc__D_e": [
+            -10.0,
+            1000.0
+          ],
+          "EX_nh4_e": [
+            -1000.0,
+            1000.0
+          ],
+          "EX_pi_e": [
+            -1000.0,
+            1000.0
+          ]
+        },
+        "non_essential_nutrients": {
+          "EX_co2_e": [
+            0,
+            1000.0
+          ],
+          "EX_h_e": [
+            0,
+            1000.0
+          ],
+          "EX_h2o_e": [
+            0,
+            1000.0
+          ],
+          "EX_o2_e": [
+            0,
+            1000.0
+          ]
+        },
+        "complete_solution": 0.8739215069684305,
+        "result_file": null
+      },
+      "metadata": {
+        "model_id": "e_coli_core",
+        "num_exchange_reactions": 7,
+        "num_essential_nutrients": 3,
+        "num_non_essential_nutrients": 4,
+        "growth_threshold": 1e-06
+      },
+      "smart_summarization_metrics": {
+        "enabled": false
+      }
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 2.017292022705078,
+    "success": true,
+    "error": null,
+    "timestamp_end": "2025-06-17T23:13:09.616437"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

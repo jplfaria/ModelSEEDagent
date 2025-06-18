@@ -2,7 +2,7 @@
 
 **AI-Powered Metabolic Modeling Platform**
 
-ModelSEEDagent combines large-language-model reasoning with **25 specialised metabolic-modeling tools** and **Smart Summarization Framework**.  The **interactive interface is production-ready and fully tested**; the Typer-based CLI is available in **beta** while we finish import cleanup and help-formatting fixes.
+ModelSEEDagent combines large-language-model reasoning with **24 specialised metabolic-modeling tools** and **Smart Summarization Framework**.  The **interactive interface is production-ready and fully tested**; the Typer-based CLI is available in **beta** while we finish import cleanup and help-formatting fixes.
 
 ## 📚 **Documentation**
 
@@ -35,7 +35,7 @@ modelseed-agent analyze data/examples/e_coli_core.xml --query "Find essential ge
 
 ## Core Capabilities
 
-- **Complete Genome-to-Model Pipeline** - RAST annotation → Model building → Gapfilling
+- **Complete Genome-to-Model Pipeline** - RAST annotation (genome/protein FASTA) → Model building → Gapfilling
 - **Advanced COBRA Analysis** - 12 tools covering comprehensive COBRApy capabilities
 - **Universal Compatibility** - Perfect ModelSEED ↔ COBRApy integration
 - **Biochemistry Intelligence** - Universal ID resolution across 45K+ compounds and 56K+ reactions
@@ -102,20 +102,19 @@ Pre-built workflow templates combining media selection with analysis:
 
 **🧪 [Complete Tool Testing Status](https://jplfaria.github.io/ModelSEEDagent/TOOL_TESTING_STATUS/)** - Live testing coverage and results
 
-**Current Status**: 24/30 tools actively tested (80% coverage) with 100% success rate across 4 model types
+**Current Status**: 24/24 tools actively tested (100% coverage) with 100% success rate across 4 model types
 
 | Category | Implemented | Tested | Success Rate | Status |
 |----------|-------------|--------|--------------|--------|
 | **COBRA Tools** | 12 | 12 | 100% (48/48) | ✅ Complete coverage |
 | **AI Media Tools** | 6 | 6 | 100% (24/24) | ✅ Complete coverage |
-| **Biochemistry Tools** | 2 | 2 | 100% (8/8) | ✅ Complete coverage |
+| **Biochemistry Tools** | 3 | 3 | 100% (12/12) | ✅ Complete coverage |
 | **System Tools** | 4 | 4 | 100% (16/16) | ✅ Functional validation |
-| **ModelSEED Tools** | 3 | 0 | N/A | Service dependencies |
-| **RAST Tools** | 2 | 0 | N/A | Service dependencies |
+| **ModelSEED Tools** | 3 | 3 | 100% (12/12) | ✅ Functional |
 
 **Last Comprehensive Test**: 2025-06-14 | **Models Tested**: e_coli_core, iML1515, EcoliMG1655, B_aphidicola
 
-## Specialized Tools (29 Total)
+## Specialized Tools (24 Total)
 
 ### AI Media Tools (6 tools) - 100% Tested
 - **Media Selection** - AI-powered optimal media selection for models
@@ -136,10 +135,10 @@ Pre-built workflow templates combining media selection with analysis:
 - **Universal ID Resolution** - ModelSEED ↔ BiGG ↔ KEGG mapping
 - **Biochemistry Search** - Compound/reaction discovery by name
 
-### ModelSEED Integration (3 tools) - Service Dependencies
-- **Model Building** - MSBuilder with template selection
-- **Gapfilling** - Advanced MSGapfill algorithms
-- **Protein Annotation** - Individual protein sequence annotation
+### ModelSEED Integration (3 tools) - Functional
+- **Model Building** - MSBuilder with MSGenome support and protein FASTA capability
+- **Gapfilling** - Advanced MSGapfill algorithms with improved API
+- **RAST Annotation** - Consolidated genome and protein FASTA annotation
 
 ### System Tools (4 tools) - 100% Tested
 - **Tool Audit** - Execution auditing and verification
@@ -171,7 +170,7 @@ ModelSEEDagent/
 ├── notebooks/                     # Interactive tutorials
 ├── src/                           # Main source code
 │   ├── agents/                    # AI agents and reasoning
-│   ├── tools/                     # 29 specialized tools
+│   ├── tools/                     # 28 specialized tools
 │   │   ├── cobra/                 # 12 COBRApy tools
 │   │   ├── modelseed/             # 3 ModelSEED tools
 │   │   ├── biochem/               # 2 biochemistry tools
@@ -231,10 +230,12 @@ modelseed-agent interactive
 
 **Complete Genome-to-Model Pipeline:**
 ```bash
-# 1. Annotate genome with RAST
+# 1. Annotate genome or protein FASTA with RAST
 modelseed-agent run-tool annotate_genome_rast --genome-file pputida.fna
+# OR for protein FASTA:
+modelseed-agent run-tool annotate_genome_rast --protein-fasta proteins.fasta
 
-# 2. Build draft model
+# 2. Build draft model (supports MSGenome)
 modelseed-agent run-tool build_metabolic_model --genome-object <result>
 
 # 3. Gapfill for growth

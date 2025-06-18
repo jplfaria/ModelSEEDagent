@@ -1,0 +1,44 @@
+{
+  "audit_id": "8134949c-487c-4fb6-9d9c-d298a710964e",
+  "session_id": null,
+  "tool_name": "fetch_artifact_data",
+  "timestamp": "2025-06-17T15:49:18.694629",
+  "input": {
+    "artifact_path": "/var/folders/w8/n6dl4vb96pxfg4ln03nqqq5m0000gp/T/tmprtvuixkd.json",
+    "format": "json"
+  },
+  "output": {
+    "structured": {
+      "success": false,
+      "message": "Error fetching artifact data",
+      "error": "'ArtifactStorage' object has no attribute 'pd'",
+      "full_data_path": null,
+      "summary_dict": null,
+      "key_findings": null,
+      "schema_version": "1.0",
+      "tool_name": null,
+      "model_stats": null,
+      "data": null,
+      "metadata": {},
+      "smart_summarization_metrics": {
+        "enabled": false
+      }
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 1.801462173461914,
+    "success": false,
+    "error": null,
+    "timestamp_end": "2025-06-17T15:49:18.694714"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

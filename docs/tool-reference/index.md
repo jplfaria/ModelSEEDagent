@@ -8,7 +8,6 @@ Auto-generated pages for every registered tool.
 - [analyze_pathway](analyze_pathway.md)
 - [analyze_reaction_expression](analyze_reaction_expression.md)
 - [annotate_genome_rast](annotate_genome_rast.md)
-- [annotate_proteins_rast](annotate_proteins_rast.md)
 - [build_metabolic_model](build_metabolic_model.md)
 - [check_missing_media](check_missing_media.md)
 - [compare_media_performance](compare_media_performance.md)

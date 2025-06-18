@@ -1,0 +1,1651 @@
+{
+  "audit_id": "74468dac-5aea-4824-81ad-93f3760aa9cb",
+  "session_id": null,
+  "tool_name": "run_gene_deletion_analysis",
+  "timestamp": "2025-06-17T15:56:54.257987",
+  "input": {
+    "model_path": "data/examples/B_aphidicola.xml",
+    "genes": [
+      "272557.1.peg.1",
+      "272557.1.peg.2"
+    ],
+    "method": "single"
+  },
+  "output": {
+    "structured": {
+      "success": true,
+      "message": "Single gene deletion analysis completed for 315 genes",
+      "error": null,
+      "full_data_path": null,
+      "summary_dict": null,
+      "key_findings": null,
+      "schema_version": "1.0",
+      "tool_name": null,
+      "model_stats": null,
+      "data": {
+        "deletion_results": {
+          "BUSG_RS02720": {
+            "growth": 19.701892099859883,
+            "growth_ratio": 0.9999999999999946
+          },
+          "BUSG_RS02935": {
+            "growth": 9.116602151523287e-15,
+            "growth_ratio": 4.627272398668793e-16
+          },
+          "BUSG_RS02630": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02270": {
+            "growth": 4.7839954286395563e-14,
+            "growth_ratio": 2.428190858213843e-15
+          },
+          "BUSG_RS02520": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00815": {
+            "growth": 19.701892099860096,
+            "growth_ratio": 1.0000000000000053
+          },
+          "BUSG_RS01050": {
+            "growth": 19.701892099860434,
+            "growth_ratio": 1.0000000000000226
+          },
+          "BUSG_RS01855": {
+            "growth": 19.70189209986028,
+            "growth_ratio": 1.0000000000000149
+          },
+          "BUSG_RS00105": {
+            "growth": 19.70189209986028,
+            "growth_ratio": 1.0000000000000149
+          },
+          "BUSG_RS00810": {
+            "growth": 19.70189209986028,
+            "growth_ratio": 1.0000000000000149
+          },
+          "BUSG_RS03060": {
+            "growth": 19.70189209986028,
+            "growth_ratio": 1.0000000000000149
+          },
+          "BUSG_RS01775": {
+            "growth": -4.091436515211785e-15,
+            "growth_ratio": -2.07667187216037e-16
+          },
+          "BUSG_RS00540": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00325": {
+            "growth": 19.701892099859972,
+            "growth_ratio": 0.9999999999999991
+          },
+          "BUSG_RS01605": {
+            "growth": -2.2970039352921492e-14,
+            "growth_ratio": -1.165879867603413e-15
+          },
+          "BUSG_RS01270": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02550": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01945": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02335": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02545": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01010": {
+            "growth": -5.460110572054973e-12,
+            "growth_ratio": -2.7713635545155456e-13
+          },
+          "BUSG_RS00185": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02135": {
+            "growth": 19.701892099859847,
+            "growth_ratio": 0.9999999999999928
+          },
+          "BUSG_RS00310": {
+            "growth": 19.70189209985988,
+            "growth_ratio": 0.9999999999999944
+          },
+          "BUSG_RS01340": {
+            "growth": 6.105329017363646e-13,
+            "growth_ratio": 3.09885415391501e-14
+          },
+          "BUSG_RS01575": {
+            "growth": 1.495093588044917e-14,
+            "growth_ratio": 7.588578703339572e-16
+          },
+          "BUSG_RS02635": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01780": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00360": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00905": {
+            "growth": 19.701892099860032,
+            "growth_ratio": 1.0000000000000022
+          },
+          "BUSG_RS00800": {
+            "growth": 19.701892099860252,
+            "growth_ratio": 1.0000000000000133
+          },
+          "BUSG_RS02610": {
+            "growth": -3.199066213957366e-15,
+            "growth_ratio": -1.623735526386372e-16
+          },
+          "BUSG_RS01115": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02530": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01485": {
+            "growth": 19.701892099859798,
+            "growth_ratio": 0.9999999999999902
+          },
+          "BUSG_RS02525": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00985": {
+            "growth": 1.3300089073057316e-13,
+            "growth_ratio": 6.750665878000536e-15
+          },
+          "BUSG_RS00160": {
+            "growth": -3.882581070481837e-12,
+            "growth_ratio": -1.9706640615037316e-13
+          },
+          "BUSG_RS01375": {
+            "growth": 5.279066016197714e-13,
+            "growth_ratio": 2.6794715905662833e-14
+          },
+          "BUSG_RS01205": {
+            "growth": -6.876166001248734e-29,
+            "growth_ratio": -3.490104385099946e-30
+          },
+          "BUSG_RS00640": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00180": {
+            "growth": 19.70189209985996,
+            "growth_ratio": 0.9999999999999986
+          },
+          "BUSG_RS00030": {
+            "growth": 19.701892099860316,
+            "growth_ratio": 1.0000000000000167
+          },
+          "BUSG_RS01610": {
+            "growth": 4.511986034716768e-15,
+            "growth_ratio": 2.2901282840488364e-16
+          },
+          "BUSG_RS02355": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00745": {
+            "growth": 19.701892099860963,
+            "growth_ratio": 1.0000000000000495
+          },
+          "BUSG_RS01770": {
+            "growth": 2.1809183289446672e-14,
+            "growth_ratio": 1.1069588229854157e-15
+          },
+          "BUSG_RS00825": {
+            "growth": 19.701892099859826,
+            "growth_ratio": 0.9999999999999917
+          },
+          "BUSG_RS01455": {
+            "growth": 1.92414196504456e-15,
+            "growth_ratio": 9.766280087678655e-17
+          },
+          "BUSG_RS02745": {
+            "growth": 19.701892099859702,
+            "growth_ratio": 0.9999999999999853
+          },
+          "BUSG_RS01585": {
+            "growth": 4.676499603174717e-14,
+            "growth_ratio": 2.3736296897128727e-15
+          },
+          "BUSG_RS02740": {
+            "growth": 2.242480606632723e-12,
+            "growth_ratio": 1.138205709008354e-13
+          },
+          "BUSG_RS00265": {
+            "growth": 6.4902671353464766e-15,
+            "growth_ratio": 3.294235448275853e-16
+          },
+          "BUSG_RS01830": {
+            "growth": -1.158533137866631e-12,
+            "growth_ratio": -5.880314093664456e-14
+          },
+          "BUSG_RS00490": {
+            "growth": 8.927273905419766e-27,
+            "growth_ratio": 4.531175919638301e-28
+          },
+          "BUSG_RS01190": {
+            "growth": -8.586072839940436e-13,
+            "growth_ratio": -4.357994042613528e-14
+          },
+          "BUSG_RS02915": {
+            "growth": 19.701892099860082,
+            "growth_ratio": 1.0000000000000047
+          },
+          "BUSG_RS01460": {
+            "growth": 2.810360626754067e-14,
+            "growth_ratio": 1.426441994763558e-15
+          },
+          "BUSG_RS01260": {
+            "growth": 19.70189209986022,
+            "growth_ratio": 1.0000000000000118
+          },
+          "BUSG_RS00495": {
+            "growth": -1.2662514197392387e-14,
+            "growth_ratio": -6.427054890571842e-16
+          },
+          "BUSG_RS01420": {
+            "growth": -4.7425231882372994e-14,
+            "growth_ratio": -2.4071409812821996e-15
+          },
+          "BUSG_RS02910": {
+            "growth": 19.70189209986039,
+            "growth_ratio": 1.0000000000000204
+          },
+          "BUSG_RS00050": {
+            "growth": -2.119682366120749e-14,
+            "growth_ratio": -1.0758775631178146e-15
+          },
+          "BUSG_RS00730": {
+            "growth": 19.701892099859773,
+            "growth_ratio": 0.999999999999989
+          },
+          "BUSG_RS02645": {
+            "growth": 7.77431738513893e-14,
+            "growth_ratio": 3.9459750087628275e-15
+          },
+          "BUSG_RS01075": {
+            "growth": -5.137519577156326e-13,
+            "growth_ratio": -2.6076275065950825e-14
+          },
+          "BUSG_RS02370": {
+            "growth": 19.70189209985957,
+            "growth_ratio": 0.9999999999999787
+          },
+          "BUSG_RS00995": {
+            "growth": -7.394031045221752e-13,
+            "growth_ratio": -3.7529547962930415e-14
+          },
+          "BUSG_RS02845": {
+            "growth": 19.701892099860025,
+            "growth_ratio": 1.0000000000000018
+          },
+          "BUSG_RS02650": {
+            "growth": 7.77431738513893e-14,
+            "growth_ratio": 3.9459750087628275e-15
+          },
+          "BUSG_RS00710": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01150": {
+            "growth": 1.7056078185106403e-13,
+            "growth_ratio": 8.657076233418013e-15
+          },
+          "BUSG_RS01125": {
+            "growth": 2.405204623935046e-30,
+            "growth_ratio": 1.2207988003102193e-31
+          },
+          "BUSG_RS01950": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01975": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02575": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00240": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01600": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01920": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01175": {
+            "growth": 19.70189209986008,
+            "growth_ratio": 1.0000000000000044
+          },
+          "BUSG_RS01535": {
+            "growth": 2.0254568805106853e-12,
+            "growth_ratio": 1.0280519608190724e-13
+          },
+          "BUSG_RS01790": {
+            "growth": -3.6520683543474868e-28,
+            "growth_ratio": -1.8536637678436175e-29
+          },
+          "BUSG_RS00805": {
+            "growth": 19.701892099860412,
+            "growth_ratio": 1.0000000000000215
+          },
+          "BUSG_RS02640": {
+            "growth": -6.831962002601743e-14,
+            "growth_ratio": -3.4676679620280196e-15
+          },
+          "BUSG_RS00635": {
+            "growth": 3.2491143289287624e-14,
+            "growth_ratio": 1.6491382210705804e-15
+          },
+          "BUSG_RS01850": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01465": {
+            "growth": 2.6271588218668926e-13,
+            "growth_ratio": 1.3334550857100483e-14
+          },
+          "BUSG_RS00915": {
+            "growth": 4.2478921771218534e-14,
+            "growth_ratio": 2.1560833627507484e-15
+          },
+          "BUSG_RS01070": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00190": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02655": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02565": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01000": {
+            "growth": 19.70189209986036,
+            "growth_ratio": 1.0000000000000187
+          },
+          "BUSG_RS01590": {
+            "growth": -4.5595736038948013e-14,
+            "growth_ratio": -2.3142820906664106e-15
+          },
+          "BUSG_RS02005": {
+            "growth": -3.0410947074362665e-30,
+            "growth_ratio": -1.5435546454230546e-31
+          },
+          "BUSG_RS02285": {
+            "growth": 19.701892099860377,
+            "growth_ratio": 1.0000000000000198
+          },
+          "BUSG_RS02985": {
+            "growth": 19.701892099858217,
+            "growth_ratio": 0.9999999999999101
+          },
+          "BUSG_RS00290": {
+            "growth": 9.756554940498207e-14,
+            "growth_ratio": 4.95209033276938e-15
+          },
+          "BUSG_RS02470": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02995": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02680": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02330": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00200": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01285": {
+            "growth": 2.413612991524412e-13,
+            "growth_ratio": 1.2250665973049179e-14
+          },
+          "BUSG_RS02535": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01310": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02725": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00875": {
+            "growth": -1.3404600096204784e-13,
+            "growth_ratio": -6.8037120639291504e-15
+          },
+          "BUSG_RS02605": {
+            "growth": 5.834453989098237e-14,
+            "growth_ratio": 2.9613673445809298e-15
+          },
+          "BUSG_RS02255": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01060": {
+            "growth": -4.999674605854726e-29,
+            "growth_ratio": -2.537662159813704e-30
+          },
+          "BUSG_RS02540": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00260": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01955": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00795": {
+            "growth": 19.701892099861222,
+            "growth_ratio": 1.0000000000000626
+          },
+          "BUSG_RS00430": {
+            "growth": -9.821232727205452e-15,
+            "growth_ratio": -4.984918543572395e-16
+          },
+          "BUSG_RS02715": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00165": {
+            "growth": -3.672937727711321e-13,
+            "growth_ratio": -1.8642563410127613e-14
+          },
+          "BUSG_RS02070": {
+            "growth": -5.202552822697108e-13,
+            "growth_ratio": -2.6406361360257778e-14
+          },
+          "BUSG_RS00305": {
+            "growth": 4.4481248242943915e-14,
+            "growth_ratio": 2.257714539166521e-15
+          },
+          "BUSG_RS00470": {
+            "growth": -5.979417518517913e-13,
+            "growth_ratio": -3.0349458256145895e-14
+          },
+          "BUSG_RS02590": {
+            "growth": 1.9033490195248632e-14,
+            "growth_ratio": 9.66074227732873e-16
+          },
+          "BUSG_RS00505": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02050": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00620": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02325": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02455": {
+            "growth": 8.663414745871393e-13,
+            "growth_ratio": 4.397250122963042e-14
+          },
+          "BUSG_RS00245": {
+            "growth": 19.701892099860586,
+            "growth_ratio": 1.0000000000000302
+          },
+          "BUSG_RS00660": {
+            "growth": 5.880054978342636e-14,
+            "growth_ratio": 2.9845128318332543e-15
+          },
+          "BUSG_RS00695": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00010": {
+            "growth": 19.701892099860807,
+            "growth_ratio": 1.0000000000000415
+          },
+          "BUSG_RS02375": {
+            "growth": 8.878584954988967e-14,
+            "growth_ratio": 4.506463089934424e-15
+          },
+          "BUSG_RS02585": {
+            "growth": -1.94906336730684e-30,
+            "growth_ratio": -9.892772518638913e-32
+          },
+          "BUSG_RS02045": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS03045": {
+            "growth": -2.1952571828891003e-14,
+            "growth_ratio": -1.1142367300370612e-15
+          },
+          "BUSG_RS00925": {
+            "growth": -1.5995846595029412e-31,
+            "growth_ratio": -8.118939294740675e-33
+          },
+          "BUSG_RS01510": {
+            "growth": 19.70189209986006,
+            "growth_ratio": 1.0000000000000036
+          },
+          "BUSG_RS02615": {
+            "growth": -1.3744972931305272e-13,
+            "growth_ratio": -6.976473559817613e-15
+          },
+          "BUSG_RS01800": {
+            "growth": 19.701892099859755,
+            "growth_ratio": 0.9999999999999881
+          },
+          "BUSG_RS00040": {
+            "growth": 19.701892099861336,
+            "growth_ratio": 1.0000000000000684
+          },
+          "BUSG_RS01560": {
+            "growth": 19.701892099862008,
+            "growth_ratio": 1.0000000000001024
+          },
+          "BUSG_RS01765": {
+            "growth": 8.818568790828147e-14,
+            "growth_ratio": 4.4760009577409146e-15
+          },
+          "BUSG_RS02250": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS03010": {
+            "growth": 19.701892099860284,
+            "growth_ratio": 1.0000000000000149
+          },
+          "BUSG_RS01045": {
+            "growth": 19.701892099860398,
+            "growth_ratio": 1.0000000000000207
+          },
+          "BUSG_RS00950": {
+            "growth": 3.481115003474867e-11,
+            "growth_ratio": 1.7668937510319657e-12
+          },
+          "BUSG_RS02440": {
+            "growth": 9.797663441687425e-15,
+            "growth_ratio": 4.972955588238681e-16
+          },
+          "BUSG_RS00525": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00650": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01580": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02195": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00655": {
+            "growth": 2.984978629871129e-44,
+            "growth_ratio": 1.515072062491065e-45
+          },
+          "BUSG_RS02125": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00770": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01365": {
+            "growth": 19.701892099860405,
+            "growth_ratio": 1.000000000000021
+          },
+          "BUSG_RS01040": {
+            "growth": 3.5542000901290385e-11,
+            "growth_ratio": 1.803989216931249e-12
+          },
+          "BUSG_RS01555": {
+            "growth": 19.701892099859716,
+            "growth_ratio": 0.9999999999999861
+          },
+          "BUSG_RS01170": {
+            "growth": -1.2501989954124192e-14,
+            "growth_ratio": -6.345578328597707e-16
+          },
+          "BUSG_RS01805": {
+            "growth": 19.701892099859826,
+            "growth_ratio": 0.9999999999999917
+          },
+          "BUSG_RS01180": {
+            "growth": -1.2592522391257017e-14,
+            "growth_ratio": -6.391529467033526e-16
+          },
+          "BUSG_RS02905": {
+            "growth": 19.70189209986023,
+            "growth_ratio": 1.0000000000000122
+          },
+          "BUSG_RS03215": {
+            "growth": 19.701892099860242,
+            "growth_ratio": 1.0000000000000129
+          },
+          "BUSG_RS01240": {
+            "growth": -1.2592522391257017e-14,
+            "growth_ratio": -6.391529467033526e-16
+          },
+          "BUSG_RS00250": {
+            "growth": 19.70189209986023,
+            "growth_ratio": 1.0000000000000122
+          },
+          "BUSG_RS00740": {
+            "growth": 19.701892099860185,
+            "growth_ratio": 1.00000000000001
+          },
+          "BUSG_RS00520": {
+            "growth": 2.082487788859789e-14,
+            "growth_ratio": 1.0569988802621592e-15
+          },
+          "BUSG_RS00900": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02310": {
+            "growth": 19.7018920998596,
+            "growth_ratio": 0.9999999999999801
+          },
+          "BUSG_RS00235": {
+            "growth": 4.164610176259945e-14,
+            "growth_ratio": 2.1138122953630124e-15
+          },
+          "BUSG_RS01220": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00065": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00920": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02770": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02230": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01625": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02930": {
+            "growth": 19.7018920998604,
+            "growth_ratio": 1.0000000000000209
+          },
+          "BUSG_RS01785": {
+            "growth": 3.4700717052549215e-14,
+            "growth_ratio": 1.7612885542498638e-15
+          },
+          "BUSG_RS00790": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02840": {
+            "growth": 7.483500669680971e-14,
+            "growth_ratio": 3.798366487721325e-15
+          },
+          "BUSG_RS00070": {
+            "growth": 1.1379886937468413e-30,
+            "growth_ratio": 5.776037590597343e-32
+          },
+          "BUSG_RS00460": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02350": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01005": {
+            "growth": 2.747912492010109e-11,
+            "growth_ratio": 1.3947454782932432e-12
+          },
+          "BUSG_RS01970": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01380": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00195": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02380": {
+            "growth": 1.9263868701877029e-13,
+            "growth_ratio": 9.777674450878718e-15
+          },
+          "BUSG_RS02570": {
+            "growth": 8.16069340395833e-30,
+            "growth_ratio": 4.142086131928579e-31
+          },
+          "BUSG_RS00320": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS03035": {
+            "growth": 19.701892099860004,
+            "growth_ratio": 1.0000000000000007
+          },
+          "BUSG_RS02730": {
+            "growth": 5.058474518703044e-14,
+            "growth_ratio": 2.5675069648457733e-15
+          },
+          "BUSG_RS02390": {
+            "growth": 8.644439119251707e-14,
+            "growth_ratio": 4.3876187502382765e-15
+          },
+          "BUSG_RS01550": {
+            "growth": 19.701892099890447,
+            "growth_ratio": 1.0000000000015459
+          },
+          "BUSG_RS02220": {
+            "growth": -6.367762185214985e-14,
+            "growth_ratio": -3.2320561664532902e-15
+          },
+          "BUSG_RS00145": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00485": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00830": {
+            "growth": 19.70189209986038,
+            "growth_ratio": 1.0000000000000198
+          },
+          "BUSG_RS01215": {
+            "growth": -2.943364015884707e-15,
+            "growth_ratio": -1.493949921645152e-16
+          },
+          "BUSG_RS01530": {
+            "growth": 19.701892099859993,
+            "growth_ratio": 1.0000000000000002
+          },
+          "BUSG_RS01865": {
+            "growth": 19.701892099860014,
+            "growth_ratio": 1.0000000000000013
+          },
+          "BUSG_RS01515": {
+            "growth": 19.701892099860014,
+            "growth_ratio": 1.0000000000000013
+          },
+          "BUSG_RS02100": {
+            "growth": 19.70189209986128,
+            "growth_ratio": 1.0000000000000655
+          },
+          "BUSG_RS00045": {
+            "growth": 19.701892099861222,
+            "growth_ratio": 1.0000000000000626
+          },
+          "BUSG_RS01545": {
+            "growth": 19.701892099859244,
+            "growth_ratio": 0.9999999999999621
+          },
+          "BUSG_RS00550": {
+            "growth": 19.701892099859396,
+            "growth_ratio": 0.9999999999999699
+          },
+          "BUSG_RS00025": {
+            "growth": 19.701892099883704,
+            "growth_ratio": 1.0000000000012037
+          },
+          "BUSG_RS00835": {
+            "growth": 19.701892099859705,
+            "growth_ratio": 0.9999999999999856
+          },
+          "BUSG_RS01105": {
+            "growth": 2.4790423083254172e-14,
+            "growth_ratio": 1.258276258828478e-15
+          },
+          "BUSG_RS00615": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00510": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02595": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02025": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01155": {
+            "growth": 1.6806123130245904e-13,
+            "growth_ratio": 8.53020768008639e-15
+          },
+          "BUSG_RS00845": {
+            "growth": 19.70189209986004,
+            "growth_ratio": 1.0000000000000024
+          },
+          "BUSG_RS01690": {
+            "growth": 8.902633717791724e-14,
+            "growth_ratio": 4.518669411378509e-15
+          },
+          "BUSG_RS00015": {
+            "growth": 19.701892099860096,
+            "growth_ratio": 1.0000000000000053
+          },
+          "BUSG_RS00530": {
+            "growth": -3.049136733880761e-14,
+            "growth_ratio": -1.5476365003046735e-15
+          },
+          "BUSG_RS01055": {
+            "growth": 19.7018920998547,
+            "growth_ratio": 0.9999999999997315
+          },
+          "BUSG_RS00990": {
+            "growth": -6.788344591886151e-13,
+            "growth_ratio": -3.445529270731511e-14
+          },
+          "BUSG_RS01100": {
+            "growth": 8.300788814772173e-15,
+            "growth_ratio": 4.213193724084583e-16
+          },
+          "BUSG_RS01350": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00150": {
+            "growth": 19.70189209985926,
+            "growth_ratio": 0.999999999999963
+          },
+          "BUSG_RS01985": {
+            "growth": -2.1409883681495828e-14,
+            "growth_ratio": -1.0866917539177862e-15
+          },
+          "BUSG_RS02580": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00035": {
+            "growth": 19.701892099860157,
+            "growth_ratio": 1.0000000000000084
+          },
+          "BUSG_RS02280": {
+            "growth": 19.70189209985126,
+            "growth_ratio": 0.9999999999995569
+          },
+          "BUSG_RS02855": {
+            "growth": -2.2984638397891868e-14,
+            "growth_ratio": -1.1666208647064515e-15
+          },
+          "BUSG_RS02260": {
+            "growth": -4.7459003089157745e-28,
+            "growth_ratio": -2.408855091105438e-29
+          },
+          "BUSG_RS01475": {
+            "growth": 19.701892099860338,
+            "growth_ratio": 1.0000000000000178
+          },
+          "BUSG_RS01860": {
+            "growth": 3.4314385583470188e-15,
+            "growth_ratio": 1.7416797031242518e-16
+          },
+          "BUSG_RS00280": {
+            "growth": -5.37397501647988e-14,
+            "growth_ratio": -2.7276441213065366e-15
+          },
+          "BUSG_RS00335": {
+            "growth": 19.701892099859865,
+            "growth_ratio": 0.9999999999999937
+          },
+          "BUSG_RS01200": {
+            "growth": 1.5515436788142769e-15,
+            "growth_ratio": 7.875099868328397e-17
+          },
+          "BUSG_RS03050": {
+            "growth": -9.130357204426893e-15,
+            "growth_ratio": -4.634253988474425e-16
+          },
+          "BUSG_RS00255": {
+            "growth": 19.701892099860228,
+            "growth_ratio": 1.000000000000012
+          },
+          "BUSG_RS02815": {
+            "growth": -2.7936479593196392e-14,
+            "growth_ratio": -1.4179592219670578e-15
+          },
+          "BUSG_RS00475": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00750": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00295": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01440": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00665": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02780": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02120": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02625": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00140": {
+            "growth": 17.61349107191179,
+            "growth_ratio": 0.8939999763797791
+          },
+          "BUSG_RS02865": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02860": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02065": {
+            "growth": 19.701892099859826,
+            "growth_ratio": 0.9999999999999917
+          },
+          "BUSG_RS00690": {
+            "growth": -1.900032558782154e-14,
+            "growth_ratio": -9.643909067980614e-16
+          },
+          "BUSG_RS00700": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01630": {
+            "growth": 19.701892099859744,
+            "growth_ratio": 0.9999999999999876
+          },
+          "BUSG_RS02965": {
+            "growth": 4.555015859065271e-12,
+            "growth_ratio": 2.3119687367984527e-13
+          },
+          "BUSG_RS00910": {
+            "growth": 19.70189209985865,
+            "growth_ratio": 0.999999999999932
+          },
+          "BUSG_RS00055": {
+            "growth": 1.7251115248055258e-14,
+            "growth_ratio": 8.756070310717949e-16
+          },
+          "BUSG_RS01320": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02110": {
+            "growth": 19.70189209985985,
+            "growth_ratio": 0.999999999999993
+          },
+          "BUSG_RS00575": {
+            "growth": 9.710424794536046e-15,
+            "growth_ratio": 4.928676263842219e-16
+          },
+          "BUSG_RS00020": {
+            "growth": 19.701892099860068,
+            "growth_ratio": 1.000000000000004
+          },
+          "BUSG_RS00535": {
+            "growth": 5.518569453711425e-14,
+            "growth_ratio": 2.8010352638925694e-15
+          },
+          "BUSG_RS00775": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00850": {
+            "growth": 19.701892099859926,
+            "growth_ratio": 0.9999999999999968
+          },
+          "BUSG_RS00465": {
+            "growth": 19.701892099860068,
+            "growth_ratio": 1.000000000000004
+          },
+          "BUSG_RS02620": {
+            "growth": 3.8410277152948377e-14,
+            "growth_ratio": 1.949573013508755e-15
+          },
+          "BUSG_RS00880": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00445": {
+            "growth": 16.905101535997073,
+            "growth_ratio": 0.8580445700500617
+          },
+          "BUSG_RS01965": {
+            "growth": 5.932656673200775e-14,
+            "growth_ratio": 3.011211635476846e-15
+          },
+          "BUSG_RS00860": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02705": {
+            "growth": -1.4237224512636766e-27,
+            "growth_ratio": -7.226323461967361e-29
+          },
+          "BUSG_RS01120": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00765": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00435": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02600": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02955": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01825": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02105": {
+            "growth": 19.701892099859666,
+            "growth_ratio": 0.9999999999999836
+          },
+          "BUSG_RS01820": {
+            "growth": 4.920949012228936e-14,
+            "growth_ratio": 2.497703767377706e-15
+          },
+          "BUSG_RS00560": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01890": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00755": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00565": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02875": {
+            "growth": 2.0574803815840182e-13,
+            "growth_ratio": 1.044305983991578e-14
+          },
+          "BUSG_RS00820": {
+            "growth": 19.701892099859453,
+            "growth_ratio": 0.9999999999999728
+          },
+          "BUSG_RS02340": {
+            "growth": 19.701892099860338,
+            "growth_ratio": 1.0000000000000178
+          },
+          "BUSG_RS02165": {
+            "growth": 19.701892099860338,
+            "growth_ratio": 1.0000000000000178
+          },
+          "BUSG_RS00515": {
+            "growth": 4.2540070505636567e-14,
+            "growth_ratio": 2.1591870613248805e-15
+          },
+          "BUSG_RS01280": {
+            "growth": 19.70189209985982,
+            "growth_ratio": 0.9999999999999913
+          },
+          "BUSG_RS01095": {
+            "growth": 4.0523377298248705e-14,
+            "growth_ratio": 2.0568266790242285e-15
+          },
+          "BUSG_RS01065": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02465": {
+            "growth": -6.602918171678607e-14,
+            "growth_ratio": -3.3514132237712994e-15
+          },
+          "BUSG_RS01410": {
+            "growth": -3.759838596896695e-30,
+            "growth_ratio": -1.9083642209792705e-31
+          },
+          "BUSG_RS00970": {
+            "growth": 19.70189209986006,
+            "growth_ratio": 1.0000000000000036
+          },
+          "BUSG_RS01910": {
+            "growth": -2.781815227739667e-14,
+            "growth_ratio": -1.411953336075491e-15
+          },
+          "BUSG_RS00330": {
+            "growth": -6.1765172324994545e-12,
+            "growth_ratio": -3.134986833342442e-13
+          },
+          "BUSG_RS02215": {
+            "growth": -1.5130626976836824e-14,
+            "growth_ratio": -7.679783698005507e-16
+          },
+          "BUSG_RS01540": {
+            "growth": 5.480133273756022e-47,
+            "growth_ratio": 2.781526386389542e-48
+          },
+          "BUSG_RS00555": {
+            "growth": 19.701892099859638,
+            "growth_ratio": 0.9999999999999821
+          },
+          "BUSG_RS02385": {
+            "growth": -1.0007658108074978e-13,
+            "growth_ratio": -5.079541628464251e-15
+          },
+          "BUSG_RS02500": {
+            "growth": 2.848471645518426e-13,
+            "growth_ratio": 1.4457858316758665e-14
+          },
+          "BUSG_RS01615": {
+            "growth": -5.1198863578811135e-14,
+            "growth_ratio": -2.598677493476628e-15
+          },
+          "BUSG_RS02675": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02095": {
+            "growth": 1.552024608307183e-13,
+            "growth_ratio": 7.877540900339275e-15
+          },
+          "BUSG_RS00340": {
+            "growth": 9.75850061330548e-28,
+            "growth_ratio": 4.953077889090068e-29
+          },
+          "BUSG_RS00735": {
+            "growth": -9.915069456818457e-15,
+            "growth_ratio": -5.032546826753213e-16
+          },
+          "BUSG_RS01870": {
+            "growth": 19.701892099860366,
+            "growth_ratio": 1.000000000000019
+          },
+          "BUSG_RS02425": {
+            "growth": 19.701892099859677,
+            "growth_ratio": 0.9999999999999841
+          },
+          "BUSG_RS01480": {
+            "growth": 19.701892099859677,
+            "growth_ratio": 0.9999999999999841
+          },
+          "BUSG_RS02560": {
+            "growth": 3.8419559491078975e-15,
+            "growth_ratio": 1.9500441529345296e-16
+          },
+          "BUSG_RS00060": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01995": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01415": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS01405": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS02660": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00285": {
+            "growth": 0.0,
+            "growth_ratio": 0.0
+          },
+          "BUSG_RS00175": {
+            "growth": 19.701892099860537,
+            "growth_ratio": 1.0000000000000278
+          },
+          "BUSG_RS00840": {
+            "growth": 19.70189209985965,
+            "growth_ratio": 0.9999999999999827
+          }
+        },
+        "analysis": {
+          "essential_genes": [
+            "BUSG_RS02935",
+            "BUSG_RS02630",
+            "BUSG_RS02270",
+            "BUSG_RS02520",
+            "BUSG_RS01775",
+            "BUSG_RS00540",
+            "BUSG_RS01605",
+            "BUSG_RS01270",
+            "BUSG_RS02550",
+            "BUSG_RS01945",
+            "BUSG_RS02335",
+            "BUSG_RS02545",
+            "BUSG_RS01010",
+            "BUSG_RS00185",
+            "BUSG_RS01340",
+            "BUSG_RS01575",
+            "BUSG_RS02635",
+            "BUSG_RS01780",
+            "BUSG_RS00360",
+            "BUSG_RS02610",
+            "BUSG_RS01115",
+            "BUSG_RS02530",
+            "BUSG_RS02525",
+            "BUSG_RS00985",
+            "BUSG_RS00160",
+            "BUSG_RS01375",
+            "BUSG_RS01205",
+            "BUSG_RS00640",
+            "BUSG_RS01610",
+            "BUSG_RS02355",
+            "BUSG_RS01770",
+            "BUSG_RS01455",
+            "BUSG_RS01585",
+            "BUSG_RS02740",
+            "BUSG_RS00265",
+            "BUSG_RS01830",
+            "BUSG_RS00490",
+            "BUSG_RS01190",
+            "BUSG_RS01460",
+            "BUSG_RS00495",
+            "BUSG_RS01420",
+            "BUSG_RS00050",
+            "BUSG_RS02645",
+            "BUSG_RS01075",
+            "BUSG_RS00995",
+            "BUSG_RS02650",
+            "BUSG_RS00710",
+            "BUSG_RS01150",
+            "BUSG_RS01125",
+            "BUSG_RS01950",
+            "BUSG_RS01975",
+            "BUSG_RS02575",
+            "BUSG_RS00240",
+            "BUSG_RS01600",
+            "BUSG_RS01920",
+            "BUSG_RS01535",
+            "BUSG_RS01790",
+            "BUSG_RS02640",
+            "BUSG_RS00635",
+            "BUSG_RS01850",
+            "BUSG_RS01465",
+            "BUSG_RS00915",
+            "BUSG_RS01070",
+            "BUSG_RS00190",
+            "BUSG_RS02655",
+            "BUSG_RS02565",
+            "BUSG_RS01590",
+            "BUSG_RS02005",
+            "BUSG_RS00290",
+            "BUSG_RS02470",
+            "BUSG_RS02995",
+            "BUSG_RS02680",
+            "BUSG_RS02330",
+            "BUSG_RS00200",
+            "BUSG_RS01285",
+            "BUSG_RS02535",
+            "BUSG_RS01310",
+            "BUSG_RS02725",
+            "BUSG_RS00875",
+            "BUSG_RS02605",
+            "BUSG_RS02255",
+            "BUSG_RS01060",
+            "BUSG_RS02540",
+            "BUSG_RS00260",
+            "BUSG_RS01955",
+            "BUSG_RS00430",
+            "BUSG_RS02715",
+            "BUSG_RS00165",
+            "BUSG_RS02070",
+            "BUSG_RS00305",
+            "BUSG_RS00470",
+            "BUSG_RS02590",
+            "BUSG_RS00505",
+            "BUSG_RS02050",
+            "BUSG_RS00620",
+            "BUSG_RS02325",
+            "BUSG_RS02455",
+            "BUSG_RS00660",
+            "BUSG_RS00695",
+            "BUSG_RS02375",
+            "BUSG_RS02585",
+            "BUSG_RS02045",
+            "BUSG_RS03045",
+            "BUSG_RS00925",
+            "BUSG_RS02615",
+            "BUSG_RS01765",
+            "BUSG_RS02250",
+            "BUSG_RS00950",
+            "BUSG_RS02440",
+            "BUSG_RS00525",
+            "BUSG_RS00650",
+            "BUSG_RS01580",
+            "BUSG_RS02195",
+            "BUSG_RS00655",
+            "BUSG_RS02125",
+            "BUSG_RS00770",
+            "BUSG_RS01040",
+            "BUSG_RS01170",
+            "BUSG_RS01180",
+            "BUSG_RS01240",
+            "BUSG_RS00520",
+            "BUSG_RS00900",
+            "BUSG_RS00235",
+            "BUSG_RS01220",
+            "BUSG_RS00065",
+            "BUSG_RS00920",
+            "BUSG_RS02770",
+            "BUSG_RS02230",
+            "BUSG_RS01625",
+            "BUSG_RS01785",
+            "BUSG_RS00790",
+            "BUSG_RS02840",
+            "BUSG_RS00070",
+            "BUSG_RS00460",
+            "BUSG_RS02350",
+            "BUSG_RS01005",
+            "BUSG_RS01970",
+            "BUSG_RS01380",
+            "BUSG_RS00195",
+            "BUSG_RS02380",
+            "BUSG_RS02570",
+            "BUSG_RS00320",
+            "BUSG_RS02730",
+            "BUSG_RS02390",
+            "BUSG_RS02220",
+            "BUSG_RS00145",
+            "BUSG_RS00485",
+            "BUSG_RS01215",
+            "BUSG_RS01105",
+            "BUSG_RS00615",
+            "BUSG_RS00510",
+            "BUSG_RS02595",
+            "BUSG_RS02025",
+            "BUSG_RS01155",
+            "BUSG_RS01690",
+            "BUSG_RS00530",
+            "BUSG_RS00990",
+            "BUSG_RS01100",
+            "BUSG_RS01350",
+            "BUSG_RS01985",
+            "BUSG_RS02580",
+            "BUSG_RS02855",
+            "BUSG_RS02260",
+            "BUSG_RS01860",
+            "BUSG_RS00280",
+            "BUSG_RS01200",
+            "BUSG_RS03050",
+            "BUSG_RS02815",
+            "BUSG_RS00475",
+            "BUSG_RS00750",
+            "BUSG_RS00295",
+            "BUSG_RS01440",
+            "BUSG_RS00665",
+            "BUSG_RS02780",
+            "BUSG_RS02120",
+            "BUSG_RS02625",
+            "BUSG_RS02865",
+            "BUSG_RS02860",
+            "BUSG_RS00690",
+            "BUSG_RS00700",
+            "BUSG_RS02965",
+            "BUSG_RS00055",
+            "BUSG_RS01320",
+            "BUSG_RS00575",
+            "BUSG_RS00535",
+            "BUSG_RS00775",
+            "BUSG_RS02620",
+            "BUSG_RS00880",
+            "BUSG_RS01965",
+            "BUSG_RS00860",
+            "BUSG_RS02705",
+            "BUSG_RS01120",
+            "BUSG_RS00765",
+            "BUSG_RS00435",
+            "BUSG_RS02600",
+            "BUSG_RS02955",
+            "BUSG_RS01825",
+            "BUSG_RS01820",
+            "BUSG_RS00560",
+            "BUSG_RS01890",
+            "BUSG_RS00755",
+            "BUSG_RS00565",
+            "BUSG_RS02875",
+            "BUSG_RS00515",
+            "BUSG_RS01095",
+            "BUSG_RS01065",
+            "BUSG_RS02465",
+            "BUSG_RS01410",
+            "BUSG_RS01910",
+            "BUSG_RS00330",
+            "BUSG_RS02215",
+            "BUSG_RS01540",
+            "BUSG_RS02385",
+            "BUSG_RS02500",
+            "BUSG_RS01615",
+            "BUSG_RS02675",
+            "BUSG_RS02095",
+            "BUSG_RS00340",
+            "BUSG_RS00735",
+            "BUSG_RS02560",
+            "BUSG_RS00060",
+            "BUSG_RS01995",
+            "BUSG_RS01415",
+            "BUSG_RS01405",
+            "BUSG_RS02660",
+            "BUSG_RS00285"
+          ],
+          "severely_impaired": [],
+          "moderately_impaired": [],
+          "mildly_impaired": [
+            "BUSG_RS00140",
+            "BUSG_RS00445"
+          ],
+          "no_effect": [
+            "BUSG_RS02720",
+            "BUSG_RS00815",
+            "BUSG_RS01050",
+            "BUSG_RS01855",
+            "BUSG_RS00105",
+            "BUSG_RS00810",
+            "BUSG_RS03060",
+            "BUSG_RS00325",
+            "BUSG_RS02135",
+            "BUSG_RS00310",
+            "BUSG_RS00905",
+            "BUSG_RS00800",
+            "BUSG_RS01485",
+            "BUSG_RS00180",
+            "BUSG_RS00030",
+            "BUSG_RS00745",
+            "BUSG_RS00825",
+            "BUSG_RS02745",
+            "BUSG_RS02915",
+            "BUSG_RS01260",
+            "BUSG_RS02910",
+            "BUSG_RS00730",
+            "BUSG_RS02370",
+            "BUSG_RS02845",
+            "BUSG_RS01175",
+            "BUSG_RS00805",
+            "BUSG_RS01000",
+            "BUSG_RS02285",
+            "BUSG_RS02985",
+            "BUSG_RS00795",
+            "BUSG_RS00245",
+            "BUSG_RS00010",
+            "BUSG_RS01510",
+            "BUSG_RS01800",
+            "BUSG_RS00040",
+            "BUSG_RS01560",
+            "BUSG_RS03010",
+            "BUSG_RS01045",
+            "BUSG_RS01365",
+            "BUSG_RS01555",
+            "BUSG_RS01805",
+            "BUSG_RS02905",
+            "BUSG_RS03215",
+            "BUSG_RS00250",
+            "BUSG_RS00740",
+            "BUSG_RS02310",
+            "BUSG_RS02930",
+            "BUSG_RS03035",
+            "BUSG_RS01550",
+            "BUSG_RS00830",
+            "BUSG_RS01530",
+            "BUSG_RS01865",
+            "BUSG_RS01515",
+            "BUSG_RS02100",
+            "BUSG_RS00045",
+            "BUSG_RS01545",
+            "BUSG_RS00550",
+            "BUSG_RS00025",
+            "BUSG_RS00835",
+            "BUSG_RS00845",
+            "BUSG_RS00015",
+            "BUSG_RS01055",
+            "BUSG_RS00150",
+            "BUSG_RS00035",
+            "BUSG_RS02280",
+            "BUSG_RS01475",
+            "BUSG_RS00335",
+            "BUSG_RS00255",
+            "BUSG_RS02065",
+            "BUSG_RS01630",
+            "BUSG_RS00910",
+            "BUSG_RS02110",
+            "BUSG_RS00020",
+            "BUSG_RS00850",
+            "BUSG_RS00465",
+            "BUSG_RS02105",
+            "BUSG_RS00820",
+            "BUSG_RS02340",
+            "BUSG_RS02165",
+            "BUSG_RS01280",
+            "BUSG_RS00970",
+            "BUSG_RS00555",
+            "BUSG_RS01870",
+            "BUSG_RS02425",
+            "BUSG_RS01480",
+            "BUSG_RS00175",
+            "BUSG_RS00840"
+          ],
+          "improved_growth": [],
+          "summary": {
+            "total_genes_tested": 315,
+            "essential_count": 226,
+            "impaired_count": 2,
+            "no_effect_count": 87,
+            "improved_count": 0,
+            "essentiality_rate": 0.7174603174603175
+          }
+        },
+        "wild_type_growth": 19.70189209985999
+      },
+      "metadata": {
+        "model_id": "B_aphidicolaGMM",
+        "deletion_type": "single",
+        "method": "single",
+        "genes_tested": 315
+      },
+      "smart_summarization_metrics": {
+        "enabled": false
+      }
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 2.4071640968322754,
+    "success": true,
+    "error": null,
+    "timestamp_end": "2025-06-17T15:56:54.258136"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

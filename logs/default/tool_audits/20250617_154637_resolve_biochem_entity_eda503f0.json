@@ -1,0 +1,195 @@
+{
+  "audit_id": "eda503f0-894b-4087-b2ba-9f7ef8a6d715",
+  "session_id": null,
+  "tool_name": "resolve_biochem_entity",
+  "timestamp": "2025-06-17T15:46:37.709895",
+  "input": {
+    "model_path": "data/examples/e_coli_core.xml",
+    "entity_id": "glc__D",
+    "entity_type": "compound",
+    "include_aliases": true
+  },
+  "output": {
+    "structured": {
+      "success": true,
+      "message": "Resolved glc__D \u2192 cpd00027 (D-Glucose)",
+      "error": null,
+      "full_data_path": null,
+      "summary_dict": null,
+      "key_findings": null,
+      "schema_version": "1.0",
+      "tool_name": null,
+      "model_stats": null,
+      "data": {
+        "entity_id": "glc__D",
+        "entity_type": "compound",
+        "resolved": true,
+        "primary_id": "cpd00027",
+        "primary_name": "D-Glucose",
+        "formula": "C6H12O6",
+        "charge": 0,
+        "mass": 180.0,
+        "inchi_key": "WQZGKKKJIJFFOK-GASJEMHNSA-N",
+        "smiles": "OC[C@H]1OC(O)[C@H](O)[C@@H](O)[C@@H]1O",
+        "aliases": {
+          "AlgaGEM": [
+            "S_Glucose_p",
+            "S_Glucose_c",
+            "S_D_45_Glucose_c",
+            "S_Glucose_ext_b"
+          ],
+          "AraGEM": [
+            "S_D_45_Glucose_c"
+          ],
+          "BiGG": [
+            "glc__D"
+          ],
+          "BiGG1": [
+            "glc-D",
+            "glc_D"
+          ],
+          "ChEBI": [
+            "4167"
+          ],
+          "JM_Creinhardtii": [
+            "GLC"
+          ],
+          "JP_Creinhardtii_NMeth": [
+            "M_glc_D_h",
+            "M_glc_D_c"
+          ],
+          "KEGG": [
+            "C00031",
+            "C00293"
+          ],
+          "Maize_C4GEM": [
+            "S_D_45_Glucose_c",
+            "S_Glucose_ext"
+          ],
+          "MetaCyc": [
+            "Glucopyranose"
+          ],
+          "TS_Athaliana": [
+            "met735_v",
+            "met735_c",
+            "met735_p",
+            "met735_r"
+          ],
+          "iAF1260": [
+            "glc-D"
+          ],
+          "iAF692": [
+            "glc-D"
+          ],
+          "iAG612": [
+            "cbs_47",
+            "cbs_346",
+            "cbs_40"
+          ],
+          "iAO358": [
+            "cll_28",
+            "cll_276"
+          ],
+          "iGT196": [
+            "glc-D"
+          ],
+          "iIN800": [
+            "glc-D"
+          ],
+          "iIT341": [
+            "glc_D"
+          ],
+          "iJN746": [
+            "glc-D"
+          ],
+          "iJR904": [
+            "glc-D"
+          ],
+          "iMA945": [
+            "glc-D"
+          ],
+          "iMEO21": [
+            "glc_D"
+          ],
+          "iMM904": [
+            "glc-D"
+          ],
+          "iMO1053-PAO1": [
+            "glc-D"
+          ],
+          "iMO1056": [
+            "glc-D"
+          ],
+          "iND750": [
+            "glc-D"
+          ],
+          "iNJ661": [
+            "glc-D"
+          ],
+          "iPS189": [
+            "glc-D"
+          ],
+          "iRR1083": [
+            "glc-D"
+          ],
+          "iRS1563": [
+            "M_C00293_p",
+            "M_C00293_c"
+          ],
+          "iSB619": [
+            "glc-D"
+          ],
+          "iSO783": [
+            "glc-D"
+          ],
+          "iYO844": [
+            "glc-D"
+          ],
+          "metanetx.chemical": [
+            "MNXM41",
+            "MNXM55158"
+          ],
+          "SMILE": [
+            "OC[C@H]1OC(O)[C@H](O)[C@@H](O)[C@@H]1O"
+          ],
+          "InChIKey": [
+            "WQZGKKKJIJFFOK-GASJEMHNSA-N"
+          ],
+          "InChI": [
+            "InChI=1S/C6H12O6/c7-1-2-3(8)4(9)5(10)6(11)12-2/h2-11H,1H2/t2-,3-,4+,5-,6?/m1/s1"
+          ]
+        },
+        "alternative_names": [],
+        "delta_g": -102.12,
+        "pka": null,
+        "pkb": null,
+        "database_source": "ModelSEEDpy",
+        "suggestions": [],
+        "database_stats": {
+          "compounds": 45706,
+          "reactions": 56009
+        }
+      },
+      "metadata": {},
+      "smart_summarization_metrics": {
+        "enabled": false
+      }
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 6.981894016265869,
+    "success": true,
+    "error": null,
+    "timestamp_end": "2025-06-17T15:46:37.710022"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

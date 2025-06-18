@@ -1,0 +1,112 @@
+{
+  "audit_id": "694af804-3d2f-4de5-9528-0884a143433c",
+  "session_id": null,
+  "tool_name": "translate_database_ids",
+  "timestamp": "2025-06-17T15:58:03.401420",
+  "input": {
+    "model_path": "data/examples/B_aphidicola.xml",
+    "entity_ids": [
+      "cpd00027",
+      "cpd00001",
+      "cpd00002"
+    ],
+    "target_databases": [
+      "BiGG",
+      "KEGG",
+      "MetaCyc"
+    ],
+    "entity_type": "compound",
+    "include_variants": true
+  },
+  "output": {
+    "structured": {
+      "success": true,
+      "message": "Translated 14 IDs with 100.0% success rate using ModelSEED database (45,706 compounds, 56,009 reactions)",
+      "error": null,
+      "full_data_path": null,
+      "summary_dict": null,
+      "key_findings": null,
+      "schema_version": "1.0",
+      "tool_name": null,
+      "model_stats": null,
+      "data": {
+        "translations": {
+          "cpd00027": {
+            "BiGG": [
+              "glc__D"
+            ],
+            "KEGG": [
+              "C00293",
+              "C00031"
+            ],
+            "MetaCyc": [
+              "Glucopyranose"
+            ]
+          },
+          "cpd00001": {
+            "BiGG": [
+              "h2o",
+              "oh1"
+            ],
+            "KEGG": [
+              "C00001",
+              "C01328"
+            ],
+            "MetaCyc": [
+              "OXONIUM",
+              "OH",
+              "WATER"
+            ]
+          },
+          "cpd00002": {
+            "BiGG": [
+              "atp"
+            ],
+            "KEGG": [
+              "C00002"
+            ],
+            "MetaCyc": [
+              "ATP"
+            ]
+          }
+        },
+        "failed_translations": [],
+        "source_database_detected": {
+          "cpd00027": "ModelSEED",
+          "cpd00001": "ModelSEED",
+          "cpd00002": "ModelSEED"
+        },
+        "translation_confidence": {
+          "cpd00027": 1.0,
+          "cpd00001": 1.0,
+          "cpd00002": 1.0
+        },
+        "total_translations": 14,
+        "database_stats": {
+          "compounds": 45706,
+          "reactions": 56009
+        }
+      },
+      "metadata": {},
+      "smart_summarization_metrics": {
+        "enabled": false
+      }
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 1.81333589553833,
+    "success": true,
+    "error": null,
+    "timestamp_end": "2025-06-17T15:58:03.401538"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

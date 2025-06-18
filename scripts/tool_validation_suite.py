@@ -9,7 +9,7 @@ against multiple models with detailed biological knowledge validation and struct
 This is the main tool validation system for ModelSEEDagent, providing:
 
 **Validation Levels:**
-- **Comprehensive Validation**: Full 25 tools × 4 models (100 test combinations)
+- **Comprehensive Validation**: Full 24 tools × 4 models (96 test combinations)
 - **CI Validation**: Essential subset (FBA on e_coli_core) for continuous integration
 - **System Tools Validation**: Functional validation for audit and verification tools
 
@@ -19,7 +19,7 @@ This is the main tool validation system for ModelSEEDagent, providing:
 - data/examples/EcoliMG1655.xml (ModelSEED E. coli model)
 - data/examples/B_aphidicola.xml (ModelSEED minimal organism)
 
-**Tools validated (25 total):**
+**Tools validated (24 total):**
 - 12 COBRA tools (FBA, ModelAnalysis, FluxVariability, etc.)
 - 6 AI Media tools (MediaSelector, MediaManipulator, etc.)
 - 3 Biochemistry tools (BiochemEntityResolver, BiochemSearch, CrossDatabaseIDTranslator)
@@ -1679,6 +1679,279 @@ class ModelSEEDToolValidationSuite:
         latest_link.symlink_to(self.run_dir.name)
         print(f"🔗 Created latest symlink: {latest_link} -> {self.run_dir.name}")
 
+    def find_latest_complete_run(self) -> Optional[Path]:
+        """Find the most recent complete validation run"""
+        if not self.output_base_dir.exists():
+            return None
+
+        # Get all validation run directories
+        run_dirs = [d for d in self.output_base_dir.iterdir() if d.is_dir() and d.name.endswith("_validation_run")]
+        
+        if not run_dirs:
+            return None
+
+        # Sort by creation time (newest first)
+        run_dirs.sort(key=lambda x: x.stat().st_mtime, reverse=True)
+
+        # Find the most recent complete run (has all 4 models)
+        for run_dir in run_dirs:
+            individual_dir = run_dir / "individual"
+            if individual_dir.exists():
+                model_dirs = [d for d in individual_dir.iterdir() if d.is_dir()]
+                model_names = set(d.name for d in model_dirs)
+                
+                # Check if all expected models are present and have results
+                expected_models = set(self.models.keys())
+                if model_names >= expected_models:
+                    # Verify each model has actual results (not empty)
+                    all_complete = True
+                    for model_name in expected_models:
+                        model_dir = individual_dir / model_name
+                        if not model_dir.exists():
+                            all_complete = False
+                            break
+                        # Check if directory has tool result files
+                        result_files = list(model_dir.glob("*_results.json"))
+                        if len(result_files) < 20:  # Should have at least 20+ tool results
+                            all_complete = False
+                            break
+                    
+                    if all_complete:
+                        return run_dir
+        
+        return None
+
+    def load_previous_performance_data(self, previous_run_dir: Path) -> Dict[str, Any]:
+        """Load performance data from a previous complete run"""
+        performance_data = {
+            "total_tools": 0,
+            "tool_execution_times": {},
+            "model_execution_times": {},
+            "success_rates": {},
+            "run_timestamp": None,
+            "run_dir": str(previous_run_dir.name)
+        }
+
+        try:
+            # Load incremental results for each model
+            for model_name in self.models.keys():
+                incremental_file = previous_run_dir / f"incremental_{model_name}_results.json"
+                if incremental_file.exists():
+                    with open(incremental_file, "r") as f:
+                        data = json.load(f)
+                    
+                    if "results" in data and model_name in data["results"]:
+                        model_results = data["results"][model_name]
+                        model_total_time = 0
+                        model_success_count = 0
+                        model_total_count = 0
+
+                        for tool_name, result in model_results.items():
+                            # Track execution times
+                            exec_time = result.get("execution_time", 0)
+                            if tool_name not in performance_data["tool_execution_times"]:
+                                performance_data["tool_execution_times"][tool_name] = {}
+                            performance_data["tool_execution_times"][tool_name][model_name] = exec_time
+                            model_total_time += exec_time
+
+                            # Track success rates
+                            success = result.get("success", False)
+                            if success:
+                                model_success_count += 1
+                            model_total_count += 1
+
+                        performance_data["model_execution_times"][model_name] = model_total_time
+                        performance_data["success_rates"][model_name] = {
+                            "successful": model_success_count,
+                            "total": model_total_count,
+                            "rate": model_success_count / model_total_count if model_total_count > 0 else 0
+                        }
+
+            # Get metadata
+            metadata_files = list(previous_run_dir.glob("incremental_*_results.json"))
+            if metadata_files:
+                with open(metadata_files[0], "r") as f:
+                    data = json.load(f)
+                    if "metadata" in data:
+                        performance_data["total_tools"] = data["metadata"].get("tools_tested", {}).get("total_count", 0)
+                        performance_data["run_timestamp"] = data["metadata"].get("timestamp")
+
+        except Exception as e:
+            print(f"Warning: Could not load previous performance data: {e}")
+
+        return performance_data
+
+    def generate_performance_comparison(self, previous_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Generate performance comparison between current and previous runs"""
+        comparison = {
+            "metadata": {
+                "current_run": self.timestamp,
+                "previous_run": previous_data.get("run_dir", "unknown"),
+                "analysis_timestamp": datetime.now().isoformat(),
+            },
+            "tool_count_changes": {
+                "previous": previous_data.get("total_tools", 0),
+                "current": len(self.all_tools),
+                "difference": len(self.all_tools) - previous_data.get("total_tools", 0),
+                "new_tools": [],
+                "removed_tools": []
+            },
+            "execution_time_comparison": {},
+            "success_rate_comparison": {},
+            "performance_summary": {
+                "faster_tools": [],
+                "slower_tools": [],
+                "performance_regressions": [],
+                "new_failures": [],
+                "improvements": []
+            }
+        }
+
+        # Calculate current performance data
+        current_tool_times = {}
+        current_model_times = {}
+        current_success_rates = {}
+
+        for model_name, model_results in self.results.items():
+            model_total_time = 0
+            model_success_count = 0
+            model_total_count = 0
+
+            for tool_name, result in model_results.items():
+                exec_time = result.get("execution_time", 0)
+                if tool_name not in current_tool_times:
+                    current_tool_times[tool_name] = {}
+                current_tool_times[tool_name][model_name] = exec_time
+                model_total_time += exec_time
+
+                success = result.get("success", False)
+                if success:
+                    model_success_count += 1
+                model_total_count += 1
+
+            current_model_times[model_name] = model_total_time
+            current_success_rates[model_name] = {
+                "successful": model_success_count,
+                "total": model_total_count,
+                "rate": model_success_count / model_total_count if model_total_count > 0 else 0
+            }
+
+        # Compare tool execution times
+        prev_tool_times = previous_data.get("tool_execution_times", {})
+        for tool_name in current_tool_times:
+            if tool_name not in prev_tool_times:
+                comparison["tool_count_changes"]["new_tools"].append(tool_name)
+            else:
+                # Calculate average execution time across models
+                current_avg = sum(current_tool_times[tool_name].values()) / len(current_tool_times[tool_name])
+                prev_avg = sum(prev_tool_times[tool_name].values()) / len(prev_tool_times[tool_name])
+                
+                time_diff = current_avg - prev_avg
+                percent_change = (time_diff / prev_avg * 100) if prev_avg > 0 else 0
+
+                comparison["execution_time_comparison"][tool_name] = {
+                    "previous_avg": prev_avg,
+                    "current_avg": current_avg,
+                    "time_difference": time_diff,
+                    "percent_change": percent_change
+                }
+
+                if percent_change > 50:  # More than 50% slower
+                    comparison["performance_summary"]["performance_regressions"].append({
+                        "tool": tool_name,
+                        "percent_slower": percent_change,
+                        "time_increase": time_diff
+                    })
+                elif percent_change < -20:  # More than 20% faster
+                    comparison["performance_summary"]["improvements"].append({
+                        "tool": tool_name,
+                        "percent_faster": -percent_change,
+                        "time_decrease": -time_diff
+                    })
+
+        # Find removed tools
+        for tool_name in prev_tool_times:
+            if tool_name not in current_tool_times:
+                comparison["tool_count_changes"]["removed_tools"].append(tool_name)
+
+        # Compare success rates
+        prev_success_rates = previous_data.get("success_rates", {})
+        for model_name in current_success_rates:
+            if model_name in prev_success_rates:
+                current_rate = current_success_rates[model_name]["rate"]
+                prev_rate = prev_success_rates[model_name]["rate"]
+                rate_change = current_rate - prev_rate
+
+                comparison["success_rate_comparison"][model_name] = {
+                    "previous_rate": prev_rate,
+                    "current_rate": current_rate,
+                    "rate_change": rate_change,
+                    "previous_successful": prev_success_rates[model_name]["successful"],
+                    "current_successful": current_success_rates[model_name]["successful"]
+                }
+
+                if rate_change < -0.1:  # 10% or more drop in success rate
+                    comparison["performance_summary"]["new_failures"].append({
+                        "model": model_name,
+                        "rate_drop": rate_change,
+                        "tools_lost": prev_success_rates[model_name]["successful"] - current_success_rates[model_name]["successful"]
+                    })
+
+        return comparison
+
+    def save_performance_comparison(self, comparison: Dict[str, Any]):
+        """Save performance comparison results"""
+        comparison_file = self.run_dir / "comprehensive" / "performance_comparison.json"
+        
+        with open(comparison_file, "w") as f:
+            json.dump(comparison, f, indent=2, default=str)
+        
+        print(f"📊 Performance comparison saved to: {comparison_file}")
+
+    def print_performance_summary(self, comparison: Dict[str, Any]):
+        """Print a summary of performance changes"""
+        print("\n" + "=" * 80)
+        print("📊 PERFORMANCE COMPARISON SUMMARY")
+        print("=" * 80)
+
+        # Tool count changes
+        tool_changes = comparison["tool_count_changes"]
+        print(f"\n🔧 Tool Count Changes:")
+        print(f"   Previous run: {tool_changes['previous']} tools")
+        print(f"   Current run: {tool_changes['current']} tools")
+        print(f"   Difference: {tool_changes['difference']:+d} tools")
+
+        if tool_changes["new_tools"]:
+            print(f"   ➕ New tools: {', '.join(tool_changes['new_tools'])}")
+        if tool_changes["removed_tools"]:
+            print(f"   ➖ Removed tools: {', '.join(tool_changes['removed_tools'])}")
+
+        # Performance regressions
+        regressions = comparison["performance_summary"]["performance_regressions"]
+        if regressions:
+            print(f"\n⚠️  Performance Regressions (>50% slower):")
+            for reg in regressions:
+                print(f"   🐌 {reg['tool']}: {reg['percent_slower']:.1f}% slower (+{reg['time_increase']:.2f}s)")
+
+        # Improvements
+        improvements = comparison["performance_summary"]["improvements"]
+        if improvements:
+            print(f"\n✅ Performance Improvements (>20% faster):")
+            for imp in improvements:
+                print(f"   🚀 {imp['tool']}: {imp['percent_faster']:.1f}% faster (-{imp['time_decrease']:.2f}s)")
+
+        # Success rate changes
+        failures = comparison["performance_summary"]["new_failures"]
+        if failures:
+            print(f"\n❌ Success Rate Regressions:")
+            for fail in failures:
+                print(f"   📉 {fail['model']}: {fail['rate_drop']:.1%} drop ({fail['tools_lost']} tools failed)")
+
+        if not regressions and not failures:
+            print(f"\n🎉 No significant performance regressions detected!")
+
+        print("=" * 80)
+
 
 def main():
     """Main execution function"""
@@ -1689,6 +1962,21 @@ def main():
     print("with comprehensive biological knowledge validation.\n")
 
     validation_suite = ModelSEEDToolValidationSuite()
+
+    # Check for previous complete run for performance comparison
+    previous_run_dir = validation_suite.find_latest_complete_run()
+    previous_data = None
+    
+    if previous_run_dir:
+        print(f"📊 Found previous complete run: {previous_run_dir.name}")
+        print("🔄 Loading performance data for comparison...")
+        previous_data = validation_suite.load_previous_performance_data(previous_run_dir)
+        print(f"   Previous run had {previous_data.get('total_tools', 0)} tools")
+        print(f"   Current run has {len(validation_suite.all_tools)} tools")
+        if len(validation_suite.all_tools) > previous_data.get('total_tools', 0):
+            print(f"   🆕 {len(validation_suite.all_tools) - previous_data.get('total_tools', 0)} new tools detected!")
+    else:
+        print("📊 No previous complete run found - this will be the baseline")
 
     try:
         # Run comprehensive validation
@@ -1702,6 +1990,13 @@ def main():
         validation_suite.save_comprehensive_analysis()
         validation_suite.create_latest_symlink()
 
+        # Generate and save performance comparison if we have previous data
+        if previous_data:
+            print("\n🔍 Generating performance comparison...")
+            comparison = validation_suite.generate_performance_comparison(previous_data)
+            validation_suite.save_performance_comparison(comparison)
+            validation_suite.print_performance_summary(comparison)
+
         print(f"\n🎉 Tool validation suite complete!")
         print(f"📊 View detailed results in: {validation_suite.run_dir}")
         print(
@@ -1711,8 +2006,12 @@ def main():
             f"🔬 All {len(validation_suite.all_tools)} tools validated on {len(validation_suite.models)} models"
         )
 
+        if previous_data:
+            print(f"📈 Performance comparison available in: {validation_suite.run_dir / 'comprehensive' / 'performance_comparison.json'}")
+
     except KeyboardInterrupt:
         print("\n⚠️  Validation suite interrupted by user")
+        print("💡 Note: Use 'nohup python scripts/tool_validation_suite.py &' for long runs")
     except Exception as e:
         print(f"\n💥 Validation suite failed with error: {e}")
         traceback.print_exc()

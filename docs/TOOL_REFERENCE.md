@@ -2,7 +2,7 @@
 
 ## Overview
 
-ModelSEEDagent provides **25 specialized metabolic modeling tools** organized into six main categories, enhanced with the **Smart Summarization Framework** for optimal LLM performance. Each tool is designed for specific analysis tasks and integrates seamlessly with the AI reasoning system.
+ModelSEEDagent provides **24 specialized metabolic modeling tools** organized into six main categories, enhanced with the **Smart Summarization Framework** for optimal LLM performance. Each tool is designed for specific analysis tasks and integrates seamlessly with the AI reasoning system.
 
 ## Tool Categories
 
@@ -175,46 +175,20 @@ Enhanced universal compound and reaction information tools with pure ModelSEEDpy
 
 Genome-scale model construction and annotation tools:
 
-### 1. Model Builder (`build_modelseed_model`) (in development - currently not functional)
-**Purpose**: Build metabolic models from genome annotations
-**Usage**: `"build a model from this genome"`
-**What it does**: Creates draft metabolic models from gene annotations
+### 1. RAST Annotator (`annotate_genome_rast`)
+**Purpose**: Genome and protein FASTA annotation using RAST server with MSGenome integration
+**Usage**: `"annotate this genome with RAST"` or `"annotate this protein FASTA"`
+**What it does**: Automated genome/protein annotation using MSGenome.from_fasta() and modelseedpy.RastClient()
 
-### 2. Model Gapfiller (`gapfill_modelseed_model`) (in development - currently not functional)
+### 2. Model Builder (`build_metabolic_model`)
+**Purpose**: Build metabolic models from genome annotations or MSGenome objects
+**Usage**: `"build a model from this genome"` or `"build a model from this annotation"`
+**What it does**: Creates draft metabolic models from MSGenome objects with SBML/JSON export capabilities
+
+### 3. Model Gapfiller (`gapfill_model`)
 **Purpose**: Fill gaps in metabolic networks to enable growth
 **Usage**: `"gapfill this model"`
-**What it does**: Adds missing reactions needed for biomass production
-
-### 3. Annotation Tool (`annotate_with_modelseed`) (in development - currently not functional)
-**Purpose**: Annotate models with ModelSEED database information
-**Usage**: Automatically applied during model analysis
-**What it does**: Adds standardized biochemistry annotations
-
-### 4. Compatibility Checker (`check_modelseed_compatibility`) (in development - currently not functional)
-**Purpose**: Check ModelSEED-COBRApy compatibility
-**Usage**: `"check model compatibility"`
-**What it does**: Validates model format and suggests conversions
-
-### 5. Protein Annotator (`annotate_proteins_rast`) (in development - currently not functional)
-**Purpose**: Functional annotation of protein sequences
-**Usage**: `"annotate protein functions"`
-**What it does**: Assigns enzyme functions and metabolic roles
-
----
-
-## RAST Tools
-
-Genome annotation and analysis tools:
-
-### 1. RAST Annotator (`annotate_with_rast`) (in development - currently not functional)
-**Purpose**: Genome annotation using RAST server
-**Usage**: `"annotate this genome with RAST"`
-**What it does**: Automated genome annotation and functional assignment
-
-### 2. Annotation Analyzer (`analyze_rast_annotations`) (in development - currently not functional)
-**Purpose**: Quality assessment of genome annotations
-**Usage**: `"analyze annotation quality"`
-**What it does**: Evaluates completeness and accuracy of genome annotations
+**What it does**: Adds missing reactions needed for biomass production with improved MSGapfill API
 
 ---
 
@@ -271,4 +245,4 @@ AI auditing and verification tools for transparency and quality assurance:
 
 ## Summary
 
-ModelSEEDagent's 25 tools provide comprehensive metabolic modeling capabilities through an intuitive AI interface enhanced with Smart Summarization. Each tool is designed to work seamlessly with the AI reasoning system, allowing for complex multi-step analyses through simple natural language commands.
+ModelSEEDagent's 24 tools provide comprehensive metabolic modeling capabilities through an intuitive AI interface enhanced with Smart Summarization. Each tool is designed to work seamlessly with the AI reasoning system, allowing for complex multi-step analyses through simple natural language commands.

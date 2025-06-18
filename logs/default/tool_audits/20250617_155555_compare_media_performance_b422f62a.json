@@ -1,0 +1,140 @@
+{
+  "audit_id": "b422f62a-6ee0-4f67-aa1b-46c67dd90226",
+  "session_id": null,
+  "tool_name": "compare_media_performance",
+  "timestamp": "2025-06-17T15:55:55.784436",
+  "input": {
+    "model_path": "data/examples/EcoliMG1655.xml",
+    "media_list": [
+      "GMM",
+      "AuxoMedia",
+      "PyruvateMinimalMedia"
+    ]
+  },
+  "output": {
+    "structured": {
+      "success": true,
+      "message": "Media comparison completed for 5 conditions",
+      "error": null,
+      "full_data_path": null,
+      "summary_dict": null,
+      "key_findings": null,
+      "schema_version": "1.0",
+      "tool_name": null,
+      "model_stats": null,
+      "data": {
+        "model_info": {
+          "model_id": "",
+          "reactions": 1867,
+          "metabolites": 1514
+        },
+        "comparison_results": {
+          "GMM": {
+            "growth_rate": 0.5544326164550967,
+            "status": "optimal",
+            "feasible": true,
+            "media_description": "Glucose Minimal Media - minimal components for growth with glucose",
+            "compound_count": 20,
+            "conditions": {
+              "aerobic": true,
+              "carbon_source": "glucose"
+            }
+          },
+          "GMM_anaerobic": {
+            "growth_rate": 0.0,
+            "status": "optimal",
+            "feasible": false,
+            "media_description": "Glucose Minimal Media without O2 - anaerobic growth with alternative electron acceptors",
+            "compound_count": 20,
+            "conditions": {
+              "aerobic": false,
+              "carbon_source": "glucose"
+            }
+          },
+          "AuxoMedia": {
+            "growth_rate": 6.100483714645792,
+            "status": "optimal",
+            "feasible": true,
+            "media_description": "Rich media with glucose, amino acids, and vitamins",
+            "compound_count": 52,
+            "conditions": {
+              "aerobic": true,
+              "carbon_source": "glucose",
+              "rich": true
+            }
+          },
+          "PyruvateMinimalMedia": {
+            "growth_rate": 0.4329363815221673,
+            "status": "optimal",
+            "feasible": true,
+            "media_description": "Minimal media with pyruvate as carbon source",
+            "compound_count": 20,
+            "conditions": {
+              "aerobic": true,
+              "carbon_source": "pyruvate"
+            }
+          },
+          "PyruvateMinimalMedia_anaerobic": {
+            "growth_rate": 0.0,
+            "status": "optimal",
+            "feasible": false,
+            "media_description": "Minimal media with pyruvate as carbon source - anaerobic",
+            "compound_count": 20,
+            "conditions": {
+              "aerobic": false,
+              "carbon_source": "pyruvate"
+            }
+          }
+        },
+        "summary": {
+          "feasible_count": 3,
+          "best_media": "AuxoMedia",
+          "best_growth_rate": 6.100483714645792,
+          "rankings": [
+            [
+              "AuxoMedia",
+              6.100483714645792
+            ],
+            [
+              "GMM",
+              0.5544326164550967
+            ],
+            [
+              "PyruvateMinimalMedia",
+              0.4329363815221673
+            ]
+          ],
+          "insights": [
+            "Best performance: AuxoMedia (6.100 h\u207b\u00b9)",
+            "Rich media available: AuxoMedia"
+          ]
+        }
+      },
+      "metadata": {
+        "total_conditions_tested": 5,
+        "feasible_conditions": 3,
+        "best_growth_rate": 6.100483714645792,
+        "best_media": "AuxoMedia"
+      },
+      "smart_summarization_metrics": {
+        "enabled": false
+      }
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 2.7047650814056396,
+    "success": true,
+    "error": null,
+    "timestamp_end": "2025-06-17T15:55:55.784555"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}
