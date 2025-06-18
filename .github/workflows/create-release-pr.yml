@@ -54,21 +54,34 @@ jobs:
       - name: Analyze commits for version bump
         id: analyze
         run: |
+          echo "Analyzing commits since ${{ steps.latest_release.outputs.tag }}..."
+
           # Get commits since last release
           if [ "${{ steps.latest_release.outputs.tag }}" = "v0.0.0" ]; then
+            echo "No previous release found, analyzing all commits..."
             commits=$(git log --oneline --pretty=format:"%s")
           else
+            echo "Found previous release: ${{ steps.latest_release.outputs.tag }}"
             commits=$(git log ${{ steps.latest_release.outputs.tag }}..HEAD --oneline --pretty=format:"%s")
           fi
 
-          echo "=== Commits since last release ==="
-          echo "$commits"
-          echo "=================================="
+          commit_count=$(echo "$commits" | wc -l)
+          echo "Found $commit_count commits to analyze"
+
+          echo "=== First 10 commits ==="
+          echo "$commits" | head -10
+          echo "========================="
 
           # Count changes by type
           breaking_changes=$(echo "$commits" | grep -E "BREAKING CHANGE|!:" | wc -l)
           features=$(echo "$commits" | grep "^feat" | wc -l)
           fixes=$(echo "$commits" | grep "^fix" | wc -l)
+
+          echo "Analysis results:"
+          echo "- Breaking changes: $breaking_changes"
+          echo "- Features: $features"
+          echo "- Fixes: $fixes"
+          echo "- Total commits: $commit_count"
 
           echo "breaking_changes=$breaking_changes" >> $GITHUB_OUTPUT
           echo "features=$features" >> $GITHUB_OUTPUT
@@ -127,81 +140,96 @@ jobs:
         run: |
           commits="${{ steps.analyze.outputs.commits }}"
 
-          # Create detailed changelog
-          changelog=""
+          # Create changelog file to avoid GitHub Actions multiline issues
+          changelog_file=$(mktemp)
+
+          echo "Generating changelog for $(echo "$commits" | wc -l) commits..."
 
           # Breaking changes
           breaking=$(echo "$commits" | grep -E "BREAKING CHANGE|!:" || true)
           if [ -n "$breaking" ]; then
-            changelog="$changelog## 💥 Breaking Changes\n\n"
-            echo "$breaking" | while read -r line; do
-              changelog="$changelog- $line\n"
-            done
-            changelog="$changelog\n"
+            echo "## 💥 Breaking Changes" >> "$changelog_file"
+            echo "" >> "$changelog_file"
+            echo "$breaking" | sed 's/^/- /' >> "$changelog_file"
+            echo "" >> "$changelog_file"
           fi
 
           # Features
           features=$(echo "$commits" | grep "^feat" || true)
           if [ -n "$features" ]; then
-            changelog="$changelog## ✨ New Features\n\n"
-            echo "$features" | while read -r line; do
-              clean_line=$(echo "$line" | sed 's/^feat: //')
-              changelog="$changelog- $clean_line\n"
-            done
-            changelog="$changelog\n"
+            echo "## ✨ New Features" >> "$changelog_file"
+            echo "" >> "$changelog_file"
+            echo "$features" | sed 's/^feat: /- /' >> "$changelog_file"
+            echo "" >> "$changelog_file"
           fi
 
           # Bug fixes
           fixes=$(echo "$commits" | grep "^fix" || true)
           if [ -n "$fixes" ]; then
-            changelog="$changelog## 🐛 Bug Fixes\n\n"
-            echo "$fixes" | while read -r line; do
-              clean_line=$(echo "$line" | sed 's/^fix: //')
-              changelog="$changelog- $clean_line\n"
-            done
-            changelog="$changelog\n"
+            echo "## 🐛 Bug Fixes" >> "$changelog_file"
+            echo "" >> "$changelog_file"
+            echo "$fixes" | sed 's/^fix: /- /' >> "$changelog_file"
+            echo "" >> "$changelog_file"
           fi
 
           # Documentation
           docs=$(echo "$commits" | grep "^docs" || true)
           if [ -n "$docs" ]; then
-            changelog="$changelog## 📚 Documentation\n\n"
-            echo "$docs" | while read -r line; do
-              clean_line=$(echo "$line" | sed 's/^docs: //')
-              changelog="$changelog- $clean_line\n"
-            done
-            changelog="$changelog\n"
+            echo "## 📚 Documentation" >> "$changelog_file"
+            echo "" >> "$changelog_file"
+            echo "$docs" | sed 's/^docs: /- /' >> "$changelog_file"
+            echo "" >> "$changelog_file"
           fi
 
           # Performance improvements
           perf=$(echo "$commits" | grep "^perf" || true)
           if [ -n "$perf" ]; then
-            changelog="$changelog## ⚡ Performance Improvements\n\n"
-            echo "$perf" | while read -r line; do
-              clean_line=$(echo "$line" | sed 's/^perf: //')
-              changelog="$changelog- $clean_line\n"
-            done
-            changelog="$changelog\n"
+            echo "## ⚡ Performance Improvements" >> "$changelog_file"
+            echo "" >> "$changelog_file"
+            echo "$perf" | sed 's/^perf: /- /' >> "$changelog_file"
+            echo "" >> "$changelog_file"
           fi
 
           # Other changes
           others=$(echo "$commits" | grep -v -E "^(feat|fix|docs|perf|BREAKING)" || true)
           if [ -n "$others" ]; then
-            changelog="$changelog## 🔧 Other Changes\n\n"
-            echo "$others" | while read -r line; do
-              changelog="$changelog- $line\n"
-            done
-            changelog="$changelog\n"
+            echo "## 🔧 Other Changes" >> "$changelog_file"
+            echo "" >> "$changelog_file"
+            echo "$others" | sed 's/^/- /' >> "$changelog_file"
+            echo "" >> "$changelog_file"
           fi
 
-          # Store changelog
-          echo "content<<EOF" >> $GITHUB_OUTPUT
-          echo -e "$changelog" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          # Store changelog using proper EOF delimiter
+          {
+            echo "content<<CHANGELOG_EOF"
+            cat "$changelog_file"
+            echo "CHANGELOG_EOF"
+          } >> $GITHUB_OUTPUT
+
+          # Debug output
+          echo "Generated changelog preview:"
+          head -20 "$changelog_file"
+          echo "..."
+
+          # Cleanup
+          rm "$changelog_file"
 
       - name: Create release branch
         run: |
           branch_name="release/v${{ steps.version.outputs.new_version }}"
+
+          # Check if branch already exists and delete it
+          if git show-ref --verify --quiet "refs/heads/$branch_name"; then
+            echo "Branch $branch_name already exists locally, deleting..."
+            git branch -D "$branch_name"
+          fi
+
+          if git show-ref --verify --quiet "refs/remotes/origin/$branch_name"; then
+            echo "Branch $branch_name exists on remote, deleting..."
+            git push origin --delete "$branch_name" || echo "Failed to delete remote branch (might not exist)"
+          fi
+
+          # Create new branch
           git checkout -b "$branch_name"
           echo "Created branch: $branch_name"
           echo "branch_name=$branch_name" >> $GITHUB_ENV
@@ -254,7 +282,8 @@ jobs:
 
       - name: Push release branch
         run: |
-          git push origin "${{ env.branch_name }}"
+          echo "Pushing release branch: ${{ env.branch_name }}"
+          git push --force-with-lease origin "${{ env.branch_name }}"
 
       - name: Create Pull Request
         run: |
