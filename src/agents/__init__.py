@@ -1,5 +1,5 @@
 from .base import AgentResult, BaseAgent
-from .factory import AgentFactory, create_metabolic_agent, create_real_time_agent
+from .factory import AgentFactory, create_metabolic_agent, create_real_time_agent, create_langgraph_agent
 from .metabolic import MetabolicAgent
 from .real_time_metabolic import RealTimeMetabolicAgent
 
@@ -11,4 +11,5 @@ __all__ = [
     "AgentFactory",
     "create_metabolic_agent",
     "create_real_time_agent",
+    "create_langgraph_agent",
 ]

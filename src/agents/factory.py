@@ -5,6 +5,7 @@ from ..tools.base import BaseTool
 from .base import BaseAgent
 from .metabolic import MetabolicAgent
 from .real_time_metabolic import RealTimeMetabolicAgent
+from .langgraph_metabolic import LangGraphMetabolicAgent
 
 
 class AgentFactory:
@@ -14,6 +15,8 @@ class AgentFactory:
         "metabolic": MetabolicAgent,
         "real_time": RealTimeMetabolicAgent,
         "dynamic": RealTimeMetabolicAgent,  # Alias for convenience
+        "langgraph": LangGraphMetabolicAgent,
+        "graph": LangGraphMetabolicAgent,  # Alias for convenience
         # Add more agent types here as they are implemented
     }
 
@@ -104,4 +107,23 @@ def create_real_time_agent(
     """
     return AgentFactory.create_agent(
         agent_type="real_time", llm=llm, tools=tools, config=config
+    )
+
+
+def create_langgraph_agent(
+    llm: BaseLLM, tools: List[BaseTool], config: Dict[str, Any]
+) -> LangGraphMetabolicAgent:
+    """
+    Convenience function to create a LangGraph-based metabolic modeling agent.
+
+    Args:
+        llm: Language model instance
+        tools: List of tools for the agent
+        config: Agent configuration
+
+    Returns:
+        Configured LangGraphMetabolicAgent instance
+    """
+    return AgentFactory.create_agent(
+        agent_type="langgraph", llm=llm, tools=tools, config=config
     )
