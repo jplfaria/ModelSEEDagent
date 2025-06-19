@@ -610,7 +610,7 @@
     {
       "prompt_id": "enhanced_analysis",
       "category": "result_analysis",
-      "version": "1.6",
+      "version": "1.78",
       "description": "Enhanced analysis prompt with biochemical context",
       "template": "\n            Analyze the following biochemical data with enhanced context and reasoning:\n\n            {context_data}\n\n            Biochemical Context:\n            {biochemical_context}\n\n            Reasoning Guidance:\n            {reasoning_questions}\n\n            Provide a detailed analysis following these reasoning patterns:\n            {reasoning_prompts}\n\n            Focus on mechanistic insights and biological significance.\n            ",
       "variables": [
@@ -620,8 +620,8 @@
         "reasoning_prompts"
       ],
       "validation_rules": {},
-      "created_at": "2025-06-18T19:41:44.939239",
-      "updated_at": "2025-06-18T19:41:44.939240",
+      "created_at": "2025-06-19T17:19:02.391517",
+      "updated_at": "2025-06-19T17:19:02.391518",
       "usage_count": 0,
       "success_rate": 0.0,
       "avg_response_time": 0.0
@@ -629,7 +629,7 @@
     {
       "prompt_id": "growth_analysis_enhanced",
       "category": "result_analysis",
-      "version": "1.6",
+      "version": "1.78",
       "description": "Growth analysis with enhanced context and reasoning",
       "template": "\n            Perform comprehensive growth analysis with the following data:\n\n            {growth_data}\n\n            Enhanced Context:\n            {enhanced_context}\n\n            Growth-Specific Analysis Questions:\n            {growth_questions}\n\n            Reasoning Framework:\n            {growth_prompts}\n\n            Provide insights into:\n            1. Growth performance and limitations\n            2. Metabolic efficiency and strategy\n            3. Nutrient utilization patterns\n            4. Optimization opportunities\n\n            Support your analysis with mechanistic reasoning and quantitative evidence.\n            ",
       "variables": [
@@ -639,8 +639,8 @@
         "growth_prompts"
       ],
       "validation_rules": {},
-      "created_at": "2025-06-18T19:41:44.940245",
-      "updated_at": "2025-06-18T19:41:44.940246",
+      "created_at": "2025-06-19T17:19:02.393355",
+      "updated_at": "2025-06-19T17:19:02.393357",
       "usage_count": 0,
       "success_rate": 0.0,
       "avg_response_time": 0.0
@@ -648,7 +648,7 @@
     {
       "prompt_id": "pathway_analysis_enhanced",
       "category": "result_analysis",
-      "version": "1.6",
+      "version": "1.78",
       "description": "Pathway analysis with enhanced reasoning framework",
       "template": "\n            Analyze metabolic pathway activity with enhanced context:\n\n            {pathway_data}\n\n            Pathway Context Enhancement:\n            {pathway_context}\n\n            Analysis Framework:\n            {pathway_questions}\n\n            Reasoning Guidance:\n            {pathway_prompts}\n\n            Focus on:\n            1. Pathway activity patterns and coordination\n            2. Regulatory mechanisms and control points\n            3. Metabolic strategy and adaptation\n            4. Cross-pathway interactions and trade-offs\n\n            Explain the biochemical basis for observed patterns.\n            ",
       "variables": [
@@ -658,8 +658,8 @@
         "pathway_prompts"
       ],
       "validation_rules": {},
-      "created_at": "2025-06-18T19:41:44.941163",
-      "updated_at": "2025-06-18T19:41:44.941164",
+      "created_at": "2025-06-19T17:19:02.394757",
+      "updated_at": "2025-06-19T17:19:02.394757",
       "usage_count": 0,
       "success_rate": 0.0,
       "avg_response_time": 0.0
@@ -667,7 +667,7 @@
     {
       "prompt_id": "enhanced_synthesis",
       "category": "synthesis",
-      "version": "1.6",
+      "version": "1.78",
       "description": "Enhanced multi-tool synthesis with context integration",
       "template": "\n            Synthesize insights from multiple analyses with enhanced context:\n\n            Multiple Analysis Results:\n            {multiple_results}\n\n            Cross-Tool Context:\n            {cross_tool_context}\n\n            Session Context:\n            {session_context}\n\n            Synthesis Questions:\n            {synthesis_questions}\n\n            Integrate findings to provide:\n            1. Unified biological interpretation\n            2. Cross-tool validation and consistency\n            3. Systems-level insights\n            4. Testable hypotheses\n            5. Practical implications\n\n            Explain how different analyses support or contradict each other.\n            ",
       "variables": [
@@ -677,13 +677,51 @@
         "synthesis_questions"
       ],
       "validation_rules": {},
-      "created_at": "2025-06-18T19:41:44.942137",
-      "updated_at": "2025-06-18T19:41:44.942138",
+      "created_at": "2025-06-19T17:19:02.395839",
+      "updated_at": "2025-06-19T17:19:02.395840",
+      "usage_count": 0,
+      "success_rate": 0.0,
+      "avg_response_time": 0.0
+    },
+    {
+      "prompt_id": "result_analysis",
+      "category": "result_analysis",
+      "version": "1.0",
+      "description": "General result analysis prompt for Intelligence Framework",
+      "template": "Analyze the following query with intelligence and reasoning:\n\nQuery: {query}\n\nProvide a comprehensive analysis focusing on:\n1. Key quantitative findings with specific metrics\n2. Biological insights and mechanistic interpretations\n3. Quality assessment and confidence levels\n4. Implications for further analysis\n5. Testable hypotheses based on observations\n\nFormat your response with clear sections:\nKEY_FINDINGS: [quantitative discoveries]\nBIOLOGICAL_INSIGHTS: [mechanistic understanding]\nQUALITY_ASSESSMENT: [confidence and reliability]\nHYPOTHESES: [testable predictions]\nRECOMMENDATIONS: [next steps]",
+      "variables": [
+        "query"
+      ],
+      "validation_rules": {
+        "min_length": 100,
+        "must_contain": "KEY_FINDINGS"
+      },
+      "created_at": "2025-06-19T12:00:00",
+      "updated_at": "2025-06-19T12:00:00",
+      "usage_count": 0,
+      "success_rate": 0.0,
+      "avg_response_time": 0.0
+    },
+    {
+      "prompt_id": "synthesis",
+      "category": "synthesis",
+      "version": "1.0",
+      "description": "General synthesis prompt for Intelligence Framework",
+      "template": "Synthesize the following information using intelligence and reasoning:\n\nQuery: {query}\n\nProvide a comprehensive synthesis focusing on:\n1. Integration of multiple data sources and findings\n2. Cross-tool consistency and validation\n3. Systems-level insights and patterns\n4. Scientific implications and significance\n5. Unified interpretation with confidence assessment\n\nFormat your response with clear sections:\nSYNTHESIS_OVERVIEW: [integrated interpretation]\nCROSS_VALIDATION: [consistency analysis]\nSYSTEMS_INSIGHTS: [holistic understanding]\nCONFIDENCE_ASSESSMENT: [reliability evaluation]\nUNIFIED_CONCLUSIONS: [final integrated insights]",
+      "variables": [
+        "query"
+      ],
+      "validation_rules": {
+        "min_length": 100,
+        "must_contain": "SYNTHESIS_OVERVIEW"
+      },
+      "created_at": "2025-06-19T12:00:00",
+      "updated_at": "2025-06-19T12:00:00",
       "usage_count": 0,
       "success_rate": 0.0,
       "avg_response_time": 0.0
     }
   ],
   "ab_tests": [],
-  "last_updated": "2025-06-18T19:41:44.942590"
+  "last_updated": "2025-06-19T17:19:02.396361"
 }

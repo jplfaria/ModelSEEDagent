@@ -295,7 +295,7 @@ class DynamicAIConversationEngine:
             return self._handle_no_ai_fallback(user_input)
 
         # Use real AI agent for processing - disable streaming for now to fix display issues
-        return self._process_with_simple_ai(user_input, start_time)
+        return self._process_with_real_ai(user_input, start_time)
 
     def _process_with_real_ai(
         self, user_input: str, start_time: float
@@ -306,8 +306,8 @@ class DynamicAIConversationEngine:
         # Show AI thinking indicator
         with console.status("🧠 AI analyzing your query...", spinner="dots"):
             try:
-                # Run the dynamic AI agent
-                result = self.ai_agent.run({"query": user_input})
+                # Run the async dynamic AI agent in sync context
+                result = asyncio.run(self.ai_agent.run({"query": user_input}))
 
                 processing_time = time.time() - start_time
 

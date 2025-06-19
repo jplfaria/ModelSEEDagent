@@ -1374,6 +1374,15 @@ def debug():
     - MODELSEED_CAPTURE_CONSOLE_DEBUG: capture console debug output (true/false)
     - MODELSEED_CAPTURE_AI_REASONING_FLOW: capture AI reasoning steps (true/false)
     - MODELSEED_CAPTURE_FORMATTED_RESULTS: capture final formatted results (true/false)
+
+    Intelligence Framework Variables:
+    - MODELSEED_DEBUG_INTELLIGENCE: enable Intelligence Framework debug (true/false)
+    - MODELSEED_DEBUG_PROMPTS: enable prompt registry debug (true/false)
+    - MODELSEED_DEBUG_CONTEXT_ENHANCEMENT: enable context enhancer debug (true/false)
+    - MODELSEED_DEBUG_QUALITY_ASSESSMENT: enable quality validator debug (true/false)
+    - MODELSEED_DEBUG_ARTIFACT_INTELLIGENCE: enable artifact intelligence debug (true/false)
+    - MODELSEED_DEBUG_SELF_REFLECTION: enable self-reflection engine debug (true/false)
+    - MODELSEED_TRACE_REASONING_WORKFLOW: trace complete reasoning workflow (true/false)
     """
     print_banner()
     console.print("[bold blue]🔍 Debug Configuration Status[/bold blue]\n")
@@ -1398,10 +1407,35 @@ def debug():
         "   • Set MODELSEED_CAPTURE_FORMATTED_RESULTS=true to capture final results"
     )
 
+    console.print("\n[bold magenta]🧠 Intelligence Framework Debug:[/bold magenta]")
+    console.print(
+        "   • Set MODELSEED_DEBUG_INTELLIGENCE=true to enable Intelligence Framework debug"
+    )
+    console.print(
+        "   • Set MODELSEED_DEBUG_PROMPTS=true to debug prompt registry issues"
+    )
+    console.print(
+        "   • Set MODELSEED_DEBUG_QUALITY_ASSESSMENT=true to debug quality validation"
+    )
+    console.print(
+        "   • Set MODELSEED_TRACE_REASONING_WORKFLOW=true to trace complete reasoning workflow"
+    )
+    console.print(
+        "   • Use component-specific flags to isolate Intelligence Framework issues"
+    )
+
     console.print("\n[bold yellow]📝 Example Usage:[/bold yellow]")
+    console.print("   # General debugging")
     console.print("   export MODELSEED_DEBUG_LEVEL=verbose")
     console.print("   export MODELSEED_DEBUG_COBRAKBASE=true")
     console.print("   export MODELSEED_DEBUG_LANGGRAPH=false")
+
+    console.print("\n   # Intelligence Framework debugging")
+    console.print("   export MODELSEED_DEBUG_INTELLIGENCE=true")
+    console.print("   export MODELSEED_DEBUG_PROMPTS=true")
+    console.print("   export MODELSEED_TRACE_REASONING_WORKFLOW=true")
+
+    console.print("\n   # Console capture")
     console.print("   export MODELSEED_CAPTURE_AI_REASONING_FLOW=true")
     console.print("   modelseed-agent interactive")
 
@@ -1418,6 +1452,78 @@ def status():
 
     # System configuration status
     console.print(create_config_panel(config_state))
+
+    # Intelligence Framework status
+    try:
+        from src.config.debug_config import (
+            get_intelligence_debug_config,
+            is_intelligence_debug_enabled,
+        )
+
+        console.print("\n[bold magenta]🧠 Intelligence Framework Status[/bold magenta]")
+
+        intelligence_table = Table(box=box.ROUNDED)
+        intelligence_table.add_column("Component", style="bold cyan")
+        intelligence_table.add_column("Status", style="bold white")
+        intelligence_table.add_column("Debug Level", style="yellow")
+
+        # Check component availability
+        components = [
+            ("Enhanced Prompt Provider", "src.reasoning.enhanced_prompt_provider"),
+            ("Context Enhancer", "src.reasoning.context_enhancer"),
+            ("Quality Assessment", "src.reasoning.quality_validator"),
+            ("Artifact Intelligence", "src.reasoning.artifact_intelligence"),
+            ("Self-Reflection Engine", "src.reasoning.self_reflection_engine"),
+            (
+                "Intelligent Reasoning System",
+                "src.reasoning.intelligent_reasoning_system",
+            ),
+        ]
+
+        debug_config = get_intelligence_debug_config()
+
+        for component_name, module_name in components:
+            try:
+                __import__(module_name)
+                status = "[green]✅ Available[/green]"
+            except ImportError:
+                status = "[red]❌ Missing[/red]"
+
+            # Determine debug level for this component
+            component_key = (
+                component_name.lower()
+                .replace(" ", "_")
+                .replace("enhanced_", "")
+                .replace("_provider", "")
+                .replace("_engine", "")
+                .replace("_system", "")
+            )
+            debug_key = f"{component_key}_debug"
+
+            if debug_key in debug_config and debug_config[debug_key]:
+                debug_level = "[green]DEBUG[/green]"
+            elif debug_config.get("intelligence_debug", False):
+                debug_level = "[yellow]INFO[/yellow]"
+            else:
+                debug_level = "[dim]NORMAL[/dim]"
+
+            intelligence_table.add_row(component_name, status, debug_level)
+
+        console.print(intelligence_table)
+
+        # Intelligence Framework configuration summary
+        if is_intelligence_debug_enabled():
+            console.print(
+                "\n[green]Intelligence Framework debugging is ENABLED[/green]"
+            )
+        else:
+            console.print("\n[dim]Intelligence Framework debugging is disabled[/dim]")
+            console.print("   Use: export MODELSEED_DEBUG_INTELLIGENCE=true to enable")
+
+    except Exception as e:
+        console.print(
+            f"\n[red]Could not check Intelligence Framework status: {e}[/red]"
+        )
 
     # Performance metrics if available
     if config_state.get("agent") and hasattr(config_state["agent"], "tool_integration"):

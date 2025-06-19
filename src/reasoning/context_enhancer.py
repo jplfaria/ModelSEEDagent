@@ -68,6 +68,91 @@ class BiochemContextEnhancer:
 
         logger.info("BiochemContextEnhancer initialized")
 
+    def enhance_context(
+        self, query: str, context: Dict[str, Any], prompt: str
+    ) -> Dict[str, Any]:
+        """
+        Enhance analysis context with biochemical knowledge for Intelligence Framework
+
+        Args:
+            query: User query
+            context: Analysis context
+            prompt: Generated prompt
+
+        Returns:
+            Enhanced context with biochemical enrichment
+        """
+        enhanced_context = context.copy()
+
+        # Add biochemical knowledge based on query content
+        query_lower = query.lower()
+
+        # Detect biochemical entities mentioned in query
+        compounds_mentioned = self._compound_pattern.findall(query)
+        reactions_mentioned = self._reaction_pattern.findall(query)
+
+        # Add relevant biochemical context
+        if "glucose" in query_lower or "growth" in query_lower:
+            enhanced_context["biochemical_focus"] = (
+                "Central carbon metabolism and energy production"
+            )
+            enhanced_context["key_pathways"] = [
+                "Glycolysis",
+                "TCA cycle",
+                "Respiration",
+            ]
+        elif "flux" in query_lower or "variability" in query_lower:
+            enhanced_context["biochemical_focus"] = (
+                "Metabolic flux analysis and network flexibility"
+            )
+            enhanced_context["key_pathways"] = ["Core metabolism", "Exchange reactions"]
+        elif "media" in query_lower or "nutrient" in query_lower:
+            enhanced_context["biochemical_focus"] = (
+                "Nutritional requirements and media optimization"
+            )
+            enhanced_context["key_pathways"] = ["Transport systems", "Biosynthesis"]
+        else:
+            enhanced_context["biochemical_focus"] = "General metabolic analysis"
+            enhanced_context["key_pathways"] = ["Core metabolism"]
+
+        # Add entity-specific context if found
+        if compounds_mentioned:
+            enhanced_context["compounds_of_interest"] = compounds_mentioned
+        if reactions_mentioned:
+            enhanced_context["reactions_of_interest"] = reactions_mentioned
+
+        # Add reasoning guidance
+        enhanced_context["reasoning_guidance"] = self._generate_reasoning_guidance(
+            query_lower
+        )
+
+        return enhanced_context
+
+    def _generate_reasoning_guidance(self, query_lower: str) -> List[str]:
+        """Generate reasoning guidance based on query type"""
+        guidance = []
+
+        if "analyze" in query_lower:
+            guidance.append(
+                "Focus on quantitative analysis and biological interpretation"
+            )
+            guidance.append("Identify key metabolic patterns and mechanisms")
+        if "growth" in query_lower:
+            guidance.append("Consider energy efficiency and resource utilization")
+            guidance.append("Evaluate growth limitations and bottlenecks")
+        if "flux" in query_lower:
+            guidance.append("Examine flux distributions and network topology")
+            guidance.append("Assess metabolic flexibility and robustness")
+        if "optimization" in query_lower or "engineering" in query_lower:
+            guidance.append("Identify targets for metabolic engineering")
+            guidance.append("Evaluate trade-offs and constraints")
+
+        if not guidance:
+            guidance.append("Apply biochemical knowledge to interpret results")
+            guidance.append("Connect findings to biological mechanisms")
+
+        return guidance
+
     def enhance_tool_result(
         self,
         tool_name: str,

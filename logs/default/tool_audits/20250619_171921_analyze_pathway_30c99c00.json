@@ -1,0 +1,44 @@
+{
+  "audit_id": "30c99c00-7f06-4ab7-94a6-580e7518c41a",
+  "session_id": null,
+  "tool_name": "analyze_pathway",
+  "timestamp": "2025-06-19T17:19:21.769874",
+  "input": {
+    "model_path": "/Users/jplfaria/repos/ModelSEEDagent/data/examples/ecolimg1655.xml",
+    "pathway": "glycolysis"
+  },
+  "output": {
+    "structured": {
+      "success": false,
+      "message": "No reactions found for pathway: glycolysis. Try: 'glycolysis', 'tca', 'pentose', 'transport', 'exchange', or 'central'",
+      "error": "Pathway not found",
+      "full_data_path": null,
+      "summary_dict": null,
+      "key_findings": null,
+      "schema_version": "1.0",
+      "tool_name": null,
+      "model_stats": null,
+      "data": null,
+      "metadata": {},
+      "smart_summarization_metrics": {
+        "enabled": false
+      }
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 2.110801935195923,
+    "success": false,
+    "error": null,
+    "timestamp_end": "2025-06-19T17:19:21.770000"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

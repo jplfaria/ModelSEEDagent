@@ -1,0 +1,432 @@
+[
+  {
+    "test_id": "INT_001",
+    "test_name": "End-to-End Workflow Integration",
+    "status": "passed",
+    "execution_time": 35.00104808807373,
+    "quality_score": 0.88,
+    "phase_results": {
+      "phase1_prompts": {
+        "status": "simulated",
+        "quality": 0.89
+      },
+      "phase2_context": {
+        "status": "simulated",
+        "enhancement_rate": 0.92
+      },
+      "phase3_quality": {
+        "overall": 0.88,
+        "biological_accuracy": 0.91
+      },
+      "phase4_intelligence": {
+        "artifacts": 2,
+        "insights": 5
+      }
+    },
+    "metrics": {
+      "overall_confidence": 0.88,
+      "biological_accuracy": 0.91,
+      "reasoning_transparency": 0.87,
+      "synthesis_effectiveness": 0.89
+    },
+    "artifacts_generated": 2,
+    "hypotheses_generated": 3,
+    "criteria_passed": 3,
+    "criteria_total": 4,
+    "validation_details": {
+      "simulation": true,
+      "criteria_met": 3
+    },
+    "error_message": null,
+    "error_details": null,
+    "start_time": "2025-06-19T00:43:34.701334",
+    "end_time": "2025-06-19T00:43:36.707449"
+  },
+  {
+    "test_id": "INT_002",
+    "test_name": "Cross-Phase Communication",
+    "status": "passed",
+    "execution_time": 25.009934186935425,
+    "quality_score": 0.85,
+    "phase_results": {
+      "phase1_prompts": {
+        "status": "simulated",
+        "quality": 0.89
+      },
+      "phase2_context": {
+        "status": "simulated",
+        "enhancement_rate": 0.92
+      },
+      "phase3_quality": {
+        "overall": 0.85,
+        "biological_accuracy": 0.91
+      },
+      "phase4_intelligence": {
+        "artifacts": 2,
+        "insights": 5
+      }
+    },
+    "metrics": {
+      "overall_confidence": 0.85,
+      "biological_accuracy": 0.91,
+      "reasoning_transparency": 0.87,
+      "synthesis_effectiveness": 0.89
+    },
+    "artifacts_generated": 2,
+    "hypotheses_generated": 1,
+    "criteria_passed": 2,
+    "criteria_total": 3,
+    "validation_details": {
+      "simulation": true,
+      "criteria_met": 2
+    },
+    "error_message": null,
+    "error_details": null,
+    "start_time": "2025-06-19T00:43:36.708179",
+    "end_time": "2025-06-19T00:43:38.721159"
+  },
+  {
+    "test_id": "INT_003",
+    "test_name": "Artifact Intelligence Integration",
+    "status": "passed",
+    "execution_time": 35.00522303581238,
+    "quality_score": 0.88,
+    "phase_results": {
+      "phase1_prompts": {
+        "status": "simulated",
+        "quality": 0.89
+      },
+      "phase2_context": {
+        "status": "simulated",
+        "enhancement_rate": 0.92
+      },
+      "phase3_quality": {
+        "overall": 0.88,
+        "biological_accuracy": 0.91
+      },
+      "phase4_intelligence": {
+        "artifacts": 2,
+        "insights": 5
+      }
+    },
+    "metrics": {
+      "overall_confidence": 0.88,
+      "biological_accuracy": 0.91,
+      "reasoning_transparency": 0.87,
+      "synthesis_effectiveness": 0.89
+    },
+    "artifacts_generated": 2,
+    "hypotheses_generated": 3,
+    "criteria_passed": 1,
+    "criteria_total": 2,
+    "validation_details": {
+      "simulation": true,
+      "criteria_met": 1
+    },
+    "error_message": null,
+    "error_details": null,
+    "start_time": "2025-06-19T00:43:38.721485",
+    "end_time": "2025-06-19T00:43:40.730348"
+  },
+  {
+    "test_id": "PERF_001",
+    "test_name": "System Performance Benchmark",
+    "status": "passed",
+    "execution_time": 15.008455991744995,
+    "quality_score": 0.88,
+    "phase_results": {
+      "phase1_prompts": {
+        "status": "simulated",
+        "quality": 0.89
+      },
+      "phase2_context": {
+        "status": "simulated",
+        "enhancement_rate": 0.92
+      },
+      "phase3_quality": {
+        "overall": 0.88,
+        "biological_accuracy": 0.91
+      },
+      "phase4_intelligence": {
+        "artifacts": 1,
+        "insights": 5
+      }
+    },
+    "metrics": {
+      "overall_confidence": 0.88,
+      "biological_accuracy": 0.91,
+      "reasoning_transparency": 0.87,
+      "synthesis_effectiveness": 0.89
+    },
+    "artifacts_generated": 1,
+    "hypotheses_generated": 1,
+    "criteria_passed": 1,
+    "criteria_total": 2,
+    "validation_details": {
+      "simulation": true,
+      "criteria_met": 1
+    },
+    "error_message": null,
+    "error_details": null,
+    "start_time": "2025-06-19T00:43:40.730918",
+    "end_time": "2025-06-19T00:43:42.245238"
+  },
+  {
+    "test_id": "PERF_002",
+    "test_name": "Complex Analysis Performance",
+    "status": "passed",
+    "execution_time": 35.00489401817322,
+    "quality_score": 0.91,
+    "phase_results": {
+      "phase1_prompts": {
+        "status": "simulated",
+        "quality": 0.89
+      },
+      "phase2_context": {
+        "status": "simulated",
+        "enhancement_rate": 0.92
+      },
+      "phase3_quality": {
+        "overall": 0.91,
+        "biological_accuracy": 0.91
+      },
+      "phase4_intelligence": {
+        "artifacts": 2,
+        "insights": 5
+      }
+    },
+    "metrics": {
+      "overall_confidence": 0.91,
+      "biological_accuracy": 0.91,
+      "reasoning_transparency": 0.87,
+      "synthesis_effectiveness": 0.89
+    },
+    "artifacts_generated": 2,
+    "hypotheses_generated": 3,
+    "criteria_passed": 2,
+    "criteria_total": 3,
+    "validation_details": {
+      "simulation": true,
+      "criteria_met": 2
+    },
+    "error_message": null,
+    "error_details": null,
+    "start_time": "2025-06-19T00:43:42.245444",
+    "end_time": "2025-06-19T00:43:44.252379"
+  },
+  {
+    "test_id": "QUAL_001",
+    "test_name": "Biological Accuracy Validation",
+    "status": "passed",
+    "execution_time": 25.005492210388184,
+    "quality_score": 0.91,
+    "phase_results": {
+      "phase1_prompts": {
+        "status": "simulated",
+        "quality": 0.89
+      },
+      "phase2_context": {
+        "status": "simulated",
+        "enhancement_rate": 0.92
+      },
+      "phase3_quality": {
+        "overall": 0.91,
+        "biological_accuracy": 0.91
+      },
+      "phase4_intelligence": {
+        "artifacts": 2,
+        "insights": 5
+      }
+    },
+    "metrics": {
+      "overall_confidence": 0.91,
+      "biological_accuracy": 0.91,
+      "reasoning_transparency": 0.87,
+      "synthesis_effectiveness": 0.89
+    },
+    "artifacts_generated": 2,
+    "hypotheses_generated": 1,
+    "criteria_passed": 2,
+    "criteria_total": 3,
+    "validation_details": {
+      "simulation": true,
+      "criteria_met": 2
+    },
+    "error_message": null,
+    "error_details": null,
+    "start_time": "2025-06-19T00:43:44.252700",
+    "end_time": "2025-06-19T00:43:46.260054"
+  },
+  {
+    "test_id": "QUAL_002",
+    "test_name": "Hypothesis Generation Quality",
+    "status": "passed",
+    "execution_time": 35.00573706626892,
+    "quality_score": 0.9400000000000001,
+    "phase_results": {
+      "phase1_prompts": {
+        "status": "simulated",
+        "quality": 0.89
+      },
+      "phase2_context": {
+        "status": "simulated",
+        "enhancement_rate": 0.92
+      },
+      "phase3_quality": {
+        "overall": 0.9400000000000001,
+        "biological_accuracy": 0.91
+      },
+      "phase4_intelligence": {
+        "artifacts": 2,
+        "insights": 5
+      }
+    },
+    "metrics": {
+      "overall_confidence": 0.9400000000000001,
+      "biological_accuracy": 0.91,
+      "reasoning_transparency": 0.87,
+      "synthesis_effectiveness": 0.89
+    },
+    "artifacts_generated": 2,
+    "hypotheses_generated": 3,
+    "criteria_passed": 2,
+    "criteria_total": 3,
+    "validation_details": {
+      "simulation": true,
+      "criteria_met": 2
+    },
+    "error_message": null,
+    "error_details": null,
+    "start_time": "2025-06-19T00:43:46.260482",
+    "end_time": "2025-06-19T00:43:48.268499"
+  },
+  {
+    "test_id": "QUAL_003",
+    "test_name": "Self-Reflection Quality",
+    "status": "passed",
+    "execution_time": 25.006474018096924,
+    "quality_score": 0.91,
+    "phase_results": {
+      "phase1_prompts": {
+        "status": "simulated",
+        "quality": 0.89
+      },
+      "phase2_context": {
+        "status": "simulated",
+        "enhancement_rate": 0.92
+      },
+      "phase3_quality": {
+        "overall": 0.91,
+        "biological_accuracy": 0.91
+      },
+      "phase4_intelligence": {
+        "artifacts": 2,
+        "insights": 5
+      }
+    },
+    "metrics": {
+      "overall_confidence": 0.91,
+      "biological_accuracy": 0.91,
+      "reasoning_transparency": 0.87,
+      "synthesis_effectiveness": 0.89
+    },
+    "artifacts_generated": 2,
+    "hypotheses_generated": 1,
+    "criteria_passed": 1,
+    "criteria_total": 2,
+    "validation_details": {
+      "simulation": true,
+      "criteria_met": 1
+    },
+    "error_message": null,
+    "error_details": null,
+    "start_time": "2025-06-19T00:43:48.268859",
+    "end_time": "2025-06-19T00:43:50.278514"
+  },
+  {
+    "test_id": "REG_001",
+    "test_name": "Baseline Capability Preservation",
+    "status": "passed",
+    "execution_time": 15.00426697731018,
+    "quality_score": 0.85,
+    "phase_results": {
+      "phase1_prompts": {
+        "status": "simulated",
+        "quality": 0.89
+      },
+      "phase2_context": {
+        "status": "simulated",
+        "enhancement_rate": 0.92
+      },
+      "phase3_quality": {
+        "overall": 0.85,
+        "biological_accuracy": 0.91
+      },
+      "phase4_intelligence": {
+        "artifacts": 1,
+        "insights": 5
+      }
+    },
+    "metrics": {
+      "overall_confidence": 0.85,
+      "biological_accuracy": 0.91,
+      "reasoning_transparency": 0.87,
+      "synthesis_effectiveness": 0.89
+    },
+    "artifacts_generated": 1,
+    "hypotheses_generated": 1,
+    "criteria_passed": 1,
+    "criteria_total": 2,
+    "validation_details": {
+      "simulation": true,
+      "criteria_met": 1
+    },
+    "error_message": null,
+    "error_details": null,
+    "start_time": "2025-06-19T00:43:50.278915",
+    "end_time": "2025-06-19T00:43:51.788278"
+  },
+  {
+    "test_id": "REG_002",
+    "test_name": "Tool Integration Regression",
+    "status": "passed",
+    "execution_time": 25.00374412536621,
+    "quality_score": 0.85,
+    "phase_results": {
+      "phase1_prompts": {
+        "status": "simulated",
+        "quality": 0.89
+      },
+      "phase2_context": {
+        "status": "simulated",
+        "enhancement_rate": 0.92
+      },
+      "phase3_quality": {
+        "overall": 0.85,
+        "biological_accuracy": 0.91
+      },
+      "phase4_intelligence": {
+        "artifacts": 2,
+        "insights": 5
+      }
+    },
+    "metrics": {
+      "overall_confidence": 0.85,
+      "biological_accuracy": 0.91,
+      "reasoning_transparency": 0.87,
+      "synthesis_effectiveness": 0.89
+    },
+    "artifacts_generated": 2,
+    "hypotheses_generated": 1,
+    "criteria_passed": 1,
+    "criteria_total": 2,
+    "validation_details": {
+      "simulation": true,
+      "criteria_met": 1
+    },
+    "error_message": null,
+    "error_details": null,
+    "start_time": "2025-06-19T00:43:51.788555",
+    "end_time": "2025-06-19T00:43:53.795717"
+  }
+]

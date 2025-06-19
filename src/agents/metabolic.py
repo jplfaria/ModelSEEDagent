@@ -17,6 +17,18 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 from ..config.prompts import load_prompt_template, load_prompts
 from ..llm.base import BaseLLM
+from ..reasoning.artifact_intelligence import ArtifactIntelligenceEngine
+from ..reasoning.composite_metrics import CompositeMetricsCalculator
+from ..reasoning.context_enhancer import BiochemContextEnhancer
+from ..reasoning.enhanced_prompt_provider import EnhancedPromptProvider
+from ..reasoning.integrated_quality_system import QualityAwarePromptProvider
+
+# Intelligence Enhancement Framework imports
+from ..reasoning.intelligent_reasoning_system import (
+    IntelligentAnalysisRequest,
+    IntelligentReasoningSystem,
+)
+from ..reasoning.self_reflection_engine import SelfReflectionEngine
 from ..tools.base import BaseTool, ToolResult
 from .base import AgentConfig, AgentResult, BaseAgent
 
@@ -157,7 +169,18 @@ class CustomReActOutputParser(ReActSingleInputOutputParser):
 
 
 class MetabolicAgent(BaseAgent):
-    """Agent for metabolic model analysis with enhanced memory, token management, simulation result export, and logging."""
+    """
+    Agent for metabolic model analysis with Intelligence Enhancement Framework integration.
+
+    Features:
+    - Enhanced memory, token management, simulation result export, and logging
+    - Intelligence Enhancement Framework with transparent reasoning
+    - Context enhancement with biochemical knowledge integration
+    - Quality assessment with multi-dimensional scoring
+    - Artifact intelligence with smart data navigation
+    - Self-reflection with pattern learning and bias detection
+    - Fallback to standard ReAct-based execution if Intelligence Framework fails
+    """
 
     def __init__(
         self, llm: BaseLLM, tools: List[BaseTool], config: Dict[str, Any] | AgentConfig
@@ -193,6 +216,41 @@ class MetabolicAgent(BaseAgent):
         self._last_query = ""
         self.vector_store = SimpleVectorStore()
         self.simulation_store = SimulationResultsStore()
+
+        # Initialize Intelligence Enhancement Framework (Phase 1-5)
+        try:
+            logger.info("🧠 Initializing Intelligence Enhancement Framework...")
+
+            # Phase 1: Enhanced Prompt Provider
+            self.enhanced_prompt_provider = EnhancedPromptProvider()
+
+            # Phase 2: Context Enhancer
+            self.context_enhancer = BiochemContextEnhancer()
+
+            # Phase 3: Quality System
+            self.quality_provider = QualityAwarePromptProvider()
+            self.metrics_calculator = CompositeMetricsCalculator()
+
+            # Phase 4: Artifact Intelligence
+            self.artifact_intelligence = ArtifactIntelligenceEngine()
+            self.self_reflection_engine = SelfReflectionEngine()
+
+            # Phase 5: Intelligent Reasoning System (Main Coordinator)
+            storage_path = str(self.run_dir / "intelligence_framework")
+            self.intelligent_reasoning_system = IntelligentReasoningSystem(
+                storage_path=storage_path
+            )
+
+            logger.info(
+                "✅ Intelligence Enhancement Framework initialized successfully"
+            )
+            self.intelligence_enabled = True
+
+        except Exception as e:
+            logger.warning(
+                f"⚠️ Intelligence Enhancement Framework initialization failed: {e}"
+            )
+            self.intelligence_enabled = False
 
         logger.info(f"Created run directory with improved structure: {self.run_dir}")
         print(f"DEBUG: Run directory created at {self.run_dir}")
@@ -576,6 +634,69 @@ class MetabolicAgent(BaseAgent):
         try:
             query = str(input_data.get("input", ""))
             self._last_query = query
+
+            # Try Intelligence Framework first if available
+            if self.intelligence_enabled:
+                try:
+                    logger.info(
+                        "🧠 Using Intelligence Enhancement Framework for analysis"
+                    )
+
+                    # Create intelligent analysis request
+                    request = IntelligentAnalysisRequest(
+                        request_id=f"metabolic_agent_{self.run_id}_{self.current_iteration}",
+                        query=query,
+                        context={
+                            "agent_type": "metabolic",
+                            "tool_results": self._current_tool_results,
+                            "iteration": self.current_iteration,
+                        },
+                    )
+
+                    # Execute through intelligent reasoning system
+                    import asyncio
+
+                    workflow_result = asyncio.run(
+                        self.intelligent_reasoning_system.execute_comprehensive_workflow(
+                            request
+                        )
+                    )
+
+                    # Convert to AgentResult format
+                    formatted_result = AgentResult(
+                        success=workflow_result.success,
+                        message=workflow_result.final_response,
+                        data={
+                            "workflow_result": workflow_result.model_dump(),
+                            "intelligence_enabled": True,
+                            "quality_scores": workflow_result.quality_scores,
+                            "artifacts_generated": len(
+                                workflow_result.artifacts_generated
+                            ),
+                            "execution_time": workflow_result.total_execution_time,
+                        },
+                        metadata={
+                            "agent_type": "metabolic",
+                            "intelligence_framework": "enabled",
+                            "overall_confidence": workflow_result.overall_confidence,
+                        },
+                    )
+
+                    self._log_execution(
+                        "complete_intelligence", formatted_result.model_dump()
+                    )
+                    logger.info(
+                        "✅ Intelligence Framework analysis completed successfully"
+                    )
+                    return formatted_result
+
+                except Exception as e:
+                    logger.warning(
+                        f"Intelligence Framework failed, falling back to standard agent: {e}"
+                    )
+                    # Fall through to standard execution
+
+            # Standard agent execution (fallback or when Intelligence Framework disabled)
             input_data.update(
                 {"input": query, "tool_results": self._current_tool_results}
             )
@@ -584,6 +705,7 @@ class MetabolicAgent(BaseAgent):
             formatted_result = self._format_result(result)
             self._log_execution("complete", formatted_result.model_dump())
             return formatted_result
+
         except Exception as e:
             self._log_execution("error", {"error": str(e)})
             logger.error(f"Agent execution failed: {e}")

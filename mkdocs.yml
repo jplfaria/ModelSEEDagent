@@ -86,6 +86,7 @@ nav:
   - Testing:
     - Tool Status: TOOL_TESTING_STATUS.md
     - Test Infrastructure: development/testing-infrastructure-roadmap.md
+    - Intelligence Enhancement Test Queries: testing/intelligence-enhancement-test-queries.md
 
   - API Documentation:
     - Overview: api/overview.md
@@ -94,6 +95,8 @@ nav:
   - Developer:
     - Contributing: developer/contributing.md
     - Testing: developer/testing.md
+    - Validation System: developer/validation-system-guide.md
+    - Validation Quick Reference: developer/validation-quick-reference.md
     - Style Guide: developer/style-guide.md
     - Development Roadmap: development/DEVELOPMENT_ROADMAP.md
     - Smart Summarization: development/smart-summarization-assessment.md

@@ -24,6 +24,18 @@ from langchain_core.prompts import ChatPromptTemplate
 
 from ..config.debug_config import get_debug_config
 from ..llm.base import BaseLLM
+from ..reasoning.artifact_intelligence import ArtifactIntelligenceEngine
+from ..reasoning.composite_metrics import CompositeMetricsCalculator
+from ..reasoning.context_enhancer import BiochemContextEnhancer
+from ..reasoning.enhanced_prompt_provider import EnhancedPromptProvider
+from ..reasoning.integrated_quality_system import QualityAwarePromptProvider
+
+# Intelligence Enhancement Framework imports
+from ..reasoning.intelligent_reasoning_system import (
+    IntelligentAnalysisRequest,
+    IntelligentReasoningSystem,
+)
+from ..reasoning.self_reflection_engine import SelfReflectionEngine
 from ..tools import ToolRegistry
 from ..tools.ai_audit import create_ai_decision_verifier, get_ai_audit_logger
 from ..tools.base import BaseTool, ToolResult
@@ -34,16 +46,6 @@ from .collaborative_reasoning import create_collaborative_reasoning_system
 from .hypothesis_system import create_hypothesis_system
 from .pattern_memory import create_learning_system
 from .reasoning_chains import create_reasoning_chain_system
-
-# Intelligence Enhancement Framework imports
-from ..reasoning.intelligent_reasoning_system import IntelligentReasoningSystem, IntelligentAnalysisRequest
-from ..reasoning.enhanced_prompt_provider import EnhancedPromptProvider
-from ..reasoning.integrated_quality_system import QualityAwarePromptProvider
-from ..reasoning.context_enhancer import BiochemContextEnhancer
-from ..reasoning.artifact_intelligence import ArtifactIntelligenceEngine
-from ..reasoning.self_reflection_engine import SelfReflectionEngine
-from ..reasoning.composite_metrics import CompositeMetricsCalculator
-from ..config.debug_config import get_debug_config
 
 logger = logging.getLogger(__name__)
 
@@ -58,7 +60,7 @@ class RealTimeMetabolicAgent(BaseAgent):
     - Result-driven workflow adaptation
     - Complete audit trail for hallucination detection
     - No predefined workflows - pure AI decision-making
-    
+
     Intelligence Enhancement Features:
     - Transparent reasoning traces with step-by-step explanations
     - Context enhancement with biochemical knowledge integration
@@ -201,30 +203,36 @@ class RealTimeMetabolicAgent(BaseAgent):
         # Initialize Intelligence Enhancement Framework (Phase 1-5)
         try:
             logger.info("🧠 Initializing Intelligence Enhancement Framework...")
-            
+
             # Phase 1: Enhanced Prompt Provider
             self.enhanced_prompt_provider = EnhancedPromptProvider()
-            
+
             # Phase 2: Context Enhancer
             self.context_enhancer = BiochemContextEnhancer()
-            
+
             # Phase 3: Quality System
             self.quality_provider = QualityAwarePromptProvider()
             self.metrics_calculator = CompositeMetricsCalculator()
-            
-            # Phase 4: Artifact Intelligence  
+
+            # Phase 4: Artifact Intelligence
             self.artifact_intelligence = ArtifactIntelligenceEngine()
             self.self_reflection_engine = SelfReflectionEngine()
-            
+
             # Phase 5: Intelligent Reasoning System (Main Coordinator)
             storage_path = str(self.run_dir / "intelligence_framework")
-            self.intelligent_reasoning_system = IntelligentReasoningSystem(storage_path=storage_path)
-            
-            logger.info("✅ Intelligence Enhancement Framework initialized successfully")
+            self.intelligent_reasoning_system = IntelligentReasoningSystem(
+                storage_path=storage_path
+            )
+
+            logger.info(
+                "✅ Intelligence Enhancement Framework initialized successfully"
+            )
             self.intelligence_enabled = True
-            
+
         except Exception as e:
-            logger.warning(f"⚠️ Intelligence Enhancement Framework initialization failed: {e}")
+            logger.warning(
+                f"⚠️ Intelligence Enhancement Framework initialization failed: {e}"
+            )
             self.intelligence_enabled = False
 
         # Default model path for tools that need it
@@ -317,32 +325,64 @@ class RealTimeMetabolicAgent(BaseAgent):
         # Apply Intelligence Enhancement Framework if available
         if self.intelligence_enabled:
             try:
-                # Create intelligence request
-                intelligence_request = IntelligentAnalysisRequest(
-                    query=query,
-                    context=input_data,
-                    analysis_type="real_time_interactive",
-                    tools_available=[tool.name for tool in self.tools],
-                    run_id=self.run_id
+                logger.info(
+                    "🧠 Using Intelligence Enhancement Framework for real-time analysis"
                 )
-                
-                # Get intelligence-enhanced analysis
-                intelligence_result = self.intelligent_reasoning_system.analyze_query(intelligence_request)
-                
-                # Extract enhanced query and context
-                enhanced_query = intelligence_result.enhanced_query or query
-                enhanced_context = intelligence_result.context_analysis or {}
-                
-                # Use enhanced query for processing
-                query = enhanced_query
-                input_data.update(enhanced_context)
-                
+
+                # Create intelligent analysis request (following MetabolicAgent pattern)
+                intelligence_request = IntelligentAnalysisRequest(
+                    request_id=f"real_time_{self.run_id}_{hash(query) % 10000}",
+                    query=query,
+                    context={
+                        "agent_type": "real_time",
+                        "reasoning_mode": reasoning_mode,
+                        "max_iterations": max_iterations,
+                        **input_data,
+                    },
+                )
+
+                # Execute through intelligent reasoning system (correct API)
+                workflow_result = await self.intelligent_reasoning_system.execute_comprehensive_workflow(
+                    intelligence_request
+                )
+
+                # Use Intelligence Framework result if successful
+                if workflow_result.success:
+                    logger.info(
+                        "✅ Intelligence Framework analysis completed, using enhanced workflow"
+                    )
+
+                    # Return Intelligence Framework result directly
+                    return AgentResult(
+                        success=workflow_result.success,
+                        message=workflow_result.final_response,
+                        data={
+                            "workflow_result": workflow_result.model_dump(),
+                            "intelligence_enabled": True,
+                            "quality_scores": workflow_result.quality_scores,
+                            "artifacts_generated": len(
+                                workflow_result.artifacts_generated
+                            ),
+                            "execution_time": workflow_result.total_execution_time,
+                        },
+                        metadata={
+                            "agent_type": "real_time",
+                            "intelligence_framework": "enabled",
+                            "overall_confidence": workflow_result.overall_confidence,
+                            "reasoning_mode": reasoning_mode,
+                        },
+                    )
+
                 debug_config = get_debug_config()
                 if debug_config.intelligence_debug:
-                    logger.info(f"🧠 Intelligence Framework enhanced interactive query: {query[:100]}...")
-                    
+                    logger.info(
+                        f"🧠 Intelligence Framework enhanced interactive query: {query[:100]}..."
+                    )
+
             except Exception as e:
-                logger.warning(f"⚠️ Intelligence Framework processing failed, using original query: {e}")
+                logger.warning(
+                    f"⚠️ Intelligence Framework processing failed, using standard analysis: {e}"
+                )
 
         logger.info(f"🧠 ADVANCED AI AGENT STARTING: {query} (Mode: {reasoning_mode})")
 
@@ -1559,54 +1599,68 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
     def _extract_model_path_from_query(self, query: str) -> str:
         """
         Intelligently extract model path from user query.
-        
+
         Intelligence Enhancement: Respects user-specified model files
         """
         query_lower = query.lower()
         base_path = Path(__file__).parent.parent.parent / "data" / "examples"
-        
+
         # Check for specific model names in query
         if "ecolimg1655.xml" in query_lower or "EcoliMG1655.xml" in query:
             model_path = str(base_path / "EcoliMG1655.xml")
             logger.info(f"🧠 Intelligence: Detected EcoliMG1655.xml model request")
             return model_path
-            
+
         elif "iml1515.xml" in query_lower or "iML1515.xml" in query:
-            model_path = str(base_path / "iML1515.xml") 
+            model_path = str(base_path / "iML1515.xml")
             logger.info(f"🧠 Intelligence: Detected iML1515.xml model request")
             return model_path
-            
+
         elif "e_coli_core.xml" in query_lower:
             model_path = str(base_path / "e_coli_core.xml")
             logger.info(f"🧠 Intelligence: Detected e_coli_core.xml model request")
             return model_path
-            
+
         # Check for model path patterns (ModelSEEDagent/data/examples/...)
         import re
-        path_pattern = r'ModelSEEDagent[/\\]data[/\\]examples[/\\]([a-zA-Z0-9_]+\.xml)'
+
+        path_pattern = r"ModelSEEDagent[/\\]data[/\\]examples[/\\]([a-zA-Z0-9_]+\.xml)"
         match = re.search(path_pattern, query)
         if match:
             model_file = match.group(1)
             model_path = str(base_path / model_file)
             logger.info(f"🧠 Intelligence: Detected model path pattern: {model_file}")
             return model_path
-            
+
         # Check for organism-specific requests
-        if any(term in query_lower for term in ["e. coli k-12", "e.coli k-12", "ecoli k-12"]):
+        if any(
+            term in query_lower
+            for term in ["e. coli k-12", "e.coli k-12", "ecoli k-12"]
+        ):
             # Prefer EcoliMG1655.xml for E. coli K-12 requests
             model_path = str(base_path / "EcoliMG1655.xml")
-            logger.info(f"🧠 Intelligence: E. coli K-12 detected, using EcoliMG1655.xml")
+            logger.info(
+                f"🧠 Intelligence: E. coli K-12 detected, using EcoliMG1655.xml"
+            )
             return model_path
-            
+
         elif any(term in query_lower for term in ["e. coli", "e.coli", "ecoli"]):
             # Default E. coli model
             model_path = str(base_path / "e_coli_core.xml")
-            logger.info(f"🧠 Intelligence: Generic E. coli detected, using e_coli_core.xml")
+            logger.info(
+                f"🧠 Intelligence: Generic E. coli detected, using e_coli_core.xml"
+            )
             return model_path
-            
+
         # Fallback to default
-        model_path = str(self.default_model_path) if self.default_model_path else str(base_path / "e_coli_core.xml")
-        logger.debug(f"🧠 Intelligence: Using default model path: {Path(model_path).name}")
+        model_path = (
+            str(self.default_model_path)
+            if self.default_model_path
+            else str(base_path / "e_coli_core.xml")
+        )
+        logger.debug(
+            f"🧠 Intelligence: Using default model path: {Path(model_path).name}"
+        )
         return model_path
 
     def _prepare_tool_input(self, tool_name: str, query: str) -> Dict[str, Any]:
@@ -1639,7 +1693,7 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
         ]:
             # Intelligence Enhancement: Extract model path from query
             model_path = self._extract_model_path_from_query(query)
-            
+
             result = {"model_path": model_path}
             logger.debug(f"🔍 TOOL INPUT PREPARED: {tool_name} -> {result}")
             return result
@@ -2250,12 +2304,14 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
         logger.info("🚀 Starting standard dynamic analysis workflow")
 
         # Intelligence Enhancement: Use our enhanced reasoning system if available
-        if hasattr(self, 'intelligence_enabled') and self.intelligence_enabled:
+        if hasattr(self, "intelligence_enabled") and self.intelligence_enabled:
             logger.info("🧠 Using Intelligence Enhancement Framework for analysis")
             try:
                 return await self._run_intelligent_analysis(query, max_iterations)
             except Exception as e:
-                logger.warning(f"⚠️ Intelligence Enhancement failed, falling back to standard: {e}")
+                logger.warning(
+                    f"⚠️ Intelligence Enhancement failed, falling back to standard: {e}"
+                )
                 # Continue with standard analysis
 
         # For comprehensive analysis queries, delegate to LangGraph for better performance
@@ -2458,38 +2514,6 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
             capture_summary = self.console_capture.get_capture_summary()
             logger.info(f"🔍 Console capture summary: {capture_summary}")
 
-        # Apply Intelligence Framework post-processing if available
-        intelligence_metadata = {}
-        if self.intelligence_enabled:
-            try:
-                # Get final message for analysis
-                final_message = final_conclusions.get(
-                    "conclusions", final_conclusions.get("summary", "Analysis completed")
-                )
-                
-                # Create post-processing context
-                post_context = {
-                    "query": query,
-                    "result": final_message,
-                    "tools_used": [t["tool"] for t in self.tool_execution_history],
-                    "reasoning_steps": len(self.audit_trail),
-                    "confidence_score": confidence_score
-                }
-                
-                # Get intelligence insights
-                intelligence_insights = self.intelligent_reasoning_system.get_analysis_insights(
-                    query, post_context
-                )
-                
-                intelligence_metadata = {
-                    "intelligence_insights": intelligence_insights,
-                    "intelligence_enabled": True
-                }
-                
-            except Exception as e:
-                logger.warning(f"⚠️ Intelligence Framework post-processing failed: {e}")
-                intelligence_metadata = {"intelligence_enabled": False, "intelligence_error": str(e)}
-
         return AgentResult(
             success=True,
             message=final_conclusions.get(
@@ -2504,24 +2528,26 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
                 "tools_executed": [t["tool"] for t in self.tool_execution_history],
                 "reasoning_steps": len(self.audit_trail),
                 "confidence_score": confidence_score,
-                **intelligence_metadata,
+                "intelligence_enabled": False,  # Standard fallback path
             },
         )
 
-    async def _run_intelligent_analysis(self, query: str, max_iterations: int) -> AgentResult:
+    async def _run_intelligent_analysis(
+        self, query: str, max_iterations: int
+    ) -> AgentResult:
         """
         Run analysis using the Intelligence Enhancement Framework (Phase 1-5)
-        
+
         This method provides:
         - Transparent reasoning traces
-        - Context enhancement with biochemical knowledge 
+        - Context enhancement with biochemical knowledge
         - Quality assessment with multi-dimensional scoring
         - Artifact intelligence with smart data navigation
         - Self-reflection with pattern learning
         - Hypothesis generation with testable predictions
         """
         logger.info("🧠 Starting Intelligence Enhancement Framework analysis")
-        
+
         try:
             # Create intelligent analysis request
             analysis_request = IntelligentAnalysisRequest(
@@ -2531,47 +2557,75 @@ Base everything on the ACTUAL DATA you collected, not general knowledge."""
                     "session_id": self.run_id,
                     "workflow_id": self.current_workflow_id,
                     "tools_available": list(self._tools_dict.keys()),
-                    "max_iterations": max_iterations
-                }
+                    "max_iterations": max_iterations,
+                },
             )
-            
+
             # Process with Intelligence Enhancement Framework
-            intelligent_result = await self.intelligent_reasoning_system.execute_comprehensive_workflow(
-                analysis_request
+            intelligent_result = (
+                await self.intelligent_reasoning_system.execute_comprehensive_workflow(
+                    analysis_request
+                )
             )
-            
+
             # Log intelligence metrics
-            if hasattr(intelligent_result, 'quality_metrics'):
-                logger.info(f"🧠 Intelligence Quality Metrics: {intelligent_result.quality_metrics}")
-            
-            if hasattr(intelligent_result, 'reasoning_trace'):
-                logger.info(f"🧠 Reasoning Steps: {len(intelligent_result.reasoning_trace)}")
-            
-            if hasattr(intelligent_result, 'hypothesis_count'):
-                logger.info(f"🧠 Generated Hypotheses: {intelligent_result.hypothesis_count}")
-            
+            if hasattr(intelligent_result, "quality_metrics"):
+                logger.info(
+                    f"🧠 Intelligence Quality Metrics: {intelligent_result.quality_metrics}"
+                )
+
+            if hasattr(intelligent_result, "reasoning_trace"):
+                logger.info(
+                    f"🧠 Reasoning Steps: {len(intelligent_result.reasoning_trace)}"
+                )
+
+            if hasattr(intelligent_result, "hypothesis_count"):
+                logger.info(
+                    f"🧠 Generated Hypotheses: {intelligent_result.hypothesis_count}"
+                )
+
             # Convert to AgentResult format
             return AgentResult(
                 success=True,
-                message=intelligent_result.conclusions if hasattr(intelligent_result, 'conclusions') else "Intelligence-enhanced analysis completed",
+                message=(
+                    intelligent_result.conclusions
+                    if hasattr(intelligent_result, "conclusions")
+                    else "Intelligence-enhanced analysis completed"
+                ),
                 data={
                     "intelligent_analysis": True,
-                    "quality_metrics": getattr(intelligent_result, 'quality_metrics', {}),
-                    "reasoning_trace": getattr(intelligent_result, 'reasoning_trace', []),
-                    "generated_hypotheses": getattr(intelligent_result, 'hypotheses', []),
-                    "artifact_usage": getattr(intelligent_result, 'artifact_usage', {}),
-                    "knowledge_base": getattr(intelligent_result, 'knowledge_base', {}),
+                    "quality_metrics": getattr(
+                        intelligent_result, "quality_metrics", {}
+                    ),
+                    "reasoning_trace": getattr(
+                        intelligent_result, "reasoning_trace", []
+                    ),
+                    "generated_hypotheses": getattr(
+                        intelligent_result, "hypotheses", []
+                    ),
+                    "artifact_usage": getattr(intelligent_result, "artifact_usage", {}),
+                    "knowledge_base": getattr(intelligent_result, "knowledge_base", {}),
                 },
                 metadata={
                     "intelligence_enabled": True,
-                    "artifact_usage_rate": getattr(intelligent_result, 'artifact_usage_rate', 0),
-                    "biological_accuracy": getattr(intelligent_result, 'biological_accuracy', 0),
-                    "reasoning_transparency": getattr(intelligent_result, 'reasoning_transparency', 0),
-                    "hypothesis_count": getattr(intelligent_result, 'hypothesis_count', 0),
-                    "quality_score": getattr(intelligent_result, 'overall_quality_score', 0),
-                }
+                    "artifact_usage_rate": getattr(
+                        intelligent_result, "artifact_usage_rate", 0
+                    ),
+                    "biological_accuracy": getattr(
+                        intelligent_result, "biological_accuracy", 0
+                    ),
+                    "reasoning_transparency": getattr(
+                        intelligent_result, "reasoning_transparency", 0
+                    ),
+                    "hypothesis_count": getattr(
+                        intelligent_result, "hypothesis_count", 0
+                    ),
+                    "quality_score": getattr(
+                        intelligent_result, "overall_quality_score", 0
+                    ),
+                },
             )
-            
+
         except Exception as e:
             logger.error(f"🧠 Intelligence Enhancement Framework failed: {e}")
             raise e

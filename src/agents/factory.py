@@ -3,9 +3,9 @@ from typing import Any, Dict, List, Type
 from ..llm.base import BaseLLM
 from ..tools.base import BaseTool
 from .base import BaseAgent
+from .langgraph_metabolic import LangGraphMetabolicAgent
 from .metabolic import MetabolicAgent
 from .real_time_metabolic import RealTimeMetabolicAgent
-from .langgraph_metabolic import LangGraphMetabolicAgent
 
 
 class AgentFactory:

@@ -35,6 +35,18 @@ from sklearn.metrics.pairwise import cosine_similarity
 from ..config.debug_config import get_debug_config
 from ..config.prompts import load_prompt_template, load_prompts
 from ..llm.base import BaseLLM
+from ..reasoning.artifact_intelligence import ArtifactIntelligenceEngine
+from ..reasoning.composite_metrics import CompositeMetricsCalculator
+from ..reasoning.context_enhancer import BiochemContextEnhancer
+from ..reasoning.enhanced_prompt_provider import EnhancedPromptProvider
+from ..reasoning.integrated_quality_system import QualityAwarePromptProvider
+
+# Intelligence Enhancement Framework imports
+from ..reasoning.intelligent_reasoning_system import (
+    IntelligentAnalysisRequest,
+    IntelligentReasoningSystem,
+)
+from ..reasoning.self_reflection_engine import SelfReflectionEngine
 from ..tools.base import BaseTool, ToolResult
 from .base import AgentConfig, AgentResult, BaseAgent
 from .tool_integration import (
@@ -45,15 +57,6 @@ from .tool_integration import (
     ToolPriority,
     WorkflowState,
 )
-
-# Intelligence Enhancement Framework imports
-from ..reasoning.intelligent_reasoning_system import IntelligentReasoningSystem, IntelligentAnalysisRequest
-from ..reasoning.enhanced_prompt_provider import EnhancedPromptProvider
-from ..reasoning.integrated_quality_system import QualityAwarePromptProvider
-from ..reasoning.context_enhancer import BiochemContextEnhancer
-from ..reasoning.artifact_intelligence import ArtifactIntelligenceEngine
-from ..reasoning.self_reflection_engine import SelfReflectionEngine
-from ..reasoning.composite_metrics import CompositeMetricsCalculator
 
 logger = logging.getLogger(__name__)
 
@@ -283,30 +286,36 @@ class LangGraphMetabolicAgent(BaseAgent):
         # Initialize Intelligence Enhancement Framework (Phase 1-5)
         try:
             logger.info("🧠 Initializing Intelligence Enhancement Framework...")
-            
+
             # Phase 1: Enhanced Prompt Provider
             self.enhanced_prompt_provider = EnhancedPromptProvider()
-            
+
             # Phase 2: Context Enhancer
             self.context_enhancer = BiochemContextEnhancer()
-            
+
             # Phase 3: Quality System
             self.quality_provider = QualityAwarePromptProvider()
             self.metrics_calculator = CompositeMetricsCalculator()
-            
-            # Phase 4: Artifact Intelligence  
+
+            # Phase 4: Artifact Intelligence
             self.artifact_intelligence = ArtifactIntelligenceEngine()
             self.self_reflection_engine = SelfReflectionEngine()
-            
+
             # Phase 5: Intelligent Reasoning System (Main Coordinator)
             storage_path = str(self.run_dir / "intelligence_framework")
-            self.intelligent_reasoning_system = IntelligentReasoningSystem(storage_path=storage_path)
-            
-            logger.info("✅ Intelligence Enhancement Framework initialized successfully")
+            self.intelligent_reasoning_system = IntelligentReasoningSystem(
+                storage_path=storage_path
+            )
+
+            logger.info(
+                "✅ Intelligence Enhancement Framework initialized successfully"
+            )
             self.intelligence_enabled = True
-            
+
         except Exception as e:
-            logger.warning(f"⚠️ Intelligence Enhancement Framework initialization failed: {e}")
+            logger.warning(
+                f"⚠️ Intelligence Enhancement Framework initialization failed: {e}"
+            )
             self.intelligence_enabled = False
 
         # Only log initialization if LangGraph debug is enabled
@@ -1453,32 +1462,66 @@ Respond with actionable metabolic insights, not just procedural information."""
         # Apply Intelligence Enhancement Framework if available
         if self.intelligence_enabled:
             try:
-                # Create intelligence request
-                intelligence_request = IntelligentAnalysisRequest(
-                    query=query,
-                    context=input_data,
-                    analysis_type="langgraph_workflow",
-                    tools_available=[tool.name for tool in self.tools],
-                    run_id=self.run_id
+                logger.info(
+                    "🧠 Using Intelligence Enhancement Framework for LangGraph workflow"
                 )
-                
-                # Get intelligence-enhanced analysis
-                intelligence_result = self.intelligent_reasoning_system.analyze_query(intelligence_request)
-                
-                # Extract enhanced query and context
-                enhanced_query = intelligence_result.enhanced_query or query
-                enhanced_context = intelligence_result.context_analysis or {}
-                
-                # Use enhanced query for processing
-                query = enhanced_query
-                input_data.update(enhanced_context)
-                
+
+                # Create intelligent analysis request (following MetabolicAgent pattern)
+                intelligence_request = IntelligentAnalysisRequest(
+                    request_id=f"langgraph_{self.run_id}_{hash(query) % 10000}",
+                    query=query,
+                    context={
+                        "agent_type": "langgraph",
+                        "max_iterations": input_data.get("max_iterations", 5),
+                        **input_data,
+                    },
+                )
+
+                # Execute through intelligent reasoning system (correct API)
+                import asyncio
+
+                workflow_result = asyncio.run(
+                    self.intelligent_reasoning_system.execute_comprehensive_workflow(
+                        intelligence_request
+                    )
+                )
+
+                # Use Intelligence Framework result if successful
+                if workflow_result.success:
+                    logger.info(
+                        "✅ Intelligence Framework analysis completed, using enhanced workflow"
+                    )
+
+                    # Return Intelligence Framework result directly
+                    return AgentResult(
+                        success=workflow_result.success,
+                        message=workflow_result.final_response,
+                        data={
+                            "workflow_result": workflow_result.model_dump(),
+                            "intelligence_enabled": True,
+                            "quality_scores": workflow_result.quality_scores,
+                            "artifacts_generated": len(
+                                workflow_result.artifacts_generated
+                            ),
+                            "execution_time": workflow_result.total_execution_time,
+                        },
+                        metadata={
+                            "agent_type": "langgraph",
+                            "intelligence_framework": "enabled",
+                            "overall_confidence": workflow_result.overall_confidence,
+                        },
+                    )
+
                 debug_config = get_debug_config()
                 if debug_config.intelligence_debug:
-                    logger.info(f"🧠 Intelligence Framework enhanced query: {query[:100]}...")
-                    
+                    logger.info(
+                        f"🧠 Intelligence Framework enhanced query: {query[:100]}..."
+                    )
+
             except Exception as e:
-                logger.warning(f"⚠️ Intelligence Framework processing failed, using original query: {e}")
+                logger.warning(
+                    f"⚠️ Intelligence Framework processing failed, using standard LangGraph workflow: {e}"
+                )
 
         # Initialize state
         initial_state: AgentState = {
@@ -1513,35 +1556,7 @@ Respond with actionable metabolic insights, not just procedural information."""
             config = {"configurable": {"thread_id": self.run_id}}
             final_state = self.app.invoke(initial_state, config)
 
-            # Apply Intelligence Framework post-processing if available
-            intelligence_metadata = {}
-            if self.intelligence_enabled:
-                try:
-                    # Get final answer for analysis
-                    final_answer = final_state.get("final_answer", "Analysis completed")
-                    
-                    # Create post-processing context
-                    post_context = {
-                        "query": query,
-                        "result": final_answer,
-                        "tools_used": final_state.get("tools_called", []),
-                        "workflow_state": final_state.get("workflow_state"),
-                        "errors": final_state.get("errors", [])
-                    }
-                    
-                    # Get intelligence insights
-                    intelligence_insights = self.intelligent_reasoning_system.get_analysis_insights(
-                        query, post_context
-                    )
-                    
-                    intelligence_metadata = {
-                        "intelligence_insights": intelligence_insights,
-                        "intelligence_enabled": True
-                    }
-                    
-                except Exception as e:
-                    logger.warning(f"⚠️ Intelligence Framework post-processing failed: {e}")
-                    intelligence_metadata = {"intelligence_enabled": False, "intelligence_error": str(e)}
+            # Standard LangGraph fallback path (Intelligence Framework handles its own processing)
 
             # Convert to AgentResult
             return AgentResult(
@@ -1556,7 +1571,7 @@ Respond with actionable metabolic insights, not just procedural information."""
                     "iterations": final_state.get("iteration", 0),
                     "errors": final_state.get("errors", []),
                     "execution_summary": self._create_execution_summary(final_state),
-                    **intelligence_metadata,
+                    "intelligence_enabled": False,  # Standard fallback path
                     # Enhanced tool integration metadata
                     "intent_analysis": final_state.get("intent_analysis", {}),
                     "workflow_analysis": final_state.get("workflow_analysis", {}),

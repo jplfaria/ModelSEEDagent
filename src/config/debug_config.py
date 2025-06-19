@@ -16,6 +16,15 @@ Environment Variables:
 - MODELSEED_CAPTURE_CONSOLE_DEBUG: capture console debug output (true/false)
 - MODELSEED_CAPTURE_AI_REASONING_FLOW: capture AI reasoning steps (true/false)
 - MODELSEED_CAPTURE_FORMATTED_RESULTS: capture final formatted results (true/false)
+
+Intelligence Framework Debug Variables:
+- MODELSEED_DEBUG_INTELLIGENCE: enable Intelligence Framework debug (true/false)
+- MODELSEED_DEBUG_PROMPTS: enable prompt registry debug (true/false)
+- MODELSEED_DEBUG_CONTEXT_ENHANCEMENT: enable context enhancer debug (true/false)
+- MODELSEED_DEBUG_QUALITY_ASSESSMENT: enable quality validator debug (true/false)
+- MODELSEED_DEBUG_ARTIFACT_INTELLIGENCE: enable artifact intelligence debug (true/false)
+- MODELSEED_DEBUG_SELF_REFLECTION: enable self-reflection engine debug (true/false)
+- MODELSEED_TRACE_REASONING_WORKFLOW: trace complete reasoning workflow (true/false)
 """
 
 import logging
@@ -46,6 +55,27 @@ class DebugFlags:
         self.http_debug = self._get_bool_env("MODELSEED_DEBUG_HTTP", False)
         self.tools_debug = self._get_bool_env("MODELSEED_DEBUG_TOOLS", False)
         self.llm_debug = self._get_bool_env("MODELSEED_DEBUG_LLM", False)
+
+        # Intelligence Framework debug flags
+        self.intelligence_debug = self._get_bool_env(
+            "MODELSEED_DEBUG_INTELLIGENCE", False
+        )
+        self.prompts_debug = self._get_bool_env("MODELSEED_DEBUG_PROMPTS", False)
+        self.context_enhancement_debug = self._get_bool_env(
+            "MODELSEED_DEBUG_CONTEXT_ENHANCEMENT", False
+        )
+        self.quality_assessment_debug = self._get_bool_env(
+            "MODELSEED_DEBUG_QUALITY_ASSESSMENT", False
+        )
+        self.artifact_intelligence_debug = self._get_bool_env(
+            "MODELSEED_DEBUG_ARTIFACT_INTELLIGENCE", False
+        )
+        self.self_reflection_debug = self._get_bool_env(
+            "MODELSEED_DEBUG_SELF_REFLECTION", False
+        )
+        self.trace_reasoning_workflow = self._get_bool_env(
+            "MODELSEED_TRACE_REASONING_WORKFLOW", False
+        )
 
         # Special logging flags
         self.log_llm_inputs = self._get_bool_env("MODELSEED_LOG_LLM_INPUTS", False)
@@ -100,6 +130,22 @@ class DebugFlags:
             if not os.getenv("MODELSEED_DEBUG_LLM"):
                 self.llm_debug = True
 
+            # Enable Intelligence Framework debugging in trace mode
+            if not os.getenv("MODELSEED_DEBUG_INTELLIGENCE"):
+                self.intelligence_debug = True
+            if not os.getenv("MODELSEED_DEBUG_PROMPTS"):
+                self.prompts_debug = True
+            if not os.getenv("MODELSEED_DEBUG_CONTEXT_ENHANCEMENT"):
+                self.context_enhancement_debug = True
+            if not os.getenv("MODELSEED_DEBUG_QUALITY_ASSESSMENT"):
+                self.quality_assessment_debug = True
+            if not os.getenv("MODELSEED_DEBUG_ARTIFACT_INTELLIGENCE"):
+                self.artifact_intelligence_debug = True
+            if not os.getenv("MODELSEED_DEBUG_SELF_REFLECTION"):
+                self.self_reflection_debug = True
+            if not os.getenv("MODELSEED_TRACE_REASONING_WORKFLOW"):
+                self.trace_reasoning_workflow = True
+
     def get_logging_level(self) -> int:
         """Get Python logging level based on debug level"""
         if self.debug_level == DebugLevel.QUIET:
@@ -133,6 +179,15 @@ class DebugFlags:
                 "http": self.http_debug,
                 "tools": self.tools_debug,
                 "llm": self.llm_debug,
+            },
+            "intelligence_flags": {
+                "intelligence_framework": self.intelligence_debug,
+                "prompts": self.prompts_debug,
+                "context_enhancement": self.context_enhancement_debug,
+                "quality_assessment": self.quality_assessment_debug,
+                "artifact_intelligence": self.artifact_intelligence_debug,
+                "self_reflection": self.self_reflection_debug,
+                "trace_reasoning": self.trace_reasoning_workflow,
             },
             "special_flags": {
                 "log_llm_inputs": self.log_llm_inputs,
@@ -172,6 +227,34 @@ class DebugFlags:
         llm_level = logging.DEBUG if self.llm_debug else logging.INFO
         logging.getLogger("src.llm").setLevel(llm_level)
 
+        # Intelligence Framework logging
+        intelligence_level = logging.DEBUG if self.intelligence_debug else logging.INFO
+        logging.getLogger("src.reasoning").setLevel(intelligence_level)
+
+        # Component-specific Intelligence Framework logging
+        if self.prompts_debug:
+            logging.getLogger("src.prompts").setLevel(logging.DEBUG)
+            logging.getLogger("src.reasoning.enhanced_prompt_provider").setLevel(
+                logging.DEBUG
+            )
+
+        if self.context_enhancement_debug:
+            logging.getLogger("src.reasoning.context_enhancer").setLevel(logging.DEBUG)
+
+        if self.quality_assessment_debug:
+            logging.getLogger("src.reasoning.quality_validator").setLevel(logging.DEBUG)
+            logging.getLogger("src.reasoning.composite_metrics").setLevel(logging.DEBUG)
+
+        if self.artifact_intelligence_debug:
+            logging.getLogger("src.reasoning.artifact_intelligence").setLevel(
+                logging.DEBUG
+            )
+
+        if self.self_reflection_debug:
+            logging.getLogger("src.reasoning.self_reflection_engine").setLevel(
+                logging.DEBUG
+            )
+
 
 # Global debug configuration instance
 debug_config = DebugFlags()
@@ -201,6 +284,10 @@ def print_debug_status():
     for flag, enabled in config["special_flags"].items():
         status = "✅ ENABLED" if enabled else "❌ DISABLED"
         print(f"     {flag:12}: {status}")
+    print(f"   Intelligence Framework Flags:")
+    for flag, enabled in config["intelligence_flags"].items():
+        status = "✅ ENABLED" if enabled else "❌ DISABLED"
+        print(f"     {flag:20}: {status}")
     print(f"   Console Capture Flags:")
     for flag, enabled in config["console_capture_flags"].items():
         status = "✅ ENABLED" if enabled else "❌ DISABLED"
@@ -215,9 +302,38 @@ def get_logging_level_for_component(component: str) -> int:
         "http": debug_config.http_debug,
         "tools": debug_config.tools_debug,
         "llm": debug_config.llm_debug,
+        "intelligence": debug_config.intelligence_debug,
+        "prompts": debug_config.prompts_debug,
+        "context_enhancement": debug_config.context_enhancement_debug,
+        "quality_assessment": debug_config.quality_assessment_debug,
+        "artifact_intelligence": debug_config.artifact_intelligence_debug,
+        "self_reflection": debug_config.self_reflection_debug,
     }
 
     if component in component_flags and component_flags[component]:
         return logging.DEBUG
     else:
         return debug_config.get_logging_level()
+
+
+def is_intelligence_debug_enabled() -> bool:
+    """Check if Intelligence Framework debugging is enabled"""
+    return debug_config.intelligence_debug
+
+
+def is_reasoning_trace_enabled() -> bool:
+    """Check if reasoning workflow tracing is enabled"""
+    return debug_config.trace_reasoning_workflow
+
+
+def get_intelligence_debug_config() -> Dict[str, bool]:
+    """Get Intelligence Framework debug configuration"""
+    return {
+        "intelligence_debug": debug_config.intelligence_debug,
+        "prompts_debug": debug_config.prompts_debug,
+        "context_enhancement_debug": debug_config.context_enhancement_debug,
+        "quality_assessment_debug": debug_config.quality_assessment_debug,
+        "artifact_intelligence_debug": debug_config.artifact_intelligence_debug,
+        "self_reflection_debug": debug_config.self_reflection_debug,
+        "trace_reasoning_workflow": debug_config.trace_reasoning_workflow,
+    }

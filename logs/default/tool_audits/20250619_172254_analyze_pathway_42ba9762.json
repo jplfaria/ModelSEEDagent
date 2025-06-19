@@ -1,0 +1,115 @@
+{
+  "audit_id": "42ba9762-1ea5-4953-a4ee-1602043c0d9c",
+  "session_id": null,
+  "tool_name": "analyze_pathway",
+  "timestamp": "2025-06-19T17:22:54.254874",
+  "input": {
+    "model_path": "/Users/jplfaria/repos/ModelSEEDagent/data/models/iML1515.xml",
+    "pathway": "glycolysis"
+  },
+  "output": {
+    "structured": {
+      "success": true,
+      "message": "Pathway analysis completed for: glycolysis",
+      "error": null,
+      "full_data_path": null,
+      "summary_dict": null,
+      "key_findings": null,
+      "schema_version": "1.0",
+      "tool_name": null,
+      "model_stats": null,
+      "data": {
+        "summary": {
+          "pathway_name": "glycolysis",
+          "reaction_count": 17,
+          "gene_coverage": 16,
+          "metabolite_count": 31,
+          "reversible_reactions": 9,
+          "irreversible_reactions": 8
+        },
+        "reaction_list": [
+          "PYK",
+          "PFK_3",
+          "ENO",
+          "FBA",
+          "PGI",
+          "PGK",
+          "PFK_2",
+          "PGMT",
+          "GAPD",
+          "FBA3",
+          "PFK",
+          "PGM",
+          "TPI",
+          "PYK4",
+          "PYK2",
+          "PYK3",
+          "PYK6"
+        ],
+        "connectivity": {
+          "input_metabolites": 10,
+          "output_metabolites": 10,
+          "internal_metabolites": 11,
+          "total_unique_metabolites": 31
+        },
+        "top_reactions": [
+          {
+            "id": "PGMT",
+            "name": "Phosphoglucomutase",
+            "gene_count": 3,
+            "metabolite_count": 2,
+            "reversible": true
+          },
+          {
+            "id": "PYK",
+            "name": "Pyruvate kinase",
+            "gene_count": 2,
+            "metabolite_count": 5,
+            "reversible": false
+          },
+          {
+            "id": "FBA",
+            "name": "Fructose-bisphosphate aldolase",
+            "gene_count": 2,
+            "metabolite_count": 3,
+            "reversible": true
+          },
+          {
+            "id": "PFK",
+            "name": "Phosphofructokinase",
+            "gene_count": 2,
+            "metabolite_count": 5,
+            "reversible": false
+          },
+          {
+            "id": "PGM",
+            "name": "Phosphoglycerate mutase",
+            "gene_count": 2,
+            "metabolite_count": 2,
+            "reversible": true
+          }
+        ]
+      },
+      "metadata": {},
+      "smart_summarization_metrics": {
+        "enabled": false
+      }
+    },
+    "console": {
+      "stdout": "",
+      "stderr": ""
+    },
+    "files": []
+  },
+  "execution": {
+    "duration_seconds": 1.9259719848632812,
+    "success": true,
+    "error": null,
+    "timestamp_end": "2025-06-19T17:22:54.254994"
+  },
+  "environment": {
+    "python_version": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+    "working_directory": "/Users/jplfaria/repos/ModelSEEDagent",
+    "user": "jplfaria"
+  }
+}

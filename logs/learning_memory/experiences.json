@@ -1232,5 +1232,591 @@
     "ineffective_strategies": [],
     "missed_opportunities": [],
     "summarization_metrics": null
+  },
+  {
+    "experience_id": "1750301863.219386",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-18T21:57:43.219398",
+    "user_query": "explore the predicte dgrowth rate in more detail and give me a summry of what you learn",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "unknown",
+      "query_type": "growth_analysis",
+      "complexity": "medium"
+    },
+    "tools_used": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "analyze_essentiality"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "analyze_essentiality"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": [],
+    "summarization_metrics": null
+  },
+  {
+    "experience_id": "1750304366.408138",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-18T22:39:26.408206",
+    "user_query": "\"Analyze E. coli K-12 (EcoliMG1655.xml) metabolism under anaerobic glucose conditions. I need detailed flux analysis of the most variable reactions and want to understand the mechanistic basis for any metabolic bottlenecks. Generate testable hypotheses for metabolic engineering improvements.\"",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "e_coli",
+      "query_type": "general",
+      "complexity": "medium"
+    },
+    "tools_used": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "run_flux_sampling",
+      "run_gene_deletion_analysis"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "run_flux_sampling",
+      "run_gene_deletion_analysis"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": [],
+    "summarization_metrics": null
+  },
+  {
+    "experience_id": "1750304921.523951",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-18T22:48:41.523961",
+    "user_query": "\"Analyze E. coli K-12 (EcoliMG1655.xml) metabolism under anaerobic glucose conditions. I need detailed flux analysis of the most variable reactions and want to understand the mechanistic basis for any metabolic bottlenecks. Generate testable hypotheses for metabolic engineering improvements.\"",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "e_coli",
+      "query_type": "general",
+      "complexity": "medium"
+    },
+    "tools_used": [
+      "run_flux_variability_analysis",
+      "run_flux_sampling",
+      "run_gene_deletion_analysis",
+      "run_metabolic_fba"
+    ],
+    "tool_sequence": [
+      "run_flux_variability_analysis",
+      "run_flux_sampling",
+      "run_gene_deletion_analysis",
+      "run_metabolic_fba"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": [],
+    "summarization_metrics": null
+  },
+  {
+    "experience_id": "1750304921.523951",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-18T22:48:41.523961",
+    "user_query": "\"Analyze E. coli K-12 (EcoliMG1655.xml) metabolism under anaerobic glucose conditions. I need detailed flux analysis of the most variable reactions and want to understand the mechanistic basis for any metabolic bottlenecks. Generate testable hypotheses for metabolic engineering improvements.\"",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "e_coli",
+      "query_type": "general",
+      "complexity": "medium"
+    },
+    "tools_used": [
+      "run_flux_variability_analysis",
+      "run_flux_sampling",
+      "run_gene_deletion_analysis",
+      "run_metabolic_fba"
+    ],
+    "tool_sequence": [
+      "run_flux_variability_analysis",
+      "run_flux_sampling",
+      "run_gene_deletion_analysis",
+      "run_metabolic_fba"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": [],
+    "summarization_metrics": {
+      "run_metabolic_fba": {
+        "original_size_bytes": 2926,
+        "summarized_size_bytes": 590,
+        "reduction_percentage": 79.84,
+        "user_satisfaction_score": 0.7984,
+        "information_completeness_score": 0.95,
+        "context_window_savings": 584,
+        "timestamp": "2025-06-18T22:51:21.390408"
+      }
+    }
+  },
+  {
+    "experience_id": "1750305116.392496",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-18T22:51:56.392506",
+    "user_query": "\"Analyze E. coli K-12 (ModelSEEDagent/data/examples/EcoliMG1655.xml) metabolism under anaerobic glucose conditions. I need detailed flux analysis of the most variable reactions and want to understand the mechanistic basis for any metabolic bottlenecks. Generate testable hypotheses for metabolic engineering improvements.\"",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "e_coli",
+      "query_type": "general",
+      "complexity": "medium"
+    },
+    "tools_used": [
+      "run_flux_variability_analysis",
+      "run_flux_sampling",
+      "run_gene_deletion_analysis",
+      "run_metabolic_fba",
+      "run_metabolic_fba"
+    ],
+    "tool_sequence": [
+      "run_flux_variability_analysis",
+      "run_flux_sampling",
+      "run_gene_deletion_analysis",
+      "run_metabolic_fba",
+      "run_metabolic_fba"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": [],
+    "summarization_metrics": null
+  },
+  {
+    "experience_id": "1750307200.069213",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-18T23:26:40.069222",
+    "user_query": "\"Analyze E. coli K-12 (EcoliMG1655.xml) metabolism under anaerobic glucose conditions. I need detailed flux analysis of the most variable reactions and want to understand the mechanistic basis for any metabolic bottlenecks. Generate testable hypotheses for metabolic engineering improvements.\"",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "e_coli",
+      "query_type": "general",
+      "complexity": "medium"
+    },
+    "tools_used": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "run_flux_sampling",
+      "run_gene_deletion_analysis"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "run_flux_sampling",
+      "run_gene_deletion_analysis"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": [],
+    "summarization_metrics": null
+  },
+  {
+    "experience_id": "1750310139.948649",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-19T00:15:39.948660",
+    "user_query": "\"Analyze E. coli K-12 (EcoliMG1655.xml) metabolism under anaerobic glucose conditions. I need detailed flux analysis of the most variable reactions and want to understand the mechanistic basis for any metabolic bottlenecks. Generate testable hypotheses for metabolic engineering improvements.\"",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "e_coli",
+      "query_type": "general",
+      "complexity": "medium"
+    },
+    "tools_used": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "run_gene_deletion_analysis",
+      "run_flux_sampling"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "run_gene_deletion_analysis",
+      "run_flux_sampling"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": [],
+    "summarization_metrics": null
+  },
+  {
+    "experience_id": "1750310139.948649",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-19T00:15:39.948660",
+    "user_query": "\"Analyze E. coli K-12 (EcoliMG1655.xml) metabolism under anaerobic glucose conditions. I need detailed flux analysis of the most variable reactions and want to understand the mechanistic basis for any metabolic bottlenecks. Generate testable hypotheses for metabolic engineering improvements.\"",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "e_coli",
+      "query_type": "general",
+      "complexity": "medium"
+    },
+    "tools_used": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "run_gene_deletion_analysis",
+      "run_flux_sampling"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "run_gene_deletion_analysis",
+      "run_flux_sampling"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [
+      "Smart Summarization for run_metabolic_fba (\u226590% reduction, high satisfaction)"
+    ],
+    "ineffective_strategies": [],
+    "missed_opportunities": [],
+    "summarization_metrics": {
+      "run_metabolic_fba": {
+        "original_size_bytes": 30368,
+        "summarized_size_bytes": 619,
+        "reduction_percentage": 97.96,
+        "user_satisfaction_score": 0.9795999999999999,
+        "information_completeness_score": 0.95,
+        "context_window_savings": 7437,
+        "timestamp": "2025-06-19T00:20:00.531646"
+      }
+    }
+  },
+  {
+    "experience_id": "1750310432.598175",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-19T00:20:32.598184",
+    "user_query": "\"Using EcoliMG1655.xml, why is the pentose phosphate pathway essential during oxidative stress conditions? Use multiple analysis approaches and generate specific experimental hypotheses to test pathway importance.\"",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "e_coli",
+      "query_type": "essentiality",
+      "complexity": "medium"
+    },
+    "tools_used": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "run_gene_deletion_analysis",
+      "run_flux_sampling",
+      "run_metabolic_fba"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "run_gene_deletion_analysis",
+      "run_flux_sampling",
+      "run_metabolic_fba"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": [],
+    "summarization_metrics": null
+  },
+  {
+    "experience_id": "1750310432.598175",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-19T00:20:32.598184",
+    "user_query": "\"Using EcoliMG1655.xml, why is the pentose phosphate pathway essential during oxidative stress conditions? Use multiple analysis approaches and generate specific experimental hypotheses to test pathway importance.\"",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "e_coli",
+      "query_type": "essentiality",
+      "complexity": "medium"
+    },
+    "tools_used": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "run_gene_deletion_analysis",
+      "run_flux_sampling",
+      "run_metabolic_fba"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "run_gene_deletion_analysis",
+      "run_flux_sampling",
+      "run_metabolic_fba"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [
+      "Smart Summarization for run_flux_variability_analysis (\u226590% reduction, high satisfaction)"
+    ],
+    "ineffective_strategies": [],
+    "missed_opportunities": [],
+    "summarization_metrics": {
+      "run_flux_variability_analysis": {
+        "original_size_bytes": 135639,
+        "summarized_size_bytes": 2604,
+        "reduction_percentage": 98.08,
+        "user_satisfaction_score": 0.9808,
+        "information_completeness_score": 0.95,
+        "context_window_savings": 33258,
+        "timestamp": "2025-06-19T00:21:30.671730"
+      }
+    }
+  },
+  {
+    "experience_id": "1750310523.439098",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-19T00:22:03.439105",
+    "user_query": "\"Using EcoliMG1655.xml, show me detailed metabolic flux patterns for the top 10 most variable reactions in central carbon metabolism. Explain what these patterns reveal about metabolic flexibility and regulatory control.\"",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "e_coli",
+      "query_type": "general",
+      "complexity": "medium"
+    },
+    "tools_used": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "run_gene_deletion_analysis",
+      "run_flux_sampling",
+      "run_metabolic_fba",
+      "run_flux_variability_analysis"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "run_gene_deletion_analysis",
+      "run_flux_sampling",
+      "run_metabolic_fba",
+      "run_flux_variability_analysis"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": [],
+    "summarization_metrics": null
+  },
+  {
+    "experience_id": "1750371264.107099",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-19T17:14:24.107110",
+    "user_query": "\"Analyze E. coli K-12 (EcoliMG1655.xml) metabolism under anaerobic glucose conditions. I need detailed flux analysis of the most variable reactions and want to understand the mechanistic basis for any metabolic bottlenecks. Generate testable hypotheses for metabolic engineering improvements.\"",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "e_coli",
+      "query_type": "general",
+      "complexity": "medium"
+    },
+    "tools_used": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "run_flux_sampling",
+      "run_gene_deletion_analysis"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "run_flux_sampling",
+      "run_gene_deletion_analysis"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": [],
+    "summarization_metrics": null
+  },
+  {
+    "experience_id": "1750371264.107099",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-19T17:14:24.107110",
+    "user_query": "\"Analyze E. coli K-12 (EcoliMG1655.xml) metabolism under anaerobic glucose conditions. I need detailed flux analysis of the most variable reactions and want to understand the mechanistic basis for any metabolic bottlenecks. Generate testable hypotheses for metabolic engineering improvements.\"",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "e_coli",
+      "query_type": "general",
+      "complexity": "medium"
+    },
+    "tools_used": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "run_flux_sampling",
+      "run_gene_deletion_analysis"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "run_flux_sampling",
+      "run_gene_deletion_analysis"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [
+      "Smart Summarization for run_flux_variability_analysis (\u226590% reduction, high satisfaction)"
+    ],
+    "ineffective_strategies": [],
+    "missed_opportunities": [],
+    "summarization_metrics": {
+      "run_flux_variability_analysis": {
+        "original_size_bytes": 135639,
+        "summarized_size_bytes": 2604,
+        "reduction_percentage": 98.08,
+        "user_satisfaction_score": 0.9808,
+        "information_completeness_score": 0.95,
+        "context_window_savings": 33258,
+        "timestamp": "2025-06-19T17:15:44.970286"
+      }
+    }
+  },
+  {
+    "experience_id": "1750371384.391197",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-19T17:16:24.391205",
+    "user_query": "\"Using EcoliMG1655.xml, show me detailed metabolic flux patterns for the top 10 most variable reactions in central carbon metabolism. Explain what these patterns reveal about metabolic flexibility and regulatory control.\"",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "e_coli",
+      "query_type": "general",
+      "complexity": "medium"
+    },
+    "tools_used": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "run_flux_sampling",
+      "run_gene_deletion_analysis",
+      "run_flux_variability_analysis"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "run_flux_sampling",
+      "run_gene_deletion_analysis",
+      "run_flux_variability_analysis"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": [],
+    "summarization_metrics": null
+  },
+  {
+    "experience_id": "1750371384.391197",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-19T17:16:24.391205",
+    "user_query": "\"Using EcoliMG1655.xml, show me detailed metabolic flux patterns for the top 10 most variable reactions in central carbon metabolism. Explain what these patterns reveal about metabolic flexibility and regulatory control.\"",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "e_coli",
+      "query_type": "general",
+      "complexity": "medium"
+    },
+    "tools_used": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "run_flux_sampling",
+      "run_gene_deletion_analysis",
+      "run_flux_variability_analysis"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "run_flux_sampling",
+      "run_gene_deletion_analysis",
+      "run_flux_variability_analysis"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [
+      "Smart Summarization for run_metabolic_fba (\u226590% reduction, high satisfaction)"
+    ],
+    "ineffective_strategies": [],
+    "missed_opportunities": [],
+    "summarization_metrics": {
+      "run_metabolic_fba": {
+        "original_size_bytes": 30368,
+        "summarized_size_bytes": 619,
+        "reduction_percentage": 97.96,
+        "user_satisfaction_score": 0.9795999999999999,
+        "information_completeness_score": 0.95,
+        "context_window_savings": 7437,
+        "timestamp": "2025-06-19T17:20:29.507274"
+      }
+    }
+  },
+  {
+    "experience_id": "1750371656.319645",
+    "session_id": "pattern_memory_session",
+    "timestamp": "2025-06-19T17:20:56.319651",
+    "user_query": "\"Using EcoliMG1655.xml, why is the pentose phosphate pathway essential during oxidative stress conditions? Use multiple analysis approaches and generate specific experimental hypotheses to test pathway importance.\"",
+    "model_characteristics": {
+      "model_type": "unknown",
+      "organism": "e_coli",
+      "query_type": "essentiality",
+      "complexity": "medium"
+    },
+    "tools_used": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "run_flux_sampling",
+      "run_gene_deletion_analysis",
+      "run_flux_variability_analysis",
+      "run_metabolic_fba"
+    ],
+    "tool_sequence": [
+      "run_metabolic_fba",
+      "run_flux_variability_analysis",
+      "run_flux_sampling",
+      "run_gene_deletion_analysis",
+      "run_flux_variability_analysis",
+      "run_metabolic_fba"
+    ],
+    "success": true,
+    "insights_discovered": [],
+    "execution_time": 0.0,
+    "user_satisfaction": null,
+    "effective_strategies": [],
+    "ineffective_strategies": [],
+    "missed_opportunities": [],
+    "summarization_metrics": null
   }
 ]

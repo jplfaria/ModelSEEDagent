@@ -81,10 +81,10 @@ Each query evaluated across five dimensions:
 **Current Response Quality**:
 -  Correctly identifies gene as essential
 -  Mentions general biological importance
-- ❌ No mechanistic explanation of protein function
-- ❌ No connection to specific metabolic pathways
-- ❌ No use of detailed data available via fetch_artifact
-- ❌ No hypothesis about conditional essentiality
+- FAIL No mechanistic explanation of protein function
+- FAIL No connection to specific metabolic pathways
+- FAIL No use of detailed data available via fetch_artifact
+- FAIL No hypothesis about conditional essentiality
 
 **Missing Intelligence Elements**:
 1. Protein function details (ClpX protease subunit)

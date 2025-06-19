@@ -419,9 +419,34 @@ class IntelligentReasoningSystem:
         )
 
         # Calculate composite metrics
-        composite_scores = self.composite_metrics.calculate_composite_scores(
-            quality_assessment
+        # Extract just the scores from the quality assessment
+        dimension_scores = {}
+        if "dimensions" in quality_assessment:
+            dimension_scores = {
+                dim_name: dim_data["score"]
+                for dim_name, dim_data in quality_assessment["dimensions"].items()
+                if isinstance(dim_data, dict) and "score" in dim_data
+            }
+
+        composite_score_obj = self.composite_metrics.calculate_composite_score(
+            dimension_scores
+            if dimension_scores
+            else {"overall": quality_assessment.get("overall_score", 0.75)}
         )
+
+        # Convert CompositeScore dataclass to dictionary for Intelligence Framework compatibility
+        composite_scores = {
+            "overall_score": composite_score_obj.overall_score,
+            "weighted_score": composite_score_obj.weighted_score,
+            "geometric_mean": composite_score_obj.geometric_mean,
+            "harmonic_mean": composite_score_obj.harmonic_mean,
+            "consistency_bonus": composite_score_obj.consistency_bonus,
+            "excellence_bonus": composite_score_obj.excellence_bonus,
+            "penalty_applied": composite_score_obj.penalty_applied,
+            "grade": composite_score_obj.grade,
+            "ranking_percentile": composite_score_obj.ranking_percentile,
+            "confidence_interval": composite_score_obj.confidence_interval,
+        }
 
         # Enhance with artifact intelligence
         enhanced_quality = self.artifact_integrator.enhance_quality_validation(
