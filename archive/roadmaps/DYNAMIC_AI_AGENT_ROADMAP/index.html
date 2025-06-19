@@ -1,0 +1,3111 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI-Powered Metabolic Modeling Platform">
+      
+      
+        <meta name="author" content="ModelSEED Team">
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>Dynamic AI Agent Transformation Roadmap - ModelSEEDagent Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="light-blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dynamic-ai-agent-transformation-roadmap" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="ModelSEEDagent Documentation" class="md-header__button md-logo" aria-label="ModelSEEDagent Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ModelSEEDagent Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Dynamic AI Agent Transformation Roadmap
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="light-blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="light-blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ModelSEED/ModelSEEDagent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ModelSEED/ModelSEEDagent
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../getting-started/installation/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../user-guide/cli-reference/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ARCHITECTURE/" class="md-tabs__link">
+          
+  
+  
+  Technical Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../TOOL_TESTING_STATUS/" class="md-tabs__link">
+          
+  
+  
+  Testing
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../api/overview/" class="md-tabs__link">
+          
+  
+  
+  API Documentation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../developer/contributing/" class="md-tabs__link">
+          
+  
+  
+  Developer
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../development/intelligence-enhancement/" class="md-tabs__link">
+          
+  
+  
+  Intelligence Enhancement
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../user-guide/enhanced-reasoning-features/" class="md-tabs__link">
+          
+  
+  
+  Enhanced Features
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../operations/deployment/" class="md-tabs__link">
+          
+  
+  
+  Operations
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="ModelSEEDagent Documentation" class="md-nav__button md-logo" aria-label="ModelSEEDagent Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ModelSEEDagent Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ModelSEED/ModelSEEDagent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ModelSEED/ModelSEEDagent
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/quickstart-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Quick Start
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/interactive-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Interactive Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    User Guide
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            User Guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/cli-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CLI Reference
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/tool-catalogue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tool Catalogue
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    FAQ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Technical Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Technical Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Performance
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Troubleshooting
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Debug Mode
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Testing
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Testing
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../TOOL_TESTING_STATUS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tool Status
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/testing-infrastructure-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Test Infrastructure
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../testing/intelligence-enhancement-test-queries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Intelligence Enhancement Test Queries
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    API Documentation
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            API Documentation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tool Implementation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Developer
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Developer
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../developer/contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../developer/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Testing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../developer/validation-system-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Validation System
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../developer/validation-quick-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Validation Quick Reference
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../developer/style-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Style Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/DEVELOPMENT_ROADMAP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Development Roadmap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/smart-summarization-assessment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Smart Summarization
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/12-factor-agents-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    12-Factor Agents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Intelligence Enhancement
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Intelligence Enhancement
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/intelligence-enhancement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/intelligence-enhancement/baseline-measurements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Baseline Measurements
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_3" id="__nav_8_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Implementation Reports
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_3">
+            <span class="md-nav__icon md-icon"></span>
+            Implementation Reports
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/intelligence-enhancement/phase-1-completion-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Phase 1 - Prompt Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/intelligence-enhancement/phase-2-completion-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Phase 2 - Context Enhancement
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/intelligence-enhancement/phase-3-completion-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Phase 3 - Quality Validation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/intelligence-enhancement/phase-4-completion-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Phase 4 - Artifact Intelligence
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/intelligence-enhancement/phase-5-completion-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Phase 5 - Integration Validation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/intelligence-enhancement-complete/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Complete Framework Report
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Enhanced Features
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Enhanced Features
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/enhanced-reasoning-features/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reasoning Features Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/reasoning-framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reasoning Framework API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Operations
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Operations
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../operations/deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Deployment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../operations/monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../operations/documentation-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Documentation Automation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#vision-statement" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Vision Statement
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-state-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔍 Current State Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔍 Current State Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#whats-working" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✅ What's Working
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#critical-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ Critical Issues
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#transformation-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚀 Transformation Goals
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Transformation Goals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#primary-objectives" class="md-nav__link">
+    <span class="md-ellipsis">
+      Primary Objectives
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#success-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      Success Criteria
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-phases" class="md-nav__link">
+    <span class="md-ellipsis">
+      📋 Implementation Phases
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📋 Implementation Phases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-5-real-time-ai-agent-core-weeks-1-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 5: Real-Time AI Agent Core (Weeks 1-2)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 5: Real-Time AI Agent Core (Weeks 1-2)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-dynamic-langgraph-agent-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1 Dynamic LangGraph Agent Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-streaming-reasoning-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2 Streaming Reasoning Engine
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-result-based-decision-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.3 Result-Based Decision System
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-6-interactive-interface-overhaul-weeks-2-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 6: Interactive Interface Overhaul (Weeks 2-3)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 6: Interactive Interface Overhaul (Weeks 2-3)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-replace-fake-conversation-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.1 Replace Fake Conversation Engine
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-real-time-streaming-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.2 Real-Time Streaming Interface
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-cli-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.3 CLI Integration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-7-advanced-audit-verification-system-weeks-3-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 7: Advanced Audit &amp; Verification System (Weeks 3-4)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 7: Advanced Audit &amp; Verification System (Weeks 3-4)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-enhanced-audit-trail" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.1 Enhanced Audit Trail
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-verification-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.2 Verification Interface
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-real-time-hallucination-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.3 Real-Time Hallucination Detection
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-8-advanced-agentic-capabilities-weeks-4-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 8: Advanced Agentic Capabilities (Weeks 4-5)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 8: Advanced Agentic Capabilities (Weeks 4-5)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-multi-step-reasoning-chains" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.1 Multi-Step Reasoning Chains
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-hypothesis-driven-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.2 Hypothesis-Driven Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-collaborative-reasoning" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.3 Collaborative Reasoning
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84-cross-model-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.4 Cross-Model Learning
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#technical-implementation-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      🛠️ Technical Implementation Details
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛠️ Technical Implementation Details">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-architecture-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Architecture Changes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Architecture Changes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-broken-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Current Broken Flow:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#new-dynamic-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      New Dynamic Flow:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-components-to-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Components to Build
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Components to Build">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-dynamic-agent-core" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Dynamic Agent Core
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-streaming-reasoning-display" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Streaming Reasoning Display
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-result-based-decision-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Result-Based Decision Engine
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration Points
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration Points">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#langgraph-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      LangGraph Integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audit-system-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Audit System Integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cli-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      CLI Integration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-organization-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      🗂️ File Organization Plan
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🗂️ File Organization Plan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#new-files-to-create" class="md-nav__link">
+    <span class="md-ellipsis">
+      New Files to Create
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#files-to-modify" class="md-nav__link">
+    <span class="md-ellipsis">
+      Files to Modify
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Testing Strategy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📊 Testing Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#unit-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unit Tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration Tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demo-scenarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      Demo Scenarios
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      📝 Documentation Plan
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📝 Documentation Plan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#user-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      User Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#developer-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Developer Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Documentation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#commit-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔄 Commit Strategy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔄 Commit Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-5-commits" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 5 Commits
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-6-commits" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 6 Commits
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-7-commits" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 7 Commits
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-8-commits" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 8 Commits
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#success-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Success Metrics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Success Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#technical-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Technical Metrics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-experience-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      User Experience Metrics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demonstration-scenarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      Demonstration Scenarios
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expected-outcomes" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎉 Expected Outcomes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎉 Expected Outcomes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      For Users
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-developers" class="md-nav__link">
+    <span class="md-ellipsis">
+      For Developers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-the-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      For the Field
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-priority" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚀 Implementation Priority
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Implementation Priority">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#immediate-week-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Immediate (Week 1)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#short-term-weeks-2-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Short-term (Weeks 2-3)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#medium-term-weeks-4-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Medium-term (Weeks 4-5)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#long-term-future" class="md-nav__link">
+    <span class="md-ellipsis">
+      Long-term (Future)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="dynamic-ai-agent-transformation-roadmap">Dynamic AI Agent Transformation Roadmap</h1>
+<h2 id="vision-statement">🎯 Vision Statement</h2>
+<p>Transform ModelSEEDagent from a static template-based system into a truly dynamic AI agent that makes real-time decisions, adapts based on tool results, provides visible reasoning, and maintains complete auditability for hallucination detection.</p>
+<h2 id="current-state-analysis">🔍 Current State Analysis</h2>
+<h3 id="whats-working">✅ What's Working</h3>
+<ul>
+<li><strong>Tools Infrastructure</strong>: All 19 tools are functional and properly registered</li>
+<li><strong>LangGraph Architecture</strong>: Core framework exists but not properly connected</li>
+<li><strong>Audit System</strong>: Phase 4 audit infrastructure is complete</li>
+<li><strong>CLI Framework</strong>: Professional command-line interface established</li>
+</ul>
+<h3 id="critical-issues">❌ Critical Issues</h3>
+<ul>
+<li><strong>Fake Responses</strong>: Interactive interface uses templated responses instead of real AI</li>
+<li><strong>Static Workflows</strong>: Pre-determined tool selection rather than dynamic decisions</li>
+<li><strong>No Real-time Reasoning</strong>: Can't watch AI think through problems step-by-step</li>
+<li><strong>Disconnected Components</strong>: Tools work independently but aren't orchestrated by AI</li>
+</ul>
+<h2 id="transformation-goals">🚀 Transformation Goals</h2>
+<h3 id="primary-objectives">Primary Objectives</h3>
+<ol>
+<li><strong>Real Dynamic Decision-Making</strong>: AI selects tools based on actual results from previous tools</li>
+<li><strong>Visible Reasoning Process</strong>: Users can watch AI think through each decision</li>
+<li><strong>Complete Auditability</strong>: Every decision and tool execution fully logged for verification</li>
+<li><strong>Streaming Interface</strong>: Real-time display of AI thoughts and tool results</li>
+<li><strong>Adaptive Workflows</strong>: AI changes strategy based on discoveries</li>
+</ol>
+<h3 id="success-criteria">Success Criteria</h3>
+<ul>
+<li>AI can process: "Analyze this E. coli model" and dynamically decide which 4-5 tools to use based on results</li>
+<li>Users can follow the AI's reasoning in real-time</li>
+<li>Complete audit trail allows verification of every AI decision</li>
+<li>No more templated responses - all reasoning is genuine AI-generated</li>
+</ul>
+<hr />
+<h2 id="implementation-phases">📋 Implementation Phases</h2>
+<h3 id="phase-5-real-time-ai-agent-core-weeks-1-2">Phase 5: Real-Time AI Agent Core (Weeks 1-2)</h3>
+<h4 id="51-dynamic-langgraph-agent-implementation"><strong>5.1 Dynamic LangGraph Agent Implementation</strong></h4>
+<ul>
+<li><strong>File</strong>: <code>src/agents/real_time_metabolic.py</code></li>
+<li><strong>Goal</strong>: Replace static workflows with dynamic decision-making</li>
+<li><strong>Implementation</strong>:
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">RealTimeMetabolicAgent</span><span class="p">:</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">process_query_dynamically</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        <span class="c1"># Step 1: AI analyzes query and selects first tool</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        <span class="n">first_tool</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ai_select_initial_tool</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>        <span class="c1"># Step 2: Execute tool and get results</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        <span class="n">result_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute_with_streaming</span><span class="p">(</span><span class="n">first_tool</span><span class="p">)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        <span class="c1"># Step 3: AI analyzes results and decides next tool</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        <span class="n">next_tool</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ai_analyze_results_and_decide</span><span class="p">(</span><span class="n">result_1</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        <span class="c1"># Continue until AI determines analysis is complete</span>
+</code></pre></div></li>
+</ul>
+<h4 id="52-streaming-reasoning-engine"><strong>5.2 Streaming Reasoning Engine</strong></h4>
+<ul>
+<li><strong>File</strong>: <code>src/reasoning/streaming_engine.py</code></li>
+<li><strong>Goal</strong>: Real-time display of AI thought process</li>
+<li><strong>Features</strong>:</li>
+<li>Stream AI reasoning as it happens</li>
+<li>Display tool selection rationale</li>
+<li>Show result analysis in real-time</li>
+<li>Beautiful CLI formatting with Rich</li>
+</ul>
+<h4 id="53-result-based-decision-system"><strong>5.3 Result-Based Decision System</strong></h4>
+<ul>
+<li><strong>File</strong>: <code>src/reasoning/decision_engine.py</code></li>
+<li><strong>Goal</strong>: AI analyzes actual tool outputs to make next decisions</li>
+<li><strong>Logic</strong>:
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">analyze_results_for_next_tool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool_results</span><span class="p">,</span> <span class="n">query_context</span><span class="p">):</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="k">if</span> <span class="s2">&quot;objective_value&quot;</span> <span class="ow">in</span> <span class="n">tool_results</span><span class="p">:</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>        <span class="n">growth_rate</span> <span class="o">=</span> <span class="n">tool_results</span><span class="p">[</span><span class="s2">&quot;objective_value&quot;</span><span class="p">]</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        <span class="k">if</span> <span class="n">growth_rate</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>            <span class="k">return</span> <span class="s2">&quot;find_minimal_media&quot;</span><span class="p">,</span> <span class="s2">&quot;High growth - investigate efficiency&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>        <span class="k">elif</span> <span class="n">growth_rate</span> <span class="o">&lt;</span> <span class="mf">0.1</span><span class="p">:</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>            <span class="k">return</span> <span class="s2">&quot;check_missing_media&quot;</span><span class="p">,</span> <span class="s2">&quot;Low growth - find constraints&quot;</span>
+</code></pre></div></li>
+</ul>
+<h3 id="phase-6-interactive-interface-overhaul-weeks-2-3">Phase 6: Interactive Interface Overhaul (Weeks 2-3)</h3>
+<h4 id="61-replace-fake-conversation-engine"><strong>6.1 Replace Fake Conversation Engine</strong></h4>
+<ul>
+<li><strong>Target</strong>: <code>src/interactive/conversation_engine.py</code></li>
+<li><strong>Action</strong>: Complete rewrite to use real LangGraph agent</li>
+<li><strong>Before</strong>: Templated responses like "Analysis completed successfully!"</li>
+<li><strong>After</strong>: Real AI responses based on actual analysis</li>
+</ul>
+<h4 id="62-real-time-streaming-interface"><strong>6.2 Real-Time Streaming Interface</strong></h4>
+<ul>
+<li><strong>File</strong>: <code>src/interactive/streaming_interface.py</code></li>
+<li><strong>Features</strong>:</li>
+<li>Live AI reasoning display</li>
+<li>Tool execution progress bars</li>
+<li>Result visualization as discovered</li>
+<li>Interactive follow-up questions</li>
+</ul>
+<h4 id="63-cli-integration"><strong>6.3 CLI Integration</strong></h4>
+<ul>
+<li><strong>Target</strong>: <code>modelseed-agent analyze</code> command</li>
+<li><strong>Enhancement</strong>: Connect to real AI agent instead of static workflows</li>
+<li><strong>Add</strong>: <code>--stream</code> flag for real-time reasoning display</li>
+</ul>
+<h3 id="phase-7-advanced-audit-verification-system-weeks-3-4">Phase 7: Advanced Audit &amp; Verification System (Weeks 3-4)</h3>
+<h4 id="71-enhanced-audit-trail"><strong>7.1 Enhanced Audit Trail</strong></h4>
+<ul>
+<li><strong>Extend</strong>: Existing Phase 4 audit system</li>
+<li><strong>Add</strong>: AI decision reasoning logs</li>
+<li><strong>Features</strong>:</li>
+<li>Every AI decision with full context</li>
+<li>Tool input/output correlation</li>
+<li>Reasoning chain verification</li>
+<li>Hallucination detection scoring</li>
+</ul>
+<h4 id="72-verification-interface"><strong>7.2 Verification Interface</strong></h4>
+<ul>
+<li><strong>File</strong>: <code>src/verification/audit_viewer.py</code></li>
+<li><strong>Purpose</strong>: Interactive audit trail exploration</li>
+<li><strong>Features</strong>:
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>modelseed-agent<span class="w"> </span>verify<span class="w"> </span>&lt;session_id&gt;
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Shows:</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># 1. AI decision chain</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># 2. Tool execution sequence</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># 3. Result analysis flow</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># 4. Hallucination confidence scores</span>
+</code></pre></div></li>
+</ul>
+<h4 id="73-real-time-hallucination-detection"><strong>7.3 Real-Time Hallucination Detection</strong></h4>
+<ul>
+<li><strong>Integration</strong>: Live verification during AI reasoning</li>
+<li><strong>Alerts</strong>: Immediate notification of suspicious AI claims</li>
+<li><strong>Scoring</strong>: Confidence metrics for each AI statement</li>
+</ul>
+<h3 id="phase-8-advanced-agentic-capabilities-weeks-4-5">Phase 8: Advanced Agentic Capabilities (Weeks 4-5)</h3>
+<h4 id="81-multi-step-reasoning-chains"><strong>8.1 Multi-Step Reasoning Chains</strong></h4>
+<ul>
+<li><strong>Capability</strong>: AI can plan 5-10 step analysis sequences</li>
+<li><strong>Example</strong>: "Analyze → Identify Issues → Investigate → Validate → Conclude"</li>
+<li><strong>Memory</strong>: AI remembers entire reasoning chain</li>
+</ul>
+<h4 id="82-hypothesis-driven-analysis"><strong>8.2 Hypothesis-Driven Analysis</strong></h4>
+<ul>
+<li><strong>Feature</strong>: AI generates hypotheses and tests them</li>
+<li><strong>Example</strong>:</li>
+<li>AI: "I hypothesize this model has auxotrophies"</li>
+<li>AI: "Testing with auxotrophy analysis tool..."</li>
+<li>AI: "Hypothesis confirmed: 3 auxotrophies found"</li>
+</ul>
+<h4 id="83-collaborative-reasoning"><strong>8.3 Collaborative Reasoning</strong></h4>
+<ul>
+<li><strong>Feature</strong>: AI asks user for guidance when uncertain</li>
+<li><strong>Example</strong>:</li>
+<li>AI: "I found low growth rate. Should I investigate:"</li>
+<li>AI: "1. Nutritional constraints, or 2. Essential gene issues?"</li>
+<li>User selects → AI continues with chosen path</li>
+</ul>
+<h4 id="84-cross-model-learning"><strong>8.4 Cross-Model Learning</strong></h4>
+<ul>
+<li><strong>Feature</strong>: AI learns patterns across multiple model analyses</li>
+<li><strong>Memory</strong>: Accumulates insights from previous analyses</li>
+<li><strong>Adaptation</strong>: Improves tool selection based on experience</li>
+</ul>
+<hr />
+<h2 id="technical-implementation-details">🛠️ Technical Implementation Details</h2>
+<h3 id="core-architecture-changes">Core Architecture Changes</h3>
+<h4 id="current-broken-flow"><strong>Current Broken Flow</strong>:</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>User Query → Template Matcher → Static Response
+</code></pre></div>
+<h4 id="new-dynamic-flow"><strong>New Dynamic Flow</strong>:</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>User Query → AI Analysis → Tool Selection → Tool Execution →
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Result Analysis → Next Tool Decision → ... → Final Synthesis
+</code></pre></div>
+<h3 id="key-components-to-build">Key Components to Build</h3>
+<h4 id="1-dynamic-agent-core"><strong>1. Dynamic Agent Core</strong></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">DynamicMetabolicAgent</span><span class="p">:</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">reasoning_engine</span> <span class="o">=</span> <span class="n">ReasoningEngine</span><span class="p">()</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tool_orchestrator</span> <span class="o">=</span> <span class="n">ToolOrchestrator</span><span class="p">()</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">audit_logger</span> <span class="o">=</span> <span class="n">AuditLogger</span><span class="p">()</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">streaming_interface</span> <span class="o">=</span> <span class="n">StreamingInterface</span><span class="p">()</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>        <span class="c1"># Real-time AI processing with streaming</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>        <span class="k">async</span> <span class="k">for</span> <span class="n">reasoning_step</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reasoning_engine</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">query</span><span class="p">):</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">streaming_interface</span><span class="o">.</span><span class="n">display_reasoning</span><span class="p">(</span><span class="n">reasoning_step</span><span class="p">)</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>            <span class="k">if</span> <span class="n">reasoning_step</span><span class="o">.</span><span class="n">requires_tool</span><span class="p">:</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>                <span class="n">tool_result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">tool_orchestrator</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>                    <span class="n">reasoning_step</span><span class="o">.</span><span class="n">selected_tool</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>                <span class="p">)</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">audit_logger</span><span class="o">.</span><span class="n">log_execution</span><span class="p">(</span><span class="n">tool_result</span><span class="p">)</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>                <span class="c1"># AI analyzes result and decides next step</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>                <span class="n">next_step</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">reasoning_engine</span><span class="o">.</span><span class="n">analyze_result</span><span class="p">(</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>                    <span class="n">tool_result</span><span class="p">,</span> <span class="n">query</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>                <span class="p">)</span>
+</code></pre></div>
+<h4 id="2-streaming-reasoning-display"><strong>2. Streaming Reasoning Display</strong></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">StreamingInterface</span><span class="p">:</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">display_reasoning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>        <span class="c1"># Real-time display with Rich</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🤖 AI Thinking: </span><span class="si">{</span><span class="n">step</span><span class="o">.</span><span class="n">reasoning</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🔧 Selected Tool: </span><span class="si">{</span><span class="n">step</span><span class="o">.</span><span class="n">tool</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;💭 Because: </span><span class="si">{</span><span class="n">step</span><span class="o">.</span><span class="n">rationale</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="3-result-based-decision-engine"><strong>3. Result-Based Decision Engine</strong></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">ReasoningEngine</span><span class="p">:</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">analyze_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool_result</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>        <span class="c1"># AI analyzes actual data to decide next step</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>        <span class="n">insights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_insights</span><span class="p">(</span><span class="n">tool_result</span><span class="p">)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>        <span class="n">gaps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">identify_knowledge_gaps</span><span class="p">(</span><span class="n">insights</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>        <span class="n">next_tool</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_tool_for_gaps</span><span class="p">(</span><span class="n">gaps</span><span class="p">)</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>        <span class="k">return</span> <span class="n">next_tool</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_reasoning</span><span class="p">(</span><span class="n">insights</span><span class="p">,</span> <span class="n">gaps</span><span class="p">,</span> <span class="n">next_tool</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="integration-points">Integration Points</h3>
+<h4 id="langgraph-integration"><strong>LangGraph Integration</strong></h4>
+<ul>
+<li>Connect existing <code>LangGraphMetabolicAgent</code> to new reasoning engine</li>
+<li>Use LangGraph's state management for conversation memory</li>
+<li>Implement proper tool routing through LangGraph nodes</li>
+</ul>
+<h4 id="audit-system-integration"><strong>Audit System Integration</strong></h4>
+<ul>
+<li>Extend Phase 4 audit system with AI decision logging</li>
+<li>Add real-time verification capabilities</li>
+<li>Implement hallucination detection scoring</li>
+</ul>
+<h4 id="cli-integration"><strong>CLI Integration</strong></h4>
+<ul>
+<li>Replace static analysis commands with dynamic agent calls</li>
+<li>Add streaming mode for real-time reasoning display</li>
+<li>Maintain backward compatibility with existing commands</li>
+</ul>
+<hr />
+<h2 id="file-organization-plan">🗂️ File Organization Plan</h2>
+<h3 id="new-files-to-create">New Files to Create</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>src/
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>├── agents/
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>│   ├── real_time_metabolic.py          # Dynamic AI agent core
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>│   └── reasoning_chains.py             # Multi-step reasoning logic
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>├── reasoning/
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>│   ├── __init__.py
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>│   ├── streaming_engine.py             # Real-time reasoning display
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>│   ├── decision_engine.py              # Result-based decisions
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>│   ├── hypothesis_generator.py         # AI hypothesis testing
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>│   └── pattern_memory.py              # Cross-analysis learning
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>├── verification/
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>│   ├── __init__.py
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>│   ├── audit_viewer.py                # Interactive audit exploration
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>│   ├── hallucination_detector.py      # Real-time verification
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>│   └── confidence_scorer.py           # AI statement scoring
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>└── streaming/
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>    ├── __init__.py
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>    ├── interface.py                   # Rich-based streaming UI
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>    ├── progress_tracker.py           # Analysis progress display
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>    └── result_visualizer.py          # Real-time result display
+</code></pre></div>
+<h3 id="files-to-modify">Files to Modify</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>src/interactive/
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>├── conversation_engine.py            # Replace with real AI calls
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>├── interactive_cli.py               # Connect to streaming agent
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>└── query_processor.py              # Remove template matching
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>src/cli/
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>├── main.py                         # Connect analyze command to real AI
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>└── standalone.py                   # Add streaming options
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>src/agents/
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>└── langgraph_metabolic.py         # Integrate with new reasoning engine
+</code></pre></div>
+<hr />
+<h2 id="testing-strategy">📊 Testing Strategy</h2>
+<h3 id="unit-tests">Unit Tests</h3>
+<ul>
+<li><strong>Reasoning Engine</strong>: Test AI decision logic with mock tool results</li>
+<li><strong>Streaming Interface</strong>: Verify real-time display components</li>
+<li><strong>Audit Logger</strong>: Ensure complete traceability</li>
+</ul>
+<h3 id="integration-tests">Integration Tests</h3>
+<ul>
+<li><strong>End-to-End Workflows</strong>: Complete user query → AI analysis → results</li>
+<li><strong>Tool Orchestration</strong>: Verify proper tool sequencing</li>
+<li><strong>Audit Verification</strong>: Check hallucination detection accuracy</li>
+</ul>
+<h3 id="demo-scenarios">Demo Scenarios</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Test scenarios for validation</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">test_scenarios</span> <span class="o">=</span> <span class="p">[</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="p">{</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>        <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;Comprehensive E. coli analysis&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>        <span class="s2">&quot;expected_tools&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;run_metabolic_fba&quot;</span><span class="p">,</span> <span class="s2">&quot;find_minimal_media&quot;</span><span class="p">,</span> <span class="s2">&quot;analyze_essentiality&quot;</span><span class="p">],</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>        <span class="s2">&quot;expected_reasoning&quot;</span><span class="p">:</span> <span class="s2">&quot;Growth analysis → nutritional assessment → gene essentiality&quot;</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="p">},</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>    <span class="p">{</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>        <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;Why is this model growing slowly?&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>        <span class="s2">&quot;expected_tools&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;run_metabolic_fba&quot;</span><span class="p">,</span> <span class="s2">&quot;check_missing_media&quot;</span><span class="p">,</span> <span class="s2">&quot;identify_auxotrophies&quot;</span><span class="p">],</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>        <span class="s2">&quot;expected_reasoning&quot;</span><span class="p">:</span> <span class="s2">&quot;Baseline growth → constraint identification → gap analysis&quot;</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>    <span class="p">}</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="p">]</span>
+</code></pre></div>
+<hr />
+<h2 id="documentation-plan">📝 Documentation Plan</h2>
+<h3 id="user-documentation">User Documentation</h3>
+<ul>
+<li><strong><code>docs/user/DYNAMIC_AGENT_GUIDE.md</code></strong>: How to use the new AI agent</li>
+<li><strong><code>docs/user/STREAMING_INTERFACE.md</code></strong>: Real-time reasoning features</li>
+<li><strong><code>docs/user/AUDIT_VERIFICATION.md</code></strong>: Hallucination checking guide</li>
+</ul>
+<h3 id="developer-documentation">Developer Documentation</h3>
+<ul>
+<li><strong><code>docs/development/AI_AGENT_ARCHITECTURE.md</code></strong>: Technical architecture</li>
+<li><strong><code>docs/development/REASONING_ENGINE.md</code></strong>: AI decision-making logic</li>
+<li><strong><code>docs/development/STREAMING_IMPLEMENTATION.md</code></strong>: Real-time display system</li>
+</ul>
+<h3 id="api-documentation">API Documentation</h3>
+<ul>
+<li><strong><code>docs/api/DYNAMIC_AGENT_API.md</code></strong>: Programmatic access to AI agent</li>
+<li><strong><code>docs/api/STREAMING_EVENTS.md</code></strong>: Real-time event streaming API</li>
+</ul>
+<hr />
+<h2 id="commit-strategy">🔄 Commit Strategy</h2>
+<h3 id="phase-5-commits">Phase 5 Commits</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Week 1</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>feat:<span class="w"> </span>Phase<span class="w"> </span><span class="m">5</span>.1<span class="w"> </span>-<span class="w"> </span>Implement<span class="w"> </span>dynamic<span class="w"> </span>LangGraph<span class="w"> </span>agent<span class="w"> </span>core
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>feat:<span class="w"> </span>Phase<span class="w"> </span><span class="m">5</span>.2<span class="w"> </span>-<span class="w"> </span>Add<span class="w"> </span>streaming<span class="w"> </span>reasoning<span class="w"> </span>engine
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>feat:<span class="w"> </span>Phase<span class="w"> </span><span class="m">5</span>.3<span class="w"> </span>-<span class="w"> </span>Implement<span class="w"> </span>result-based<span class="w"> </span>decision<span class="w"> </span>system
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>docs:<span class="w"> </span>Add<span class="w"> </span>dynamic<span class="w"> </span>agent<span class="w"> </span>architecture<span class="w"> </span>documentation
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Week 2</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>test:<span class="w"> </span>Add<span class="w"> </span>comprehensive<span class="w"> </span>tests<span class="w"> </span><span class="k">for</span><span class="w"> </span>reasoning<span class="w"> </span>engine
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>refactor:<span class="w"> </span>Integrate<span class="w"> </span>dynamic<span class="w"> </span>agent<span class="w"> </span>with<span class="w"> </span>existing<span class="w"> </span>tools
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>fix:<span class="w"> </span>Resolve<span class="w"> </span>LangGraph<span class="w"> </span>state<span class="w"> </span>management<span class="w"> </span>issues
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>docs:<span class="w"> </span>Update<span class="w"> </span>user<span class="w"> </span>guide<span class="w"> </span><span class="k">for</span><span class="w"> </span>dynamic<span class="w"> </span>features
+</code></pre></div>
+<h3 id="phase-6-commits">Phase 6 Commits</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Week 2-3</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>feat:<span class="w"> </span>Phase<span class="w"> </span><span class="m">6</span>.1<span class="w"> </span>-<span class="w"> </span>Replace<span class="w"> </span>fake<span class="w"> </span>conversation<span class="w"> </span>engine<span class="w"> </span>with<span class="w"> </span>real<span class="w"> </span>AI
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>feat:<span class="w"> </span>Phase<span class="w"> </span><span class="m">6</span>.2<span class="w"> </span>-<span class="w"> </span>Implement<span class="w"> </span>real-time<span class="w"> </span>streaming<span class="w"> </span>interface
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>feat:<span class="w"> </span>Phase<span class="w"> </span><span class="m">6</span>.3<span class="w"> </span>-<span class="w"> </span>Connect<span class="w"> </span>CLI<span class="w"> </span>analyze<span class="w"> </span><span class="nb">command</span><span class="w"> </span>to<span class="w"> </span>dynamic<span class="w"> </span>agent
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>docs:<span class="w"> </span>Add<span class="w"> </span>streaming<span class="w"> </span>interface<span class="w"> </span>user<span class="w"> </span>guide
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>test:<span class="w"> </span>End-to-end<span class="w"> </span>integration<span class="w"> </span>tests<span class="w"> </span><span class="k">for</span><span class="w"> </span>dynamic<span class="w"> </span>workflows
+</code></pre></div>
+<h3 id="phase-7-commits">Phase 7 Commits</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Week 3-4</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>feat:<span class="w"> </span>Phase<span class="w"> </span><span class="m">7</span>.1<span class="w"> </span>-<span class="w"> </span>Enhanced<span class="w"> </span>audit<span class="w"> </span>trail<span class="w"> </span>with<span class="w"> </span>AI<span class="w"> </span>reasoning<span class="w"> </span>logs
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>feat:<span class="w"> </span>Phase<span class="w"> </span><span class="m">7</span>.2<span class="w"> </span>-<span class="w"> </span>Interactive<span class="w"> </span>audit<span class="w"> </span>verification<span class="w"> </span>interface
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>feat:<span class="w"> </span>Phase<span class="w"> </span><span class="m">7</span>.3<span class="w"> </span>-<span class="w"> </span>Real-time<span class="w"> </span>hallucination<span class="w"> </span>detection<span class="w"> </span>system
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>docs:<span class="w"> </span>Complete<span class="w"> </span>audit<span class="w"> </span>and<span class="w"> </span>verification<span class="w"> </span>documentation
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>test:<span class="w"> </span>Hallucination<span class="w"> </span>detection<span class="w"> </span>accuracy<span class="w"> </span>validation
+</code></pre></div>
+<h3 id="phase-8-commits">Phase 8 Commits</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Week 4-5</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>feat:<span class="w"> </span>Phase<span class="w"> </span><span class="m">8</span>.1<span class="w"> </span>-<span class="w"> </span>Multi-step<span class="w"> </span>reasoning<span class="w"> </span>chain<span class="w"> </span>implementation
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>feat:<span class="w"> </span>Phase<span class="w"> </span><span class="m">8</span>.2<span class="w"> </span>-<span class="w"> </span>Hypothesis-driven<span class="w"> </span>analysis<span class="w"> </span>capabilities
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>feat:<span class="w"> </span>Phase<span class="w"> </span><span class="m">8</span>.3<span class="w"> </span>-<span class="w"> </span>Collaborative<span class="w"> </span>reasoning<span class="w"> </span>with<span class="w"> </span>user<span class="w"> </span>input
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>feat:<span class="w"> </span>Phase<span class="w"> </span><span class="m">8</span>.4<span class="w"> </span>-<span class="w"> </span>Cross-model<span class="w"> </span>learning<span class="w"> </span>and<span class="w"> </span>pattern<span class="w"> </span>memory
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>docs:<span class="w"> </span>Advanced<span class="w"> </span>agentic<span class="w"> </span>capabilities<span class="w"> </span>guide
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>test:<span class="w"> </span>Complex<span class="w"> </span>reasoning<span class="w"> </span>scenario<span class="w"> </span>validation
+</code></pre></div>
+<hr />
+<h2 id="success-metrics">🎯 Success Metrics</h2>
+<h3 id="technical-metrics">Technical Metrics</h3>
+<ul>
+<li><strong>Response Authenticity</strong>: 0% templated responses (currently ~95%)</li>
+<li><strong>Decision Accuracy</strong>: AI tool selection matches expert choices &gt;85%</li>
+<li><strong>Audit Completeness</strong>: 100% traceability of AI decisions</li>
+<li><strong>Hallucination Detection</strong>: &lt;5% false positives, &gt;90% true positive rate</li>
+</ul>
+<h3 id="user-experience-metrics">User Experience Metrics</h3>
+<ul>
+<li><strong>Reasoning Clarity</strong>: Users can follow AI logic in real-time</li>
+<li><strong>Trust Level</strong>: Complete audit trail enables verification</li>
+<li><strong>Efficiency</strong>: AI completes comprehensive analysis in &lt;2 minutes</li>
+<li><strong>Adaptability</strong>: AI adjusts strategy based on discovered results</li>
+</ul>
+<h3 id="demonstration-scenarios">Demonstration Scenarios</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Scenario 1: Dynamic Discovery</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>User:<span class="w"> </span><span class="s2">&quot;Analyze this E. coli model&quot;</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>AI:<span class="w"> </span><span class="s2">&quot;Starting with growth analysis... Found high growth rate (518 h⁻¹)&quot;</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>AI:<span class="w"> </span><span class="s2">&quot;High growth detected - investigating nutritional efficiency...&quot;</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>AI:<span class="w"> </span><span class="s2">&quot;Found 20 nutrient requirements - checking for biosynthetic gaps...&quot;</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>AI:<span class="w"> </span><span class="s2">&quot;Analysis complete: Robust metabolism with moderate nutritional complexity&quot;</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="c1"># Scenario 2: Problem Investigation</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>User:<span class="w"> </span><span class="s2">&quot;Why is this model growing poorly?&quot;</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>AI:<span class="w"> </span><span class="s2">&quot;Checking baseline growth... Growth rate only 0.05 h⁻¹&quot;</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>AI:<span class="w"> </span><span class="s2">&quot;Low growth detected - investigating constraints...&quot;</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>AI:<span class="w"> </span><span class="s2">&quot;Found missing essential nutrients - checking for auxotrophies...&quot;</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>AI:<span class="w"> </span><span class="s2">&quot;Identified 5 auxotrophies causing growth limitation&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="expected-outcomes">🎉 Expected Outcomes</h2>
+<h3 id="for-users">For Users</h3>
+<ul>
+<li><strong>Transparent AI</strong>: Watch AI think through complex biological problems</li>
+<li><strong>Trustworthy Results</strong>: Verify every AI decision and tool result</li>
+<li><strong>Adaptive Analysis</strong>: AI discovers unexpected insights and adjusts approach</li>
+<li><strong>Professional Quality</strong>: Publication-ready analysis with complete provenance</li>
+</ul>
+<h3 id="for-developers">For Developers</h3>
+<ul>
+<li><strong>Extensible Framework</strong>: Easy to add new reasoning capabilities</li>
+<li><strong>Robust Architecture</strong>: Fault-tolerant with graceful error handling</li>
+<li><strong>Complete Observability</strong>: Every system component fully auditable</li>
+<li><strong>Industry Standard</strong>: Reference implementation for AI agent design</li>
+</ul>
+<h3 id="for-the-field">For the Field</h3>
+<ul>
+<li><strong>New Paradigm</strong>: Demonstrates how AI agents should work in scientific applications</li>
+<li><strong>Trust in AI</strong>: Shows how to make AI decisions completely verifiable</li>
+<li><strong>Open Source</strong>: Provides template for other scientific AI systems</li>
+<li><strong>Research Impact</strong>: Enables new types of biological discovery workflows</li>
+</ul>
+<hr />
+<h2 id="implementation-priority">🚀 Implementation Priority</h2>
+<h3 id="immediate-week-1">Immediate (Week 1)</h3>
+<ol>
+<li><strong>Dynamic Agent Core</strong>: Replace static workflows with real AI decisions</li>
+<li><strong>Streaming Interface</strong>: Real-time reasoning display</li>
+<li><strong>Basic Integration</strong>: Connect to existing tools</li>
+</ol>
+<h3 id="short-term-weeks-2-3">Short-term (Weeks 2-3)</h3>
+<ol>
+<li><strong>Interactive Overhaul</strong>: Fix conversation engine and CLI</li>
+<li><strong>Enhanced Auditing</strong>: Complete traceability and verification</li>
+<li><strong>User Documentation</strong>: Comprehensive guides</li>
+</ol>
+<h3 id="medium-term-weeks-4-5">Medium-term (Weeks 4-5)</h3>
+<ol>
+<li><strong>Advanced Reasoning</strong>: Multi-step chains and hypothesis testing</li>
+<li><strong>Collaborative Features</strong>: AI-user interaction</li>
+<li><strong>Learning Capabilities</strong>: Pattern memory across analyses</li>
+</ol>
+<h3 id="long-term-future">Long-term (Future)</h3>
+<ol>
+<li><strong>Multi-Model Support</strong>: Analyze multiple organisms simultaneously</li>
+<li><strong>Workflow Templates</strong>: Save and reuse analysis patterns</li>
+<li><strong>Integration APIs</strong>: Connect to external databases and tools</li>
+</ol>
+<p>This roadmap transforms ModelSEEDagent from a tool collection into a true AI research partner that thinks, adapts, and can be trusted through complete transparency.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.share", "content.code.copy", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mtml-chtml.js"></script>
+      
+    
+  </body>
+</html>

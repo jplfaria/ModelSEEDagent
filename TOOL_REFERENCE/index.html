@@ -1,0 +1,2602 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI-Powered Metabolic Modeling Platform">
+      
+      
+        <meta name="author" content="ModelSEED Team">
+      
+      
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>Tool Reference Guide - ModelSEEDagent Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="light-blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#tool-reference-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ModelSEEDagent Documentation" class="md-header__button md-logo" aria-label="ModelSEEDagent Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ModelSEEDagent Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Tool Reference Guide
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="light-blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="light-blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ModelSEED/ModelSEEDagent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ModelSEED/ModelSEEDagent
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../getting-started/installation/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../user-guide/cli-reference/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ARCHITECTURE/" class="md-tabs__link">
+          
+  
+  
+  Technical Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../TOOL_TESTING_STATUS/" class="md-tabs__link">
+          
+  
+  
+  Testing
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../api/overview/" class="md-tabs__link">
+          
+  
+  
+  API Documentation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../developer/contributing/" class="md-tabs__link">
+          
+  
+  
+  Developer
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../development/intelligence-enhancement/" class="md-tabs__link">
+          
+  
+  
+  Intelligence Enhancement
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../user-guide/enhanced-reasoning-features/" class="md-tabs__link">
+          
+  
+  
+  Enhanced Features
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../operations/deployment/" class="md-tabs__link">
+          
+  
+  
+  Operations
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ModelSEEDagent Documentation" class="md-nav__button md-logo" aria-label="ModelSEEDagent Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ModelSEEDagent Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ModelSEED/ModelSEEDagent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ModelSEED/ModelSEEDagent
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/quickstart-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Quick Start
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/interactive-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Interactive Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    User Guide
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            User Guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/cli-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CLI Reference
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/tool-catalogue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tool Catalogue
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    FAQ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Technical Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Technical Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Performance
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Troubleshooting
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Debug Mode
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Testing
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Testing
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TOOL_TESTING_STATUS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tool Status
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/testing-infrastructure-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Test Infrastructure
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing/intelligence-enhancement-test-queries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Intelligence Enhancement Test Queries
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    API Documentation
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            API Documentation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tool Implementation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Developer
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Developer
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../developer/contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../developer/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Testing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../developer/validation-system-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Validation System
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../developer/validation-quick-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Validation Quick Reference
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../developer/style-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Style Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/DEVELOPMENT_ROADMAP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Development Roadmap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/smart-summarization-assessment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Smart Summarization
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/12-factor-agents-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    12-Factor Agents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Intelligence Enhancement
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Intelligence Enhancement
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/intelligence-enhancement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/intelligence-enhancement/baseline-measurements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Baseline Measurements
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_3" id="__nav_8_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Implementation Reports
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_3">
+            <span class="md-nav__icon md-icon"></span>
+            Implementation Reports
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/intelligence-enhancement/phase-1-completion-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Phase 1 - Prompt Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/intelligence-enhancement/phase-2-completion-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Phase 2 - Context Enhancement
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/intelligence-enhancement/phase-3-completion-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Phase 3 - Quality Validation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/intelligence-enhancement/phase-4-completion-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Phase 4 - Artifact Intelligence
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/intelligence-enhancement/phase-5-completion-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Phase 5 - Integration Validation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/intelligence-enhancement-complete/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Complete Framework Report
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Enhanced Features
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Enhanced Features
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/enhanced-reasoning-features/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reasoning Features Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/reasoning-framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reasoning Framework API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Operations
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Operations
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../operations/deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Deployment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../operations/monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../operations/documentation-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Documentation Automation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tool-categories" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tool Categories
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#smart-summarization-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Smart Summarization Framework
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Smart Summarization Framework">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#three-tier-information-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Three-Tier Information Hierarchy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#size-reduction-achievements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Size Reduction Achievements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ai-media-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      AI Media Tools
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AI Media Tools">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-media-selector-select_optimal_media" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Media Selector (select_optimal_media)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-media-manipulator-manipulate_media_composition" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Media Manipulator (manipulate_media_composition)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-media-compatibility-checker-analyze_media_compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Media Compatibility Checker (analyze_media_compatibility)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-media-performance-comparator-compare_media_performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Media Performance Comparator (compare_media_performance)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-media-optimizer-optimize_media_composition" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Media Optimizer (optimize_media_composition)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-auxotrophy-predictor-predict_auxotrophies" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Auxotrophy Predictor (predict_auxotrophies)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cobrapy-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      COBRApy Tools
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="COBRApy Tools">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-fba-tool-run_metabolic_fba" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. FBA Tool (run_metabolic_fba)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-model-analyzer-analyze_metabolic_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Model Analyzer (analyze_metabolic_model)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-pathway-analyzer-analyze_pathway" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Pathway Analyzer (analyze_pathway)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-flux-variability-analysis-run_flux_variability_analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Flux Variability Analysis (run_flux_variability_analysis)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-gene-deletion-analysis-run_gene_deletion_analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Gene Deletion Analysis (run_gene_deletion_analysis)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-moma-analysis-run_moma_analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. MOMA Analysis (run_moma_analysis)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-essentiality-analysis-analyze_essentiality" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Essentiality Analysis (analyze_essentiality)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-flux-sampling-run_flux_sampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Flux Sampling (run_flux_sampling)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-production-envelope-run_production_envelope" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. Production Envelope (run_production_envelope)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-auxotrophy-identification-identify_auxotrophies" class="md-nav__link">
+    <span class="md-ellipsis">
+      10. Auxotrophy Identification (identify_auxotrophies)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#11-minimal-media-finder-find_minimal_media" class="md-nav__link">
+    <span class="md-ellipsis">
+      11. Minimal Media Finder (find_minimal_media)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-missing-media-checker-check_missing_media" class="md-nav__link">
+    <span class="md-ellipsis">
+      12. Missing Media Checker (check_missing_media)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-reaction-expression-analyze_reaction_expression" class="md-nav__link">
+    <span class="md-ellipsis">
+      13. Reaction Expression (analyze_reaction_expression)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#biochemistry-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      Biochemistry Tools
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Biochemistry Tools">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-biochemistry-resolver-resolve_biochem_entity-enhanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Biochemistry Resolver (resolve_biochem_entity) ✨ ENHANCED
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-biochemistry-search-search_biochem-enhanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Biochemistry Search (search_biochem) ✨ ENHANCED
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-cross-database-id-translator-translate_database_ids-new" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Cross-Database ID Translator (translate_database_ids) ✨ NEW
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modelseed-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      ModelSEED Tools
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ModelSEED Tools">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-rast-annotator-annotate_genome_rast" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. RAST Annotator (annotate_genome_rast)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-model-builder-build_metabolic_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Model Builder (build_metabolic_model)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-model-gapfiller-gapfill_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Model Gapfiller (gapfill_model)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      Getting Started
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      Additional Information
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      System Tools
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="System Tools">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-tool-audit-tool_audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Tool Audit (tool_audit)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-ai-audit-ai_audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. AI Audit (ai_audit)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-realtime-verification-realtime_verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Realtime Verification (realtime_verification)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-fetchartifact-fetch_artifact_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. FetchArtifact (fetch_artifact_data)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="tool-reference-guide">Tool Reference Guide</h1>
+<h2 id="overview">Overview</h2>
+<p>ModelSEEDagent provides <strong>25 specialized metabolic modeling tools</strong> organized into six main categories, enhanced with the <strong>Smart Summarization Framework</strong> for optimal LLM performance. Each tool is designed for specific analysis tasks and integrates seamlessly with the AI reasoning system.</p>
+<h2 id="tool-categories">Tool Categories</h2>
+<ol>
+<li><a href="#ai-media-tools">AI Media Tools (6 tools)</a> - Intelligent media management and optimization</li>
+<li><a href="#cobrapy-tools">COBRApy Tools (13 tools)</a> - Comprehensive metabolic modeling analysis</li>
+<li><a href="#biochemistry-tools">Biochemistry Tools (3 tools)</a> - Enhanced compound/reaction resolution and cross-database translation</li>
+<li><a href="#system-tools">System Tools (4 tools)</a> - AI auditing and verification</li>
+</ol>
+<p>For detailed technical implementation information, see the <a href="../api/tools/">API Tool Implementation Reference</a>.</p>
+<h2 id="smart-summarization-framework">Smart Summarization Framework</h2>
+<p>All ModelSEEDagent tools integrate with the <strong>Smart Summarization Framework</strong>, which automatically transforms massive tool outputs (up to 138 MB) into LLM-optimized formats while preserving complete data access.</p>
+<h3 id="three-tier-information-hierarchy">Three-Tier Information Hierarchy</h3>
+<p><strong>Tier 1: key_findings (≤2KB)</strong>
+- Critical insights optimized for immediate LLM consumption
+- Bullet-point format with percentages and key metrics
+- Warnings and success indicators
+- Top examples (3-5 items maximum)</p>
+<p><strong>Tier 2: summary_dict (≤5KB)</strong>
+- Structured data for follow-up analysis
+- Statistical summaries and distributions
+- Category counts with limited examples
+- Metadata and analysis parameters</p>
+<p><strong>Tier 3: full_data_path</strong>
+- Complete raw results stored as JSON artifacts
+- Accessible via FetchArtifact tool for detailed analysis
+- No size limitations - preserves all original data</p>
+<h3 id="size-reduction-achievements">Size Reduction Achievements</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Original Size</th>
+<th>Summarized</th>
+<th>Reduction</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FluxSampling</td>
+<td>138.5 MB</td>
+<td>2.2 KB</td>
+<td>99.998%</td>
+<td>Production</td>
+</tr>
+<tr>
+<td>FluxVariability</td>
+<td>170 KB</td>
+<td>2.4 KB</td>
+<td>98.6%</td>
+<td>Production</td>
+</tr>
+<tr>
+<td>GeneDeletion</td>
+<td>130 KB</td>
+<td>3.1 KB</td>
+<td>97.6%</td>
+<td>Production</td>
+</tr>
+<tr>
+<td>FBA</td>
+<td>48 KB</td>
+<td>1.8 KB</td>
+<td>96.3%</td>
+<td>Production</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="ai-media-tools">AI Media Tools</h2>
+<p>Intelligent media management and optimization tools powered by AI reasoning:</p>
+<h3 id="1-media-selector-select_optimal_media">1. Media Selector (<code>select_optimal_media</code>)</h3>
+<p><strong>Purpose</strong>: Automatically find the best growth media for your model
+<strong>Usage</strong>: <code>modelseed-agent analyze model.xml --query "select optimal media"</code>
+<strong>What it does</strong>: Tests multiple media types and recommends the one that gives best growth</p>
+<h3 id="2-media-manipulator-manipulate_media_composition">2. Media Manipulator (<code>manipulate_media_composition</code>)</h3>
+<p><strong>Purpose</strong>: Modify media using natural language commands
+<strong>Usage</strong>: <code>"make this media anaerobic"</code> or <code>"add vitamins to the media"</code>
+<strong>What it does</strong>: Interprets commands like "add amino acids" and applies the changes</p>
+<h3 id="3-media-compatibility-checker-analyze_media_compatibility">3. Media Compatibility Checker (<code>analyze_media_compatibility</code>)</h3>
+<p><strong>Purpose</strong>: Check if your model can grow on specific media types
+<strong>Usage</strong>: Automatically runs when testing different media
+<strong>What it does</strong>: Identifies missing transporters and suggests improvements</p>
+<h3 id="4-media-performance-comparator-compare_media_performance">4. Media Performance Comparator (<code>compare_media_performance</code>)</h3>
+<p><strong>Purpose</strong>: Compare growth rates across different media types
+<strong>Usage</strong>: <code>"compare growth on different media types"</code>
+<strong>What it does</strong>: Ranks media by growth performance and provides insights</p>
+<h3 id="5-media-optimizer-optimize_media_composition">5. Media Optimizer (<code>optimize_media_composition</code>)</h3>
+<p><strong>Purpose</strong>: Design custom media to achieve target growth rates
+<strong>Usage</strong>: <code>"optimize media for maximum growth"</code>
+<strong>What it does</strong>: Iteratively adds/removes compounds to reach growth targets</p>
+<h3 id="6-auxotrophy-predictor-predict_auxotrophies">6. Auxotrophy Predictor (<code>predict_auxotrophies</code>)</h3>
+<p><strong>Purpose</strong>: Predict which nutrients your model requires
+<strong>Usage</strong>: <code>"predict auxotrophies for this model"</code>
+<strong>What it does</strong>: Identifies essential compounds the model cannot synthesize</p>
+<hr />
+<h2 id="cobrapy-tools">COBRApy Tools</h2>
+<p>Core metabolic modeling analysis capabilities:</p>
+<h3 id="1-fba-tool-run_metabolic_fba">1. FBA Tool (<code>run_metabolic_fba</code>)</h3>
+<p><strong>Purpose</strong>: Calculate growth rates and metabolic fluxes
+<strong>Usage</strong>: <code>"run flux balance analysis on this model"</code>
+<strong>What it does</strong>: Predicts growth rate and identifies active metabolic pathways</p>
+<h3 id="2-model-analyzer-analyze_metabolic_model">2. Model Analyzer (<code>analyze_metabolic_model</code>)</h3>
+<p><strong>Purpose</strong>: Analyze the structure and composition of metabolic models
+<strong>Usage</strong>: <code>"analyze the structure of this model"</code>
+<strong>What it does</strong>: Counts reactions, metabolites, genes, and identifies network properties</p>
+<h3 id="3-pathway-analyzer-analyze_pathway">3. Pathway Analyzer (<code>analyze_pathway</code>)</h3>
+<p><strong>Purpose</strong>: Analyze specific metabolic pathways and subsystems
+<strong>Usage</strong>: <code>"analyze the glycolysis pathway"</code>
+<strong>What it does</strong>: Examines pathway completeness, connectivity, and gene associations</p>
+<h3 id="4-flux-variability-analysis-run_flux_variability_analysis">4. Flux Variability Analysis (<code>run_flux_variability_analysis</code>)</h3>
+<p><strong>Purpose</strong>: Determine the range of possible flux values for each reaction
+<strong>Usage</strong>: <code>"run flux variability analysis"</code>
+<strong>What it does</strong>: Calculates min/max flux ranges and identifies flexible vs. fixed reactions</p>
+<h3 id="5-gene-deletion-analysis-run_gene_deletion_analysis">5. Gene Deletion Analysis (<code>run_gene_deletion_analysis</code>)</h3>
+<p><strong>Purpose</strong>: Test the effect of removing genes from the model
+<strong>Usage</strong>: <code>"perform gene knockout analysis"</code>
+<strong>What it does</strong>: Simulates gene deletions and categorizes essentiality</p>
+<h3 id="6-moma-analysis-run_moma_analysis">6. MOMA Analysis (<code>run_moma_analysis</code>)</h3>
+<p><strong>Purpose</strong>: Predict realistic metabolic adjustments after genetic perturbations
+<strong>Usage</strong>: <code>"run MOMA analysis on this knockout"</code> or <code>"predict metabolic adjustment"</code>
+<strong>What it does</strong>: Uses Minimization of Metabolic Adjustment (MOMA) to find flux distributions that minimize metabolic changes compared to wild-type, providing more realistic predictions than standard FBA</p>
+<h3 id="7-essentiality-analysis-analyze_essentiality">7. Essentiality Analysis (<code>analyze_essentiality</code>)</h3>
+<p><strong>Purpose</strong>: Comprehensive analysis of essential genes and reactions
+<strong>Usage</strong>: <code>"find essential genes and reactions"</code>
+<strong>What it does</strong>: Identifies components critical for growth and survival</p>
+<h3 id="8-flux-sampling-run_flux_sampling">8. Flux Sampling (<code>run_flux_sampling</code>)</h3>
+<p><strong>Purpose</strong>: Statistical exploration of the metabolic solution space
+<strong>Usage</strong>: <code>"sample flux distributions"</code>
+<strong>What it does</strong>: Generates thousands of possible flux states to understand variability</p>
+<h3 id="9-production-envelope-run_production_envelope">9. Production Envelope (<code>run_production_envelope</code>)</h3>
+<p><strong>Purpose</strong>: Analyze trade-offs between growth and product formation
+<strong>Usage</strong>: <code>"analyze production envelope for ethanol"</code>
+<strong>What it does</strong>: Maps the relationship between growth rate and production capacity</p>
+<h3 id="10-auxotrophy-identification-identify_auxotrophies">10. Auxotrophy Identification (<code>identify_auxotrophies</code>)</h3>
+<p><strong>Purpose</strong>: Find nutrients the model cannot produce
+<strong>Usage</strong>: <code>"identify auxotrophies"</code>
+<strong>What it does</strong>: Tests removal of compounds to find essential nutrients</p>
+<h3 id="11-minimal-media-finder-find_minimal_media">11. Minimal Media Finder (<code>find_minimal_media</code>)</h3>
+<p><strong>Purpose</strong>: Find the smallest set of nutrients needed for growth
+<strong>Usage</strong>: <code>"find minimal media requirements"</code>
+<strong>What it does</strong>: Systematically removes nutrients to find the minimal viable set</p>
+<h3 id="12-missing-media-checker-check_missing_media">12. Missing Media Checker (<code>check_missing_media</code>)</h3>
+<p><strong>Purpose</strong>: Diagnose media gaps when growth is poor
+<strong>Usage</strong>: <code>"check for missing media components"</code>
+<strong>What it does</strong>: Tests addition of essential nutrients to improve growth</p>
+<h3 id="13-reaction-expression-analyze_reaction_expression">13. Reaction Expression (<code>analyze_reaction_expression</code>)</h3>
+<p><strong>Purpose</strong>: Analyze reaction activity levels across the network
+<strong>Usage</strong>: <code>"analyze reaction expression levels"</code>
+<strong>What it does</strong>: Calculates how active each reaction is under given conditions</p>
+<hr />
+<h2 id="biochemistry-tools">Biochemistry Tools</h2>
+<p>Enhanced universal compound and reaction information tools with pure ModelSEEDpy integration:</p>
+<h3 id="1-biochemistry-resolver-resolve_biochem_entity-enhanced">1. Biochemistry Resolver (<code>resolve_biochem_entity</code>) ✨ ENHANCED</h3>
+<p><strong>Purpose</strong>: Look up chemical information for metabolites and reactions using official ModelSEED database
+<strong>Usage</strong>: <code>"what is cpd00027?"</code> or <code>"resolve this compound ID"</code>
+<strong>What it does</strong>: Provides names, formulas, chemical properties, and comprehensive database cross-references from 45,706+ compounds and 56,009+ reactions</p>
+<h3 id="2-biochemistry-search-search_biochem-enhanced">2. Biochemistry Search (<code>search_biochem</code>) ✨ ENHANCED</h3>
+<p><strong>Purpose</strong>: Advanced search across the complete ModelSEED biochemistry database
+<strong>Usage</strong>: <code>"search for glucose compounds"</code> or <code>"find reactions containing ATP"</code>
+<strong>What it does</strong>: Intelligent search with match scoring across 45,706+ compounds and 56,009+ reactions by name, formula, aliases, and chemical properties</p>
+<h3 id="3-cross-database-id-translator-translate_database_ids-new">3. Cross-Database ID Translator (<code>translate_database_ids</code>) ✨ NEW</h3>
+<p><strong>Purpose</strong>: Universal ID translation between biochemical databases using official ModelSEED mappings
+<strong>Usage</strong>: <code>"convert BiGG IDs to ModelSEED format"</code> or <code>"translate C00002 to other databases"</code>
+<strong>What it does</strong>: Converts IDs between ModelSEED ↔ BiGG ↔ KEGG ↔ MetaCyc ↔ ChEBI across 55+ databases with automatic compartment handling</p>
+<hr />
+<h2 id="modelseed-tools">ModelSEED Tools</h2>
+<p>Genome-scale model construction and annotation tools:</p>
+<h3 id="1-rast-annotator-annotate_genome_rast">1. RAST Annotator (<code>annotate_genome_rast</code>)</h3>
+<p><strong>Purpose</strong>: Genome and protein FASTA annotation using RAST server with MSGenome integration
+<strong>Usage</strong>: <code>"annotate this genome with RAST"</code> or <code>"annotate this protein FASTA"</code>
+<strong>What it does</strong>: Automated genome/protein annotation using MSGenome.from_fasta() and modelseedpy.RastClient()</p>
+<h3 id="2-model-builder-build_metabolic_model">2. Model Builder (<code>build_metabolic_model</code>)</h3>
+<p><strong>Purpose</strong>: Build metabolic models from genome annotations or MSGenome objects
+<strong>Usage</strong>: <code>"build a model from this genome"</code> or <code>"build a model from this annotation"</code>
+<strong>What it does</strong>: Creates draft metabolic models from MSGenome objects with SBML/JSON export capabilities</p>
+<h3 id="3-model-gapfiller-gapfill_model">3. Model Gapfiller (<code>gapfill_model</code>)</h3>
+<p><strong>Purpose</strong>: Fill gaps in metabolic networks to enable growth
+<strong>Usage</strong>: <code>"gapfill this model"</code>
+<strong>What it does</strong>: Adds missing reactions needed for biomass production with improved MSGapfill API</p>
+<hr />
+<h2 id="getting-started">Getting Started</h2>
+<p>All tools are accessible through natural language queries in the interactive interface:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>modelseed-agent<span class="w"> </span>interactive
+</code></pre></div>
+<p><strong>Example queries to try:</strong>
+- <code>"Load E. coli core model and run FBA"</code>
+- <code>"Find essential genes in this model"</code>
+- <code>"What is the optimal media for growth?"</code>
+- <code>"Identify auxotrophies and suggest supplements"</code>
+- <code>"Compare growth on different media types"</code></p>
+<h2 id="additional-information">Additional Information</h2>
+<p>For detailed technical implementation information including parameters, precision configurations, and advanced usage patterns, see the <a href="../api/tools/">API Tool Implementation Reference</a>.</p>
+<hr />
+<h2 id="system-tools">System Tools</h2>
+<p>AI auditing and verification tools for transparency and quality assurance:</p>
+<h3 id="1-tool-audit-tool_audit">1. Tool Audit (<code>tool_audit</code>)</h3>
+<p><strong>Purpose</strong>: Audit and verify tool execution with detailed tracking
+<strong>Usage</strong>: Automatically tracks all tool executions during workflows
+<strong>What it does</strong>: Records tool inputs, outputs, execution times, and success/failure status</p>
+<h3 id="2-ai-audit-ai_audit">2. AI Audit (<code>ai_audit</code>)</h3>
+<p><strong>Purpose</strong>: Audit AI reasoning and decision-making processes
+<strong>Usage</strong>: Monitors AI agent decisions and reasoning chains
+<strong>What it does</strong>: Tracks AI model responses, reasoning steps, and decision paths for transparency</p>
+<h3 id="3-realtime-verification-realtime_verification">3. Realtime Verification (<code>realtime_verification</code>)</h3>
+<p><strong>Purpose</strong>: Live verification of AI statements against actual results
+<strong>Usage</strong>: Automatically validates AI claims during execution
+<strong>What it does</strong>: Cross-references AI assertions with tool outputs to detect and prevent hallucinations</p>
+<h3 id="4-fetchartifact-fetch_artifact_data">4. FetchArtifact (<code>fetch_artifact_data</code>)</h3>
+<p><strong>Purpose</strong>: Retrieve complete raw data from Smart Summarization artifacts
+<strong>Usage</strong>: <code>"get the full flux sampling data for detailed analysis"</code>
+<strong>What it does</strong>: Loads complete original tool outputs from storage when detailed analysis is needed beyond summarized results</p>
+<p><strong>When to use FetchArtifact</strong>:
+- User asks for "detailed analysis" or "complete results"
+- Statistical analysis beyond summary_dict scope is needed
+- Debugging scenarios requiring full data inspection
+- Cross-model comparisons requiring raw data</p>
+<h2 id="summary">Summary</h2>
+<p>ModelSEEDagent's 24 tools provide comprehensive metabolic modeling capabilities through an intuitive AI interface enhanced with Smart Summarization. Each tool is designed to work seamlessly with the AI reasoning system, allowing for complex multi-step analyses through simple natural language commands.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.share", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mtml-chtml.js"></script>
+      
+    
+  </body>
+</html>

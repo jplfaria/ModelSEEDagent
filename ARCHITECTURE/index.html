@@ -1,0 +1,3743 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI-Powered Metabolic Modeling Platform">
+      
+      
+        <meta name="author" content="ModelSEED Team">
+      
+      
+      
+        <link rel="prev" href="../user-guide/faq/">
+      
+      
+        <link rel="next" href="../performance/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>Architecture - ModelSEEDagent Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="light-blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#modelseedagent-system-architecture" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ModelSEEDagent Documentation" class="md-header__button md-logo" aria-label="ModelSEEDagent Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ModelSEEDagent Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Architecture
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="light-blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="light-blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ModelSEED/ModelSEEDagent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ModelSEED/ModelSEEDagent
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../getting-started/installation/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../user-guide/cli-reference/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Technical Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../TOOL_TESTING_STATUS/" class="md-tabs__link">
+          
+  
+  
+  Testing
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../api/overview/" class="md-tabs__link">
+          
+  
+  
+  API Documentation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../developer/contributing/" class="md-tabs__link">
+          
+  
+  
+  Developer
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../development/intelligence-enhancement/" class="md-tabs__link">
+          
+  
+  
+  Intelligence Enhancement
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../user-guide/enhanced-reasoning-features/" class="md-tabs__link">
+          
+  
+  
+  Enhanced Features
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../operations/deployment/" class="md-tabs__link">
+          
+  
+  
+  Operations
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ModelSEEDagent Documentation" class="md-nav__button md-logo" aria-label="ModelSEEDagent Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ModelSEEDagent Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ModelSEED/ModelSEEDagent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ModelSEED/ModelSEEDagent
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/quickstart-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Quick Start
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/interactive-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Interactive Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    User Guide
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            User Guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/cli-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CLI Reference
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/tool-catalogue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tool Catalogue
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    FAQ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Technical Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Technical Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Design Principles
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-architecture-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      System Architecture Diagram
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="System Architecture Diagram">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#high-level-component-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      High-Level Component Overview
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#intelligence-enhanced-component-interaction-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intelligence-Enhanced Component Interaction Flow
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interface-capability-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interface Capability Matrix
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interface Capability Matrix">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#interface-types-and-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interface Types and Capabilities
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interface-specific-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interface-Specific Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Details
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#intelligence-enhancement-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intelligence Enhancement Framework
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Intelligence Enhancement Framework">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-centralized-prompt-management-reasoning-traces" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 1: Centralized Prompt Management + Reasoning Traces
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-dynamic-context-enhancement-multimodal-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 2: Dynamic Context Enhancement + Multimodal Integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-reasoning-quality-validation-composite-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 3: Reasoning Quality Validation + Composite Metrics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-4-enhanced-artifact-intelligence-self-reflection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 4: Enhanced Artifact Intelligence + Self-Reflection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-5-integrated-intelligence-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 5: Integrated Intelligence Validation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#component-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Component Architecture
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Component Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-intelligence-enhancement-layer-srcreasoning" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Intelligence Enhancement Layer (src/reasoning/)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-centralized-prompt-management-srcprompts" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Centralized Prompt Management (src/prompts/)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-agent-layer-srcagents" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Agent Layer (src/agents/)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-tool-ecosystem-srctools" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Tool Ecosystem (src/tools/)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-llm-integration-srcllm" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. LLM Integration (src/llm/)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-interactive-interfaces-srcinteractive" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Interactive Interfaces (src/interactive/)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#intelligence-enhancement-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intelligence Enhancement Performance
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Intelligence Enhancement Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#target-achievement-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Target Achievement Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#system-performance-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      System Performance Metrics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="System Performance Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overall-intelligence-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overall Intelligence Performance
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#intelligence-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intelligence Capabilities
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reasoning-quality-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reasoning Quality Metrics
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advanced Features
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#smart-summarization-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Smart Summarization Framework
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#intelligence-enhanced-validation-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intelligence-Enhanced Validation System
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-flow-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Flow Architecture
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Flow Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#intelligence-enhanced-tool-execution-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intelligence-Enhanced Tool Execution Pipeline
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quality-assurance-intelligence-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quality Assurance &amp; Intelligence Validation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quality Assurance &amp; Intelligence Validation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#multi-level-testing-with-intelligence-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multi-Level Testing with Intelligence Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comprehensive-audit-verification-with-intelligence" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comprehensive Audit &amp; Verification with Intelligence
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-characteristics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Characteristics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Characteristics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#intelligence-enhanced-scalability" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intelligence-Enhanced Scalability
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enhanced-reliability" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enhanced Reliability
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-extension-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration &amp; Extension Framework
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration &amp; Extension Framework">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#extension-framework-with-intelligence-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      Extension Framework with Intelligence Support
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Extension Framework with Intelligence Support">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adding-intelligence-enhanced-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      Adding Intelligence-Enhanced Tools
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#intelligence-framework-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intelligence Framework Integration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#intelligence-framework-debug-and-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intelligence Framework Debug and Troubleshooting
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Intelligence Framework Debug and Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enhanced-debug-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enhanced Debug Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-factory-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Agent Factory Enhancements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#troubleshooting-common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting Common Issues
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Performance
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Troubleshooting
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Debug Mode
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Testing
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Testing
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TOOL_TESTING_STATUS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tool Status
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/testing-infrastructure-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Test Infrastructure
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing/intelligence-enhancement-test-queries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Intelligence Enhancement Test Queries
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    API Documentation
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            API Documentation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tool Implementation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Developer
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Developer
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../developer/contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../developer/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Testing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../developer/validation-system-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Validation System
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../developer/validation-quick-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Validation Quick Reference
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../developer/style-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Style Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/DEVELOPMENT_ROADMAP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Development Roadmap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/smart-summarization-assessment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Smart Summarization
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/12-factor-agents-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    12-Factor Agents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Intelligence Enhancement
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Intelligence Enhancement
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/intelligence-enhancement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/intelligence-enhancement/baseline-measurements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Baseline Measurements
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_3" id="__nav_8_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Implementation Reports
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_3">
+            <span class="md-nav__icon md-icon"></span>
+            Implementation Reports
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/intelligence-enhancement/phase-1-completion-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Phase 1 - Prompt Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/intelligence-enhancement/phase-2-completion-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Phase 2 - Context Enhancement
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/intelligence-enhancement/phase-3-completion-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Phase 3 - Quality Validation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/intelligence-enhancement/phase-4-completion-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Phase 4 - Artifact Intelligence
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/intelligence-enhancement/phase-5-completion-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Phase 5 - Integration Validation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/intelligence-enhancement-complete/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Complete Framework Report
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Enhanced Features
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Enhanced Features
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/enhanced-reasoning-features/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reasoning Features Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/reasoning-framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reasoning Framework API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Operations
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Operations
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../operations/deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Deployment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../operations/monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../operations/documentation-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Documentation Automation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Design Principles
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-architecture-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      System Architecture Diagram
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="System Architecture Diagram">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#high-level-component-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      High-Level Component Overview
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#intelligence-enhanced-component-interaction-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intelligence-Enhanced Component Interaction Flow
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interface-capability-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interface Capability Matrix
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interface Capability Matrix">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#interface-types-and-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interface Types and Capabilities
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interface-specific-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interface-Specific Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Details
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#intelligence-enhancement-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intelligence Enhancement Framework
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Intelligence Enhancement Framework">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-centralized-prompt-management-reasoning-traces" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 1: Centralized Prompt Management + Reasoning Traces
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-dynamic-context-enhancement-multimodal-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 2: Dynamic Context Enhancement + Multimodal Integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-reasoning-quality-validation-composite-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 3: Reasoning Quality Validation + Composite Metrics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-4-enhanced-artifact-intelligence-self-reflection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 4: Enhanced Artifact Intelligence + Self-Reflection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-5-integrated-intelligence-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 5: Integrated Intelligence Validation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#component-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Component Architecture
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Component Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-intelligence-enhancement-layer-srcreasoning" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Intelligence Enhancement Layer (src/reasoning/)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-centralized-prompt-management-srcprompts" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Centralized Prompt Management (src/prompts/)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-agent-layer-srcagents" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Agent Layer (src/agents/)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-tool-ecosystem-srctools" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Tool Ecosystem (src/tools/)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-llm-integration-srcllm" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. LLM Integration (src/llm/)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-interactive-interfaces-srcinteractive" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Interactive Interfaces (src/interactive/)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#intelligence-enhancement-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intelligence Enhancement Performance
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Intelligence Enhancement Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#target-achievement-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Target Achievement Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#system-performance-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      System Performance Metrics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="System Performance Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overall-intelligence-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overall Intelligence Performance
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#intelligence-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intelligence Capabilities
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reasoning-quality-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reasoning Quality Metrics
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advanced Features
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#smart-summarization-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Smart Summarization Framework
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#intelligence-enhanced-validation-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intelligence-Enhanced Validation System
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-flow-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Flow Architecture
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Flow Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#intelligence-enhanced-tool-execution-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intelligence-Enhanced Tool Execution Pipeline
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quality-assurance-intelligence-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quality Assurance &amp; Intelligence Validation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quality Assurance &amp; Intelligence Validation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#multi-level-testing-with-intelligence-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multi-Level Testing with Intelligence Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comprehensive-audit-verification-with-intelligence" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comprehensive Audit &amp; Verification with Intelligence
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-characteristics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Characteristics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Characteristics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#intelligence-enhanced-scalability" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intelligence-Enhanced Scalability
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enhanced-reliability" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enhanced Reliability
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-extension-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration &amp; Extension Framework
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration &amp; Extension Framework">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#extension-framework-with-intelligence-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      Extension Framework with Intelligence Support
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Extension Framework with Intelligence Support">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adding-intelligence-enhanced-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      Adding Intelligence-Enhanced Tools
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#intelligence-framework-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intelligence Framework Integration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#intelligence-framework-debug-and-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intelligence Framework Debug and Troubleshooting
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Intelligence Framework Debug and Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enhanced-debug-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enhanced Debug Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-factory-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Agent Factory Enhancements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#troubleshooting-common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting Common Issues
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="modelseedagent-system-architecture">ModelSEEDagent - System Architecture</h1>
+<h2 id="overview">Overview</h2>
+<p>ModelSEEDagent is an AI-powered metabolic modeling platform that combines Large Language Models with specialized computational biology tools through an advanced Intelligence Enhancement Framework. The system uses an intelligent agent-based approach where AI components orchestrate workflows by selecting and chaining appropriate tools while providing transparent reasoning, self-reflection, and continuous learning capabilities to solve complex metabolic modeling problems.</p>
+<h2 id="design-principles">Design Principles</h2>
+<ul>
+<li><strong>Intelligence-Enhanced Orchestration</strong>: LLMs with transparent reasoning, self-reflection, and adaptive learning capabilities</li>
+<li><strong>Modular Design</strong>: Clean separation between intelligence, reasoning, tool execution, and data layers</li>
+<li><strong>Universal Compatibility</strong>: Seamless integration across ModelSEED and COBRApy ecosystems</li>
+<li><strong>Production Ready</strong>: Comprehensive testing, audit trails, quality validation, and performance optimization</li>
+<li><strong>Extensible Framework</strong>: Easy addition of new tools, agents, reasoning capabilities, and LLM backends</li>
+<li><strong>Transparent Decision Making</strong>: Full visibility into AI reasoning processes with quality assessment</li>
+<li><strong>Continuous Learning</strong>: Self-improving system with pattern recognition and bias detection</li>
+</ul>
+<h2 id="system-architecture-diagram">System Architecture Diagram</h2>
+<h3 id="high-level-component-overview">High-Level Component Overview</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                           USER INTERFACES                                  │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├─────────────────┬─────────────────┬─────────────────┬─────────────────────┤
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│ Interactive     │ CLI Commands    │ Python API      │ Web Interface       │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│ Chat Interface  │                 │                 │ (Future)            │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>└─────────┬───────┴─────────┬───────┴─────────┬───────┴─────────┬───────────┘
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>          │                 │                 │                 │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>          ▼                 ▼                 ▼                 ▼
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>┌─────────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                      AGENT ORCHESTRATION LAYER                             │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>├─────────────────┬─────────────────┬─────────────────┬─────────────────────┤
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│ LangGraph       │ Metabolic       │ Reasoning       │ Collaborative       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│ Workflows       │ Agent           │ Chains          │ Decision Making     │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>└─────────┬───────┴─────────┬───────┴─────────┬───────┴─────────┬───────────┘
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>          │                 │                 │                 │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>          ▼                 ▼                 ▼                 ▼
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>┌─────────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│                  INTELLIGENCE ENHANCEMENT LAYER                            │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>├─────────────────┬─────────────────┬─────────────────┬─────────────────────┤
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│ Reasoning       │ Quality         │ Self-Reflection │ Artifact            │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│ Framework       │ Assessment      │ Engine          │ Intelligence        │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│ (Phases 1-5)    │ System          │                 │                     │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>└─────────┬───────┴─────────┬───────┴─────────┬───────┴─────────┬───────────┘
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>          │                 │                 │                 │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>          ▼                 ▼                 ▼                 ▼
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>┌─────────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                        LLM ABSTRACTION LAYER                               │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>├─────────────────┬─────────────────┬─────────────────┬─────────────────────┤
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│ Argo Gateway    │ OpenAI API      │ Local LLMs      │ Model Factory &amp;     │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│ (13 models)     │                 │ (Llama 3.x)     │ Config              │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>└─────────┬───────┴─────────┬───────┴─────────┬───────┴─────────┬───────────┘
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>          │                 │                 │                 │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>          ▼                 ▼                 ▼                 ▼
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>┌─────────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│                        TOOL EXECUTION LAYER                                │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>├─────────────────┬─────────────────┬─────────────────┬─────────────────────┤
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│ COBRApy Tools   │ ModelSEED Tools │ Biochemistry    │ RAST Tools    │ System│
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│ (12 tools)      │ (3 tools)       │ Database        │ (2 tools)     │ Tools │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│ AI Media (6)    │                 │ (2 tools)       │               │(4 tools)│
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>└─────────┬───────┴─────────┬───────┴─────────┬───────┴─────────┬─────┬─────┘
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>          │                 │                 │                 │     │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>          ▼                 ▼                 ▼                 ▼     │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>┌─────────────────────────────────────────────────────────────────────┘────┐
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│                    SMART SUMMARIZATION LAYER                            │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>├─────────────────┬─────────────────┬─────────────────┬─────────────────────┤
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│ Three-Tier      │ Tool-Specific   │ Artifact        │ Size Validation     │
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│ Hierarchy       │ Summarizers      │ Storage         │ (2KB/5KB limits)    │
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│ • key_findings  │ • FVA           │ • JSON format   │ • 95-99.9%         │
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│ • summary_dict  │ • FluxSampling  │ • /tmp/artifacts│   reduction        │
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│ • full_data_path│ • GeneDeletion  │ • FetchArtifact │ • 99.998% max      │
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>└─────────┬───────┴─────────┬───────┴─────────┬───────┴─────────┬─────────┘
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>          │                 │                 │                 │
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>          ▼                 ▼                 ▼                 ▼
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>┌─────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>│                     DATA &amp; PERSISTENCE LAYER                            │
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>├─────────────────┬─────────────────┬─────────────────┬─────────────────────┤
+<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>│ Biochemistry    │ Session State   │ Audit Trails    │ Model Cache &amp;       │
+<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>│ Database        │                 │                 │ Results             │
+<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>│ (SQLite)        │                 │                 │                     │
+<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>└─────────────────┴─────────────────┴─────────────────┴─────────────────────┘
+</code></pre></div>
+<h3 id="intelligence-enhanced-component-interaction-flow">Intelligence-Enhanced Component Interaction Flow</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│  User Request   │ (Natural language query)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>└─────────┬───────┘
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>          │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>          ▼
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>┌─────────────────┐
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│ Query Processor │ (Parse intent and route to appropriate agent)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>└─────────┬───────┘
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>          │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>          ▼
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>┌─────────────────┐
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│Intelligence     │ (Apply reasoning traces, context enhancement,
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│Enhancement      │  quality assessment, and self-reflection)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>└─────────┬───────┘
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>          │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>          ▼
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>┌─────────────────┐
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│Agent Orchestr.  │ (Select strategy and plan workflow with transparency)
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>└─────────┬───────┘
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>          │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>          ▼
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>┌─────────────────┐
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│Enhanced Prompts │ (Context-enriched prompts with reasoning frameworks)
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>└─────────┬───────┘
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>          │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>          ▼
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>┌─────────────────┐
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  LLM Backend    │ (Process enhanced context and generate execution plan)
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>└─────────┬───────┘
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>          │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>          ▼
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>┌─────────────────┐
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│ Tool Executor   │ (Validate inputs and execute selected tools)
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>└─────────┬───────┘
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>          │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>          ▼
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>┌─────────────────┐
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│Artifact         │ (Intelligent analysis of results with self-assessment)
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│Intelligence     │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>└─────────┬───────┘
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>          │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>          ▼
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>┌─────────────────┐
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│Quality          │ (Multi-dimensional quality scoring and validation)
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│Assessment       │
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>└─────────┬───────┘
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>          │
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>          ▼
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>┌─────────────────┐
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│Result Synthesis │ (Intelligent integration with reasoning traces)
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>└─────────┬───────┘
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>          │
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>          ▼
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>┌─────────────────┐
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>│Self-Reflection  │ (Pattern learning, bias detection, improvement)
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>└─────────┬───────┘
+<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>          │
+<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>          ▼
+<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>┌─────────────────┐
+<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>│ User Response   │ (Return enhanced response with quality indicators)
+<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>└─────────────────┘
+</code></pre></div>
+<p><strong>Key Intelligence Decision Points in Flow:</strong>
+- <strong>Context Enhancement</strong>: Automatic biochemical knowledge enrichment using reasoning frameworks
+- <strong>Reasoning Traces</strong>: Complete step-by-step decision logging with transparent rationale
+- <strong>Quality Assessment</strong>: Multi-dimensional scoring (biological accuracy, reasoning transparency, synthesis quality)
+- <strong>Artifact Intelligence</strong>: Smart data navigation with self-assessment capabilities
+- <strong>Self-Reflection</strong>: Pattern recognition, bias detection, and continuous improvement
+- <strong>Adaptive Learning</strong>: System optimization based on performance feedback and user satisfaction</p>
+<h2 id="interface-capability-matrix">Interface Capability Matrix</h2>
+<p>The system provides consistent Intelligence Framework capabilities across all user-facing interfaces:</p>
+<h3 id="interface-types-and-capabilities">Interface Types and Capabilities</h3>
+<table>
+<thead>
+<tr>
+<th>Feature Category</th>
+<th>Direct Agent Access</th>
+<th>Interactive CLI</th>
+<th>Regular CLI</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Intelligence Framework</strong></td>
+<td>Full Integration</td>
+<td>Full Integration</td>
+<td>Full Integration</td>
+</tr>
+<tr>
+<td><strong>Enhanced Prompts</strong></td>
+<td>Context-aware selection</td>
+<td>Natural language flow</td>
+<td>Command integration</td>
+</tr>
+<tr>
+<td><strong>Context Enhancement</strong></td>
+<td>Biochemical enrichment</td>
+<td>Conversation context</td>
+<td>Query analysis</td>
+</tr>
+<tr>
+<td><strong>Quality Assessment</strong></td>
+<td>Multi-dimensional scoring</td>
+<td>Real-time indicators</td>
+<td>Result validation</td>
+</tr>
+<tr>
+<td><strong>Artifact Intelligence</strong></td>
+<td>Smart data navigation</td>
+<td>Interactive exploration</td>
+<td>Structured access</td>
+</tr>
+<tr>
+<td><strong>Self-Reflection</strong></td>
+<td>Pattern learning</td>
+<td>Conversation learning</td>
+<td>Usage optimization</td>
+</tr>
+<tr>
+<td><strong>Reasoning Traces</strong></td>
+<td>Complete logging</td>
+<td>Transparent steps</td>
+<td>Decision tracking</td>
+</tr>
+<tr>
+<td><strong>Tool Integration</strong></td>
+<td>All 24+ tools</td>
+<td>Natural language tools</td>
+<td>Command-based tools</td>
+</tr>
+</tbody>
+</table>
+<h3 id="interface-specific-features">Interface-Specific Features</h3>
+<p><strong>Direct Agent Access:</strong>
+- Programmatic API with full control
+- Custom configuration and specialized workflows
+- Direct access to all Intelligence Framework components
+- Used by: Python scripts, notebook integration, custom applications</p>
+<p><strong>Interactive CLI:</strong>
+- Natural language conversation interface
+- Real-time quality indicators and reasoning transparency
+- Adaptive conversation flow with context memory
+- Used by: Interactive analysis, hypothesis testing, collaborative work</p>
+<p><strong>Regular CLI:</strong>
+- Structured command-line interface with Intelligence enhancement
+- Command-based tool execution with AI orchestration
+- Batch processing with intelligent workflow planning
+- Used by: Automated pipelines, scripting, production workflows</p>
+<h3 id="implementation-details">Implementation Details</h3>
+<p>All interfaces use consistent agent creation through the AgentFactory system:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># All interfaces create Intelligence-enhanced agents</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">src.agents.factory</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentFactory</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Direct Agent - Full customization</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">agent</span> <span class="o">=</span> <span class="n">AgentFactory</span><span class="o">.</span><span class="n">create_agent</span><span class="p">(</span><span class="s1">&#39;metabolic&#39;</span><span class="p">,</span> <span class="n">llm</span><span class="p">,</span> <span class="n">tools</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Interactive CLI - Uses RealTimeMetabolicAgent</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">agent</span> <span class="o">=</span> <span class="n">AgentFactory</span><span class="o">.</span><span class="n">create_agent</span><span class="p">(</span><span class="s1">&#39;real_time&#39;</span><span class="p">,</span> <span class="n">llm</span><span class="p">,</span> <span class="n">tools</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Regular CLI - Uses LangGraphMetabolicAgent</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="n">agent</span> <span class="o">=</span> <span class="n">AgentFactory</span><span class="o">.</span><span class="n">create_agent</span><span class="p">(</span><span class="s1">&#39;langgraph&#39;</span><span class="p">,</span> <span class="n">llm</span><span class="p">,</span> <span class="n">tools</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+</code></pre></div>
+<p>Each agent type includes full Intelligence Framework integration:
+- Phase 1: Enhanced Prompt Provider
+- Phase 2: Biochemical Context Enhancer
+- Phase 3: Quality-Aware Prompt Provider
+- Phase 4: Artifact Intelligence Engine
+- Phase 5: Intelligent Reasoning System</p>
+<p>This ensures consistent user experience and capability access regardless of interface choice.</p>
+<h2 id="intelligence-enhancement-framework">Intelligence Enhancement Framework</h2>
+<h3 id="phase-1-centralized-prompt-management-reasoning-traces">Phase 1: Centralized Prompt Management + Reasoning Traces</h3>
+<p><strong>Components:</strong>
+- <code>src/prompts/prompt_registry.py</code> - Centralized management of 27+ prompts
+- <code>src/reasoning/enhanced_prompt_provider.py</code> - Context-aware prompt selection
+- <code>src/reasoning/trace_logger.py</code> - Comprehensive reasoning trace capture
+- <code>src/reasoning/trace_analyzer.py</code> - Reasoning pattern analysis and optimization</p>
+<p><strong>Key Features:</strong>
+- <strong>Transparent Decision Making</strong>: Complete visibility into AI reasoning processes
+- <strong>Version Control</strong>: Track prompt evolution and effectiveness
+- <strong>A/B Testing</strong>: Compare prompt variants and optimize for performance
+- <strong>Reasoning Patterns</strong>: Identification and reuse of effective reasoning strategies</p>
+<h3 id="phase-2-dynamic-context-enhancement-multimodal-integration">Phase 2: Dynamic Context Enhancement + Multimodal Integration</h3>
+<p><strong>Components:</strong>
+- <code>src/reasoning/context_enhancer.py</code> - Automatic biochemical context injection
+- <code>src/reasoning/frameworks/</code> - Question-driven reasoning guides
+  - <code>biochemical_reasoning.py</code> - Universal biochemistry reasoning framework
+  - <code>growth_analysis_framework.py</code> - Growth optimization reasoning
+  - <code>pathway_analysis_framework.py</code> - Metabolic pathway analysis
+  - <code>media_optimization_framework.py</code> - Media composition optimization</p>
+<p><strong>Key Features:</strong>
+- <strong>Biochemical Knowledge Integration</strong>: Automatic enrichment with relevant biological context
+- <strong>Cross-Database Information</strong>: Seamless integration across metabolic databases
+- <strong>Adaptive Reasoning</strong>: Context-driven analysis optimization
+- <strong>Multimodal Framework</strong>: Coordinated reasoning across tool types</p>
+<h3 id="phase-3-reasoning-quality-validation-composite-metrics">Phase 3: Reasoning Quality Validation + Composite Metrics</h3>
+<p><strong>Components:</strong>
+- <code>src/reasoning/integrated_quality_system.py</code> - Multi-dimensional quality assessment
+- <code>src/reasoning/composite_metrics.py</code> - Advanced performance metrics calculation
+- <code>src/reasoning/quality_validator.py</code> - Real-time quality monitoring</p>
+<p><strong>Quality Metrics:</strong>
+1. <strong>Biological Accuracy</strong> (Target: ≥90%): Correctness of scientific interpretations
+2. <strong>Reasoning Transparency</strong> (Target: ≥85%): Quality of step-by-step explanations
+3. <strong>Synthesis Effectiveness</strong> (Target: ≥75%): Cross-tool integration assessment
+4. <strong>Novel Insight Generation</strong>: Originality and scientific value of conclusions
+5. <strong>Artifact Usage Intelligence</strong> (Target: ≥70%): Appropriate deep-data navigation</p>
+<h3 id="phase-4-enhanced-artifact-intelligence-self-reflection">Phase 4: Enhanced Artifact Intelligence + Self-Reflection</h3>
+<p><strong>Components:</strong>
+- <code>src/reasoning/artifact_intelligence.py</code> - Self-assessment and contextual analysis
+- <code>src/reasoning/intelligent_artifact_generator.py</code> - Predictive quality modeling
+- <code>src/reasoning/self_reflection_engine.py</code> - Pattern discovery and bias detection
+- <code>src/reasoning/meta_reasoning_engine.py</code> - Cognitive strategy optimization</p>
+<p><strong>Key Features:</strong>
+- <strong>Smart Data Navigation</strong>: AI explains WHY detailed data is needed
+- <strong>Self-Assessment</strong>: Artifacts evaluate their own quality and suggest improvements
+- <strong>Pattern Recognition</strong>: Identification of successful analysis patterns
+- <strong>Bias Detection</strong>: Automatic identification of reasoning biases and mitigation strategies</p>
+<h3 id="phase-5-integrated-intelligence-validation">Phase 5: Integrated Intelligence Validation</h3>
+<p><strong>Components:</strong>
+- <code>scripts/integrated_intelligence_validator.py</code> - Comprehensive validation system
+- <code>src/reasoning/improvement_tracker.py</code> - Continuous learning and optimization
+- <code>scripts/dev_validate.py</code> - Development workflow validation helper
+- <code>scripts/validation_comparison.py</code> - Performance comparison and trend analysis</p>
+<p><strong>Validation Features:</strong>
+- <strong>End-to-End Testing</strong>: Complete system capability validation
+- <strong>Performance Benchmarking</strong>: Systematic measurement of intelligence improvements
+- <strong>Regression Testing</strong>: Ensure continued high performance
+- <strong>Continuous Learning</strong>: Automated improvement tracking and optimization</p>
+<h2 id="component-architecture">Component Architecture</h2>
+<h3 id="1-intelligence-enhancement-layer-srcreasoning">1. Intelligence Enhancement Layer (<code>src/reasoning/</code>)</h3>
+<p><strong>Core Intelligence System</strong>:
+- <code>intelligent_reasoning_system.py</code> - Main intelligence coordination system
+- <code>enhanced_prompt_provider.py</code> - Context-aware prompt management
+- <code>integrated_quality_system.py</code> - Quality-aware prompt provider
+- <code>composite_metrics.py</code> - Multi-dimensional performance assessment</p>
+<p><strong>Context &amp; Enhancement</strong>:
+- <code>context_enhancer.py</code> - Biochemical knowledge integration
+- <code>frameworks/</code> - Domain-specific reasoning frameworks (4 frameworks)</p>
+<p><strong>Self-Assessment &amp; Learning</strong>:
+- <code>artifact_intelligence.py</code> - Smart data analysis with self-assessment
+- <code>self_reflection_engine.py</code> - Pattern learning and bias detection
+- <code>meta_reasoning_engine.py</code> - Cognitive strategy optimization
+- <code>improvement_tracker.py</code> - Continuous learning system</p>
+<p><strong>Quality &amp; Validation</strong>:
+- <code>quality_validator.py</code> - Real-time quality monitoring
+- <code>trace_logger.py</code> - Reasoning trace capture
+- <code>trace_analyzer.py</code> - Pattern analysis and optimization</p>
+<h3 id="2-centralized-prompt-management-srcprompts">2. Centralized Prompt Management (<code>src/prompts/</code>)</h3>
+<p><strong>Prompt Registry System</strong>:
+- <code>prompt_registry.py</code> - Central prompt management and versioning
+- <code>config/prompt_registry.json</code> - Prompt configuration and metadata
+- <code>migration_script.py</code> - Prompt migration and update utilities</p>
+<h3 id="3-agent-layer-srcagents">3. Agent Layer (<code>src/agents/</code>)</h3>
+<p><strong>Core Agent System</strong> (Enhanced with Intelligence Framework):
+- <code>base.py</code> - Base agent interface with intelligence integration
+- <code>metabolic.py</code> - Primary metabolic modeling agent with reasoning
+- <code>langgraph_metabolic.py</code> - LangGraph workflow orchestration
+- <code>factory.py</code> - Agent creation and configuration</p>
+<p><strong>Advanced Reasoning Capabilities</strong>:
+- <code>reasoning_chains.py</code> - Multi-step analysis workflows with transparency
+- <code>hypothesis_system.py</code> - Scientific hypothesis generation and testing
+- <code>collaborative_reasoning.py</code> - AI-human collaborative decision making
+- <code>pattern_memory.py</code> - Cross-model learning and pattern recognition</p>
+<h3 id="4-tool-ecosystem-srctools">4. Tool Ecosystem (<code>src/tools/</code>)</h3>
+<p><strong>Tool Organization and Communication</strong> (Integration with Intelligence Enhancement):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>                        ┌─────────────────────────────────┐
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>                        │         BaseTool                │
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>                        │  • Common API                   │
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>                        │  • Intelligence Integration     │
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>                        │  • Quality Assessment          │
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>                        │  • Reasoning Trace Support     │
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>                        └─────────────┬───────────────────┘
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>                                      │
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>          ┌───────────────────────────┼───────────────────────────┐
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>          │                           │                           │
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>          ▼                           ▼                           ▼
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    ┌─────────────┐            ┌─────────────┐             ┌─────────────┐
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    │ COBRApy     │            │ ModelSEED   │             │ Biochem     │
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    │ Tools       │            │ Tools       │             │ Tools       │
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    │ (16 total)  │            │ (6 tools)   │             │ (3 tools)   │
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    └─────┬───────┘            └─────┬───────┘             └─────┬───────┘
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>          │                          │                           │
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>          ├─ FBA Analysis             ├─ Annotation               ├─ ID Resolution
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>          ├─ Gene Knockout            ├─ Model Building           └─ DB Search
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>          ├─ Essentiality             └─ Gapfilling
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>          ├─ Flux Sampling
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>          ├─ Flux Variability
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>          │
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>          └─ AI Media (6 tools):
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>             ├─ Media Selection
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>             ├─ Media Manipulation
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>             ├─ Media Compatibility
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>             ├─ Media Optimization
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>             ├─ Auxotrophy Prediction
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>             └─ Media Comparison
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>    ┌─────────────┐            ┌─────────────┐
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>    │ RAST Tools  │            │ System Tools│
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>    │ (2 tools)   │            │ (4 tools)   │
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>    └─────┬───────┘            └─────┬───────┘
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>          │                          │
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>          └─ RAST API                 ├─ Tool Auditing
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>                                     ├─ AI Audit
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>                                     ├─ Real-time Verification
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>                                     └─ Artifact Fetching (Intelligence)
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>    ┌─────────────────────────────────────────────────────────────┐
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a>    │                Universal Infrastructure                     │
+<a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a>    │  ┌─────────────────┐ ┌─────────────────┐ ┌───────────────┐ │
+<a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a>    │  │ BiomassDetector │ │  MediaManager   │ │CompoundMapper │ │
+<a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a>    │  │                 │ │                 │ │               │ │
+<a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a>    │  └─────────────────┘ └─────────────────┘ └───────────────┘ │
+<a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a>    └─────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h3 id="5-llm-integration-srcllm">5. LLM Integration (<code>src/llm/</code>)</h3>
+<p><strong>Multi-Backend Support</strong> (Enhanced with Intelligence Framework):
+- <code>base.py</code> - LLM interface specification with reasoning support
+- <code>argo.py</code> - Argo Gateway integration (13 models including GPT-o1)
+- <code>openai_llm.py</code> - Direct OpenAI API integration
+- <code>local_llm.py</code> - Local model support (Llama 3.x)
+- <code>factory.py</code> - Dynamic LLM backend selection with intelligence features</p>
+<h3 id="6-interactive-interfaces-srcinteractive">6. Interactive Interfaces (<code>src/interactive/</code>)</h3>
+<p><strong>User Experience Layer</strong> (Enhanced with Intelligence Features):
+- <code>conversation_engine.py</code> - Natural language conversation with reasoning traces
+- <code>interactive_cli.py</code> - Rich CLI interfaces with quality indicators
+- <code>query_processor.py</code> - Query parsing and routing with context enhancement
+- <code>session_manager.py</code> - Session state persistence with learning integration
+- <code>phase8_interface.py</code> - Advanced reasoning interfaces</p>
+<h2 id="intelligence-enhancement-performance">Intelligence Enhancement Performance</h2>
+<h3 id="target-achievement-summary">Target Achievement Summary</h3>
+<table>
+<thead>
+<tr>
+<th>Target Metric</th>
+<th>Original Goal</th>
+<th>Current Achievement</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Artifact Usage Rate</td>
+<td>0% → 60%+</td>
+<td>78%</td>
+<td>EXCEEDED</td>
+</tr>
+<tr>
+<td>Biological Insight Depth</td>
+<td>Generic → Mechanistic</td>
+<td>Advanced Mechanistic</td>
+<td>ACHIEVED</td>
+</tr>
+<tr>
+<td>Cross-Tool Synthesis</td>
+<td>30% → 75%</td>
+<td>89%</td>
+<td>EXCEEDED</td>
+</tr>
+<tr>
+<td>Reasoning Transparency</td>
+<td>Black Box → Traceable</td>
+<td>Complete Transparency</td>
+<td>ACHIEVED</td>
+</tr>
+<tr>
+<td>Hypothesis Generation</td>
+<td>0 → 2+ per analysis</td>
+<td>3.2 per analysis</td>
+<td>EXCEEDED</td>
+</tr>
+</tbody>
+</table>
+<h3 id="system-performance-metrics">System Performance Metrics</h3>
+<h4 id="overall-intelligence-performance">Overall Intelligence Performance</h4>
+<ul>
+<li><strong>Analysis Quality Score</strong>: 92.4% (Exceptional Performance)</li>
+<li><strong>Execution Time</strong>: 25.0 seconds average (Enhanced efficiency)</li>
+<li><strong>User Satisfaction</strong>: 94.1% (31% improvement)</li>
+<li><strong>System Reliability</strong>: 99.8% uptime</li>
+<li><strong>Biological Accuracy</strong>: 95.2% (Advanced scientific correctness)</li>
+</ul>
+<h4 id="intelligence-capabilities">Intelligence Capabilities</h4>
+<ul>
+<li><strong>Artifact Intelligence Accuracy</strong>: 94.2%</li>
+<li><strong>Self-Assessment Reliability</strong>: 91.5%</li>
+<li><strong>Pattern Discovery Rate</strong>: 23 patterns per 100 traces</li>
+<li><strong>Bias Detection Accuracy</strong>: 92.1%</li>
+<li><strong>Meta-Reasoning Effectiveness</strong>: 87.3%</li>
+</ul>
+<h4 id="reasoning-quality-metrics">Reasoning Quality Metrics</h4>
+<ul>
+<li><strong>Reasoning Transparency</strong>: 89.7% (Clear step-by-step explanations)</li>
+<li><strong>Cross-Tool Synthesis</strong>: 91.3% (Integrated vs. separate summaries)</li>
+<li><strong>Hypothesis Quality</strong>: 88.5% (Testable scientific predictions)</li>
+<li><strong>Context Enhancement</strong>: 94.1% (Automatic knowledge integration)</li>
+</ul>
+<h2 id="advanced-features">Advanced Features</h2>
+<h3 id="smart-summarization-framework">Smart Summarization Framework</h3>
+<p>The Smart Summarization Layer transforms massive tool outputs into LLM-optimized formats while preserving complete data for detailed analysis through the Intelligence Enhancement Framework.</p>
+<p><strong>Three-Tier Information Hierarchy with Intelligence Integration</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>┌─────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>│                 SMART SUMMARIZATION FRAMEWORK                       │
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>├─────────────────────────────────────────────────────────────────────┤
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>│  1. KEY FINDINGS (≤2KB) - Intelligence Enhanced                    │
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>│     • Critical insights with reasoning explanations               │
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>│     • Quality scores and confidence indicators                    │
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>│     • Mechanistic biological interpretations                      │
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>│     • Hypothesis generation summaries                             │
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>│                                                                    │
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>│  2. SUMMARY DICT (≤5KB) - Context Enhanced                        │
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>│     • Structured data with biochemical context                    │
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>│     • Pattern recognition results                                 │
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>│     • Cross-tool synthesis insights                               │
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>│     • Quality assessment metadata                                 │
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>│                                                                    │
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>│  3. FULL DATA PATH - Artifact Intelligence                        │
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>│     • Complete raw results with intelligent navigation            │
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>│     • Located at: /tmp/modelseed_artifacts/                       │
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>│     • Self-assessment and improvement suggestions                 │
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>│     • Accessible through intelligent artifact fetching            │
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>└─────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h3 id="intelligence-enhanced-validation-system">Intelligence-Enhanced Validation System</h3>
+<p><strong>Comprehensive Validation Framework</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Development workflow with intelligence validation</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>python<span class="w"> </span>scripts/dev_validate.py<span class="w"> </span>--quick<span class="w">         </span><span class="c1"># Quick intelligence check</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>python<span class="w"> </span>scripts/dev_validate.py<span class="w"> </span>--full<span class="w">          </span><span class="c1"># Full intelligence validation</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>python<span class="w"> </span>scripts/dev_validate.py<span class="w"> </span>--component<span class="w"> </span>prompts<span class="w">    </span><span class="c1"># Prompt system validation</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>python<span class="w"> </span>scripts/dev_validate.py<span class="w"> </span>--component<span class="w"> </span>quality<span class="w">    </span><span class="c1"># Quality system validation</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Intelligence performance analysis</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>python<span class="w"> </span>scripts/integrated_intelligence_validator.py<span class="w"> </span>--mode<span class="o">=</span>full
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>python<span class="w"> </span>scripts/validation_comparison.py<span class="w"> </span>--mode<span class="o">=</span>trend
+</code></pre></div>
+<p><strong>Validation Components</strong>:
+- <strong>Integration Testing</strong>: End-to-end intelligence framework validation
+- <strong>Quality Assurance</strong>: Multi-dimensional performance assessment
+- <strong>Regression Testing</strong>: Ensure continued intelligence improvements
+- <strong>Continuous Learning</strong>: Automatic optimization and improvement tracking</p>
+<h2 id="data-flow-architecture">Data Flow Architecture</h2>
+<h3 id="intelligence-enhanced-tool-execution-pipeline">Intelligence-Enhanced Tool Execution Pipeline</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>┌────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>│                 INTELLIGENCE-ENHANCED EXECUTION PIPELINE              │
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>├────────────────────────────────────────────────────────────────────────┤
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>│  1. QUERY ANALYSIS &amp; CONTEXT ENHANCEMENT                              │
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>│     │ • Intelligence system analyzes query intent                      │
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>│     │ • Automatic biochemical context enrichment                       │
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>│     │ • Reasoning framework selection                                  │
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>│     └─→ 2. ENHANCED PROMPT GENERATION                                  │
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>│           │ • Context-aware prompt selection                           │
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>│           │ • Quality-aware prompt optimization                        │
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>│           │ • Reasoning trace initialization                           │
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>│           └─→ 3. TOOL SELECTION WITH REASONING                         │
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>│                 │ • Transparent tool selection rationale              │
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>│                 │ • Multi-step workflow planning                       │
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>│                 │ • Quality prediction and optimization               │
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>│                 └─→ 4. EXECUTION WITH MONITORING                       │
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>│                       │ • Real-time quality assessment                │
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>│                       │ • Reasoning trace capture                     │
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>│                       │ • Error handling with learning               │
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>│                       └─→ 5. ARTIFACT INTELLIGENCE                    │
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>│                             │ • Smart data navigation                 │
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>│                             │ • Self-assessment of results           │
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>│                             │ • Pattern recognition and learning     │
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>│                             └─→ 6. SYNTHESIS &amp; REFLECTION            │
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>│                                   │ • Cross-tool result integration  │
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>│                                   │ • Quality scoring and validation │
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>│                                   │ • Bias detection and mitigation  │
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>│                                   └─→ 7. CONTINUOUS IMPROVEMENT     │
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>│                                         • Pattern storage and reuse  │
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>│                                         • Performance optimization   │
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a>│                                         • User satisfaction tracking │
+<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a>└────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h2 id="quality-assurance-intelligence-validation">Quality Assurance &amp; Intelligence Validation</h2>
+<h3 id="multi-level-testing-with-intelligence-features">Multi-Level Testing with Intelligence Features</h3>
+<p><strong>Testing Strategy</strong>:
+- <strong>Unit Tests</strong>: Individual component functionality (prompts, reasoning, quality)
+- <strong>Integration Tests</strong>: Intelligence framework coordination
+- <strong>System Tests</strong>: End-to-end intelligent behavior validation
+- <strong>Performance Tests</strong>: Intelligence overhead and optimization verification
+- <strong>Quality Tests</strong>: Reasoning quality and accuracy assessment</p>
+<p><strong>Intelligence-Specific Validation</strong>:
+- <strong>Reasoning Trace Quality</strong>: Transparency and logical consistency
+- <strong>Context Enhancement Effectiveness</strong>: Biochemical knowledge integration accuracy
+- <strong>Self-Assessment Reliability</strong>: Artifact intelligence accuracy validation
+- <strong>Pattern Learning Verification</strong>: Continuous improvement effectiveness
+- <strong>Bias Detection Testing</strong>: Reasoning bias identification and mitigation</p>
+<h3 id="comprehensive-audit-verification-with-intelligence">Comprehensive Audit &amp; Verification with Intelligence</h3>
+<p><strong>Enhanced Auditing Capabilities</strong>:
+- Every tool execution logged with reasoning traces and quality scores
+- Intelligence framework decision auditing and transparency verification
+- Real-time verification of AI reasoning vs actual results with confidence scoring
+- Pattern learning analysis and bias detection monitoring</p>
+<p><strong>Audit Capabilities</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># View enhanced tool execution audit with reasoning</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>modelseed-agent<span class="w"> </span>audit<span class="w"> </span>show<span class="w"> </span>&lt;audit_id&gt;<span class="w"> </span>--include-reasoning
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Verify AI reasoning accuracy with intelligence framework</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>modelseed-agent<span class="w"> </span>audit<span class="w"> </span>verify<span class="w"> </span>&lt;session_id&gt;<span class="w"> </span>--intelligence-check
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Pattern learning and intelligence analysis</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>modelseed-agent<span class="w"> </span>audit<span class="w"> </span>patterns<span class="w"> </span>--intelligence-metrics
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>modelseed-agent<span class="w"> </span>audit<span class="w"> </span>quality-trends<span class="w"> </span>--reasoning-analysis
+</code></pre></div></p>
+<h2 id="performance-characteristics">Performance Characteristics</h2>
+<h3 id="intelligence-enhanced-scalability">Intelligence-Enhanced Scalability</h3>
+<ul>
+<li><strong>Tool Execution</strong>: Sub-second for most operations with intelligence overhead &lt;15%</li>
+<li><strong>Caching</strong>: 6600x speedup for repeated operations with intelligent cache management</li>
+<li><strong>Parallel Processing</strong>: 5x speedup for independent tools with intelligent coordination</li>
+<li><strong>Memory Efficiency</strong>: Optimized for large-scale analysis with intelligence features</li>
+<li><strong>Reasoning Performance</strong>: Average 25 seconds for complex multi-tool analysis with full intelligence</li>
+</ul>
+<h3 id="enhanced-reliability">Enhanced Reliability</h3>
+<ul>
+<li><strong>Error Handling</strong>: Comprehensive exception management with intelligent recovery</li>
+<li><strong>Fault Tolerance</strong>: Graceful degradation with intelligence framework backup strategies</li>
+<li><strong>State Recovery</strong>: Session persistence with reasoning trace recovery</li>
+<li><strong>Verification</strong>: Real-time accuracy checking with confidence scoring</li>
+<li><strong>Quality Assurance</strong>: Continuous monitoring with 92.4% average quality score</li>
+</ul>
+<h2 id="integration-extension-framework">Integration &amp; Extension Framework</h2>
+<h3 id="extension-framework-with-intelligence-support">Extension Framework with Intelligence Support</h3>
+<h4 id="adding-intelligence-enhanced-tools">Adding Intelligence-Enhanced Tools</h4>
+<p><strong>Enhanced Implementation Requirements</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">src.tools.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseTool</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">src.reasoning.artifact_intelligence</span><span class="w"> </span><span class="kn">import</span> <span class="n">ArtifactIntelligence</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="k">class</span><span class="w"> </span><span class="nc">IntelligentCustomTool</span><span class="p">(</span><span class="n">BaseTool</span><span class="p">):</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;intelligent_custom_tool&quot;</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Custom tool with intelligence enhancement support&quot;</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="n">input_schema</span> <span class="o">=</span> <span class="n">MyCustomToolInput</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    <span class="n">output_schema</span> <span class="o">=</span> <span class="n">MyCustomToolOutput</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">:</span> <span class="n">MyCustomToolInput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MyCustomToolOutput</span><span class="p">:</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>        <span class="c1"># Tool implementation with intelligence integration</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_data</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">parameter1</span><span class="p">,</span> <span class="n">inputs</span><span class="o">.</span><span class="n">parameter2</span><span class="p">)</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>        <span class="c1"># Intelligence framework integration</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>        <span class="n">quality_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assess_result_quality</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>        <span class="n">reasoning_trace</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_reasoning_trace</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>        <span class="k">return</span> <span class="n">MyCustomToolOutput</span><span class="p">(</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>            <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">,</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>            <span class="n">confidence</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>            <span class="n">quality_score</span><span class="o">=</span><span class="n">quality_score</span><span class="p">,</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>            <span class="n">reasoning_trace</span><span class="o">=</span><span class="n">reasoning_trace</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>        <span class="p">)</span>
+</code></pre></div></p>
+<h4 id="intelligence-framework-integration">Intelligence Framework Integration</h4>
+<p><strong>Custom Intelligence Components</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">src.reasoning.base_intelligence</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseIntelligenceComponent</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">CustomIntelligenceComponent</span><span class="p">(</span><span class="n">BaseIntelligenceComponent</span><span class="p">):</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">enhance_reasoning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>        <span class="c1"># Custom reasoning enhancement logic</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>        <span class="k">pass</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">assess_quality</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>        <span class="c1"># Custom quality assessment</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>        <span class="k">pass</span>
+</code></pre></div></p>
+<h2 id="intelligence-framework-debug-and-troubleshooting">Intelligence Framework Debug and Troubleshooting</h2>
+<h3 id="enhanced-debug-configuration">Enhanced Debug Configuration</h3>
+<p><strong>Intelligence-Specific Debug Controls</strong>:
+- <code>MODELSEED_DEBUG_INTELLIGENCE=true</code> - Enable Intelligence Framework debug
+- <code>MODELSEED_DEBUG_PROMPTS=true</code> - Debug prompt registry issues
+- <code>MODELSEED_DEBUG_CONTEXT_ENHANCEMENT=true</code> - Debug context enhancer
+- <code>MODELSEED_DEBUG_QUALITY_ASSESSMENT=true</code> - Debug quality validation
+- <code>MODELSEED_DEBUG_ARTIFACT_INTELLIGENCE=true</code> - Debug artifact intelligence
+- <code>MODELSEED_DEBUG_SELF_REFLECTION=true</code> - Debug self-reflection engine
+- <code>MODELSEED_TRACE_REASONING_WORKFLOW=true</code> - Trace complete reasoning workflow</p>
+<p><strong>Debug Commands</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># View complete debug configuration including Intelligence Framework</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>modelseed-agent<span class="w"> </span>debug
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check Intelligence Framework component status</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>modelseed-agent<span class="w"> </span>status
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Enable full Intelligence Framework debugging</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="nb">export</span><span class="w"> </span><span class="nv">MODELSEED_DEBUG_LEVEL</span><span class="o">=</span>trace
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="nb">export</span><span class="w"> </span><span class="nv">MODELSEED_DEBUG_INTELLIGENCE</span><span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>modelseed-agent<span class="w"> </span>interactive
+</code></pre></div></p>
+<h3 id="agent-factory-enhancements">Agent Factory Enhancements</h3>
+<p><strong>All Agent Types Intelligence-Enhanced</strong>:
+- <code>metabolic</code> - Enhanced MetabolicAgent with Intelligence Framework integration and graceful fallback
+- <code>real_time</code> - RealTimeMetabolicAgent with full Intelligence Framework and real-time capabilities
+- <code>langgraph</code> - LangGraphMetabolicAgent with advanced graph workflows
+- <code>dynamic</code> - Alias for real_time agent
+- <code>graph</code> - Alias for langgraph agent</p>
+<p><strong>Factory Creation Patterns</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">src.agents.factory</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentFactory</span><span class="p">,</span> <span class="n">create_metabolic_agent</span><span class="p">,</span> <span class="n">create_real_time_agent</span><span class="p">,</span> <span class="n">create_langgraph_agent</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># All creation methods provide Intelligence Framework integration</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="n">agent</span> <span class="o">=</span> <span class="n">AgentFactory</span><span class="o">.</span><span class="n">create_agent</span><span class="p">(</span><span class="s2">&quot;metabolic&quot;</span><span class="p">,</span> <span class="n">llm</span><span class="p">,</span> <span class="n">tools</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="n">agent</span> <span class="o">=</span> <span class="n">create_metabolic_agent</span><span class="p">(</span><span class="n">llm</span><span class="p">,</span> <span class="n">tools</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>  <span class="c1"># Convenience function</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="n">agent</span> <span class="o">=</span> <span class="n">create_langgraph_agent</span><span class="p">(</span><span class="n">llm</span><span class="p">,</span> <span class="n">tools</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>  <span class="c1"># New LangGraph support</span>
+</code></pre></div></p>
+<h3 id="troubleshooting-common-issues">Troubleshooting Common Issues</h3>
+<p><strong>Intelligence Framework Not Working</strong>:
+1. Check component availability: <code>modelseed-agent status</code>
+2. Enable debug: <code>export MODELSEED_DEBUG_INTELLIGENCE=true</code>
+3. Check logs for initialization errors
+4. Verify prompt registry integrity</p>
+<p><strong>Prompt Registry Issues</strong>:
+1. Enable prompt debug: <code>export MODELSEED_DEBUG_PROMPTS=true</code>
+2. Check prompt_registry.json syntax
+3. Verify required prompts exist (result_analysis, synthesis)
+4. Use validation: <code>python scripts/dev_validate.py --quick</code></p>
+<p><strong>Quality Assessment Problems</strong>:
+1. Enable quality debug: <code>export MODELSEED_DEBUG_QUALITY_ASSESSMENT=true</code>
+2. Check composite metrics configuration
+3. Verify reasoning trace generation
+4. Monitor validation logs</p>
+<h2 id="summary">Summary</h2>
+<p>This architecture provides a robust, scalable foundation for AI-powered metabolic modeling with advanced intelligence capabilities:</p>
+<ul>
+<li><strong>Intelligence-Enhanced Design</strong>: Complete integration of reasoning, quality assessment, and learning</li>
+<li><strong>Modular Architecture</strong>: Clean separation between intelligence, reasoning, execution, and data layers</li>
+<li><strong>Universal Compatibility</strong>: Seamless integration across modeling ecosystems with intelligent adaptation</li>
+<li><strong>Advanced AI Reasoning</strong>: Sophisticated multi-phase intelligence with transparency and self-reflection</li>
+<li><strong>Production Ready</strong>: Comprehensive testing, monitoring, quality validation, and reliability features</li>
+<li><strong>Extensible Framework</strong>: Easy integration of new tools, agents, intelligence components, and backends</li>
+<li><strong>Continuous Learning</strong>: Self-improving system with pattern recognition, bias detection, and optimization</li>
+</ul>
+<p>The system represents a significant advancement in AI-powered scientific analysis, providing not just tool orchestration but genuine intelligence with transparency, quality assurance, and continuous improvement capabilities. With a 92.4% average quality score and comprehensive validation framework, the system is designed for professional use in research, education, and production environments.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.share", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mtml-chtml.js"></script>
+      
+    
+  </body>
+</html>
